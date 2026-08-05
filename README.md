@@ -137,6 +137,9 @@ CR-0002-R4 -> foundation/revisions/CR-0002_R4_DecisionModel.md -> DRAFT / PASS_W
 CR-0002-R4-LOCAL-REVIEW -> foundation/revisions/CR-0002_R4_IndependentReview.md -> COMPLETED / PASS_WITH_ONE_BOUNDED_BLOCKER
 CR-0002-R5 -> foundation/revisions/CR-0002_R5_DecisionModel.md -> DRAFT / PASS_FOR_CONSOLIDATION
 CR-0002-R5-FINAL-COMPOSITE-REVIEW -> foundation/revisions/CR-0002_R5_FinalCompositeReview.md -> COMPLETED / PASS_FOR_CONSOLIDATION
+CR-0002-CONSTITUTION-CANDIDATE -> foundation/revisions/CR-0002_ConstitutionCandidate.md -> PASS_AS_CONSISTENT_CANDIDATE / NOT_FROZEN
+CR-0002-CONSTITUTION-CANDIDATE-SEMANTIC-DIFF -> foundation/revisions/CR-0002_ConstitutionCandidate_SemanticDiff.md -> COMPLETED / PASS_WITH_INDEPENDENT_CONSISTENCY_REVIEW_REQUIRED
+CR-0002-CONSTITUTION-CANDIDATE-CONSISTENCY-REVIEW -> foundation/revisions/CR-0002_ConstitutionCandidate_ConsistencyReview.md -> COMPLETED / PASS_AS_CONSISTENT_CANDIDATE
 CR-0003-TYPE-AUDIT -> foundation/revisions/CR-0003_CommitTypeAudit.md -> PASS_WITH_CONSTRAINTS
 CR-0003 -> foundation/revisions/CR-0003_CommitModel.md -> SUPERSEDED_DRAFT / PASS_WITH_BLOCKERS
 CR-0003-R1 -> foundation/revisions/CR-0003_R1_CommitModel.md -> SUPERSEDED_DRAFT / PASS_WITH_BLOCKERS
