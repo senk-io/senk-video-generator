@@ -168,4 +168,5 @@ CR-0004 -> foundation/revisions/CR-0004_InstitutionRegistryAndFreezeReferenceSup
 CR-0004-LOCAL-REVIEW -> foundation/revisions/CR-0004_IndependentReview.md -> COMPLETED / PASS_WITH_FOUR_BOUNDED_BLOCKERS
 CR-0004-R1 -> foundation/revisions/CR-0004_R1_InstitutionRegistryAndFreezeReferenceSupport.md -> DRAFT / PASS_WITH_THREE_BOUNDED_BLOCKERS / R2_REQUIRED
 CR-0004-R1-LOCAL-REVIEW -> foundation/revisions/CR-0004_R1_IndependentReview.md -> COMPLETED / PASS_WITH_THREE_BOUNDED_BLOCKERS
+CR-0004-R2 -> foundation/revisions/CR-0004_R2_InstitutionRegistryResidualClosure.md -> DRAFT / INDEPENDENT_REVIEW_REQUIRED / CONSOLIDATION_BLOCKED
 ```
