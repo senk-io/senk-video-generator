@@ -166,4 +166,5 @@ CR-0003-CONSTITUTION-CANDIDATE-R2-FINAL-REVIEW -> foundation/revisions/CR-0003_C
 CR-0003-FREEZE-DEPENDENCY-READINESS-AUDIT -> foundation/revisions/CR-0003_FreezeDependencyReadinessAudit.md -> COMPLETED / NOT_READY_FOR_FREEZE
 CR-0004 -> foundation/revisions/CR-0004_InstitutionRegistryAndFreezeReferenceSupport.md -> DRAFT / PASS_WITH_FOUR_BOUNDED_BLOCKERS / R1_REQUIRED
 CR-0004-LOCAL-REVIEW -> foundation/revisions/CR-0004_IndependentReview.md -> COMPLETED / PASS_WITH_FOUR_BOUNDED_BLOCKERS
+CR-0004-R1 -> foundation/revisions/CR-0004_R1_InstitutionRegistryAndFreezeReferenceSupport.md -> DRAFT / INDEPENDENT_REVIEW_REQUIRED / CONSOLIDATION_BLOCKED
 ```
