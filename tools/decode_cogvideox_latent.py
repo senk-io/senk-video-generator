@@ -8,6 +8,7 @@ import json
 import os
 import re
 import signal
+import subprocess
 import threading
 import time
 from datetime import UTC, datetime
@@ -16,7 +17,10 @@ from typing import Any
 
 import psutil
 
-from tools.run_provider_compatibility_trial import sha256_file, write_json, write_manifest
+try:
+    from tools.run_provider_compatibility_trial import sha256_file, write_json, write_manifest
+except ModuleNotFoundError:
+    from run_provider_compatibility_trial import sha256_file, write_json, write_manifest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +31,7 @@ PREFLIGHT_MIN_AVAILABLE = 16 * GIB
 PREFLIGHT_MAX_SWAP = 4 * GIB
 ABORT_MIN_AVAILABLE = 5 * GIB
 MAX_SWAP_GROWTH = 4 * GIB
+NORMAL_MEMORY_PRESSURE_LEVEL = 1
 
 
 class DecodeAbort(RuntimeError):
@@ -42,6 +47,29 @@ def read_json(file_path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("JSON 根值不是对象")
     return value
+
+
+def read_macos_memory_pressure_level() -> int | None:
+    """读取 macOS 的权威内存压力级别；无法读取时返回空值。"""
+    try:
+        result = subprocess.run(
+            ["sysctl", "-n", "kern.memorystatus_vm_pressure_level"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=2,
+        )
+        return int(result.stdout.strip())
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def preflight_block_reason(available_bytes: int, swap_used_bytes: int, pressure_level: int | None) -> str | None:
+    if available_bytes < PREFLIGHT_MIN_AVAILABLE:
+        return "启动前可用内存不足 16 GiB"
+    if swap_used_bytes > PREFLIGHT_MAX_SWAP and pressure_level != NORMAL_MEMORY_PRESSURE_LEVEL:
+        return "启动前换页高于 4 GiB，且系统内存压力并非正常级"
+    return None
 
 
 def validate_decode_source(evidence_root: Path, source_execution_id: str) -> dict[str, Any]:
@@ -138,14 +166,14 @@ def main() -> int:
         raise SystemExit("输出证据目录无效或已经存在")
     memory_start = psutil.virtual_memory()
     swap_start = psutil.swap_memory()
-    if memory_start.available < PREFLIGHT_MIN_AVAILABLE:
-        raise SystemExit("启动前可用内存不足 16 GiB")
-    if swap_start.used > PREFLIGHT_MAX_SWAP:
-        raise SystemExit("启动前换页高于 4 GiB，仍处于恢复期")
+    memory_pressure_level = read_macos_memory_pressure_level()
+    block_reason = preflight_block_reason(memory_start.available, swap_start.used, memory_pressure_level)
+    if block_reason:
+        raise SystemExit(block_reason)
 
     output_root.mkdir(parents=True)
     request = {
-        "schema_version": "cogvideox-latent-decode.v1",
+        "schema_version": "cogvideox-latent-decode.v2",
         "execution_id": args.execution_id,
         "source_execution_id": args.source_execution_id,
         "source_latent_sha256": source["latent_sha256"],
@@ -155,6 +183,9 @@ def main() -> int:
         "resource_budget": {
             "preflight_min_available_memory_bytes": PREFLIGHT_MIN_AVAILABLE,
             "preflight_max_swap_used_bytes": PREFLIGHT_MAX_SWAP,
+            "preflight_swap_residue_override_requires_memory_pressure_level": NORMAL_MEMORY_PRESSURE_LEVEL,
+            "observed_memory_pressure_level": memory_pressure_level,
+            "historical_swap_residue_override_applied": swap_start.used > PREFLIGHT_MAX_SWAP,
             "abort_min_available_memory_bytes": ABORT_MIN_AVAILABLE,
             "max_swap_growth_bytes": MAX_SWAP_GROWTH,
         },

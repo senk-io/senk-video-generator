@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-08-09T18:12:58.539762+00:00",
+  "device": "cpu",
+  "dtype": "float32",
+  "execution_id": "LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z",
+  "formal_fact_creation": "PROHIBITED",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "historical_swap_residue_override_applied": true,
+    "max_swap_growth_bytes": 4294967296,
+    "observed_memory_pressure_level": 1,
+    "preflight_max_swap_used_bytes": 4294967296,
+    "preflight_min_available_memory_bytes": 17179869184,
+    "preflight_swap_residue_override_requires_memory_pressure_level": 1
+  },
+  "schema_version": "cogvideox-latent-decode.v2",
+  "source_execution_id": "LM-COGVIDEOX-CPU-DECODE-R2-20260809T175503Z",
+  "source_latent_sha256": "54978e4d98a4b9b51a280ade92ce0e24fb7600d0e59b14ad767ad938c2c102a4",
+  "tile_sample_size": [
+    180,
+    120
+  ]
+}

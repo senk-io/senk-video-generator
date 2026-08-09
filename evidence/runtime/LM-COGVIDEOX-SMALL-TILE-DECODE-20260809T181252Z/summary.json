@@ -1,0 +1,25 @@
+{
+  "elapsed_seconds": 69.515,
+  "error_observation": null,
+  "execution_id": "LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z",
+  "finished_at": "2026-08-09T18:14:08.054134+00:00",
+  "formal_fact_created": false,
+  "institution_freeze_created": false,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "output_sha256": "fdc861e02ba4834f3f062b57bd78117435624a82fdd23331e15a98ba9a81cb20",
+  "process_peak_rss_bytes": 13974388736,
+  "quality_acceptance_created": false,
+  "safety_abort_reason": null,
+  "source_execution_id": "LM-COGVIDEOX-CPU-DECODE-R2-20260809T175503Z",
+  "system_peak_swap_used_bytes": 4304994304,
+  "system_start_swap_used_bytes": 4304994304
+}

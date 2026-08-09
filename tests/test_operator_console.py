@@ -31,7 +31,7 @@ from tools.run_provider_compatibility_trial import (
     request_worker_stop,
     release_pipeline_memory,
 )
-from tools.decode_cogvideox_latent import validate_decode_source
+from tools.decode_cogvideox_latent import preflight_block_reason, validate_decode_source
 from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
 
 
@@ -251,6 +251,18 @@ else:
             low_available_samples=0,
         )
         self.assertEqual(reason, "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET")
+
+    def test_decode_preflight_accepts_only_normal_pressure_swap_residue(self) -> None:
+        self.assertIsNone(preflight_block_reason(20 * GIB, 5 * GIB, 1))
+        self.assertEqual(
+            preflight_block_reason(20 * GIB, 5 * GIB, 2),
+            "启动前换页高于 4 GiB，且系统内存压力并非正常级",
+        )
+        self.assertEqual(
+            preflight_block_reason(20 * GIB, 5 * GIB, None),
+            "启动前换页高于 4 GiB，且系统内存压力并非正常级",
+        )
+        self.assertEqual(preflight_block_reason(15 * GIB, 2 * GIB, 1), "启动前可用内存不足 16 GiB")
 
     def test_mps_limit_strategy_activation_and_release_are_explicit(self) -> None:
         class FakeMps:
