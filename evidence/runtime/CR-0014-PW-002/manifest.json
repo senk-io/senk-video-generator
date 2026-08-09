@@ -1,0 +1,15 @@
+{
+  "algorithm": "SHA-256",
+  "canonical_manifest": "digest + two spaces + filename + LF, sorted by filename",
+  "files": {
+    "authority_grants.jsonl": "e7f868c7c958bd62237deecf3ed118a3f8e7c3a4b166123e0443cf96e4c9dc18",
+    "governance.db": "d2879a78b1bc54085c37988993c58c59945047384e6d1094c3fd81700099aed9",
+    "immutability_checks.json": "ece8c3e5751a50d994feead3c78944bafc79d975ebd2c751d549bb16fd3d663b",
+    "input_manifest.json": "3d12fab844878009c16d4c55ede5aaf44c4773f35aab9eb18eb8b7c288d375d9",
+    "protected_records.jsonl": "8f32f3ce9a7ec0bbd3ee052ea073a84f6df72843d8f505582590c849b93f3f8b",
+    "summary.json": "e59b1ce2f4dfd0bed463e1def1a4fc75183de9f4c8a600b1bd7e25103d78f30e",
+    "write_attempts.jsonl": "2f395129b21e49b01518d5ea0a73b193c9ce3db8b5111377dc8df53888a2b9c1",
+    "write_conflicts.jsonl": "68ae92e45b00192be1eeabbf647f81d10f1a84970eec066f9f943482586a3543"
+  },
+  "package_digest": "fab922e20b564cac98ff632167d3776c51f4d8f09cb28247e0812fa13cda380e"
+}

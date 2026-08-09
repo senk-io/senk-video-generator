@@ -1,0 +1,33 @@
+{
+  "authority_mode": "EVIDENCE_ONLY_TEST_GRANTS",
+  "execution_id": "CR-0014-PW-004",
+  "formal_fact_creation": "PROHIBITED",
+  "implementation_version": "governance-kernel/0.1.0+sha256:f273f81f789b38c656749340a5d2894c7594bfc7519869248b997b384eafa8ce",
+  "institution_proposal_versions": [
+    "CR-0004-CONSTITUTION-CANDIDATE-R1",
+    "CR-0005-R11-COMPOSITE",
+    "CR-0006-R10-COMPOSITE",
+    "CR-0007-R5-COMPOSITE",
+    "CR-0008-R4-COMPOSITE",
+    "CR-0009-R2-COMPOSITE",
+    "CR-0010-R4-COMPOSITE",
+    "CR-0011-R2-COMPOSITE",
+    "CR-0012-R2-COMPOSITE"
+  ],
+  "next_evidence_stage": "TEST_REPLAY_CONCURRENCY_PROJECTION_CORRECTNESS",
+  "proposal_digests": {
+    "WS-01": "1fbeca02ccf0a712180c8d1ce15f0b4953960e6c29c170e63447613c15f17e55",
+    "WS-02": "07d1b2b3d3ca6b647cba0262ad65a7b14270c4f7bc314f447e1f8afde27c9913",
+    "WS-03": "7320738cb76be12a2ddb795335c6d527fcc8967ee5731513b2df17c03f5db05a",
+    "WS-04": "d04daaecf57407e68c973a5ff80094b42f0addefc376ea74a2f239836d2c933c",
+    "WS-05": "3ed4c70164e5a0423ba348561db25e552790a0c4ad23682213348987f1e8b01a",
+    "WS-06": "ee49d2cbc375557b88f3fabe407c2be3de4b3a13576096394a3b8eaea55fc7a1",
+    "WS-07": "d92c359f8ccd3aab7f8502d3abdf548e21d1a727a476f90262f29ce22eb12091",
+    "WS-08": "462f0fc8c4c4fde61646087e4c51b8e531d3956c9b2f6d2990a552ef5c33c1c2",
+    "WS-09": "36ef7591ee327e6d5af7aa57dd057d11f9eb22e5f2f2b70c08ab6cade53a3da4"
+  },
+  "scope_ref": "scope:evidence:nine-workstreams",
+  "started_at": "2026-08-09T07:54:26.217288Z",
+  "supersedes_execution_id": "CR-0014-PW-003",
+  "supersession_reason": "final evidence packaging switched from WAL to DELETE journaling to prevent unmanifested read sidecars"
+}

@@ -1,0 +1,40 @@
+{
+  "accepted_record_count": 12,
+  "append_only_update_delete_guards": true,
+  "attempt_count": 55,
+  "completed_at": "2026-08-09T07:44:44.497922Z",
+  "conflict_count": 11,
+  "correction_history_preserved": true,
+  "event_hash_chain_verified": true,
+  "execution_id": "CR-0014-PW-001",
+  "formal_fact_created": false,
+  "implementation_version": "governance-kernel/0.1.0+sha256:95b5580fa1b409512e017564f0d13057cecd71a75fa454f9cf935170b11d00e1",
+  "institution_freeze_created": false,
+  "missing_prerequisite_rejected": true,
+  "outcome_counts": {
+    "ACCEPTED_EVIDENCE_ONLY": 12,
+    "CONFLICT_RECORDED": 11,
+    "IDEMPOTENT_EXISTING": 11,
+    "REJECTED_MISSING_PREREQUISITE": 10,
+    "REJECTED_UNAUTHORIZED": 11
+  },
+  "projection_publication_content_identical": true,
+  "protected_record_types_covered": 11,
+  "result": "PASS_AS_NON_AUTHORITATIVE_PROTECTED_WRITE_EVIDENCE",
+  "same_key_different_payload_conflict_preserved": true,
+  "same_key_same_payload_idempotent": true,
+  "started_at": "2026-08-09T07:44:44.440421Z",
+  "terminal_record_overwrite_prevented": true,
+  "unauthorized_write_rejected": true,
+  "workstreams_covered": [
+    "WS-01",
+    "WS-02",
+    "WS-03",
+    "WS-04",
+    "WS-05",
+    "WS-06",
+    "WS-07",
+    "WS-08",
+    "WS-09"
+  ]
+}
