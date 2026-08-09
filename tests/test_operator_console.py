@@ -175,6 +175,11 @@ else:
         self.assertEqual(contract["resource_budget"]["preflight_max_swap_used_bytes"], 4 * GIB)
         self.assertEqual(contract["resource_budget"]["max_swap_growth_bytes"], 8 * GIB)
         self.assertEqual(contract["contract_status"], "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE")
+        quality_profile = next(
+            item for item in public_catalog()["generation_profiles"] if item["key"] == "wan_quality_probe"
+        )
+        self.assertEqual(quality_profile["parameters"]["width"], 256)
+        self.assertEqual(quality_profile["parameters"]["num_inference_steps"], 4)
 
     def test_persisted_job_is_loaded_by_runner_without_model_import(self) -> None:
         job = self.manager.create_job(self.request())

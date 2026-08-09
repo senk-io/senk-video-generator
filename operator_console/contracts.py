@@ -109,6 +109,20 @@ GENERATION_PROFILES: dict[str, dict[str, Any]] = {
             "fps": 8,
         },
     },
+    "wan_quality_probe": {
+        "key": "wan_quality_probe",
+        "provider_key": "wan",
+        "name": "质量探针",
+        "description": "保持最低画幅与帧数，仅把推理提高到 4 步以观察可辨识度。",
+        "parameters": {
+            "width": 256,
+            "height": 144,
+            "num_frames": 9,
+            "num_inference_steps": 4,
+            "guidance_scale": 5.0,
+            "fps": 8,
+        },
+    },
     "wan_low_memory": {
         "key": "wan_low_memory",
         "provider_key": "wan",
