@@ -212,8 +212,8 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
     steps = provider.get("num_inference_steps")
     frames = provider.get("num_frames")
     if temporal_derivation is None:
-        if steps not in {8, 16} or frames != baseline_provider["num_frames"]:
-            raise ValueError("质量探针只允许 9 帧、8 步或 16 步")
+        if steps not in {8, 16, 32} or frames != baseline_provider["num_frames"]:
+            raise ValueError("质量探针只允许 9 帧、8 步、16 步或 32 步")
         expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"
     else:
         expected_derivation = {
@@ -239,6 +239,12 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
         "thirty_second_timeline_creation",
     }.issubset(non_goals):
         raise ValueError("五秒探针缺少控制台与三十秒时间线非目标边界")
+    if steps == 32 and not {
+        "five_second_generation",
+        "operator_console_enablement",
+        "thirty_second_timeline_creation",
+    }.issubset(non_goals):
+        raise ValueError("三十二步探针缺少五秒、控制台与三十秒时间线非目标边界")
 
 
 def load_execution_contract(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:

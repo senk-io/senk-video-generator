@@ -253,6 +253,21 @@ else:
         with self.assertRaisesRegex(ValueError, "派生合同必须固定"):
             validate_bounded_trial_variant(mutated_derivation, "cogvideox")
 
+        thirty_two_path = Path(
+            "experiments/provider_compatibility/cogvideox_quality_32_steps.json"
+        ).resolve()
+        thirty_two, source = load_execution_contract(
+            argparse.Namespace(job_spec=None, trial_contract=str(thirty_two_path), provider="cogvideox")
+        )
+        self.assertEqual(source, thirty_two_path)
+        self.assertEqual(thirty_two["providers"]["cogvideox"]["num_frames"], 9)
+        self.assertEqual(thirty_two["providers"]["cogvideox"]["num_inference_steps"], 32)
+
+        mutated_thirty_two = json.loads(json.dumps(thirty_two))
+        mutated_thirty_two["non_goals"].remove("five_second_generation")
+        with self.assertRaisesRegex(ValueError, "三十二步探针缺少"):
+            validate_bounded_trial_variant(mutated_thirty_two, "cogvideox")
+
     def test_cogvideox_temporal_stability_contract_and_linear_trajectory_are_fail_closed(self) -> None:
         contract_path = Path(
             "experiments/postprocessing/cogvideox_temporal_stability_v1.json"
