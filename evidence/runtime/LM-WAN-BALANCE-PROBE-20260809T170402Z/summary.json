@@ -1,0 +1,84 @@
+{
+  "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+  "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
+  "cross_provider_contract_created": false,
+  "elapsed_seconds": 33.684,
+  "error_observation": null,
+  "execution_id": "LM-WAN-BALANCE-PROBE-20260809T170402Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T17:04:37.709952+00:00",
+  "formal_fact_created": false,
+  "generation_profile_key": "wan_balance_probe",
+  "inference_completed": true,
+  "institution_freeze_created": false,
+  "job_id": "JOB-20260809T170402Z-C92F4911",
+  "last_phase": "WORKER_COMPLETED",
+  "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
+  "mps_memory_fraction": 0.75,
+  "mps_memory_limit": {
+    "configured_limit_bytes": 22613004288,
+    "fraction": 0.75,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 4208992256,
+  "mps_peak_driver_allocated_bytes": 8413462528,
+  "mps_post_release": {
+    "current_allocated_bytes": 8388608,
+    "driver_allocated_bytes": 2778415104
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->transformer_2->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_bytes": 11194,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      256,
+      144
+    ]
+  },
+  "output_sha256": "ffe2dd74a7580758702dc57c9f7315e4516375f203cea015bc6ec005a4b08b88",
+  "pipeline_loaded": true,
+  "process_tree_peak_rss_bytes": 12483674112,
+  "prompt_encoding_completed": true,
+  "prompt_stage_activation": {
+    "full_text_encoder_transfer": false,
+    "offload_granularity": "leaf_module",
+    "strategy": "mps_sequential_cpu_offload"
+  },
+  "provider_identity": "Wan-AI",
+  "provider_key": "wan",
+  "safety_abort_reason": null,
+  "stage_elapsed_seconds": {
+    "inference": 9.331,
+    "mps_release": 0.075,
+    "mps_strategy_activation": 0.009,
+    "mps_transfer": 0.009,
+    "pipeline_load": 2.628,
+    "prompt_encoding_and_release": 19.176,
+    "snapshot_resolution": 0.275,
+    "video_export": 0.226
+  },
+  "started_at": "2026-08-09T17:04:04.026090+00:00",
+  "stop_request": null,
+  "system_peak_swap_used_bytes": 1906573312,
+  "system_peak_used_bytes": 31260966912,
+  "system_start_swap_used_bytes": 1906573312,
+  "system_start_used_bytes": 18162008064,
+  "text_encoder_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "thumbnail_sha256": "e3c08b6411e25306b931c42fdb4424f5fb0e7344644067925950ed23b93c502c",
+  "timed_out": false,
+  "worker_exit_code": 0
+}

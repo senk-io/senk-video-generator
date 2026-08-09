@@ -137,6 +137,20 @@ GENERATION_PROFILES: dict[str, dict[str, Any]] = {
             "fps": 8,
         },
     },
+    "wan_balance_backtest": {
+        "key": "wan_balance_backtest",
+        "provider_key": "wan",
+        "name": "平衡回测",
+        "description": "在 16 步出现语义形态后回测 8 步，寻找更低可用成本。",
+        "parameters": {
+            "width": 256,
+            "height": 144,
+            "num_frames": 9,
+            "num_inference_steps": 8,
+            "guidance_scale": 5.0,
+            "fps": 8,
+        },
+    },
     "wan_low_memory": {
         "key": "wan_low_memory",
         "provider_key": "wan",
