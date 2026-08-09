@@ -31,6 +31,7 @@ from operator_console.contracts import (
     validate_job_request,
     validate_persisted_job,
 )
+from pilot_project import PilotCatalog, PilotOperationError, PilotWorkspace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +39,7 @@ WEB_ROOT = Path(__file__).resolve().parent / "web"
 DEFAULT_STATE_ROOT = REPO_ROOT / ".senknet" / "operator"
 DEFAULT_EVIDENCE_ROOT = REPO_ROOT / "evidence" / "runtime"
 DEFAULT_CACHE_ROOT = Path.home() / ".cache" / "huggingface" / "hub"
+DEFAULT_PROJECTS_ROOT = REPO_ROOT / "projects"
 RUNNER_PATH = REPO_ROOT / "tools" / "run_provider_compatibility_trial.py"
 MAX_REQUEST_BYTES = 64 * 1024
 MAX_LAUNCHER_LOG_BYTES = 64 * 1024
@@ -113,6 +115,7 @@ class JobManager:
         state_root: Path = DEFAULT_STATE_ROOT,
         evidence_root: Path = DEFAULT_EVIDENCE_ROOT,
         cache_root: Path = DEFAULT_CACHE_ROOT,
+        projects_root: Path = DEFAULT_PROJECTS_ROOT,
         python_executable: str | None = None,
         runner_path: Path = RUNNER_PATH,
     ) -> None:
@@ -121,6 +124,8 @@ class JobManager:
         self.jobs_root = self.state_root / "jobs"
         self.evidence_root = evidence_root.resolve()
         self.cache_root = cache_root.resolve()
+        self.pilots = PilotCatalog(projects_root)
+        self.pilot_workspace = PilotWorkspace(self.pilots, self.state_root, self.evidence_root)
         self.python_executable = python_executable or sys.executable
         self.runner_path = runner_path.resolve()
         self.jobs_root.mkdir(parents=True, exist_ok=True)
@@ -138,6 +143,7 @@ class JobManager:
     def overview(self) -> dict[str, Any]:
         system = self.observer.system_status()
         processes = self.observer.active_processes()
+        jobs = self.list_jobs()
         return {
             "schema_version": "operator-console.v1",
             "generated_at": utc_now(),
@@ -146,7 +152,8 @@ class JobManager:
             "system": system,
             "models": self.observer.model_statuses(),
             "active_generation_processes": processes,
-            "jobs": self.list_jobs(),
+            "jobs": jobs,
+            "pilot_projects": self.pilot_workspace.overview(jobs),
             "observatory_url": "http://127.0.0.1:4319/",
             "control_boundary": {
                 "local_only": True,
@@ -155,6 +162,7 @@ class JobManager:
                 "creates_formal_fact": False,
                 "creates_selection_decision": False,
                 "creates_institution_freeze": False,
+                "pilot_project_status": "DRAFT_NON_AUTHORITATIVE",
             },
         }
 
@@ -315,6 +323,36 @@ class JobManager:
                 raise ControlError("STOP_FAILED", "无法向对应进程发送停止信号。", HTTPStatus.CONFLICT) from exc
             return self.job_detail(job_id)
 
+    def select_pilot_candidate(
+        self,
+        project_id: str,
+        shot_id: str,
+        job_id: str,
+        confirmation_shot_id: str,
+    ) -> dict[str, Any]:
+        with self._lock:
+            job = self.job_detail(job_id)
+            try:
+                return self.pilot_workspace.select_candidate(
+                    project_id,
+                    shot_id,
+                    job,
+                    confirmation_shot_id,
+                )
+            except PilotOperationError as exc:
+                raise ControlError(exc.code, exc.message, HTTPStatus.CONFLICT, exc.details) from exc
+
+    def assemble_pilot(self, project_id: str, confirmation_project_id: str) -> dict[str, Any]:
+        with self._lock:
+            try:
+                return self.pilot_workspace.assemble(
+                    project_id,
+                    confirmation_project_id,
+                    self.job_detail,
+                )
+            except PilotOperationError as exc:
+                raise ControlError(exc.code, exc.message, HTTPStatus.CONFLICT, exc.details) from exc
+
     def list_jobs(self) -> list[dict[str, Any]]:
         values = []
         if not self.jobs_root.is_dir():
@@ -356,7 +394,21 @@ class JobManager:
                 "terminal_reason": status.get("terminal_reason"),
                 "evidence_observation": evidence_summary.get("observation") if evidence_summary else None,
                 "evidence_available": evidence_summary is not None,
+                "evidence_metrics": {
+                    "elapsed_seconds": evidence_summary.get("elapsed_seconds"),
+                    "duration_seconds": (evidence_summary.get("output_metadata") or {}).get("duration_seconds"),
+                    "resolution": (evidence_summary.get("output_metadata") or {}).get("size"),
+                    "fps": (evidence_summary.get("output_metadata") or {}).get("fps"),
+                    "process_tree_peak_rss_bytes": evidence_summary.get("process_tree_peak_rss_bytes"),
+                    "mps_peak_driver_allocated_bytes": evidence_summary.get("mps_peak_driver_allocated_bytes"),
+                    "system_peak_swap_used_bytes": evidence_summary.get("system_peak_swap_used_bytes"),
+                    "cash_cost_observation": "LOCAL_NO_METERED_PROVIDER_FEE",
+                    "creative_review_required": True,
+                }
+                if evidence_summary
+                else None,
                 "launcher_log_tail": read_tail(job_dir / "launcher.log", self.repo_root),
+                "project_binding": request.get("project_binding"),
             }
             if include_events:
                 value["events"] = self._read_events(job_dir)
@@ -437,6 +489,22 @@ class JobManager:
                 profile["risk_message"],
             ),
         ]
+        if request.get("project_binding") is not None:
+            binding_valid, binding_message, shot = self.pilots.validate_binding(request)
+            checks.insert(
+                0,
+                self._check(
+                    "PILOT_SHOT_BINDING",
+                    "样片镜头合同固定",
+                    binding_valid,
+                    binding_message,
+                    {
+                        "project_binding": request.get("project_binding"),
+                        "shot_title": shot.get("title") if shot else None,
+                        "target_duration_seconds": shot.get("duration_seconds") if shot else None,
+                    },
+                ),
+            )
         return checks
 
     @staticmethod
@@ -725,6 +793,27 @@ class OperatorHandler(BaseHTTPRequestHandler):
         stop = re.fullmatch(r"/api/v1/jobs/(JOB-[A-Z0-9-]+)/stop", path)
         if stop:
             self._execute(lambda: self.control_server.manager.stop_job(stop.group(1)))
+            return
+        selection = re.fullmatch(
+            r"/api/v1/pilots/(PILOT-[A-Z0-9-]+)/shots/(SHOT-[0-9]{3})/select",
+            path,
+        )
+        if selection:
+            job_id = str(body.get("job_id", ""))
+            confirmation = str(body.get("confirmation_shot_id", ""))
+            self._execute(
+                lambda: self.control_server.manager.select_pilot_candidate(
+                    selection.group(1),
+                    selection.group(2),
+                    job_id,
+                    confirmation,
+                )
+            )
+            return
+        assembly = re.fullmatch(r"/api/v1/pilots/(PILOT-[A-Z0-9-]+)/assemble", path)
+        if assembly:
+            confirmation = str(body.get("confirmation_project_id", ""))
+            self._execute(lambda: self.control_server.manager.assemble_pilot(assembly.group(1), confirmation))
             return
         self._json({"error": {"code": "NOT_FOUND", "message": "接口不存在。"}}, HTTPStatus.NOT_FOUND)
 

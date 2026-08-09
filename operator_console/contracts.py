@@ -8,10 +8,13 @@ from typing import Any
 
 
 EXECUTION_ID_PATTERN = re.compile(r"[A-Z0-9][A-Z0-9._-]{2,127}")
-JOB_SCHEMA_VERSION = "operator-job.v3"
-LEGACY_JOB_SCHEMA_VERSIONS = frozenset({"operator-job.v2"})
+JOB_SCHEMA_VERSION = "operator-job.v4"
+LEGACY_JOB_SCHEMA_VERSIONS = frozenset({"operator-job.v2", "operator-job.v3"})
 GIB = 1024**3
 JOB_ID_PATTERN = re.compile(r"JOB-[0-9]{8}T[0-9]{6}Z-[A-F0-9]{8}")
+PROJECT_ID_PATTERN = re.compile(r"PILOT-[A-Z0-9][A-Z0-9-]{2,95}")
+SHOT_ID_PATTERN = re.compile(r"SHOT-[0-9]{3}")
+SHA256_PATTERN = re.compile(r"[a-f0-9]{64}")
 
 PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
     "wan": {
@@ -268,6 +271,8 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
     elif len(prompt) > 2000:
         errors.append({"field": "prompt", "code": "PROMPT_TOO_LONG", "message": "提示词不能超过 2000 个字符。"})
 
+    project_binding = validate_project_binding(value.get("project_binding"), errors)
+
     seed = integer_field(value, "seed", 0, 2**32 - 1, errors)
     timeout_seconds = integer_field(value, "timeout_seconds", 300, 7200, errors)
     preflight_memory = integer_field(
@@ -424,11 +429,48 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
             "mps_memory_fraction": mps_memory_fraction,
         },
         "risk_acknowledged": risk_acknowledged,
+        "project_binding": project_binding,
         "formal_fact_creation": "PROHIBITED",
         "cross_provider_contract_creation": "PROHIBITED",
         "institution_freeze_creation": "PROHIBITED",
     }
     return normalized, []
+
+
+def validate_project_binding(
+    value: Any,
+    errors: list[dict[str, str]],
+) -> dict[str, str] | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        errors.append(
+            {
+                "field": "project_binding",
+                "code": "INVALID_PROJECT_BINDING",
+                "message": "样片项目绑定必须是对象。",
+            }
+        )
+        return None
+    fields = {
+        "project_id": (PROJECT_ID_PATTERN, "样片项目标识无效。"),
+        "shot_id": (SHOT_ID_PATTERN, "镜头标识无效。"),
+        "project_contract_sha256": (SHA256_PATTERN, "样片合同摘要无效。"),
+        "prompt_sha256": (SHA256_PATTERN, "镜头提示词摘要无效。"),
+    }
+    normalized: dict[str, str] = {}
+    for field, (pattern, message) in fields.items():
+        raw = str(value.get(field, ""))
+        if not pattern.fullmatch(raw):
+            errors.append(
+                {
+                    "field": f"project_binding.{field}",
+                    "code": "INVALID_PROJECT_BINDING_FIELD",
+                    "message": message,
+                }
+            )
+        normalized[field] = raw
+    return normalized
 
 
 def integer_field(
@@ -506,6 +548,7 @@ def compile_runner_contract(job: dict[str, Any]) -> dict[str, Any]:
         "mps_fallback_to_cpu": True,
         "timeout_seconds": job["timeout_seconds"],
         "resource_budget": deepcopy(job["resource_budget"]),
+        "project_binding": deepcopy(job.get("project_binding")),
         "providers": {job["provider_key"]: provider},
         "non_goals": [
             "visual_quality_acceptance",
@@ -543,6 +586,7 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
         "max_swap_growth_bytes": resource_budget.get("max_swap_growth_bytes"),
         "mps_memory_fraction": resource_budget.get("mps_memory_fraction"),
         "risk_acknowledged": value.get("risk_acknowledged"),
+        "project_binding": value.get("project_binding"),
     }
     normalized, errors = validate_job_request(raw)
     job_id = str(value.get("job_id", ""))
@@ -566,6 +610,14 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
                         "message": f"{field} 与固定提供者配置不一致。",
                     }
                 )
+        if value.get("project_binding") != normalized.get("project_binding"):
+            errors.append(
+                {
+                    "field": "project_binding",
+                    "code": "PROTECTED_FIELD_MISMATCH",
+                    "message": "样片项目绑定与不可变作业请求不一致。",
+                }
+            )
     if errors or not normalized:
         return None, errors
     normalized["job_id"] = job_id

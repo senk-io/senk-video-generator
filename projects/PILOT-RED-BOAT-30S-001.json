@@ -1,0 +1,121 @@
+{
+  "schema_version": "pilot-project.v1",
+  "project_id": "PILOT-RED-BOAT-30S-001",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "title": "风把纸船送回岸边",
+  "logline": "一只红色纸船在平静水面遭遇微风，短暂偏航后沿着倒影找到岸边。",
+  "target": {
+    "duration_seconds": 30,
+    "aspect_ratio": "16:9",
+    "resolution": [1280, 720],
+    "fps": 24,
+    "audio": "AMBIENCE_FIRST_NO_DIALOGUE"
+  },
+  "authority": {
+    "brief_owner": "LOCAL_HUMAN_OPERATOR",
+    "generation_executor": "LOCAL_ORCHESTRATOR",
+    "creative_selection_owner": "LOCAL_HUMAN_OPERATOR",
+    "publication_owner": "LOCAL_HUMAN_OPERATOR",
+    "automatic_acceptance": "PROHIBITED"
+  },
+  "expectations": [
+    {
+      "expectation_id": "EXP-DURATION-001",
+      "owner": "LOCAL_HUMAN_OPERATOR",
+      "purpose": "把长片风险压缩到可复查的首个样片。",
+      "success": "最终时间线精确为 30 秒并包含六个顺序固定的镜头。",
+      "observable": "成片时长、镜头边界和时间线清单。",
+      "evidence": "组装清单、媒体探测记录和文件摘要。",
+      "acceptable_gap": "候选阶段允许单镜头尚未生成，不允许组装时缺镜头。",
+      "authority": "系统可检查结构，不能代替人工接受创意质量。"
+    },
+    {
+      "expectation_id": "EXP-CONTINUITY-001",
+      "owner": "LOCAL_HUMAN_OPERATOR",
+      "purpose": "保持红色纸船、日光方向与水面环境连续。",
+      "success": "六个镜头中的主体身份、主色和运动方向没有明显跳变。",
+      "observable": "逐镜头首尾帧、主体颜色和屏幕运动方向。",
+      "evidence": "候选缩略图、首尾帧接触表和人工复审记录。",
+      "acceptable_gap": "轻微水纹变化可接受；主体消失、换色或方向反转不可接受。",
+      "authority": "检查器只报告观察，最终连续性由人工选择权威决定。"
+    },
+    {
+      "expectation_id": "EXP-QUALITY-001",
+      "owner": "LOCAL_HUMAN_OPERATOR",
+      "purpose": "证明免费本地路线能形成可观看而非仅可运行的短片。",
+      "success": "主体可辨、运动稳定、无乱码文字、无严重形变，达到 1280×720 交付画面。",
+      "observable": "分辨率、稳定性、主体完整性和人工观看结果。",
+      "evidence": "媒体元数据、逐帧探针、候选比较和人工选择记录。",
+      "acceptable_gap": "结构预览可低于交付分辨率，但不得被标记为质量通过。",
+      "authority": "本地生成器只能产生候选，不能声明质量通过。"
+    }
+  ],
+  "shots": [
+    {
+      "shot_id": "SHOT-001",
+      "ordinal": 1,
+      "title": "起",
+      "duration_seconds": 5,
+      "purpose": "建立红色纸船、平静水面和柔和日光。",
+      "generation_prompt": "A small red paper boat resting on calm water, soft morning daylight, gentle ripples, cinematic wide shot, fixed camera, realistic paper texture, no people, no text.",
+      "continuity_in": "故事起点；纸船完整，船头朝画面右侧。",
+      "continuity_out": "纸船开始缓慢向右漂动。",
+      "observable_checks": ["红色纸船从第一帧可辨", "镜头保持稳定", "没有文字和人物"]
+    },
+    {
+      "shot_id": "SHOT-002",
+      "ordinal": 2,
+      "title": "漂",
+      "duration_seconds": 5,
+      "purpose": "展示纸船沿水面平稳前行。",
+      "generation_prompt": "The same small red paper boat drifting slowly from left to right across calm water, soft morning daylight, low water-level tracking shot, realistic paper texture, gentle ripples, no people, no text.",
+      "continuity_in": "承接向右运动，纸船外观与光线不变。",
+      "continuity_out": "右前方水纹开始增强。",
+      "observable_checks": ["运动方向持续向右", "纸船颜色与结构连续", "水面没有突变"]
+    },
+    {
+      "shot_id": "SHOT-003",
+      "ordinal": 3,
+      "title": "遇风",
+      "duration_seconds": 5,
+      "purpose": "微风改变水纹并制造第一次小冲突。",
+      "generation_prompt": "The same red paper boat on water as a gentle gust creates stronger ripples, the boat tilts slightly but stays intact, soft morning daylight, medium cinematic shot, subtle camera push, no people, no text.",
+      "continuity_in": "纸船继续向右，水纹逐渐增强。",
+      "continuity_out": "船头轻微偏向画面左前方。",
+      "observable_checks": ["纸船只轻微倾斜且未破损", "风由水纹体现", "不出现剧烈风暴"]
+    },
+    {
+      "shot_id": "SHOT-004",
+      "ordinal": 4,
+      "title": "转向",
+      "duration_seconds": 5,
+      "purpose": "让纸船在水流中完成可读的方向调整。",
+      "generation_prompt": "The same red paper boat gently turning in a curved current, recovering balance and pointing toward a quiet shoreline, soft morning daylight, overhead three-quarter shot, smooth motion, no people, no text.",
+      "continuity_in": "从轻微偏航开始，纸船仍完整。",
+      "continuity_out": "纸船对准远处安静岸边。",
+      "observable_checks": ["转向轨迹清楚", "主体没有瞬移", "纸船恢复平衡"]
+    },
+    {
+      "shot_id": "SHOT-005",
+      "ordinal": 5,
+      "title": "穿过倒影",
+      "duration_seconds": 5,
+      "purpose": "以暖色倒影形成抵达前的视觉高潮。",
+      "generation_prompt": "The same red paper boat gliding through a warm golden reflection on calm water toward the shoreline, soft morning sunlight, cinematic side tracking shot, delicate ripples, realistic paper texture, no people, no text.",
+      "continuity_in": "纸船朝岸边前进，光线开始变暖。",
+      "continuity_out": "岸边进入近景，纸船速度放缓。",
+      "observable_checks": ["暖色来自水面倒影", "纸船仍为红色", "岸边方向保持一致"]
+    },
+    {
+      "shot_id": "SHOT-006",
+      "ordinal": 6,
+      "title": "抵达",
+      "duration_seconds": 5,
+      "purpose": "让纸船轻触岸边并稳定结束。",
+      "generation_prompt": "The same red paper boat arriving gently at a quiet shoreline, touching the wet sand and coming to rest, warm soft daylight, close cinematic shot, calm water, realistic paper texture, no people, no text.",
+      "continuity_in": "纸船从暖色倒影驶向同一岸边。",
+      "continuity_out": "纸船完整停靠，画面平静收束。",
+      "observable_checks": ["纸船完成停靠", "结尾至少稳定一秒", "没有主体形变或消失"]
+    }
+  ]
+}

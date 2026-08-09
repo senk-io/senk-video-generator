@@ -4,6 +4,7 @@ const GIB = 1024 ** 3;
 
 const elements = {
   introStatus: document.querySelector("#introStatus"),
+  pilotProject: document.querySelector("#pilotProject"),
   providerGrid: document.querySelector("#providerGrid"),
   taskGrid: document.querySelector("#taskGrid"),
   materialNote: document.querySelector("#materialNote"),
@@ -12,6 +13,7 @@ const elements = {
   profileDescription: document.querySelector("#profileDescription"),
   strategyDescription: document.querySelector("#strategyDescription"),
   prompt: document.querySelector("#prompt"),
+  shotBinding: document.querySelector("#shotBinding"),
   promptCount: document.querySelector("#promptCount"),
   executionId: document.querySelector("#executionId"),
   generateId: document.querySelector("#generateId"),
@@ -59,6 +61,15 @@ const state = {
   refreshTimer: null,
   requestInFlight: false,
   toastTimer: null,
+  projectBinding: null,
+};
+
+const shotStateLabels = {
+  PLANNED: "待生成",
+  GENERATING: "作业中",
+  CANDIDATES_READY: "已有候选",
+  SELECTED: "已选择",
+  RETRY_AVAILABLE: "可重试",
 };
 
 const jobStateLabels = {
@@ -237,6 +248,65 @@ function renderMaterialNote() {
     : "当前是文生视频：无需选择素材，提示词是本次作业的主要生成输入。";
 }
 
+function renderPilotProject() {
+  const project = state.overview?.pilot_projects?.[0];
+  if (!project) {
+    elements.pilotProject.innerHTML = '<div class="pilot-loading">未发现可用的 30 秒样片合同。</div>';
+    return;
+  }
+  const progress = project.progress;
+  const percent = progress.shots_with_completed_candidates / Math.max(1, progress.planned_shot_count) * 100;
+  elements.pilotProject.innerHTML = `
+    <div class="pilot-head">
+      <div>
+        <span class="eyebrow">30 SECOND PILOT · DRAFT</span>
+        <div class="pilot-title-line"><h2>${escapeHtml(project.title)}</h2><span class="pilot-state">非权威样片草案</span></div>
+        <p class="pilot-copy">${escapeHtml(project.logline)} 六个镜头分别生成、失败可续跑；只有人工选中的候选才能在后续进入时间线。</p>
+      </div>
+      <div class="pilot-metrics">
+        <div class="pilot-metric"><strong>30s</strong><span>目标时长</span></div>
+        <div class="pilot-metric"><strong>${progress.shots_with_completed_candidates}/${progress.planned_shot_count}</strong><span>镜头有候选</span></div>
+        <div class="pilot-metric"><strong>${progress.selected_shot_count}</strong><span>已人工选择</span></div>
+        <button class="primary-button" type="button" data-pilot-assemble="${escapeHtml(project.project_id)}" ${progress.selected_shot_count === progress.planned_shot_count ? "" : "disabled"}>组装结构样片</button>
+      </div>
+    </div>
+    <div class="pilot-progress"><i style="width:${percent}%"></i></div>
+    <div class="shot-grid">
+      ${project.shots.map((shot) => `
+        <article class="shot-card ${state.projectBinding?.shot_id === shot.shot_id ? "is-bound" : ""}">
+          <div class="shot-card-top"><span class="shot-index">${escapeHtml(shot.shot_id)} · ${shot.duration_seconds}s</span><span class="shot-status">${escapeHtml(shotStateLabels[shot.state] || shot.state)}${shot.completed_candidate_count ? ` · ${shot.completed_candidate_count} 候选` : ""}</span></div>
+          <h3>${escapeHtml(shot.title)}</h3>
+          <p>${escapeHtml(shot.purpose)}</p>
+          ${shot.candidate_observations?.[0] ? `<p class="shot-observation">源 ${escapeHtml(shot.candidate_observations[0].source_duration_seconds || "—")}s · ${escapeHtml((shot.candidate_observations[0].source_resolution || []).join("×") || "未知尺寸")} · 仍需人工复审</p>` : ""}
+          <button class="secondary-button" type="button" data-pilot-project="${escapeHtml(project.project_id)}" data-pilot-shot="${escapeHtml(shot.shot_id)}">${state.projectBinding?.shot_id === shot.shot_id ? "已载入" : "准备此镜头"}</button>
+        </article>`).join("")}
+    </div>`;
+}
+
+function loadPilotShot(projectId, shotId) {
+  const project = state.overview?.pilot_projects?.find((item) => item.project_id === projectId);
+  const shot = project?.shots.find((item) => item.shot_id === shotId);
+  if (!project || !shot) {
+    showToast("无法读取对应镜头合同。");
+    return;
+  }
+  state.projectBinding = {
+    project_id: project.project_id,
+    shot_id: shot.shot_id,
+    project_contract_sha256: project.contract_sha256,
+    prompt_sha256: shot.prompt_sha256,
+  };
+  elements.prompt.value = shot.generation_prompt;
+  elements.promptCount.textContent = `${elements.prompt.value.length} / 2000`;
+  elements.shotBinding.textContent = `已绑定 ${project.project_id} / ${shot.shot_id} · ${shot.title}；修改提示词会使合同预检失败。`;
+  elements.shotBinding.classList.add("is-active");
+  elements.executionId.value = newExecutionId();
+  invalidatePreflight();
+  renderPilotProject();
+  elements.prompt.scrollIntoView({ behavior: "smooth", block: "center" });
+  showToast(`已载入 ${shot.shot_id}；尚未登记或启动模型。`);
+}
+
 function newExecutionId() {
   const date = new Date();
   const stamp = [
@@ -248,7 +318,8 @@ function newExecutionId() {
     String(date.getMinutes()).padStart(2, "0"),
     String(date.getSeconds()).padStart(2, "0"),
   ].join("");
-  return `LOCAL-${state.providerKey.toUpperCase()}-${stamp}`;
+  const shotPart = state.projectBinding?.shot_id ? `-${state.projectBinding.shot_id}` : "";
+  return `LOCAL-${state.providerKey.toUpperCase()}${shotPart}-${stamp}`;
 }
 
 function formRequest() {
@@ -275,6 +346,7 @@ function formRequest() {
     max_swap_growth_bytes: Number(elements.swapGrowth.value) * GIB,
     mps_memory_fraction: Number(elements.mpsFraction.value) / 100,
     risk_acknowledged: elements.riskAcknowledged.checked,
+    project_binding: state.projectBinding,
   };
 }
 
@@ -406,7 +478,7 @@ function renderJobs() {
   elements.jobList.innerHTML = jobs.length
     ? jobs.map((job) => `
         <button class="job-item ${job.job_id === state.selectedJobId ? "is-selected" : ""}" type="button" data-job-id="${escapeHtml(job.job_id)}">
-          <span class="job-item-top"><span>${escapeHtml(job.provider_key.toUpperCase())}</span>${jobStateBadge(job)}</span>
+          <span class="job-item-top"><span>${escapeHtml(job.project_binding?.shot_id || job.provider_key.toUpperCase())}</span>${jobStateBadge(job)}</span>
           <strong>${escapeHtml(job.execution_id)}</strong>
           <p>${escapeHtml(job.prompt)}</p>
         </button>`).join("")
@@ -450,12 +522,61 @@ function renderConfirmation() {
   } else {
     const events = (job.events || []).slice().reverse().map((event) => `
       <div class="event-row"><span>${String(event.sequence).padStart(2, "0")}</span><div><strong>${escapeHtml(event.event_type)}</strong><time>${escapeHtml(formatTime(event.recorded_at))}</time></div></div>`).join("");
+    const binding = job.project_binding;
+    const metrics = job.evidence_metrics;
+    const evidenceControls = metrics ? `
+      <div class="confirm-title"><span>候选媒体观察</span><strong>${escapeHtml(metrics.duration_seconds || "—")}s · ${escapeHtml((metrics.resolution || []).join("×") || "未知尺寸")} · ${escapeHtml(metrics.fps || "—")} fps</strong></div>
+      <div class="confirm-title"><span>资源峰值</span><strong>进程 ${formatBytes(metrics.process_tree_peak_rss_bytes)} · MPS ${formatBytes(metrics.mps_peak_driver_allocated_bytes)}</strong></div>` : "";
+    const selectionControl = job.state === "COMPLETED" && binding ? `
+      <p class="confirm-instruction">该输出只是 ${escapeHtml(binding.shot_id)} 的候选。输入镜头标识后，才把它选入当前结构时间线。</p>
+      <input class="confirm-input" id="selectionInput" autocomplete="off" placeholder="输入 ${escapeHtml(binding.shot_id)}">
+      <button class="primary-button" id="selectCandidateButton" type="button" disabled>选为当前镜头</button>` : "";
     elements.confirmationCard.innerHTML = `${head}
       <div class="confirm-spec">
         <div class="confirm-title"><span>终止原因</span><strong>${escapeHtml(job.terminal_reason || "—")}</strong></div>
+        ${evidenceControls}
         <a class="secondary-button observatory-link" href="http://127.0.0.1:4319/?execution_id=${encodeURIComponent(job.execution_id)}" target="_blank" rel="noopener">查看执行证据 ↗</a>
+        ${selectionControl}
         <div class="job-events">${events}</div>
       </div>`;
+    if (binding && job.state === "COMPLETED") {
+      const input = document.querySelector("#selectionInput");
+      const button = document.querySelector("#selectCandidateButton");
+      input.addEventListener("input", () => { button.disabled = input.value !== binding.shot_id; });
+      button.addEventListener("click", () => selectCandidate(job, binding, input.value));
+    }
+  }
+}
+
+async function selectCandidate(job, binding, confirmation) {
+  const button = document.querySelector("#selectCandidateButton");
+  button.disabled = true;
+  button.textContent = "选择中…";
+  try {
+    await apiPost(`/api/v1/pilots/${encodeURIComponent(binding.project_id)}/shots/${encodeURIComponent(binding.shot_id)}/select`, {
+      job_id: job.job_id,
+      confirmation_shot_id: confirmation,
+    });
+    showToast(`${binding.shot_id} 已选择；这不是质量通过。`);
+    await refreshOverview();
+  } catch (error) {
+    showToast(`候选选择失败：${error.message}`);
+    button.disabled = false;
+    button.textContent = "选为当前镜头";
+  }
+}
+
+async function assemblePilot(projectId) {
+  const confirmation = window.prompt(`输入完整项目标识以组装 30 秒结构样片：\n${projectId}`);
+  if (confirmation === null) return;
+  try {
+    const result = await apiPost(`/api/v1/pilots/${encodeURIComponent(projectId)}/assemble`, {
+      confirmation_project_id: confirmation,
+    });
+    showToast(`结构样片已组装：${result.assembly_id}。`);
+    await refreshOverview();
+  } catch (error) {
+    showToast(`组装失败：${error.message}`);
   }
 }
 
@@ -535,6 +656,7 @@ async function refreshOverview() {
     elements.freshness.dateTime = state.overview.generated_at;
     elements.freshness.textContent = formatTime(state.overview.generated_at);
     renderHost();
+    renderPilotProject();
     renderJobs();
     if (state.selectedJobId) {
       const selectedExists = state.overview.jobs.some((job) => job.job_id === state.selectedJobId);
@@ -569,6 +691,15 @@ elements.jobForm.addEventListener("change", invalidatePreflight);
 elements.jobList.addEventListener("click", (event) => {
   const item = event.target.closest("[data-job-id]");
   if (item) selectJob(item.dataset.jobId);
+});
+elements.pilotProject.addEventListener("click", (event) => {
+  const assemblyButton = event.target.closest("[data-pilot-assemble]");
+  if (assemblyButton) {
+    assemblePilot(assemblyButton.dataset.pilotAssemble);
+    return;
+  }
+  const button = event.target.closest("[data-pilot-shot]");
+  if (button) loadPilotShot(button.dataset.pilotProject, button.dataset.pilotShot);
 });
 document.addEventListener("visibilitychange", scheduleRefresh);
 

@@ -6,6 +6,12 @@
   "device": "mps",
   "mps_fallback_to_cpu": true,
   "timeout_seconds": 7200,
+  "execution_strategy": "mps_model_offload_bounded",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "max_swap_growth_bytes": 4294967296,
+    "mps_memory_fraction": 0.65
+  },
   "providers": {
     "wan": {
       "provider_identity": "Wan-AI",

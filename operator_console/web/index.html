@@ -46,6 +46,10 @@
         </div>
       </section>
 
+      <section class="card pilot-card" id="pilotProject">
+        <div class="pilot-loading">正在读取 30 秒样片合同…</div>
+      </section>
+
       <div class="workspace-grid">
         <form class="composer" id="jobForm" novalidate>
           <section class="card form-section">
@@ -65,6 +69,7 @@
             </div>
             <label class="field prompt-field">
               <span class="field-label">提示词 <em>必填</em></span>
+              <span class="shot-binding" id="shotBinding">当前为独立作业，尚未绑定样片镜头。</span>
               <textarea id="prompt" name="prompt" rows="6" maxlength="2000" placeholder="描述主体、动作、环境、镜头、光线与不希望出现的文字……"></textarea>
               <span class="field-foot"><span id="promptHint">建议明确镜头运动和场景约束</span><span id="promptCount">0 / 2000</span></span>
             </label>
