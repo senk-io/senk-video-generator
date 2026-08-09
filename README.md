@@ -6,6 +6,12 @@
 
 本地目录与 `senk-io/senknet-video-generator` 组织仓库是同一项目的本地和远端载体，不构成两个独立项目，也不能互相充当跨项目适用性样本。基础层中具有通用表述的制度候选仍须按 `IF-0007` 证明其适用范围；该要求不得被解释为允许本项目隐式进入其他产品边界。
 
+## 开源使用入口
+
+项目采用 `Apache-2.0` 许可证。模型权重不包含在本仓库中，使用者须分别遵守模型发布方的许可证和使用条件。
+
+苹果芯片 Mac 上的 `Wan2.1-T2V-1.3B`、`CogVideoX-2B` 安装、运行、证据生成和失败排查方法见 [`docs/provider-compatibility-trials.md`](docs/provider-compatibility-trials.md)。固定依赖位于 [`requirements-provider-compat.txt`](requirements-provider-compat.txt)，固定试运行输入位于 [`experiments/provider_compatibility/trial_contract.json`](experiments/provider_compatibility/trial_contract.json)。
+
 ## 五层结构
 
 ```text

@@ -22,7 +22,7 @@ Institution Freeze Created: NO
 
 ```text
 Canonical Project: senknet-video-generator
-Local Carrier: /Users/bakboem/work/senk/senknet/senknet-video-generator
+Local Carrier: senknet/senknet-video-generator
 Remote Carrier: senk-io/senknet-video-generator
 Carrier Count: 2
 Independent Product Project Count Represented By Carriers: 1

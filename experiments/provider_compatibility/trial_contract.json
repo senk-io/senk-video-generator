@@ -1,0 +1,53 @@
+{
+  "contract_id": "CR-0019-PROVIDER-COMPATIBILITY-TRIAL-CONTRACT-001",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "shared_prompt": "A small red paper boat drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+  "shared_seed": 42,
+  "device": "mps",
+  "mps_fallback_to_cpu": true,
+  "timeout_seconds": 7200,
+  "providers": {
+    "wan": {
+      "provider_identity": "Wan-AI",
+      "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+      "dtype": "bfloat16",
+      "vae_dtype": "float32",
+      "height": 240,
+      "width": 416,
+      "num_frames": 17,
+      "num_inference_steps": 4,
+      "guidance_scale": 5.0,
+      "fps": 8
+    },
+    "cogvideox": {
+      "provider_identity": "zai-org",
+      "model_id": "zai-org/CogVideoX-2b",
+      "dtype": "float16",
+      "height": 480,
+      "width": 720,
+      "num_frames": 9,
+      "num_inference_steps": 4,
+      "guidance_scale": 6.0,
+      "fps": 8
+    }
+  },
+  "observations": [
+    "model_snapshot_resolved",
+    "pipeline_loaded",
+    "mps_transfer_completed",
+    "inference_completed",
+    "video_export_completed",
+    "elapsed_seconds",
+    "process_tree_peak_rss_bytes",
+    "system_peak_used_bytes",
+    "system_peak_swap_used_bytes",
+    "mps_peak_driver_allocated_bytes",
+    "output_sha256"
+  ],
+  "non_goals": [
+    "visual_quality_acceptance",
+    "cross_provider_contract_creation",
+    "institution_freeze",
+    "production_readiness"
+  ]
+}

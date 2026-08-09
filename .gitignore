@@ -1,5 +1,6 @@
 .DS_Store
 __pycache__/
 *.py[cod]
+.venv-provider-compat/
 evidence/runtime/**/governance.db-shm
 evidence/runtime/**/governance.db-wal
