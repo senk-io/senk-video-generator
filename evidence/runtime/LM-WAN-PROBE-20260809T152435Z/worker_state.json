@@ -1,0 +1,31 @@
+{
+  "execution_id": "LM-WAN-PROBE-20260809T152435Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "generation_profile_key": "wan_probe",
+  "inference_completed": false,
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
+  "mps_memory_limit": {
+    "configured_limit_bytes": 22613004288,
+    "fraction": 0.75,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_post_release": null,
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->transformer_2->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "output_export_completed": false,
+  "phase": "RUNNING_INFERENCE",
+  "pipeline_loaded": true,
+  "provider_key": "wan",
+  "stage_elapsed_seconds": {
+    "mps_strategy_activation": 0.015,
+    "mps_transfer": 0.015,
+    "pipeline_load": 28.482,
+    "snapshot_resolution": 0.359
+  },
+  "started_at": "2026-08-09T15:24:39.931450+00:00"
+}

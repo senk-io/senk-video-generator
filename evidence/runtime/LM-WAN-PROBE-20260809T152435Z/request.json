@@ -1,0 +1,36 @@
+{
+  "contract_id": "JOB-20260809T152436Z-1A60AB38",
+  "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
+  "created_at": "2026-08-09T15:24:36.076206+00:00",
+  "cross_provider_contract_creation": "PROHIBITED",
+  "device": "mps",
+  "execution_id": "LM-WAN-PROBE-20260809T152435Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "formal_fact_creation": "PROHIBITED",
+  "generation_profile_key": "wan_probe",
+  "job_id": "JOB-20260809T152436Z-1A60AB38",
+  "mps_fallback_to_cpu": true,
+  "prompt": "A small red paper boat drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+  "provider": {
+    "dtype": "bfloat16",
+    "fps": 8,
+    "guidance_scale": 5.0,
+    "height": 144,
+    "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+    "num_frames": 9,
+    "num_inference_steps": 1,
+    "provider_identity": "Wan-AI",
+    "vae_dtype": "float32",
+    "width": 256
+  },
+  "provider_key": "wan",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 3221225472,
+    "max_swap_growth_bytes": 8589934592,
+    "mps_memory_fraction": 0.75,
+    "preflight_min_available_memory_bytes": 10737418240
+  },
+  "seed": 42,
+  "task_type": "text_to_video",
+  "timeout_seconds": 3600
+}

@@ -213,9 +213,10 @@ manifest.json
 | 模型 | 当前结论 | 精确快照 | 关键观察 |
 | --- | --- | --- | --- |
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` | 已完成一次真实生成与证据闭包 | `0fad780a534b6463e45facd96134c9f345acfa5b` | 缓存约 27G；总耗时 2730.198 秒，其中首次快照解析 2661.848 秒；17 帧、416×240、8 fps；Metal 驱动分配峰值 30,979,096,576 字节；交换空间较启动时增加约 23.39GB |
+| `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 低内存探针 | 管线和分阶段策略成功激活，推理阶段由换页护栏终止 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、1 步；管线装载 28.482 秒；MPS 驱动采样峰值 4,210,524,160 字节；新增换页 9,075,425,280 字节，超过 8 GiB 预算；无视频输出；执行标识 `LM-WAN-PROBE-20260809T152435Z` |
 | `zai-org/CogVideoX-2b` | 只完成下载；实际生成能力仍未知 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 19 个文件；逻辑大小 13,775,572,738 字节，缓存约 13G；纯下载 1196.81 秒；下载进程最大常驻内存 4,005,658,624 字节；未导入 PyTorch、未使用 Metal、未执行生成 |
 
-Wan2.1 的可审计证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`。CogVideoX 的下载成功不能推出管线可装载、可转移到 Metal 或可完成推理；这些结论必须等待另一次明确授权的低内存生成试运行。
+Wan2.1 的成功生成证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，低内存探针失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`。CogVideoX 的下载成功不能推出管线可装载、可转移到 Metal 或可完成推理；这些结论必须等待另一次明确授权的低内存生成试运行。
 
 更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
 

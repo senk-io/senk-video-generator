@@ -1,0 +1,4 @@
+{"elapsed_seconds": 0.002, "mps_current_allocated_bytes": 0, "mps_driver_allocated_bytes": 475136}
+{"elapsed_seconds": 0.256, "mps_current_allocated_bytes": 2100305920, "mps_driver_allocated_bytes": 4210524160}
+{"elapsed_seconds": 0.508, "mps_current_allocated_bytes": 2100305920, "mps_driver_allocated_bytes": 4210524160}
+{"elapsed_seconds": 0.762, "mps_current_allocated_bytes": 2100305920, "mps_driver_allocated_bytes": 4210524160}
