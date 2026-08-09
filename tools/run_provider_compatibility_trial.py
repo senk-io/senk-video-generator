@@ -677,6 +677,55 @@ def prepare_wan_prompt_embeddings(
     observation_callback: Any = None,
 ) -> dict[str, Any]:
     """以叶级顺序卸载形成提示词嵌入，随后在装载 Transformer 前完整释放。"""
+    return prepare_prompt_embeddings(
+        snapshot_path=snapshot_path,
+        prompt=prompt,
+        torch_module=torch_module,
+        tokenizer_class=tokenizer_class,
+        text_encoder_class=text_encoder_class,
+        pipeline_class=pipeline_class,
+        text_dtype=torch_module.bfloat16,
+        max_sequence_length=512,
+        observation_callback=observation_callback,
+    )
+
+
+def prepare_cogvideox_prompt_embeddings(
+    snapshot_path: Path,
+    prompt: str,
+    torch_module: Any,
+    tokenizer_class: Any,
+    text_encoder_class: Any,
+    pipeline_class: Any,
+    observation_callback: Any = None,
+) -> dict[str, Any]:
+    """独立形成 CogVideoX 提示词嵌入并释放约九吉字节文本编码器。"""
+    return prepare_prompt_embeddings(
+        snapshot_path=snapshot_path,
+        prompt=prompt,
+        torch_module=torch_module,
+        tokenizer_class=tokenizer_class,
+        text_encoder_class=text_encoder_class,
+        pipeline_class=pipeline_class,
+        text_dtype=torch_module.float16,
+        max_sequence_length=226,
+        observation_callback=observation_callback,
+    )
+
+
+def prepare_prompt_embeddings(
+    *,
+    snapshot_path: Path,
+    prompt: str,
+    torch_module: Any,
+    tokenizer_class: Any,
+    text_encoder_class: Any,
+    pipeline_class: Any,
+    text_dtype: Any,
+    max_sequence_length: int,
+    observation_callback: Any = None,
+) -> dict[str, Any]:
+    """以叶级顺序卸载形成提示词嵌入，并在装载去噪组件前释放编码器。"""
     stage_pipe = None
     tokenizer = None
     text_encoder = None
@@ -691,7 +740,7 @@ def prepare_wan_prompt_embeddings(
         text_encoder = text_encoder_class.from_pretrained(
             snapshot_path,
             subfolder="text_encoder",
-            torch_dtype=torch_module.bfloat16,
+            torch_dtype=text_dtype,
             low_cpu_mem_usage=True,
             local_files_only=True,
         )
@@ -711,9 +760,9 @@ def prepare_wan_prompt_embeddings(
                 negative_prompt="",
                 do_classifier_free_guidance=True,
                 num_videos_per_prompt=1,
-                max_sequence_length=512,
+                max_sequence_length=max_sequence_length,
                 device=torch_module.device("mps"),
-                dtype=torch_module.bfloat16,
+                dtype=text_dtype,
             )
         torch_module.mps.synchronize()
         result["prompt_embeds"] = prompt_embeds.detach().to("cpu")
@@ -778,6 +827,47 @@ def build_wan_denoiser_pipeline(
     return pipe
 
 
+def build_cogvideox_denoiser_pipeline(
+    snapshot_path: Path,
+    torch_module: Any,
+    transformer_class: Any,
+    vae_class: Any,
+    scheduler_class: Any,
+    pipeline_class: Any,
+) -> Any:
+    """在文本编码器释放后装载 CogVideoX 去噪器和 VAE。"""
+    transformer = transformer_class.from_pretrained(
+        snapshot_path,
+        subfolder="transformer",
+        torch_dtype=torch_module.float16,
+        low_cpu_mem_usage=True,
+        local_files_only=True,
+    )
+    vae = vae_class.from_pretrained(
+        snapshot_path,
+        subfolder="vae",
+        torch_dtype=torch_module.float16,
+        low_cpu_mem_usage=True,
+        local_files_only=True,
+    )
+    scheduler = scheduler_class.from_pretrained(
+        snapshot_path,
+        subfolder="scheduler",
+        local_files_only=True,
+    )
+    pipe = pipeline_class(
+        tokenizer=None,
+        text_encoder=None,
+        vae=vae,
+        scheduler=scheduler,
+        transformer=transformer,
+    )
+    pipe.vae.enable_slicing()
+    pipe.vae.enable_tiling()
+    pipe.enable_attention_slicing()
+    return pipe
+
+
 def normalize_mps_float64_buffers(module: Any, torch_module: Any) -> list[dict[str, Any]]:
     """把模型中 MPS 无法承载的 float64 缓冲区降为 float32。"""
     normalized: list[dict[str, Any]] = []
@@ -803,12 +893,19 @@ def run_worker(args: argparse.Namespace) -> int:
     import imageio.v2 as imageio
     import numpy as np
     import torch
-    from diffusers import AutoencoderKLWan, CogVideoXPipeline, WanPipeline, WanTransformer3DModel
-    from diffusers.schedulers import UniPCMultistepScheduler
+    from diffusers import (
+        AutoencoderKLCogVideoX,
+        AutoencoderKLWan,
+        CogVideoXPipeline,
+        CogVideoXTransformer3DModel,
+        WanPipeline,
+        WanTransformer3DModel,
+    )
+    from diffusers.schedulers import CogVideoXDDIMScheduler, UniPCMultistepScheduler
     from diffusers.utils import export_to_video
     from huggingface_hub import snapshot_download
     from safetensors.torch import save_file as save_safetensors
-    from transformers import AutoTokenizer, UMT5EncoderModel
+    from transformers import AutoTokenizer, T5EncoderModel, UMT5EncoderModel
 
     contract, _ = load_execution_contract(args)
     provider = contract["providers"][args.provider]
@@ -883,20 +980,31 @@ def run_worker(args: argparse.Namespace) -> int:
         state["model_snapshot_revision"] = snapshot_path.name
         state["stage_elapsed_seconds"]["snapshot_resolution"] = round(time.perf_counter() - stage_start, 3)
         execution_strategy = contract.get("execution_strategy", "mps_full_bounded")
-        if args.provider == "wan" and execution_strategy == "mps_model_offload_bounded":
+        if args.provider in {"wan", "cogvideox"} and execution_strategy == "mps_model_offload_bounded":
             state["component_residency_strategy"] = "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER"
             state["phase"] = "ENCODING_PROMPT"
             write_json(state_path, state)
             stage_start = time.perf_counter()
-            prompt_stage = prepare_wan_prompt_embeddings(
-                snapshot_path,
-                contract["shared_prompt"],
-                torch,
-                AutoTokenizer,
-                UMT5EncoderModel,
-                WanPipeline,
-                record_prompt_observation,
-            )
+            if args.provider == "wan":
+                prompt_stage = prepare_wan_prompt_embeddings(
+                    snapshot_path,
+                    contract["shared_prompt"],
+                    torch,
+                    AutoTokenizer,
+                    UMT5EncoderModel,
+                    WanPipeline,
+                    record_prompt_observation,
+                )
+            else:
+                prompt_stage = prepare_cogvideox_prompt_embeddings(
+                    snapshot_path,
+                    contract["shared_prompt"],
+                    torch,
+                    AutoTokenizer,
+                    T5EncoderModel,
+                    CogVideoXPipeline,
+                    record_prompt_observation,
+                )
             prompt_embeds = prompt_stage["prompt_embeds"]
             negative_prompt_embeds = prompt_stage["negative_prompt_embeds"]
             state["prompt_encoding_completed"] = True
@@ -910,14 +1018,28 @@ def run_worker(args: argparse.Namespace) -> int:
             state["phase"] = "LOADING_DENOISER_PIPELINE"
             write_json(state_path, state)
             stage_start = time.perf_counter()
-            pipe = build_wan_denoiser_pipeline(
-                snapshot_path,
-                torch,
-                WanTransformer3DModel,
-                AutoencoderKLWan,
-                UniPCMultistepScheduler,
-                WanPipeline,
-            )
+            if args.provider == "wan":
+                pipe = build_wan_denoiser_pipeline(
+                    snapshot_path,
+                    torch,
+                    WanTransformer3DModel,
+                    AutoencoderKLWan,
+                    UniPCMultistepScheduler,
+                    WanPipeline,
+                )
+            else:
+                pipe = build_cogvideox_denoiser_pipeline(
+                    snapshot_path,
+                    torch,
+                    CogVideoXTransformer3DModel,
+                    AutoencoderKLCogVideoX,
+                    CogVideoXDDIMScheduler,
+                    CogVideoXPipeline,
+                )
+                state["mps_dtype_normalization"] = normalize_mps_float64_buffers(
+                    pipe.transformer,
+                    torch,
+                )
         else:
             state["component_residency_strategy"] = "FULL_PIPELINE_LOAD"
             state["phase"] = "LOADING_PIPELINE"

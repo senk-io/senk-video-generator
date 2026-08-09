@@ -21,19 +21,21 @@ from operator_console.server import ControlError, JobManager, WEB_ROOT, create_s
 from tools.run_provider_compatibility_trial import (
     WorkerStageFailure,
     activate_pipeline_strategy,
+    build_cogvideox_denoiser_pipeline,
     build_wan_denoiser_pipeline,
     configure_mps_memory_limit,
     load_execution_contract,
     max_jsonl_metric,
     normalize_mps_float64_buffers,
     observe_resource_budget,
+    prepare_cogvideox_prompt_embeddings,
     prepare_wan_prompt_embeddings,
     request_worker_stop,
     release_pipeline_memory,
     validate_bounded_trial_variant,
 )
 from tools.decode_cogvideox_latent import preflight_block_reason, validate_decode_source
-from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
+from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract, verify_staged_prompt_release
 
 
 class FakeObserver:
@@ -499,6 +501,103 @@ else:
         )
         self.assertEqual(observations["text_encoder_post_release"]["driver_allocated_bytes"], 0)
 
+    def test_cogvideox_text_encoder_is_released_before_denoiser_load(self) -> None:
+        events: list[str] = []
+        encode_options: dict = {}
+
+        class FakeTensor:
+            def detach(self):
+                return self
+
+            def to(self, *_args, **_kwargs):
+                return self
+
+        class FakeMps:
+            synchronize = staticmethod(lambda: events.append("mps_synchronize"))
+            empty_cache = staticmethod(lambda: events.append("mps_empty_cache"))
+            current_allocated_memory = staticmethod(lambda: 0)
+            driver_allocated_memory = staticmethod(lambda: 0)
+
+        class FakeInferenceMode:
+            def __enter__(self):
+                events.append("inference_mode_enter")
+
+            def __exit__(self, *_args):
+                events.append("inference_mode_exit")
+
+        fake_torch = SimpleNamespace(
+            float16="float16",
+            device=lambda value: value,
+            inference_mode=FakeInferenceMode,
+            mps=FakeMps(),
+        )
+
+        def component(name: str):
+            class Component:
+                @classmethod
+                def from_pretrained(cls, *_args, **_kwargs):
+                    events.append(name)
+                    return cls()
+
+            return Component
+
+        class FakeVae:
+            def enable_slicing(self) -> None:
+                events.append("vae_slicing")
+
+            def enable_tiling(self) -> None:
+                events.append("vae_tiling")
+
+        class FakeVaeComponent:
+            @classmethod
+            def from_pretrained(cls, *_args, **_kwargs):
+                events.append("vae")
+                return FakeVae()
+
+        class FakePipeline:
+            def __init__(self, **kwargs) -> None:
+                self.kwargs = kwargs
+                self.vae = kwargs.get("vae")
+                events.append("pipeline")
+
+            def enable_sequential_cpu_offload(self, device: str) -> None:
+                events.append(f"sequential_offload:{device}")
+
+            def encode_prompt(self, **kwargs):
+                encode_options.update(kwargs)
+                events.append("encode_prompt")
+                return FakeTensor(), FakeTensor()
+
+            def remove_all_hooks(self) -> None:
+                events.append("release_text_encoder")
+
+            def enable_attention_slicing(self) -> None:
+                events.append("attention_slicing")
+
+        prompt = prepare_cogvideox_prompt_embeddings(
+            Path("/snapshot"),
+            "A paper boat.",
+            fake_torch,
+            component("tokenizer"),
+            component("text_encoder"),
+            FakePipeline,
+        )
+        pipe = build_cogvideox_denoiser_pipeline(
+            Path("/snapshot"),
+            fake_torch,
+            component("transformer"),
+            FakeVaeComponent,
+            component("scheduler"),
+            FakePipeline,
+        )
+
+        self.assertIsInstance(prompt["prompt_embeds"], FakeTensor)
+        self.assertEqual(encode_options["max_sequence_length"], 226)
+        self.assertEqual(encode_options["dtype"], "float16")
+        self.assertLess(events.index("release_text_encoder"), events.index("transformer"))
+        self.assertIsNone(pipe.kwargs["text_encoder"])
+        self.assertIn("vae_tiling", events)
+
     def test_parent_stop_and_metric_fallback_preserve_abort_evidence(self) -> None:
         class FakeChild:
             terminated = False
@@ -573,6 +672,10 @@ else:
         summary["mps_post_release"] = None
         with self.assertRaisesRegex(ValueError, "主动释放"):
             verify_operator_memory_contract(request, summary)
+
+        verify_staged_prompt_release(summary | {"mps_post_release": {"current_allocated_bytes": 0}})
+        with self.assertRaisesRegex(ValueError, "文本编码器释放观察"):
+            verify_staged_prompt_release(summary | {"text_encoder_post_release": None})
 
         early_failure = {
             "execution_strategy": "mps_model_offload_bounded",

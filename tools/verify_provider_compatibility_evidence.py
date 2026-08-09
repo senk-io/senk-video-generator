@@ -69,6 +69,18 @@ def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, 
         raise ValueError("完成推理后缺少 MPS 主动释放观察")
 
 
+def verify_staged_prompt_release(summary: dict[str, Any]) -> None:
+    if summary.get("component_residency_strategy") != "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER":
+        return
+    if summary.get("pipeline_loaded") and not summary.get("prompt_encoding_completed"):
+        raise ValueError("分阶段去噪管线已装载但提示词编码未闭合")
+    if summary.get("prompt_encoding_completed") and not summary.get("text_encoder_post_release"):
+        raise ValueError("提示词编码完成后缺少文本编码器释放观察")
+    activation = summary.get("prompt_stage_activation") or {}
+    if summary.get("prompt_encoding_completed") and activation.get("strategy") != "mps_sequential_cpu_offload":
+        raise ValueError("提示词编码缺少叶级顺序卸载证据")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("evidence_dir")
@@ -113,6 +125,7 @@ def main() -> int:
 
     try:
         verify_operator_memory_contract(request, summary)
+        verify_staged_prompt_release(summary)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
