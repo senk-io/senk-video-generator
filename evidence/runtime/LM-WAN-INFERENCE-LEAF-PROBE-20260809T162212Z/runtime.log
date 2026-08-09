@@ -1,0 +1,21 @@
+
+Fetching 31 files:   0%|          | 0/31 [00:00<?, ?it/s]
+Fetching 31 files: 100%|██████████| 31/31 [00:00<00:00, 9351.51it/s]
+`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading checkpoint shards:  20%|██        | 1/5 [00:01<00:07,  1.99s/it]
+Loading checkpoint shards:  40%|████      | 2/5 [00:04<00:06,  2.00s/it]
+Loading checkpoint shards:  60%|██████    | 3/5 [00:06<00:04,  2.03s/it]
+Loading checkpoint shards:  80%|████████  | 4/5 [00:08<00:02,  2.31s/it]
+Loading checkpoint shards: 100%|██████████| 5/5 [00:10<00:00,  2.18s/it]
+Loading checkpoint shards: 100%|██████████| 5/5 [00:10<00:00,  2.15s/it]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.24s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.10s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.27s/it]
+
+  0%|          | 0/1 [00:00<?, ?it/s]
+100%|██████████| 1/1 [00:01<00:00,  1.03s/it]
+100%|██████████| 1/1 [00:01<00:00,  1.03s/it]

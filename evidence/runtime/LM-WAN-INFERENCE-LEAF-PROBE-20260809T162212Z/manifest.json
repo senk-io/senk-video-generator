@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-08-09T16:22:38.133228+00:00",
+  "file_count": 9,
+  "files": [
+    {
+      "bytes": 1071,
+      "path": "environment.json",
+      "sha256": "399792d675fd3a6479c7ae78f7ecc5e52b9c30ef00ff9c80c5ca9aea9c0a0456"
+    },
+    {
+      "bytes": 8687,
+      "path": "mps_metrics.jsonl",
+      "sha256": "70cfd8515714646d8d49e590e2ff7ba12494f0bbc6984dd54e3536ae160d56a0"
+    },
+    {
+      "bytes": 11712,
+      "path": "output.mp4",
+      "sha256": "542141f2c4a90edd2f17005940d167ed2dcf7cbe0f273a6fcb02f4b312eb47b8"
+    },
+    {
+      "bytes": 7788,
+      "path": "process_metrics.jsonl",
+      "sha256": "b008005c81bdec7f4551963dbec232f1bfca465c273a0cc436fde635ba1cce6a"
+    },
+    {
+      "bytes": 1255,
+      "path": "request.json",
+      "sha256": "a949a5df16a769999c4f4dd43cede89ee9770825fe1ccdd89a3fd1ae55536135"
+    },
+    {
+      "bytes": 1288,
+      "path": "runtime.log",
+      "sha256": "3ca3da1505673d8d3cb1bc41ef56b83281a8742bd37937c46b5add57b93a37db"
+    },
+    {
+      "bytes": 2883,
+      "path": "summary.json",
+      "sha256": "f0ee124495665645072ca7434ee1413ab1e59e92d90cfd43b539a4cb4326b0b6"
+    },
+    {
+      "bytes": 30673,
+      "path": "thumbnail.png",
+      "sha256": "3dc5f6d447524b2646205bab4efac54b63792350fcbdb7c3c2117e7d81497698"
+    },
+    {
+      "bytes": 1916,
+      "path": "worker_state.json",
+      "sha256": "f4c137535a08ac4a57291108ef8557284ec82f6e0fb4cac45f37a7b1a2cb5453"
+    }
+  ]
+}

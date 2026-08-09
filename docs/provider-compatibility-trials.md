@@ -204,7 +204,7 @@ manifest.json
 5. 只有探针稳定闭合，才允许使用“低内存生成”档位；
 6. CogVideoX 仍保持阻断，必须建立自己的装载和推理观察后才能解除。
 
-文本编码器独立阶段已形成两次真实失败观察：`LM-WAN-STAGED-PROBE-20260809T161019Z` 证明模型级卸载会让完整 UMT5 进入 MPS；`LM-WAN-LEAF-PROBE-20260809T161726Z` 证明直接调用 `encode_prompt` 时若未禁用自动求导，叶级卸载仍会累积中间状态并触及上限。运行器现已同时启用叶级顺序卸载与 `torch.inference_mode()`，但这一组合的实际峰值、耗时、换页增长和输出能力尚未观察。不得用旧成功记录或这些失败记录替代新组合的现实证据。
+文本编码器独立阶段形成两次真实失败观察：`LM-WAN-STAGED-PROBE-20260809T161019Z` 证明模型级卸载会让完整 UMT5 进入 MPS；`LM-WAN-LEAF-PROBE-20260809T161726Z` 证明直接调用 `encode_prompt` 时若未禁用自动求导，叶级卸载仍会累积中间状态并触及上限。启用叶级顺序卸载与 `torch.inference_mode()` 后，`LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z` 完成了提示词编码、文本编码器释放、去噪管线装载、推理、视频导出和证据闭包。该结果只允许认定固定内存探针可运行，不得外推到更高档位或画面质量。
 
 ## 9. 当前 Mac 实测记录
 
@@ -214,9 +214,10 @@ manifest.json
 | --- | --- | --- | --- |
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` | 已完成一次真实生成与证据闭包 | `0fad780a534b6463e45facd96134c9f345acfa5b` | 缓存约 27G；总耗时 2730.198 秒，其中首次快照解析 2661.848 秒；17 帧、416×240、8 fps；Metal 驱动分配峰值 30,979,096,576 字节；交换空间较启动时增加约 23.39GB |
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 低内存探针 | 管线和分阶段策略成功激活，推理阶段由换页护栏终止 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、1 步；管线装载 28.482 秒；MPS 驱动采样峰值 4,210,524,160 字节；新增换页 9,075,425,280 字节，超过 8 GiB 预算；无视频输出；执行标识 `LM-WAN-PROBE-20260809T152435Z` |
+| `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 无梯度叶级探针 | 已完成受控生成和独立证据闭包 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、1 步、8 fps；总耗时 23.444 秒；MPS 驱动峰值 8,413,462,528 字节；系统换页峰值未超过启动值；输出 11,712 字节；执行标识 `LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z` |
 | `zai-org/CogVideoX-2b` | 只完成下载；实际生成能力仍未知 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 19 个文件；逻辑大小 13,775,572,738 字节，缓存约 13G；纯下载 1196.81 秒；下载进程最大常驻内存 4,005,658,624 字节；未导入 PyTorch、未使用 Metal、未执行生成 |
 
-Wan2.1 的成功生成证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，低内存探针失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`。CogVideoX 的下载成功不能推出管线可装载、可转移到 Metal 或可完成推理；这些结论必须等待另一次明确授权的低内存生成试运行。
+Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`。CogVideoX 的下载成功不能推出管线可装载、可转移到 Metal 或可完成推理；这些结论必须等待另一次明确授权的低内存生成试运行。
 
 更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
 

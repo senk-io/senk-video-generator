@@ -23,7 +23,7 @@ PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
         "runtime_observation": "OBSERVED_OUTPUT_AVAILABLE",
         "startable": True,
         "risk": "HIGH_MEMORY",
-        "risk_message": "当前 36GB 统一内存 Mac 上曾使 MPS 驱动分配达到约 30.98GB，并显著增加换页。",
+        "risk_message": "当前 36GB 统一内存 Mac 已完成低内存探针，但更高分辨率、帧数和步数仍可能显著增加换页。",
         "dtype": "bfloat16",
         "vae_dtype": "float32",
         "defaults": {
