@@ -12,7 +12,7 @@ experiments/provider_compatibility/trial_contract.json
 
 两个模型共享相同英文提示词和随机种子。英文是因为 `CogVideoX-2B` 官方模型卡声明其提示输入只支持英文。首次试运行减少帧数和去噪步数以控制时间与内存；这些参数不能用作正式质量基准。
 
-模型权重来自模型发布方，不进入本仓库。默认缓存位置由 `huggingface_hub` 管理，通常位于用户缓存目录。证据包只记录模型标识、快照修订号、参数、阶段、资源观察和输出摘要，不记录本机用户名、序列号或硬件唯一标识。
+模型权重来自模型发布方，不进入本仓库。默认缓存位置由 `huggingface_hub` 管理，通常是 `~/.cache/huggingface/hub/`。证据包只记录模型标识、快照修订号、参数、阶段、资源观察和输出摘要，不记录本机用户名、序列号或硬件唯一标识。
 
 ## 2. 前置条件
 
@@ -53,7 +53,59 @@ PY
 
 预期 `mps` 的构建状态和可用状态均为 `True`。若为 `False`，不要继续下载模型；先检查是否使用了原生 `arm64` Python、macOS 和 PyTorch 版本。
 
-## 4. 执行方法
+## 4. 只下载模型，不执行生成
+
+下载与生成是两个不同阶段。只想预取权重时，使用下面的命令；它只导入 `huggingface_hub`，不导入 PyTorch，不建立模型管线，也不使用 Metal。
+
+Wan2.1：
+
+```bash
+HF_HUB_DISABLE_TELEMETRY=1 \
+  .venv-provider-compat/bin/python - <<'PY'
+from huggingface_hub import snapshot_download
+
+print(snapshot_download(
+    "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+    revision="0fad780a534b6463e45facd96134c9f345acfa5b",
+))
+PY
+```
+
+CogVideoX：
+
+```bash
+HF_HUB_DISABLE_TELEMETRY=1 \
+  .venv-provider-compat/bin/python - <<'PY'
+from huggingface_hub import snapshot_download
+
+print(snapshot_download(
+    "zai-org/CogVideoX-2b",
+    revision="1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+))
+PY
+```
+
+下载完成后可离线确认精确快照；这个检查不会加载模型：
+
+```bash
+HF_HUB_OFFLINE=1 \
+  .venv-provider-compat/bin/python - <<'PY'
+from huggingface_hub import snapshot_download
+
+models = {
+    "Wan-AI/Wan2.1-T2V-1.3B-Diffusers": "0fad780a534b6463e45facd96134c9f345acfa5b",
+    "zai-org/CogVideoX-2b": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+}
+for model_id, revision in models.items():
+    print(snapshot_download(model_id, revision=revision, local_files_only=True))
+PY
+```
+
+上述命令打印的路径应位于 Hugging Face 缓存的 `snapshots/<revision>/` 下。不要把该路径中的模型权重复制进项目仓库。
+
+## 5. 执行完整兼容性试运行
+
+以下命令会真正加载模型并生成视频，内存需求远高于纯下载。当前 36GB 统一内存 Mac 上的 Wan2.1 实测曾把 Metal 驱动分配推至约 30.98GB，并使系统交换空间增加约 23.39GB；执行前应先阅读第 8 节的实测记录，并关闭其他高内存任务。
 
 Wan2.1：
 
@@ -81,7 +133,7 @@ evidence/runtime/<execution-id>/
 
 每个执行标识只能使用一次。目录已经存在时脚本会失败关闭，防止覆盖既有证据。
 
-## 5. 证据内容
+## 6. 证据内容
 
 完整执行会形成：
 
@@ -100,7 +152,7 @@ manifest.json
 
 如果模型下载、装载、转移、推理或导出失败，输出视频可能不存在；父进程仍会保存退出码、已完成阶段、错误观察与内存轨迹。失败证据不等于模型永久不支持 Mac，只证明指定版本、参数与机器上下文中的本次现实。
 
-## 6. 独立校验
+## 7. 独立校验
 
 ```bash
 .venv-provider-compat/bin/python \
@@ -114,7 +166,20 @@ manifest.json
 
 校验器检查清单摘要、文件闭包、请求与执行标识、输出摘要以及公开仓库禁止出现的绝对用户路径。校验通过只表示证据包可重新审计，不表示视频质量合格或提供者适用性已经通过。
 
-## 7. 常见问题
+## 8. 当前 Mac 实测记录
+
+以下数字是一次特定机器、依赖和参数下的观察，不是产品规格或性能承诺。
+
+| 模型 | 当前结论 | 精确快照 | 关键观察 |
+| --- | --- | --- | --- |
+| `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` | 已完成一次真实生成与证据闭包 | `0fad780a534b6463e45facd96134c9f345acfa5b` | 缓存约 27G；总耗时 2730.198 秒，其中首次快照解析 2661.848 秒；17 帧、416×240、8 fps；Metal 驱动分配峰值 30,979,096,576 字节；交换空间较启动时增加约 23.39GB |
+| `zai-org/CogVideoX-2b` | 只完成下载；实际生成能力仍未知 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 19 个文件；逻辑大小 13,775,572,738 字节，缓存约 13G；纯下载 1196.81 秒；下载进程最大常驻内存 4,005,658,624 字节；未导入 PyTorch、未使用 Metal、未执行生成 |
+
+Wan2.1 的可审计证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`。CogVideoX 的下载成功不能推出管线可装载、可转移到 Metal 或可完成推理；这些结论必须等待另一次明确授权的低内存生成试运行。
+
+更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
+
+## 9. 常见问题
 
 ### 内存压力或系统换页
 

@@ -10,7 +10,7 @@
 
 项目采用 `Apache-2.0` 许可证。模型权重不包含在本仓库中，使用者须分别遵守模型发布方的许可证和使用条件。
 
-苹果芯片 Mac 上的 `Wan2.1-T2V-1.3B`、`CogVideoX-2B` 安装、运行、证据生成和失败排查方法见 [`docs/provider-compatibility-trials.md`](docs/provider-compatibility-trials.md)。固定依赖位于 [`requirements-provider-compat.txt`](requirements-provider-compat.txt)，固定试运行输入位于 [`experiments/provider_compatibility/trial_contract.json`](experiments/provider_compatibility/trial_contract.json)。
+苹果芯片 Mac 上的 `Wan2.1-T2V-1.3B`、`CogVideoX-2B` 安装、纯下载、运行、证据生成和失败排查方法见 [`docs/provider-compatibility-trials.md`](docs/provider-compatibility-trials.md)，本机实测边界见 [`knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`](knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md)。固定依赖位于 [`requirements-provider-compat.txt`](requirements-provider-compat.txt)，固定试运行输入位于 [`experiments/provider_compatibility/trial_contract.json`](experiments/provider_compatibility/trial_contract.json)。
 
 ## 五层结构
 
