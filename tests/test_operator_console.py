@@ -527,6 +527,7 @@ else:
 
         fake_torch = SimpleNamespace(
             float16="float16",
+            float32="float32",
             device=lambda value: value,
             inference_mode=FakeInferenceMode,
             mps=FakeMps(),

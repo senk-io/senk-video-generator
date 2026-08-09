@@ -846,7 +846,7 @@ def build_cogvideox_denoiser_pipeline(
     vae = vae_class.from_pretrained(
         snapshot_path,
         subfolder="vae",
-        torch_dtype=torch_module.float16,
+        torch_dtype=torch_module.float32,
         low_cpu_mem_usage=True,
         local_files_only=True,
     )
@@ -942,6 +942,7 @@ def run_worker(args: argparse.Namespace) -> int:
     pipe: Any = None
     prompt_embeds: Any = None
     negative_prompt_embeds: Any = None
+    inference_prompt: dict[str, Any] | None = None
 
     def handle_parent_stop(_signum: int, _frame: Any) -> None:
         raise WorkerTerminationRequested("父进程请求保存终止证据并释放资源")
@@ -1096,7 +1097,6 @@ def run_worker(args: argparse.Namespace) -> int:
 
         generator = torch.Generator(device="cpu").manual_seed(contract["shared_seed"])
         stage_start = time.perf_counter()
-        inference_prompt: dict[str, Any]
         if prompt_embeds is not None:
             prompt_embeds = prompt_embeds.to(device="mps", dtype=pipe.transformer.dtype)
             negative_prompt_embeds = negative_prompt_embeds.to(device="mps", dtype=pipe.transformer.dtype)
@@ -1143,11 +1143,12 @@ def run_worker(args: argparse.Namespace) -> int:
             pipe.transformer = None
             prompt_embeds = None
             negative_prompt_embeds = None
+            inference_prompt = None
             state["mps_post_denoise_release"] = release_pipeline_memory(torch)
             state["phase"] = "DECODING_VIDEO_ON_CPU"
             write_json(state_path, state)
             decode_start = time.perf_counter()
-            pipe.vae.to(device="cpu", dtype=torch.float32)
+            pipe.vae.to(device="cpu")
             pipe.vae.enable_tiling(
                 tile_sample_min_height=120,
                 tile_sample_min_width=180,
@@ -1181,6 +1182,7 @@ def run_worker(args: argparse.Namespace) -> int:
         pipe = None
         prompt_embeds = None
         negative_prompt_embeds = None
+        inference_prompt = None
         state["mps_post_release"] = release_pipeline_memory(torch)
         if sampler is not None:
             sampler.stop_sampling()
@@ -1224,6 +1226,7 @@ def run_worker(args: argparse.Namespace) -> int:
             pipe = None
             prompt_embeds = None
             negative_prompt_embeds = None
+            inference_prompt = None
             state["mps_post_release"] = release_pipeline_memory(torch)
         except BaseException as release_exc:
             state["mps_release_error"] = sanitized_exception(release_exc)
