@@ -46,8 +46,10 @@ def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, 
     if expected_fraction != observed_limit.get("fraction"):
         raise ValueError("MPS 内存上限与作业合同不一致")
     activation = summary.get("mps_strategy_activation") or {}
-    if activation.get("strategy") != request.get("execution_strategy"):
+    if activation and activation.get("strategy") != request.get("execution_strategy"):
         raise ValueError("MPS 策略激活证据与作业合同不一致")
+    if summary.get("mps_transfer_completed") and not activation:
+        raise ValueError("MPS 转移完成但缺少策略激活证据")
     staged_wan_v3 = (
         request.get("provider_key") == "wan"
         and request.get("execution_strategy") == "mps_model_offload_bounded"
@@ -60,6 +62,9 @@ def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, 
             raise ValueError("去噪管线已装载但提示词编码未闭合")
         if summary.get("prompt_encoding_completed") and not summary.get("text_encoder_post_release"):
             raise ValueError("提示词编码完成后缺少文本编码器释放观察")
+        prompt_activation = summary.get("prompt_stage_activation") or {}
+        if summary.get("prompt_encoding_completed") and prompt_activation.get("strategy") != "mps_sequential_cpu_offload":
+            raise ValueError("提示词编码缺少叶级顺序卸载证据")
     if summary.get("inference_completed") and not summary.get("mps_post_release"):
         raise ValueError("完成推理后缺少 MPS 主动释放观察")
 

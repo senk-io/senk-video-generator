@@ -42,6 +42,14 @@ class WorkerTerminationRequested(RuntimeError):
     """父进程请求工作进程保存终止证据并释放资源。"""
 
 
+class WorkerStageFailure(RuntimeError):
+    """阶段失败已经转换为不持有模型张量的公开安全观察。"""
+
+    def __init__(self, observation: dict[str, Any]) -> None:
+        super().__init__(str(observation.get("message", "工作阶段失败")))
+        self.observation = observation
+
+
 def utc_now() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -134,6 +142,16 @@ def activate_pipeline_strategy(pipe: Any, strategy: str, device: str = "mps") ->
             "full_pipeline_transfer": True,
         }
     raise ValueError(f"不受支持的执行策略：{strategy}")
+
+
+def activate_prompt_encoding_strategy(pipe: Any, device: str = "mps") -> dict[str, Any]:
+    """以叶级顺序卸载运行超大文本编码器，避免整模型同时进入 MPS。"""
+    pipe.enable_sequential_cpu_offload(device=device)
+    return {
+        "strategy": "mps_sequential_cpu_offload",
+        "offload_granularity": "leaf_module",
+        "full_text_encoder_transfer": False,
+    }
 
 
 def release_pipeline_memory(torch_module: Any) -> dict[str, int]:
@@ -503,6 +521,7 @@ def run_parent(args: argparse.Namespace) -> int:
         else max_jsonl_metric(evidence_dir / "mps_metrics.jsonl", "mps_driver_allocated_bytes"),
         "mps_memory_limit": worker_state.get("mps_memory_limit"),
         "mps_strategy_activation": worker_state.get("mps_strategy_activation"),
+        "prompt_stage_activation": worker_state.get("prompt_stage_activation"),
         "mps_post_release": worker_state.get("mps_post_release"),
         "component_residency_strategy": worker_state.get("component_residency_strategy"),
         "prompt_encoding_completed": bool(worker_state.get("prompt_encoding_completed")),
@@ -589,12 +608,14 @@ def prepare_wan_prompt_embeddings(
     tokenizer_class: Any,
     text_encoder_class: Any,
     pipeline_class: Any,
+    observation_callback: Any = None,
 ) -> dict[str, Any]:
-    """只装载文本编码器形成嵌入，随后在装载 Transformer 前完整释放。"""
+    """以叶级顺序卸载形成提示词嵌入，随后在装载 Transformer 前完整释放。"""
     stage_pipe = None
     tokenizer = None
     text_encoder = None
     result: dict[str, Any] = {}
+    error_observation: dict[str, Any] | None = None
     try:
         tokenizer = tokenizer_class.from_pretrained(
             snapshot_path,
@@ -615,11 +636,9 @@ def prepare_wan_prompt_embeddings(
             scheduler=None,
             transformer=None,
         )
-        result["activation"] = activate_pipeline_strategy(
-            stage_pipe,
-            "mps_model_offload_bounded",
-            "mps",
-        )
+        result["activation"] = activate_prompt_encoding_strategy(stage_pipe, "mps")
+        if observation_callback is not None:
+            observation_callback("prompt_stage_activation", result["activation"])
         prompt_embeds, negative_prompt_embeds = stage_pipe.encode_prompt(
             prompt=prompt,
             negative_prompt="",
@@ -634,13 +653,22 @@ def prepare_wan_prompt_embeddings(
         result["negative_prompt_embeds"] = negative_prompt_embeds.detach().to("cpu")
         prompt_embeds = None
         negative_prompt_embeds = None
+    except BaseException as exc:
+        error_observation = sanitized_exception(exc)
+        exc.__traceback__ = None
     finally:
-        if stage_pipe is not None and hasattr(stage_pipe, "maybe_free_model_hooks"):
+        if stage_pipe is not None and hasattr(stage_pipe, "remove_all_hooks"):
+            stage_pipe.remove_all_hooks()
+        elif stage_pipe is not None and hasattr(stage_pipe, "maybe_free_model_hooks"):
             stage_pipe.maybe_free_model_hooks()
         stage_pipe = None
         text_encoder = None
         tokenizer = None
         result["post_release"] = release_pipeline_memory(torch_module)
+        if observation_callback is not None:
+            observation_callback("text_encoder_post_release", result["post_release"])
+    if error_observation is not None:
+        raise WorkerStageFailure(error_observation) from None
     return result
 
 
@@ -726,6 +754,10 @@ def run_worker(args: argparse.Namespace) -> int:
     def handle_parent_stop(_signum: int, _frame: Any) -> None:
         raise WorkerTerminationRequested("父进程请求保存终止证据并释放资源")
 
+    def record_prompt_observation(field: str, value: Any) -> None:
+        state[field] = value
+        write_json(state_path, state)
+
     signal.signal(signal.SIGTERM, handle_parent_stop)
     try:
         if not torch.backends.mps.is_available():
@@ -768,6 +800,7 @@ def run_worker(args: argparse.Namespace) -> int:
                 AutoTokenizer,
                 UMT5EncoderModel,
                 WanPipeline,
+                record_prompt_observation,
             )
             prompt_embeds = prompt_stage["prompt_embeds"]
             negative_prompt_embeds = prompt_stage["negative_prompt_embeds"]
@@ -911,6 +944,10 @@ def run_worker(args: argparse.Namespace) -> int:
         write_json(state_path, state)
         return 0
     except BaseException as exc:
+        error_observation = (
+            exc.observation if isinstance(exc, WorkerStageFailure) else sanitized_exception(exc)
+        )
+        exc.__traceback__ = None
         try:
             if pipe is not None and hasattr(pipe, "maybe_free_model_hooks"):
                 pipe.maybe_free_model_hooks()
@@ -934,7 +971,7 @@ def run_worker(args: argparse.Namespace) -> int:
         state["phase"] = "WORKER_STOPPED_BY_PARENT" if stop_request else "WORKER_FAILED"
         state["stop_request"] = stop_request
         state["finished_at"] = utc_now()
-        state["error_observation"] = sanitized_exception(exc)
+        state["error_observation"] = error_observation
         write_json(state_path, state)
         print(json.dumps(state["error_observation"], ensure_ascii=False), file=sys.stderr, flush=True)
         return 1

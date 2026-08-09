@@ -19,6 +19,7 @@ from operator_console.contracts import (
 )
 from operator_console.server import ControlError, JobManager, WEB_ROOT, create_server
 from tools.run_provider_compatibility_trial import (
+    WorkerStageFailure,
     activate_pipeline_strategy,
     build_wan_denoiser_pipeline,
     configure_mps_memory_limit,
@@ -340,14 +341,14 @@ else:
                 self.kwargs = kwargs
                 events.append("pipeline")
 
-            def enable_model_cpu_offload(self, device: str) -> None:
-                events.append(f"offload:{device}")
+            def enable_sequential_cpu_offload(self, device: str) -> None:
+                events.append(f"sequential_offload:{device}")
 
             def encode_prompt(self, **_kwargs):
                 events.append("encode_prompt")
                 return FakeTensor(), FakeTensor()
 
-            def maybe_free_model_hooks(self) -> None:
+            def remove_all_hooks(self) -> None:
                 events.append("release_text_encoder")
 
             def enable_attention_slicing(self) -> None:
@@ -371,9 +372,35 @@ else:
         )
 
         self.assertIsInstance(prompt["prompt_embeds"], FakeTensor)
+        self.assertEqual(prompt["activation"]["strategy"], "mps_sequential_cpu_offload")
+        self.assertIn("sequential_offload:mps", events)
         self.assertLess(events.index("release_text_encoder"), events.index("transformer"))
         self.assertIsNone(pipe.kwargs["text_encoder"])
         self.assertIsNone(pipe.kwargs["tokenizer"])
+
+        observations: dict[str, dict] = {}
+
+        class FailingPipeline(FakePipeline):
+            def encode_prompt(self, **_kwargs):
+                raise RuntimeError("受控文本编码失败")
+
+        with self.assertRaises(WorkerStageFailure) as failure:
+            prepare_wan_prompt_embeddings(
+                Path("/snapshot"),
+                "A paper boat.",
+                fake_torch,
+                component("tokenizer_failed"),
+                component("text_encoder_failed"),
+                FailingPipeline,
+                lambda field, value: observations.__setitem__(field, value),
+            )
+
+        self.assertEqual(failure.exception.observation["type"], "RuntimeError")
+        self.assertEqual(
+            observations["prompt_stage_activation"]["strategy"],
+            "mps_sequential_cpu_offload",
+        )
+        self.assertEqual(observations["text_encoder_post_release"]["driver_allocated_bytes"], 0)
 
     def test_parent_stop_and_metric_fallback_preserve_abort_evidence(self) -> None:
         class FakeChild:
@@ -431,6 +458,7 @@ else:
             "execution_strategy": "mps_model_offload_bounded",
             "mps_memory_limit": {"fraction": 0.75},
             "mps_strategy_activation": {"strategy": "mps_model_offload_bounded"},
+            "prompt_stage_activation": {"strategy": "mps_sequential_cpu_offload"},
             "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
             "prompt_encoding_completed": True,
             "text_encoder_post_release": {
@@ -448,6 +476,18 @@ else:
         summary["mps_post_release"] = None
         with self.assertRaisesRegex(ValueError, "主动释放"):
             verify_operator_memory_contract(request, summary)
+
+        early_failure = {
+            "execution_strategy": "mps_model_offload_bounded",
+            "mps_memory_limit": {"fraction": 0.75},
+            "mps_strategy_activation": None,
+            "mps_transfer_completed": False,
+            "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+            "prompt_encoding_completed": False,
+            "pipeline_loaded": False,
+            "inference_completed": False,
+        }
+        verify_operator_memory_contract(request, early_failure)
 
     def test_unavailable_provider_missing_prompt_and_invalid_budget_are_blocked(self) -> None:
         cog = self.request()

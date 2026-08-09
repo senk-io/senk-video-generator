@@ -1,0 +1,165 @@
+{
+  "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+  "error_observation": {
+    "frames": [
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "run_worker",
+        "line": 764
+      },
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "prepare_wan_prompt_embeddings",
+        "line": 623
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/wan/pipeline_wan.py",
+        "function": "encode_prompt",
+        "line": 270
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/wan/pipeline_wan.py",
+        "function": "_get_t5_prompt_embeds",
+        "line": 185
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "new_forward",
+        "line": 192
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 1477
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 766
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/modeling_layers.py",
+        "function": "__call__",
+        "line": 94
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/utils/deprecation.py",
+        "function": "wrapped_func",
+        "line": 172
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 443
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/utils/deprecation.py",
+        "function": "wrapped_func",
+        "line": 172
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 375
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/utils/deprecation.py",
+        "function": "wrapped_func",
+        "line": 172
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 323
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "compute_bias",
+        "line": 254
+      }
+    ],
+    "message": "MPS backend out of memory (MPS allocated: 21.15 GiB, other allocations: 752.00 KiB, max allowed: 21.06 GiB). Tried to allocate 4.00 KiB on shared pool. Use PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 to disable upper limit for memory allocations (may cause system failure).",
+    "type": "RuntimeError"
+  },
+  "execution_id": "LM-WAN-STAGED-PROBE-20260809T161019Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T16:10:48.289621+00:00",
+  "generation_profile_key": "wan_probe",
+  "inference_completed": false,
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
+  "mps_memory_limit": {
+    "configured_limit_bytes": 22613004288,
+    "fraction": 0.75,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 21648904704,
+  "mps_peak_driver_allocated_bytes": 24813223936,
+  "mps_post_release": {
+    "current_allocated_bytes": 10287078400,
+    "driver_allocated_bytes": 14169096192
+  },
+  "mps_strategy_activation": null,
+  "mps_transfer_completed": false,
+  "output_export_completed": false,
+  "phase": "WORKER_FAILED",
+  "pipeline_loaded": false,
+  "prompt_encoding_completed": false,
+  "provider_key": "wan",
+  "stage_elapsed_seconds": {
+    "snapshot_resolution": 0.043
+  },
+  "started_at": "2026-08-09T16:10:23.402509+00:00",
+  "stop_request": null,
+  "text_encoder_post_release": null
+}
