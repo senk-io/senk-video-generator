@@ -1,0 +1,8 @@
+{
+  "command": "python3 -W error::ResourceWarning -m unittest discover -s tests -v",
+  "errors": 0,
+  "failures": 0,
+  "resource_warnings": 0,
+  "result": "PASS",
+  "tests_run": 14
+}

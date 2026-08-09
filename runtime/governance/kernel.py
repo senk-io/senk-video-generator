@@ -54,6 +54,7 @@ class ProtectedWriteResult:
     reason: str
     record_id: str | None
     payload_digest: str
+    content_digest: str
     evidence_digest: str
     failure_closed_result: str
 
@@ -120,6 +121,7 @@ class GovernanceKernel:
                     semantic_key TEXT NOT NULL,
                     payload_json TEXT NOT NULL,
                     payload_digest TEXT NOT NULL,
+                    content_digest TEXT NOT NULL,
                     proposal_version TEXT NOT NULL,
                     proposal_digest TEXT NOT NULL,
                     authority_ref TEXT NOT NULL,
@@ -147,6 +149,7 @@ class GovernanceKernel:
                     record_type TEXT NOT NULL,
                     semantic_key TEXT NOT NULL,
                     payload_digest TEXT NOT NULL,
+                    content_digest TEXT NOT NULL,
                     authority_ref TEXT NOT NULL,
                     scope_ref TEXT NOT NULL,
                     input_refs_json TEXT NOT NULL,
@@ -173,6 +176,8 @@ class GovernanceKernel:
                     semantic_key TEXT NOT NULL,
                     existing_payload_digest TEXT NOT NULL,
                     competing_payload_digest TEXT NOT NULL,
+                    existing_content_digest TEXT NOT NULL,
+                    competing_content_digest TEXT NOT NULL,
                     recorded_at TEXT NOT NULL,
                     evidence_mode TEXT NOT NULL CHECK (evidence_mode = 'NON_AUTHORITATIVE_CONFORMANCE'),
                     FOREIGN KEY (attempt_id) REFERENCES write_attempts(attempt_id),
@@ -288,7 +293,8 @@ class GovernanceKernel:
                 "predecessor_record_id": request.predecessor_record_id,
             }
         )
-        payload_digest = sha256_text(content_json)
+        payload_digest = sha256_text(payload_json)
+        content_digest = sha256_text(content_json)
         request_body = {
             "attempt_id": request.attempt_id,
             "execution_id": request.execution_id,
@@ -297,6 +303,7 @@ class GovernanceKernel:
             "record_type": request.record_type,
             "semantic_key": request.semantic_key,
             "payload_digest": payload_digest,
+            "content_digest": content_digest,
             "authority_ref": request.authority_ref,
             "scope_ref": request.scope_ref,
             "prerequisite_record_ids": sorted(request.prerequisite_record_ids),
@@ -335,7 +342,7 @@ class GovernanceKernel:
                     failure_closed_result="ENFORCED",
                 )
 
-            validation_error = self._validate_payload(request.payload)
+            validation_error = self._validate_payload(request.payload, spec)
             if validation_error:
                 return self._finish_attempt(
                     connection,
@@ -403,6 +410,25 @@ class GovernanceKernel:
                     "ENFORCED",
                 )
 
+            prerequisite_consistency_error = self._validate_prerequisite_consistency(
+                spec, request.payload, prerequisites
+            )
+            if prerequisite_consistency_error:
+                return self._finish_attempt(
+                    connection,
+                    request,
+                    request_digest,
+                    payload_digest,
+                    observed_at,
+                    recorded_at,
+                    spec.proposal_version,
+                    spec.proposal_digest,
+                    "REJECTED_PREREQUISITE_CONTENT_MISMATCH",
+                    prerequisite_consistency_error,
+                    None,
+                    "ENFORCED",
+                )
+
             predecessor_error = self._validate_predecessor(connection, request, spec)
             if predecessor_error:
                 return self._finish_attempt(
@@ -428,7 +454,7 @@ class GovernanceKernel:
                 (request.workflow_id, request.record_type, request.semantic_key),
             ).fetchone()
             if existing_record is not None:
-                if existing_record["payload_digest"] == payload_digest:
+                if existing_record["content_digest"] == content_digest:
                     return self._finish_attempt(
                         connection,
                         request,
@@ -464,8 +490,9 @@ class GovernanceKernel:
                     INSERT INTO write_conflicts(
                         conflict_id, attempt_id, existing_record_id, workflow_id,
                         record_type, semantic_key, existing_payload_digest,
-                        competing_payload_digest, recorded_at, evidence_mode
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        competing_payload_digest, existing_content_digest,
+                        competing_content_digest, recorded_at, evidence_mode
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         conflict_id,
@@ -476,6 +503,8 @@ class GovernanceKernel:
                         request.semantic_key,
                         existing_record["payload_digest"],
                         payload_digest,
+                        existing_record["content_digest"],
+                        content_digest,
                         recorded_at,
                         self.mode,
                     ),
@@ -505,7 +534,7 @@ class GovernanceKernel:
                     "workflow_id": request.workflow_id,
                     "record_type": request.record_type,
                     "semantic_key": request.semantic_key,
-                    "payload_digest": payload_digest,
+                    "content_digest": content_digest,
                 }
             )
             record_id = f"record:{request.workflow_id}:{sha256_text(record_seed)[:24]}"
@@ -513,10 +542,10 @@ class GovernanceKernel:
                 """
                 INSERT INTO protected_records(
                     record_id, workflow_id, record_type, semantic_key, payload_json,
-                    payload_digest, proposal_version, proposal_digest, authority_ref,
+                    payload_digest, content_digest, proposal_version, proposal_digest, authority_ref,
                     scope_ref, prerequisite_record_ids_json, predecessor_record_id,
                     execution_id, observed_at, recorded_at, evidence_mode
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     record_id,
@@ -525,6 +554,7 @@ class GovernanceKernel:
                     request.semantic_key,
                     payload_json,
                     payload_digest,
+                    content_digest,
                     spec.proposal_version,
                     spec.proposal_digest,
                     request.authority_ref,
@@ -553,7 +583,7 @@ class GovernanceKernel:
             )
 
     @staticmethod
-    def _validate_payload(payload: dict[str, Any]) -> str | None:
+    def _validate_payload(payload: dict[str, Any], spec: RecordSpec) -> str | None:
         required_fields = {
             "candidate_payload",
             "evidence_mode",
@@ -570,6 +600,42 @@ class GovernanceKernel:
             return "formal or unknown evidence mode is prohibited"
         if payload["institution_freeze_ref"] != "NOT_CREATED_EVIDENCE_ONLY":
             return "unverified institution freeze reference is prohibited"
+        if payload["proposal_ref"] != spec.proposal_version:
+            return "payload proposal reference does not match the protected-write catalog"
+        candidate_payload = payload["candidate_payload"]
+        if not isinstance(candidate_payload, dict):
+            return "candidate_payload must be an object"
+        missing_candidate_fields = sorted(
+            set(spec.required_candidate_fields).difference(candidate_payload)
+        )
+        if missing_candidate_fields:
+            return "missing required candidate payload fields: " + ", ".join(
+                missing_candidate_fields
+            )
+        if spec.record_type in {
+            "Registered Projection Change Audit Record",
+            "Projection Publication Envelope",
+        }:
+            projection_result = candidate_payload["projection_result"]
+            if projection_result not in {
+                "ABORTED",
+                "COMMITTED",
+                "CONFLICTED",
+                "INDETERMINATE",
+            }:
+                return "projection result is outside the reviewed result algebra"
+            if (
+                candidate_payload["closure_completeness"] != "COMPLETE"
+                and projection_result not in {"CONFLICTED", "INDETERMINATE"}
+            ):
+                return "non-complete closure cannot support a determinate projection"
+            previous_publication = candidate_payload["previous_publication_record_id"]
+            previous_coordinate = candidate_payload["previous_coordinate_digest"]
+            if previous_publication == "CANONICAL_BOOTSTRAP_MARKER":
+                if previous_coordinate != "NOT_APPLICABLE":
+                    return "bootstrap transition must use NOT_APPLICABLE previous coordinate"
+            elif previous_coordinate == "NOT_APPLICABLE":
+                return "successor transition must pin the previous coordinate digest"
         return None
 
     @staticmethod
@@ -595,6 +661,56 @@ class GovernanceKernel:
             if record["scope_ref"] == scope_ref
         }
         return sorted(set(spec.prerequisite_types).difference(present_types))
+
+    @staticmethod
+    def _validate_prerequisite_consistency(
+        spec: RecordSpec, payload: dict[str, Any], prerequisites: list[sqlite3.Row]
+    ) -> str | None:
+        candidate_payload = payload["candidate_payload"]
+        if spec.record_type == "Registered Projection Change Audit Record":
+            completeness_records = [
+                record
+                for record in prerequisites
+                if record["record_type"] == "Registered Closure Completeness Record"
+            ]
+            if len(completeness_records) != 1:
+                return "projection audit requires exactly one closure completeness record"
+            completeness_payload = json.loads(completeness_records[0]["payload_json"])
+            registered_value = completeness_payload["candidate_payload"].get(
+                "closure_completeness"
+            )
+            claimed_value = candidate_payload["closure_completeness"]
+            if registered_value != claimed_value:
+                return "projection closure completeness claim differs from its registered prerequisite"
+        elif spec.record_type == "Registered Projection Rebuild Requirement":
+            by_type = {record["record_type"]: record for record in prerequisites}
+            if (
+                candidate_payload["trigger_record_id"]
+                != by_type["Registered Source Record"]["record_id"]
+            ):
+                return "rebuild trigger record differs from the registered source prerequisite"
+            if (
+                candidate_payload["previous_publication_record_id"]
+                != by_type["Projection Publication Envelope"]["record_id"]
+            ):
+                return "rebuild predecessor differs from the publication prerequisite"
+            completeness = by_type["Registered Closure Completeness Record"]
+            closure_ids = json.loads(completeness["prerequisite_record_ids_json"])
+            if candidate_payload["closure_record_id"] not in closure_ids:
+                return "rebuild closure differs from the completeness prerequisite lineage"
+        elif spec.record_type == "Registered Projection Deletion Record":
+            by_type = {record["record_type"]: record for record in prerequisites}
+            if (
+                candidate_payload["target_publication_record_id"]
+                != by_type["Projection Publication Envelope"]["record_id"]
+            ):
+                return "deletion target differs from the publication prerequisite"
+            if (
+                candidate_payload["rebuild_requirement_record_id"]
+                != by_type["Registered Projection Rebuild Requirement"]["record_id"]
+            ):
+                return "deletion rebuild reference differs from the registered prerequisite"
+        return None
 
     @staticmethod
     def _validate_predecessor(
@@ -656,6 +772,14 @@ class GovernanceKernel:
         *,
         commit: bool = True,
     ) -> ProtectedWriteResult:
+        content_digest = sha256_text(
+            canonical_json(
+                {
+                    "payload": request.payload,
+                    "predecessor_record_id": request.predecessor_record_id,
+                }
+            )
+        )
         previous = connection.execute(
             "SELECT event_hash FROM write_attempts ORDER BY sequence DESC LIMIT 1"
         ).fetchone()
@@ -675,6 +799,7 @@ class GovernanceKernel:
             "record_type": request.record_type,
             "semantic_key": request.semantic_key,
             "payload_digest": payload_digest,
+            "content_digest": content_digest,
             "authority_ref": request.authority_ref,
             "scope_ref": request.scope_ref,
             "input_refs": input_refs,
@@ -695,11 +820,11 @@ class GovernanceKernel:
             INSERT INTO write_attempts(
                 attempt_id, request_digest, execution_id, implementation_version,
                 proposal_version, proposal_digest, principal_id, workflow_id,
-                record_type, semantic_key, payload_digest, authority_ref, scope_ref,
+                record_type, semantic_key, payload_digest, content_digest, authority_ref, scope_ref,
                 input_refs_json, output_ref, outcome, reason, expected_behavior,
                 observed_behavior, failure_closed_result, observed_at, recorded_at,
                 previous_event_hash, event_body_json, event_hash, evidence_mode
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 request.attempt_id,
@@ -713,6 +838,7 @@ class GovernanceKernel:
                 request.record_type,
                 request.semantic_key,
                 payload_digest,
+                content_digest,
                 request.authority_ref,
                 request.scope_ref,
                 canonical_json(input_refs),
@@ -738,6 +864,7 @@ class GovernanceKernel:
             reason=reason,
             record_id=record_id,
             payload_digest=payload_digest,
+            content_digest=content_digest,
             evidence_digest=event_hash,
             failure_closed_result=failure_closed_result,
         )
@@ -750,6 +877,7 @@ class GovernanceKernel:
             reason=attempt["reason"],
             record_id=attempt["output_ref"],
             payload_digest=attempt["payload_digest"],
+            content_digest=attempt["content_digest"],
             evidence_digest=attempt["event_hash"],
             failure_closed_result=attempt["failure_closed_result"],
         )

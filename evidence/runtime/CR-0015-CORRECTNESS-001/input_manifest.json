@@ -1,0 +1,15 @@
+{
+  "authority_mode": "EVIDENCE_ONLY_TEST_GRANTS",
+  "deterministic_execution_id": "CR-0015-CORRECTNESS-001:deterministic-input",
+  "execution_id": "CR-0015-CORRECTNESS-001",
+  "formal_fact_creation": "PROHIBITED",
+  "implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf",
+  "institution_freeze_creation": "PROHIBITED",
+  "process_worker_count_per_case": 16,
+  "replay_count": 5,
+  "runtime_mode": "NON_AUTHORITATIVE_CONFORMANCE",
+  "scope_ref": "scope:evidence:correctness",
+  "started_at": "2026-08-09T08:30:24.186225Z",
+  "test_harness_digest": "ff23fbb660be2280e1e285cd6cf83d773cd7b240eeb504c417eb6a184747ee3e",
+  "thread_worker_count_per_case": 32
+}

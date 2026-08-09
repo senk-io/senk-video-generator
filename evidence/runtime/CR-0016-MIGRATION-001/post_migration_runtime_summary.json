@@ -1,0 +1,29 @@
+{
+  "audit_publication_payload_identity": true,
+  "audit_successor_record_id": "record:WS-09:54d47e2e5789377875445547",
+  "closure_successor_record_id": "record:WS-08:98c97650f7660dd0bba69981",
+  "completeness_successor_record_id": "record:WS-08:9d41fdf805771bead58eb76c",
+  "deletion_record_id": "record:WS-09:2df177208993957c9722fd28",
+  "legacy_history_preserved": true,
+  "legacy_idempotency_verified": true,
+  "mixed_version_event_chain_verified": true,
+  "outcome_counts": {
+    "ACCEPTED_EVIDENCE_ONLY": 19,
+    "CONFLICT_RECORDED": 11,
+    "IDEMPOTENT_EXISTING": 12,
+    "REJECTED_CONTENT_IDENTITY_MISMATCH": 1,
+    "REJECTED_INVALID_PAYLOAD": 1,
+    "REJECTED_MISSING_PREREQUISITE": 11,
+    "REJECTED_UNAUTHORIZED": 12,
+    "REJECTED_UNKNOWN_TYPE": 1
+  },
+  "post_migration_accepted_record_count": 7,
+  "post_migration_negative_attempt_count": 1,
+  "publication_successor_record_id": "record:WS-09:8736334ba64bf51379b376c1",
+  "rebuild_requirement_record_id": "record:WS-09:6bc1d46acff5eb404e26b40d",
+  "result": "PASS",
+  "source_successor_record_id": "record:WS-02:ed358f373f16b404511e119f",
+  "total_attempt_count": 68,
+  "total_conflict_count": 11,
+  "total_protected_record_count": 19
+}

@@ -1,0 +1,14 @@
+{
+  "execution_id": "CR-0016-MIGRATION-001",
+  "formal_fact_creation": "PROHIBITED",
+  "institution_freeze_creation": "PROHIBITED",
+  "migration_harness_digest": "46488fce8b7d578711a24dae3d52e11e5100dcf93cf863be90e646120c203f2d",
+  "runtime_mode": "NON_AUTHORITATIVE_CONFORMANCE",
+  "source_database_digest": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+  "source_database_path": "evidence/runtime/CR-0014-PW-004/governance.db",
+  "source_execution_id": "CR-0014-PW-004",
+  "source_implementation_version": "governance-kernel/0.1.0+sha256:f273f81f789b38c656749340a5d2894c7594bfc7519869248b997b384eafa8ce",
+  "source_package_digest": "77d45a57a976ffdb790c8759206f541de9e21fd95c0c2fce959043776ae6846c",
+  "started_at": "2026-08-09T08:39:27.198094Z",
+  "target_implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf"
+}

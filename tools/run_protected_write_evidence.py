@@ -63,8 +63,49 @@ def implementation_digest() -> str:
 
 
 def payload_for(spec, marker: str = "accepted") -> dict[str, Any]:
+    candidate_payload: dict[str, Any] = {"marker": marker, "scope": SCOPE_REF}
+    if spec.record_type == "Registered Closure Completeness Record":
+        candidate_payload["closure_completeness"] = "COMPLETE"
+    elif spec.record_type in {
+        "Registered Projection Change Audit Record",
+        "Projection Publication Envelope",
+    }:
+        candidate_payload.update(
+            {
+                "change_reason": "INITIAL_PUBLICATION",
+                "closure_completeness": "COMPLETE",
+                "new_coordinate_digest": f"coordinate:{RUN_ID}:v1",
+                "previous_coordinate_digest": "NOT_APPLICABLE",
+                "previous_publication_record_id": "CANONICAL_BOOTSTRAP_MARKER",
+                "projection_result": "COMMITTED",
+                "projection_stable_key": f"projection:{RUN_ID}",
+                "transition_rule_version": "transition-rule:v1",
+                "view_mode": "AS_KNOWN_AT_K",
+            }
+        )
+    elif spec.record_type == "Registered Projection Rebuild Requirement":
+        candidate_payload.update(
+            {
+                "closure_record_id": f"closure:{RUN_ID}",
+                "impact_scope": f"projection:{RUN_ID}",
+                "new_coordinate_digest": f"coordinate:{RUN_ID}:v2",
+                "previous_coordinate_digest": f"coordinate:{RUN_ID}:v1",
+                "previous_publication_record_id": f"publication:{RUN_ID}:v1",
+                "recovery_path": "PATH_A_NEW_SUPPORT",
+                "trigger_record_id": f"source:{RUN_ID}:v2",
+            }
+        )
+    elif spec.record_type == "Registered Projection Deletion Record":
+        candidate_payload.update(
+            {
+                "cache_object_id": f"cache:projection:{RUN_ID}",
+                "deletion_reason": "REBUILD_REQUIRED",
+                "rebuild_requirement_record_id": f"rebuild:{RUN_ID}:v1",
+                "target_publication_record_id": f"publication:{RUN_ID}:v1",
+            }
+        )
     return {
-        "candidate_payload": {"marker": marker, "scope": SCOPE_REF},
+        "candidate_payload": candidate_payload,
         "evidence_mode": "NON_AUTHORITATIVE_CONFORMANCE",
         "institution_freeze_ref": "NOT_CREATED_EVIDENCE_ONLY",
         "knowledge_boundary": f"K:{RUN_ID}",
@@ -209,6 +250,21 @@ def run() -> Path:
             payload = payload_for(spec)
             if spec.content_identity_source_type:
                 payload = payloads[spec.content_identity_source_type]
+            elif spec.record_type == "Registered Projection Rebuild Requirement":
+                candidate = payload["candidate_payload"]
+                candidate["closure_record_id"] = record_ids["Registered Dependency Closure Record"]
+                candidate["previous_publication_record_id"] = record_ids[
+                    "Projection Publication Envelope"
+                ]
+                candidate["trigger_record_id"] = record_ids["Registered Source Record"]
+            elif spec.record_type == "Registered Projection Deletion Record":
+                candidate = payload["candidate_payload"]
+                candidate["rebuild_requirement_record_id"] = record_ids[
+                    "Registered Projection Rebuild Requirement"
+                ]
+                candidate["target_publication_record_id"] = record_ids[
+                    "Projection Publication Envelope"
+                ]
             accepted = kernel.write(
                 request_for(
                     spec,

@@ -1,0 +1,19 @@
+test_catalog_covers_all_nine_workflows (test_governance_kernel.GovernanceKernelTests.test_catalog_covers_all_nine_workflows) ... ok
+test_correction_adds_successor_without_overwriting_history (test_governance_kernel.GovernanceKernelTests.test_correction_adds_successor_without_overwriting_history) ... ok
+test_database_rejects_update_and_delete (test_governance_kernel.GovernanceKernelTests.test_database_rejects_update_and_delete) ... ok
+test_event_hash_chain_verifies (test_governance_kernel.GovernanceKernelTests.test_event_hash_chain_verifies) ... ok
+test_existing_database_cannot_mix_implementation_versions (test_governance_kernel.GovernanceKernelTests.test_existing_database_cannot_mix_implementation_versions) ... ok
+test_formal_runtime_mode_is_unavailable (test_governance_kernel.GovernanceKernelTests.test_formal_runtime_mode_is_unavailable) ... ok
+test_full_chain_and_publication_content_identity (test_governance_kernel.GovernanceKernelTests.test_full_chain_and_publication_content_identity) ... ok
+test_missing_prerequisite_is_rejected (test_governance_kernel.GovernanceKernelTests.test_missing_prerequisite_is_rejected) ... ok
+test_noncomplete_closure_cannot_support_determinate_projection (test_governance_kernel.GovernanceKernelTests.test_noncomplete_closure_cannot_support_determinate_projection) ... ok
+test_projection_deletion_record_does_not_delete_history (test_governance_kernel.GovernanceKernelTests.test_projection_deletion_record_does_not_delete_history) ... ok
+test_publication_payload_must_match_registered_audit (test_governance_kernel.GovernanceKernelTests.test_publication_payload_must_match_registered_audit) ... ok
+test_same_key_same_payload_is_idempotent_and_different_payload_conflicts (test_governance_kernel.GovernanceKernelTests.test_same_key_same_payload_is_idempotent_and_different_payload_conflicts) ... ok
+test_successor_publication_keeps_business_payload_identity_and_history (test_governance_kernel.GovernanceKernelTests.test_successor_publication_keeps_business_payload_identity_and_history) ... ok
+test_unauthorized_write_is_rejected (test_governance_kernel.GovernanceKernelTests.test_unauthorized_write_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.218s
+
+OK

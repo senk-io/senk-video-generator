@@ -1,0 +1,37 @@
+{
+  "all_exported_rows_identical": true,
+  "database_checks": {
+    "replay-01.db": {
+      "integrity_check": "ok",
+      "journal_mode": "delete"
+    },
+    "replay-02.db": {
+      "integrity_check": "ok",
+      "journal_mode": "delete"
+    },
+    "replay-03.db": {
+      "integrity_check": "ok",
+      "journal_mode": "delete"
+    },
+    "replay-04.db": {
+      "integrity_check": "ok",
+      "journal_mode": "delete"
+    },
+    "replay-05.db": {
+      "integrity_check": "ok",
+      "journal_mode": "delete"
+    }
+  },
+  "event_hash_chains_verified": true,
+  "execution_id": "CR-0015-CORRECTNESS-001:deterministic-input",
+  "replay_count": 5,
+  "replay_signatures": [
+    "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+    "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+    "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+    "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+    "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615"
+  ],
+  "result": "PASS",
+  "unique_signature_count": 1
+}

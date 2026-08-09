@@ -1,0 +1,83 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "conflict_count": 0,
+      "database_checks": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "event_hash_chain_verified": true,
+      "mode": "thread",
+      "outcome_counts": {
+        "ACCEPTED_EVIDENCE_ONLY": 1,
+        "IDEMPOTENT_EXISTING": 31
+      },
+      "protected_record_count": 1,
+      "result": "PASS",
+      "scenario": "SAME_PAYLOAD_IDEMPOTENT",
+      "single_terminal_assignment": true,
+      "worker_count": 32
+    },
+    {
+      "conflict_count": 31,
+      "database_checks": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "event_hash_chain_verified": true,
+      "mode": "thread",
+      "outcome_counts": {
+        "ACCEPTED_EVIDENCE_ONLY": 1,
+        "CONFLICT_RECORDED": 31
+      },
+      "protected_record_count": 1,
+      "result": "PASS",
+      "scenario": "DISTINCT_PAYLOAD_CONFLICT",
+      "single_terminal_assignment": true,
+      "worker_count": 32
+    },
+    {
+      "conflict_count": 0,
+      "database_checks": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "event_hash_chain_verified": true,
+      "mode": "process",
+      "outcome_counts": {
+        "ACCEPTED_EVIDENCE_ONLY": 1,
+        "IDEMPOTENT_EXISTING": 15
+      },
+      "protected_record_count": 1,
+      "result": "PASS",
+      "scenario": "SAME_PAYLOAD_IDEMPOTENT",
+      "single_terminal_assignment": true,
+      "worker_count": 16
+    },
+    {
+      "conflict_count": 15,
+      "database_checks": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "event_hash_chain_verified": true,
+      "mode": "process",
+      "outcome_counts": {
+        "ACCEPTED_EVIDENCE_ONLY": 1,
+        "CONFLICT_RECORDED": 15
+      },
+      "protected_record_count": 1,
+      "result": "PASS",
+      "scenario": "DISTINCT_PAYLOAD_CONFLICT",
+      "single_terminal_assignment": true,
+      "worker_count": 16
+    }
+  ],
+  "distinct_payload_conflict_preservation_verified": true,
+  "process_worker_count_per_case": 16,
+  "result": "PASS",
+  "same_payload_idempotency_verified": true,
+  "single_terminal_assignment_all_cases": true,
+  "thread_worker_count_per_case": 32
+}

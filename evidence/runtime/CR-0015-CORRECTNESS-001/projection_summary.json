@@ -1,0 +1,40 @@
+{
+  "attempt_count": 22,
+  "audit_publication_content_digest_distinct": true,
+  "audit_publication_payload_digest_equal": true,
+  "conflict_count": 1,
+  "deletion_record_id": "record:WS-09:7fa7ee5bd8037811e17f4064",
+  "deletion_requires_rebuild": true,
+  "event_hash_chain_verified": true,
+  "initial_publication_record_id": "record:WS-09:d3a8faeff83fe981ee461a14",
+  "noncomplete_determinate_projection_rejected": true,
+  "outcome_counts": {
+    "ACCEPTED_EVIDENCE_ONLY": 18,
+    "CONFLICT_RECORDED": 1,
+    "REJECTED_CONTENT_IDENTITY_MISMATCH": 1,
+    "REJECTED_INVALID_PAYLOAD": 1,
+    "REJECTED_MISSING_PREREQUISITE": 1
+  },
+  "protected_history_preserved_after_deletion": true,
+  "protected_record_count": 18,
+  "publication_mismatch_rejected": true,
+  "rebuild_requirement_record_id": "record:WS-09:c5996893844ae904cf631a52",
+  "record_type_counts": {
+    "Projection Publication Envelope": 2,
+    "Registered Atomic Qualification Resolution": 1,
+    "Registered Authority Applicability Consumer Resolution": 1,
+    "Registered Closure Completeness Record": 2,
+    "Registered Dependency Closure Record": 2,
+    "Registered Derived Record Envelope": 1,
+    "Registered Institution Registry Entry": 1,
+    "Registered Projection Change Audit Record": 2,
+    "Registered Projection Deletion Record": 1,
+    "Registered Projection Rebuild Requirement": 1,
+    "Registered Proof Applicability Record": 1,
+    "Registered Source Record": 2,
+    "Registered Temporal Mapping Record": 1
+  },
+  "result": "PASS",
+  "same_transition_competitor_conflict_preserved": true,
+  "successor_publication_record_id": "record:WS-09:7ce6345b2d4f417c60c11d1f"
+}

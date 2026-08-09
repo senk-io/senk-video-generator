@@ -44,8 +44,49 @@ class GovernanceKernelTests(unittest.TestCase):
 
     @staticmethod
     def payload(spec, marker: str = "accepted") -> dict[str, object]:
+        candidate_payload: dict[str, object] = {"marker": marker}
+        if spec.record_type == "Registered Closure Completeness Record":
+            candidate_payload["closure_completeness"] = "COMPLETE"
+        elif spec.record_type in {
+            "Registered Projection Change Audit Record",
+            "Projection Publication Envelope",
+        }:
+            candidate_payload.update(
+                {
+                    "change_reason": "INITIAL_PUBLICATION",
+                    "closure_completeness": "COMPLETE",
+                    "new_coordinate_digest": "coordinate:test:v1",
+                    "previous_coordinate_digest": "NOT_APPLICABLE",
+                    "previous_publication_record_id": "CANONICAL_BOOTSTRAP_MARKER",
+                    "projection_result": "COMMITTED",
+                    "projection_stable_key": "projection:test",
+                    "transition_rule_version": "transition-rule:v1",
+                    "view_mode": "AS_KNOWN_AT_K",
+                }
+            )
+        elif spec.record_type == "Registered Projection Rebuild Requirement":
+            candidate_payload.update(
+                {
+                    "closure_record_id": "closure:test",
+                    "impact_scope": "projection:test",
+                    "new_coordinate_digest": "coordinate:test:v2",
+                    "previous_coordinate_digest": "coordinate:test:v1",
+                    "previous_publication_record_id": "publication:test:v1",
+                    "recovery_path": "PATH_A_NEW_SUPPORT",
+                    "trigger_record_id": "source:test:v2",
+                }
+            )
+        elif spec.record_type == "Registered Projection Deletion Record":
+            candidate_payload.update(
+                {
+                    "cache_object_id": "cache:projection:test",
+                    "deletion_reason": "REBUILD_REQUIRED",
+                    "rebuild_requirement_record_id": "rebuild:test:v1",
+                    "target_publication_record_id": "publication:test:v1",
+                }
+            )
         return {
-            "candidate_payload": {"marker": marker},
+            "candidate_payload": candidate_payload,
             "evidence_mode": "NON_AUTHORITATIVE_CONFORMANCE",
             "institution_freeze_ref": "NOT_CREATED_EVIDENCE_ONLY",
             "knowledge_boundary": "K:test",
@@ -88,6 +129,21 @@ class GovernanceKernelTests(unittest.TestCase):
             payload = self.payload(spec)
             if spec.content_identity_source_type:
                 payload = payloads[spec.content_identity_source_type]
+            elif spec.record_type == "Registered Projection Rebuild Requirement":
+                candidate = payload["candidate_payload"]
+                candidate["closure_record_id"] = record_ids["Registered Dependency Closure Record"]
+                candidate["previous_publication_record_id"] = record_ids[
+                    "Projection Publication Envelope"
+                ]
+                candidate["trigger_record_id"] = record_ids["Registered Source Record"]
+            elif spec.record_type == "Registered Projection Deletion Record":
+                candidate = payload["candidate_payload"]
+                candidate["rebuild_requirement_record_id"] = record_ids[
+                    "Registered Projection Rebuild Requirement"
+                ]
+                candidate["target_publication_record_id"] = record_ids[
+                    "Projection Publication Envelope"
+                ]
             result = self.kernel.write(
                 self.request(
                     spec,
@@ -217,7 +273,9 @@ class GovernanceKernelTests(unittest.TestCase):
 
     def test_publication_payload_must_match_registered_audit(self) -> None:
         record_ids = self.build_chain()
-        publication_spec = RECORD_SPECS[-1]
+        publication_spec = next(
+            spec for spec in RECORD_SPECS if spec.record_type == "Projection Publication Envelope"
+        )
         audit_id = record_ids["Registered Projection Change Audit Record"]
         result = self.kernel.write(
             self.request(
@@ -229,6 +287,151 @@ class GovernanceKernelTests(unittest.TestCase):
             )
         )
         self.assertEqual("REJECTED_CONTENT_IDENTITY_MISMATCH", result.outcome)
+
+    def test_noncomplete_closure_cannot_support_determinate_projection(self) -> None:
+        record_ids = self.build_chain()
+        completeness_spec = next(
+            spec
+            for spec in RECORD_SPECS
+            if spec.record_type == "Registered Closure Completeness Record"
+        )
+        incomplete_payload = self.payload(completeness_spec, "incomplete")
+        incomplete_payload["candidate_payload"]["closure_completeness"] = "INCOMPLETE"
+        incomplete = self.kernel.write(
+            self.request(
+                completeness_spec,
+                "completeness:incomplete",
+                "semantic:completeness:incomplete",
+                incomplete_payload,
+                (record_ids["Registered Dependency Closure Record"],),
+                predecessor_record_id=record_ids["Registered Closure Completeness Record"],
+            )
+        )
+        self.assertEqual("ACCEPTED_EVIDENCE_ONLY", incomplete.outcome)
+
+        audit_spec = next(
+            spec
+            for spec in RECORD_SPECS
+            if spec.record_type == "Registered Projection Change Audit Record"
+        )
+        audit_payload = self.payload(audit_spec, "invalid-determinate")
+        candidate = audit_payload["candidate_payload"]
+        candidate["closure_completeness"] = "INCOMPLETE"
+        candidate["previous_publication_record_id"] = record_ids[
+            "Projection Publication Envelope"
+        ]
+        candidate["previous_coordinate_digest"] = "coordinate:test:v1"
+        candidate["new_coordinate_digest"] = "coordinate:test:v2"
+        candidate["projection_result"] = "COMMITTED"
+        result = self.kernel.write(
+            self.request(
+                audit_spec,
+                "projection:invalid-determinate",
+                "semantic:projection:invalid-determinate",
+                audit_payload,
+                (
+                    record_ids["Registered Temporal Mapping Record"],
+                    record_ids["Registered Derived Record Envelope"],
+                    record_ids["Registered Dependency Closure Record"],
+                    incomplete.record_id or "",
+                ),
+                predecessor_record_id=record_ids["Registered Projection Change Audit Record"],
+            )
+        )
+        self.assertEqual("REJECTED_INVALID_PAYLOAD", result.outcome)
+
+    def test_successor_publication_keeps_business_payload_identity_and_history(self) -> None:
+        record_ids = self.build_chain()
+        completeness_spec = next(
+            spec
+            for spec in RECORD_SPECS
+            if spec.record_type == "Registered Closure Completeness Record"
+        )
+        incomplete_payload = self.payload(completeness_spec, "incomplete-successor")
+        incomplete_payload["candidate_payload"]["closure_completeness"] = "INCOMPLETE"
+        incomplete = self.kernel.write(
+            self.request(
+                completeness_spec,
+                "successor:completeness",
+                "semantic:successor:completeness",
+                incomplete_payload,
+                (record_ids["Registered Dependency Closure Record"],),
+                predecessor_record_id=record_ids["Registered Closure Completeness Record"],
+            )
+        )
+        audit_spec = next(
+            spec
+            for spec in RECORD_SPECS
+            if spec.record_type == "Registered Projection Change Audit Record"
+        )
+        audit_payload = self.payload(audit_spec, "downgrade")
+        candidate = audit_payload["candidate_payload"]
+        candidate.update(
+            {
+                "change_reason": "SOURCE_CORRECTION",
+                "closure_completeness": "INCOMPLETE",
+                "new_coordinate_digest": "coordinate:test:v2",
+                "previous_coordinate_digest": "coordinate:test:v1",
+                "previous_publication_record_id": record_ids[
+                    "Projection Publication Envelope"
+                ],
+                "projection_result": "INDETERMINATE",
+            }
+        )
+        audit = self.kernel.write(
+            self.request(
+                audit_spec,
+                "successor:audit",
+                "semantic:successor:audit",
+                audit_payload,
+                (
+                    record_ids["Registered Temporal Mapping Record"],
+                    record_ids["Registered Derived Record Envelope"],
+                    record_ids["Registered Dependency Closure Record"],
+                    incomplete.record_id or "",
+                ),
+                predecessor_record_id=record_ids["Registered Projection Change Audit Record"],
+            )
+        )
+        self.assertEqual("ACCEPTED_EVIDENCE_ONLY", audit.outcome)
+        publication_spec = next(
+            spec for spec in RECORD_SPECS if spec.record_type == "Projection Publication Envelope"
+        )
+        publication = self.kernel.write(
+            self.request(
+                publication_spec,
+                "successor:publication",
+                "semantic:successor:publication",
+                audit_payload,
+                (audit.record_id or "",),
+                predecessor_record_id=record_ids["Projection Publication Envelope"],
+            )
+        )
+        self.assertEqual("ACCEPTED_EVIDENCE_ONLY", publication.outcome)
+        self.assertEqual(audit.payload_digest, publication.payload_digest)
+        self.assertNotEqual(audit.content_digest, publication.content_digest)
+        publications = [
+            row
+            for row in self.kernel.export_rows("protected_records")
+            if row["record_type"] == "Projection Publication Envelope"
+        ]
+        self.assertEqual(2, len(publications))
+
+    def test_projection_deletion_record_does_not_delete_history(self) -> None:
+        record_ids = self.build_chain()
+        rows = self.kernel.export_rows("protected_records")
+        self.assertTrue(
+            any(row["record_id"] == record_ids["Registered Projection Deletion Record"] for row in rows)
+        )
+        self.assertTrue(
+            any(row["record_id"] == record_ids["Projection Publication Envelope"] for row in rows)
+        )
+        self.assertTrue(
+            any(
+                row["record_id"] == record_ids["Registered Projection Change Audit Record"]
+                for row in rows
+            )
+        )
 
 
 if __name__ == "__main__":

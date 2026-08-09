@@ -1,0 +1,38 @@
+{
+  "append_only_trigger_count": 16,
+  "attempt_content_resolution_counts": {
+    "DERIVED_FROM_CONTENT_IDENTICAL_OUTPUT_RECORD": 23,
+    "UNAVAILABLE_LEGACY_REQUEST_PAYLOAD_NOT_RETAINED": 36
+  },
+  "conflict_content_resolution_counts": {
+    "DERIVED_FROM_EXISTING_RECORD": 11,
+    "UNAVAILABLE_LEGACY_COMPETING_PAYLOAD_NOT_RETAINED": 11
+  },
+  "foreign_key_failure_count": 0,
+  "integrity_check": "ok",
+  "journal_mode": "delete",
+  "legacy_tables_preserved": {
+    "authority_grants": true,
+    "protected_records": true,
+    "runtime_metadata": true,
+    "write_attempts": true,
+    "write_conflicts": true
+  },
+  "migration_contract_version": "governance-schema-migration/0.1-to-0.2",
+  "migration_execution_id": "CR-0016-MIGRATION-001",
+  "record_payload_assessment_counts": {
+    "CURRENT_PAYLOAD_CONFORMANT": 9,
+    "LEGACY_RETAINED_NOT_CURRENTLY_CONFORMANT": 3
+  },
+  "result": "PASS_WITH_EXPLICIT_LEGACY_UNAVAILABLE_DIGESTS",
+  "source_counts": {
+    "protected_records": 12,
+    "write_attempts": 59,
+    "write_conflicts": 11
+  },
+  "source_database_digest_after": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+  "source_database_digest_before": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+  "source_database_unchanged": true,
+  "source_implementation_version": "governance-kernel/0.1.0+sha256:f273f81f789b38c656749340a5d2894c7594bfc7519869248b997b384eafa8ce",
+  "target_implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf"
+}

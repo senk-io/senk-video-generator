@@ -14,6 +14,7 @@ class RecordSpec:
     proposal_digest: str
     prerequisite_types: tuple[str, ...] = ()
     content_identity_source_type: str | None = None
+    required_candidate_fields: tuple[str, ...] = ()
     allow_correction: bool = True
 
 
@@ -40,6 +41,7 @@ def _spec(
     proposal_version: str,
     prerequisite_types: tuple[str, ...] = (),
     content_identity_source_type: str | None = None,
+    required_candidate_fields: tuple[str, ...] = (),
 ) -> RecordSpec:
     return RecordSpec(
         workflow_id=workflow_id,
@@ -49,6 +51,7 @@ def _spec(
         proposal_digest=PROPOSAL_DIGESTS[workflow_id],
         prerequisite_types=prerequisite_types,
         content_identity_source_type=content_identity_source_type,
+        required_candidate_fields=required_candidate_fields,
     )
 
 
@@ -126,6 +129,7 @@ RECORD_SPECS: tuple[RecordSpec, ...] = (
         "ClosureCompletenessRegistrationAuthorityType",
         "CR-0011-R2-COMPOSITE",
         ("Registered Dependency Closure Record",),
+        required_candidate_fields=("closure_completeness",),
     ),
     _spec(
         "WS-09",
@@ -138,6 +142,17 @@ RECORD_SPECS: tuple[RecordSpec, ...] = (
             "Registered Dependency Closure Record",
             "Registered Closure Completeness Record",
         ),
+        required_candidate_fields=(
+            "change_reason",
+            "closure_completeness",
+            "new_coordinate_digest",
+            "previous_coordinate_digest",
+            "previous_publication_record_id",
+            "projection_result",
+            "projection_stable_key",
+            "transition_rule_version",
+            "view_mode",
+        ),
     ),
     _spec(
         "WS-09",
@@ -146,6 +161,53 @@ RECORD_SPECS: tuple[RecordSpec, ...] = (
         "CR-0012-R2-COMPOSITE",
         ("Registered Projection Change Audit Record",),
         content_identity_source_type="Registered Projection Change Audit Record",
+        required_candidate_fields=(
+            "change_reason",
+            "closure_completeness",
+            "new_coordinate_digest",
+            "previous_coordinate_digest",
+            "previous_publication_record_id",
+            "projection_result",
+            "projection_stable_key",
+            "transition_rule_version",
+            "view_mode",
+        ),
+    ),
+    _spec(
+        "WS-09",
+        "Registered Projection Rebuild Requirement",
+        "ProjectionRebuildRequirementRegistrationAuthorityType",
+        "CR-0012-R2-COMPOSITE",
+        (
+            "Registered Source Record",
+            "Registered Closure Completeness Record",
+            "Projection Publication Envelope",
+        ),
+        required_candidate_fields=(
+            "closure_record_id",
+            "impact_scope",
+            "new_coordinate_digest",
+            "previous_coordinate_digest",
+            "previous_publication_record_id",
+            "recovery_path",
+            "trigger_record_id",
+        ),
+    ),
+    _spec(
+        "WS-09",
+        "Registered Projection Deletion Record",
+        "ProjectionDeletionRecordRegistrationAuthorityType",
+        "CR-0012-R2-COMPOSITE",
+        (
+            "Projection Publication Envelope",
+            "Registered Projection Rebuild Requirement",
+        ),
+        required_candidate_fields=(
+            "cache_object_id",
+            "deletion_reason",
+            "rebuild_requirement_record_id",
+            "target_publication_record_id",
+        ),
     ),
 )
 

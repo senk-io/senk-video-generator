@@ -1,0 +1,6 @@
+test_v01_history_is_preserved_and_current_runtime_can_open (test_v01_to_v02_migration.MigrationTests.test_v01_history_is_preserved_and_current_runtime_can_open) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+OK

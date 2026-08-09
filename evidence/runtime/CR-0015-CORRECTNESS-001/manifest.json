@@ -1,0 +1,23 @@
+{
+  "algorithm": "SHA-256",
+  "canonical_manifest": "digest + two spaces + filename + LF, sorted by filename",
+  "files": {
+    "concurrency_summary.json": "a57e95285056d16f7a1c0b7b07e17919c00aee7226003ea6c7f0548171a7dd0e",
+    "input_manifest.json": "ad144011f1decb593d8b6b2ab4230d40064b7a059ed6a9dba6af18881ed537c2",
+    "process-conflict.db": "3b09e7e314bfacfdbed69ada391ce91422781f4a2881ef0e8c7a4df416581976",
+    "process-idempotent.db": "ea46483045178422bb59ee3e0c4fc494e5bf7bb9efd057043d38b40d8c454d0f",
+    "projection_summary.json": "20647e1b43baf0952faccde7b15abc10fe371280e915a35d58548c648b50b730",
+    "replay-01.db": "609b7592a77dea95970938a99f5b4fb7fb206d8ddcc83f09ba1601657ee400d7",
+    "replay-02.db": "609b7592a77dea95970938a99f5b4fb7fb206d8ddcc83f09ba1601657ee400d7",
+    "replay-03.db": "609b7592a77dea95970938a99f5b4fb7fb206d8ddcc83f09ba1601657ee400d7",
+    "replay-04.db": "609b7592a77dea95970938a99f5b4fb7fb206d8ddcc83f09ba1601657ee400d7",
+    "replay-05.db": "609b7592a77dea95970938a99f5b4fb7fb206d8ddcc83f09ba1601657ee400d7",
+    "replay_summary.json": "890de1c61e1887fadd7080c7eb8a6d7517b9d5e60c7562e4844d0e2990b772df",
+    "summary.json": "c56d8083fb2f75fcd303cf762b8752db5c21174746111a560faf0faf95b30b32",
+    "thread-conflict.db": "94447e67beb06a0f7d077953924db9368549de286860f8ef81575c598d1db8a3",
+    "thread-idempotent.db": "80a9ce37140203cb46f11f81ddd475f5f735e91cd34859a1a806b8c351309e50",
+    "unit_test_output.txt": "8ea138f51f6a24a551cf95a0a37abc05b5c032bb522f7b363e24b63caf91670d",
+    "unit_test_summary.json": "b23d83691951164e29e63c76bcfb986f737c8bb22a66eecc7565fe2b8d990970"
+  },
+  "package_digest": "9e9aa60f5b62da95cbc81d21135c4b6a0460d62061b3140509292d7ec35263bc"
+}

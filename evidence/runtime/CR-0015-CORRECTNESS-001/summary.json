@@ -1,0 +1,183 @@
+{
+  "completed_at": "2026-08-09T08:30:25.204054Z",
+  "concurrency": {
+    "case_count": 4,
+    "cases": [
+      {
+        "conflict_count": 0,
+        "database_checks": {
+          "integrity_check": "ok",
+          "journal_mode": "delete"
+        },
+        "event_hash_chain_verified": true,
+        "mode": "thread",
+        "outcome_counts": {
+          "ACCEPTED_EVIDENCE_ONLY": 1,
+          "IDEMPOTENT_EXISTING": 31
+        },
+        "protected_record_count": 1,
+        "result": "PASS",
+        "scenario": "SAME_PAYLOAD_IDEMPOTENT",
+        "single_terminal_assignment": true,
+        "worker_count": 32
+      },
+      {
+        "conflict_count": 31,
+        "database_checks": {
+          "integrity_check": "ok",
+          "journal_mode": "delete"
+        },
+        "event_hash_chain_verified": true,
+        "mode": "thread",
+        "outcome_counts": {
+          "ACCEPTED_EVIDENCE_ONLY": 1,
+          "CONFLICT_RECORDED": 31
+        },
+        "protected_record_count": 1,
+        "result": "PASS",
+        "scenario": "DISTINCT_PAYLOAD_CONFLICT",
+        "single_terminal_assignment": true,
+        "worker_count": 32
+      },
+      {
+        "conflict_count": 0,
+        "database_checks": {
+          "integrity_check": "ok",
+          "journal_mode": "delete"
+        },
+        "event_hash_chain_verified": true,
+        "mode": "process",
+        "outcome_counts": {
+          "ACCEPTED_EVIDENCE_ONLY": 1,
+          "IDEMPOTENT_EXISTING": 15
+        },
+        "protected_record_count": 1,
+        "result": "PASS",
+        "scenario": "SAME_PAYLOAD_IDEMPOTENT",
+        "single_terminal_assignment": true,
+        "worker_count": 16
+      },
+      {
+        "conflict_count": 15,
+        "database_checks": {
+          "integrity_check": "ok",
+          "journal_mode": "delete"
+        },
+        "event_hash_chain_verified": true,
+        "mode": "process",
+        "outcome_counts": {
+          "ACCEPTED_EVIDENCE_ONLY": 1,
+          "CONFLICT_RECORDED": 15
+        },
+        "protected_record_count": 1,
+        "result": "PASS",
+        "scenario": "DISTINCT_PAYLOAD_CONFLICT",
+        "single_terminal_assignment": true,
+        "worker_count": 16
+      }
+    ],
+    "distinct_payload_conflict_preservation_verified": true,
+    "process_worker_count_per_case": 16,
+    "result": "PASS",
+    "same_payload_idempotency_verified": true,
+    "single_terminal_assignment_all_cases": true,
+    "thread_worker_count_per_case": 32
+  },
+  "cross_domain_evidence_created": false,
+  "cross_project_evidence_created": false,
+  "cross_provider_evidence_created": false,
+  "deterministic_replay": {
+    "all_exported_rows_identical": true,
+    "database_checks": {
+      "replay-01.db": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "replay-02.db": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "replay-03.db": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "replay-04.db": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      },
+      "replay-05.db": {
+        "integrity_check": "ok",
+        "journal_mode": "delete"
+      }
+    },
+    "event_hash_chains_verified": true,
+    "execution_id": "CR-0015-CORRECTNESS-001:deterministic-input",
+    "replay_count": 5,
+    "replay_signatures": [
+      "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+      "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+      "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+      "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615",
+      "f091e22698c2bd2b66a0ed55f67a34b69f544ce254a28be863c1520cd7155615"
+    ],
+    "result": "PASS",
+    "unique_signature_count": 1
+  },
+  "execution_id": "CR-0015-CORRECTNESS-001",
+  "formal_fact_created": false,
+  "implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf",
+  "institution_freeze_created": false,
+  "migration_evidence_created": false,
+  "next_required_stage": "CROSS_CONTEXT_AND_MIGRATION_EVIDENCE",
+  "projection_correctness": {
+    "attempt_count": 22,
+    "audit_publication_content_digest_distinct": true,
+    "audit_publication_payload_digest_equal": true,
+    "conflict_count": 1,
+    "deletion_record_id": "record:WS-09:7fa7ee5bd8037811e17f4064",
+    "deletion_requires_rebuild": true,
+    "event_hash_chain_verified": true,
+    "initial_publication_record_id": "record:WS-09:d3a8faeff83fe981ee461a14",
+    "noncomplete_determinate_projection_rejected": true,
+    "outcome_counts": {
+      "ACCEPTED_EVIDENCE_ONLY": 18,
+      "CONFLICT_RECORDED": 1,
+      "REJECTED_CONTENT_IDENTITY_MISMATCH": 1,
+      "REJECTED_INVALID_PAYLOAD": 1,
+      "REJECTED_MISSING_PREREQUISITE": 1
+    },
+    "protected_history_preserved_after_deletion": true,
+    "protected_record_count": 18,
+    "publication_mismatch_rejected": true,
+    "rebuild_requirement_record_id": "record:WS-09:c5996893844ae904cf631a52",
+    "record_type_counts": {
+      "Projection Publication Envelope": 2,
+      "Registered Atomic Qualification Resolution": 1,
+      "Registered Authority Applicability Consumer Resolution": 1,
+      "Registered Closure Completeness Record": 2,
+      "Registered Dependency Closure Record": 2,
+      "Registered Derived Record Envelope": 1,
+      "Registered Institution Registry Entry": 1,
+      "Registered Projection Change Audit Record": 2,
+      "Registered Projection Deletion Record": 1,
+      "Registered Projection Rebuild Requirement": 1,
+      "Registered Proof Applicability Record": 1,
+      "Registered Source Record": 2,
+      "Registered Temporal Mapping Record": 1
+    },
+    "result": "PASS",
+    "same_transition_competitor_conflict_preserved": true,
+    "successor_publication_record_id": "record:WS-09:7ce6345b2d4f417c60c11d1f"
+  },
+  "result": "PASS_AS_NON_AUTHORITATIVE_CORRECTNESS_EVIDENCE",
+  "started_at": "2026-08-09T08:30:24.186225Z",
+  "test_harness_digest": "ff23fbb660be2280e1e285cd6cf83d773cd7b240eeb504c417eb6a184747ee3e",
+  "unit_tests": {
+    "command": "python3 -W error::ResourceWarning -m unittest discover -s tests -v",
+    "errors": 0,
+    "failures": 0,
+    "resource_warnings": 0,
+    "result": "PASS",
+    "tests_run": 14
+  }
+}

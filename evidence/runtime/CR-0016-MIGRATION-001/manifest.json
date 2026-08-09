@@ -1,0 +1,14 @@
+{
+  "algorithm": "SHA-256",
+  "canonical_manifest": "digest + two spaces + filename + LF, sorted by filename",
+  "files": {
+    "input_manifest.json": "68829d40852f4956db14feb17c58db551d2005362110c2967c8047b909dbedec",
+    "migrated.db": "e314a03ad96aebfc0419ce3365526ef7daeb916cf5354ec06ab8c74239ebe2e9",
+    "migration_summary.json": "407ce41927e5b7dcc9ebbf3417d6a5629057b69accc0fe4a4d25a6d9b175b219",
+    "migration_test_output.txt": "f2c5756a0b52bc5992edd0c813d6f594f92d00f63aa2cee94076decde82f158e",
+    "migration_test_summary.json": "ed3dfe157f4526445e9fb9b59a03c755b7f74ca753b1b4b7cb78db172d5d35c9",
+    "post_migration_runtime_summary.json": "119b81aaf9a998eade6abf212af02918e3f09870115356111ccb8dfbbaeae560",
+    "summary.json": "f61402364ac6c93dbf94e347c8a7bc9d0625a467ede32c7f7eeba95a5645a0a8"
+  },
+  "package_digest": "ee015cda57a52ed82a7fc67eab09e9f0611925d6249cc9c89c063324485020a2"
+}

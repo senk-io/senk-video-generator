@@ -1,0 +1,99 @@
+{
+  "completed_at": "2026-08-09T08:39:27.281298Z",
+  "cross_domain_evidence_created": false,
+  "cross_project_evidence_created": false,
+  "cross_provider_evidence_created": false,
+  "database_checks": {
+    "foreign_key_failure_count": 0,
+    "integrity_check": "ok",
+    "journal_mode": "delete",
+    "user_version": 2
+  },
+  "execution_id": "CR-0016-MIGRATION-001",
+  "formal_fact_created": false,
+  "institution_freeze_created": false,
+  "migration": {
+    "append_only_trigger_count": 16,
+    "attempt_content_resolution_counts": {
+      "DERIVED_FROM_CONTENT_IDENTICAL_OUTPUT_RECORD": 23,
+      "UNAVAILABLE_LEGACY_REQUEST_PAYLOAD_NOT_RETAINED": 36
+    },
+    "conflict_content_resolution_counts": {
+      "DERIVED_FROM_EXISTING_RECORD": 11,
+      "UNAVAILABLE_LEGACY_COMPETING_PAYLOAD_NOT_RETAINED": 11
+    },
+    "foreign_key_failure_count": 0,
+    "integrity_check": "ok",
+    "journal_mode": "delete",
+    "legacy_tables_preserved": {
+      "authority_grants": true,
+      "protected_records": true,
+      "runtime_metadata": true,
+      "write_attempts": true,
+      "write_conflicts": true
+    },
+    "migration_contract_version": "governance-schema-migration/0.1-to-0.2",
+    "migration_execution_id": "CR-0016-MIGRATION-001",
+    "record_payload_assessment_counts": {
+      "CURRENT_PAYLOAD_CONFORMANT": 9,
+      "LEGACY_RETAINED_NOT_CURRENTLY_CONFORMANT": 3
+    },
+    "result": "PASS_WITH_EXPLICIT_LEGACY_UNAVAILABLE_DIGESTS",
+    "source_counts": {
+      "protected_records": 12,
+      "write_attempts": 59,
+      "write_conflicts": 11
+    },
+    "source_database_digest_after": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+    "source_database_digest_before": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+    "source_database_unchanged": true,
+    "source_implementation_version": "governance-kernel/0.1.0+sha256:f273f81f789b38c656749340a5d2894c7594bfc7519869248b997b384eafa8ce",
+    "target_implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf"
+  },
+  "migration_evidence_result": "PASS_FOR_REVIEWED_0_1_TO_0_2_PATH",
+  "migration_harness_digest": "46488fce8b7d578711a24dae3d52e11e5100dcf93cf863be90e646120c203f2d",
+  "migration_tests": {
+    "errors": 0,
+    "failures": 0,
+    "resource_warnings": 0,
+    "result": "PASS",
+    "tests_run": 1
+  },
+  "next_required_stage": "EXTERNAL_CROSS_CONTEXT_EVIDENCE",
+  "post_migration_runtime": {
+    "audit_publication_payload_identity": true,
+    "audit_successor_record_id": "record:WS-09:54d47e2e5789377875445547",
+    "closure_successor_record_id": "record:WS-08:98c97650f7660dd0bba69981",
+    "completeness_successor_record_id": "record:WS-08:9d41fdf805771bead58eb76c",
+    "deletion_record_id": "record:WS-09:2df177208993957c9722fd28",
+    "legacy_history_preserved": true,
+    "legacy_idempotency_verified": true,
+    "mixed_version_event_chain_verified": true,
+    "outcome_counts": {
+      "ACCEPTED_EVIDENCE_ONLY": 19,
+      "CONFLICT_RECORDED": 11,
+      "IDEMPOTENT_EXISTING": 12,
+      "REJECTED_CONTENT_IDENTITY_MISMATCH": 1,
+      "REJECTED_INVALID_PAYLOAD": 1,
+      "REJECTED_MISSING_PREREQUISITE": 11,
+      "REJECTED_UNAUTHORIZED": 12,
+      "REJECTED_UNKNOWN_TYPE": 1
+    },
+    "post_migration_accepted_record_count": 7,
+    "post_migration_negative_attempt_count": 1,
+    "publication_successor_record_id": "record:WS-09:8736334ba64bf51379b376c1",
+    "rebuild_requirement_record_id": "record:WS-09:6bc1d46acff5eb404e26b40d",
+    "result": "PASS",
+    "source_successor_record_id": "record:WS-02:ed358f373f16b404511e119f",
+    "total_attempt_count": 68,
+    "total_conflict_count": 11,
+    "total_protected_record_count": 19
+  },
+  "result": "PASS_AS_NON_AUTHORITATIVE_MIGRATION_EVIDENCE",
+  "source_database_digest_after": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+  "source_database_digest_before": "9e64da1355af98a939ae0c4cece065ca1b0d67d90afc7ae0d4c9c97865032f42",
+  "source_execution_id": "CR-0014-PW-004",
+  "source_package_digest": "77d45a57a976ffdb790c8759206f541de9e21fd95c0c2fce959043776ae6846c",
+  "started_at": "2026-08-09T08:39:27.198094Z",
+  "target_implementation_version": "governance-kernel/0.2.0+sha256:4bd160d6ad9a64acbb66698b342396d8b33e7a763e127dc89298d42bdbbfb5cf"
+}
