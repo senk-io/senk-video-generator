@@ -527,6 +527,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "prompt_encoding_completed": bool(worker_state.get("prompt_encoding_completed")),
         "text_encoder_post_release": worker_state.get("text_encoder_post_release"),
         "mps_dtype_normalization": worker_state.get("mps_dtype_normalization", []),
+        "decode_strategy": worker_state.get("decode_strategy"),
+        "denoising_completed": bool(worker_state.get("denoising_completed")),
+        "mps_post_denoise_release": worker_state.get("mps_post_denoise_release"),
         "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
@@ -768,6 +771,9 @@ def run_worker(args: argparse.Namespace) -> int:
         "prompt_encoding_completed": False,
         "text_encoder_post_release": None,
         "mps_dtype_normalization": [],
+        "decode_strategy": "PIPELINE_DEFAULT",
+        "denoising_completed": False,
+        "mps_post_denoise_release": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
@@ -922,11 +928,42 @@ def run_worker(args: argparse.Namespace) -> int:
             num_inference_steps=provider["num_inference_steps"],
             guidance_scale=provider["guidance_scale"],
             generator=generator,
-            output_type="np",
+            output_type="latent" if args.provider == "cogvideox" else "np",
         )
         torch.mps.synchronize()
-        frames = output.frames[0]
-        del output
+        if args.provider == "cogvideox":
+            state["denoising_completed"] = True
+            state["decode_strategy"] = "LATENT_TO_CPU_THEN_VAE_CPU_TILED"
+            state["phase"] = "RELEASING_DENOISER_BEFORE_CPU_DECODE"
+            write_json(state_path, state)
+            latent_video = output.frames.detach().to(device="cpu", dtype=torch.float32)
+            del output
+            if hasattr(pipe, "maybe_free_model_hooks"):
+                pipe.maybe_free_model_hooks()
+            pipe.text_encoder = None
+            pipe.transformer = None
+            prompt_embeds = None
+            negative_prompt_embeds = None
+            state["mps_post_denoise_release"] = release_pipeline_memory(torch)
+            state["phase"] = "DECODING_VIDEO_ON_CPU"
+            write_json(state_path, state)
+            decode_start = time.perf_counter()
+            pipe.vae.to(device="cpu", dtype=torch.float32)
+            with torch.inference_mode():
+                decoded_video = pipe.decode_latents(latent_video)
+                frames = pipe.video_processor.postprocess_video(
+                    video=decoded_video,
+                    output_type="np",
+                )[0]
+            del latent_video
+            del decoded_video
+            state["stage_elapsed_seconds"]["cpu_vae_decode"] = round(
+                time.perf_counter() - decode_start,
+                3,
+            )
+        else:
+            frames = output.frames[0]
+            del output
         state["inference_completed"] = True
         state["mps_peak_current_allocated_bytes"] = sampler.peak_current
         state["mps_peak_driver_allocated_bytes"] = sampler.peak_driver
