@@ -1,0 +1,55 @@
+{
+  "contract_id": "CR-0020-COGVIDEOX-ORIGAMI-TEMPORAL-STABILITY-DERIVATION-001",
+  "contract_status": "BOUNDED_DERIVATION_ONLY",
+  "source": {
+    "execution_id": "LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z",
+    "filename": "derived_5s.mp4",
+    "sha256": "ad8b82f29660de06853eacfe6e63d1c69dd80c5289ccf6229b41bf0f35780427",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0
+  },
+  "subject_measurement": {
+    "red_minimum": 150,
+    "red_to_green_ratio_numerator": 3,
+    "red_to_green_ratio_denominator": 2,
+    "red_to_blue_ratio_numerator": 3,
+    "red_to_blue_ratio_denominator": 2,
+    "minimum_subject_area_pixels": 10000
+  },
+  "trajectory": {
+    "strategy": "LINEAR_CENTROID_FIRST_TO_LAST",
+    "rounding": "NEAREST_INTEGER_PIXEL",
+    "maximum_translation_pixels": 128,
+    "edge_fill": "EDGE_REPLICATION"
+  },
+  "temporal_filter": {
+    "strategy": "SYMMETRIC_THREE_FRAME_WEIGHTED_MIX",
+    "weights": [1, 4, 1],
+    "endpoint_behavior": "CLAMP"
+  },
+  "output": {
+    "filename": "stabilized_5s.mp4",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0,
+    "codec": "libx264",
+    "pixel_format": "yuv420p"
+  },
+  "observation_thresholds": {
+    "maximum_adjacent_centroid_jump_pixels": 5.0,
+    "mean_adjacent_centroid_jump_pixels": 2.0,
+    "maximum_adjacent_subject_area_change_percent": 13.0,
+    "all_frames_retain_subject": true
+  },
+  "non_goals": [
+    "source_evidence_modification",
+    "model_generation",
+    "visual_quality_acceptance",
+    "selection_decision",
+    "timeline_binding",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "institution_freeze"
+  ]
+}

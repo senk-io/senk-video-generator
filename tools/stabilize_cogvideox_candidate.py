@@ -182,18 +182,30 @@ def threshold_comparisons(observation: dict[str, Any], thresholds: dict[str, Any
 
 
 def validate_contract(contract: dict[str, Any]) -> None:
-    if contract.get("contract_id") != "CR-0020-COGVIDEOX-TEMPORAL-STABILITY-DERIVATION-001":
+    expected_sources = {
+        "CR-0020-COGVIDEOX-TEMPORAL-STABILITY-DERIVATION-001": {
+            "execution_id": "LM-COGVIDEOX-5S-16STEP-20260809T190026Z",
+            "filename": "derived_5s.mp4",
+            "sha256": "0276303f4eb31da3167e9a23d94e0a472f5d35b58834323a3ecc9d157357b8cd",
+            "decoded_frame_count": 40,
+            "fps": 8,
+            "duration_seconds": 5.0,
+        },
+        "CR-0020-COGVIDEOX-ORIGAMI-TEMPORAL-STABILITY-DERIVATION-001": {
+            "execution_id": "LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z",
+            "filename": "derived_5s.mp4",
+            "sha256": "ad8b82f29660de06853eacfe6e63d1c69dd80c5289ccf6229b41bf0f35780427",
+            "decoded_frame_count": 40,
+            "fps": 8,
+            "duration_seconds": 5.0,
+        },
+    }
+    contract_id = contract.get("contract_id")
+    if contract_id not in expected_sources:
         raise ValueError("时序稳定合同标识无效")
     if contract.get("contract_status") != "BOUNDED_DERIVATION_ONLY":
         raise ValueError("时序稳定合同状态无效")
-    expected_source = {
-        "execution_id": "LM-COGVIDEOX-5S-16STEP-20260809T190026Z",
-        "filename": "derived_5s.mp4",
-        "sha256": "0276303f4eb31da3167e9a23d94e0a472f5d35b58834323a3ecc9d157357b8cd",
-        "decoded_frame_count": 40,
-        "fps": 8,
-        "duration_seconds": 5.0,
-    }
+    expected_source = expected_sources[contract_id]
     if contract.get("source") != expected_source:
         raise ValueError("时序稳定来源合同无效")
     expected_measurement = {

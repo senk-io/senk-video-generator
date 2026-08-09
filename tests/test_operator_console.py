@@ -325,6 +325,20 @@ else:
         with self.assertRaisesRegex(ValueError, "混合权重"):
             validate_stability_contract(mutated)
 
+        origami_contract_path = Path(
+            "experiments/postprocessing/cogvideox_origami_temporal_stability_v1.json"
+        )
+        origami_contract = json.loads(origami_contract_path.read_text(encoding="utf-8"))
+        validate_stability_contract(origami_contract)
+        self.assertEqual(
+            origami_contract["source"]["execution_id"],
+            "LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z",
+        )
+        mutated_origami_contract = json.loads(json.dumps(origami_contract))
+        mutated_origami_contract["source"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "来源合同无效"):
+            validate_stability_contract(mutated_origami_contract)
+
         frames = np.full((4, 32, 48, 3), 240, dtype=np.uint8)
         for index, x in enumerate((4, 18, 8, 22)):
             frames[index, 12:22, x : x + 12] = (230, 20, 20)

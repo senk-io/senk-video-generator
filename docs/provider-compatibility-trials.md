@@ -187,6 +187,17 @@ CogVideoX 固定八步质量探针：
 
 这个合同仍只允许九帧输出，不自动生成五秒。只有折纸结构、主体语义和场景语义逐帧闭合后，才能单独建立新的四十一帧资源合同。
 
+九帧折纸门禁通过后，五秒折纸候选使用独立合同 `cogvideox_five_second_32_steps_origami.json`。合同保持 `65%` MPS 上限、至少 `5 GiB` 可用内存停止线和最多 `4 GiB` 新增换页停止线，并禁止自动重试：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_provider_compatibility_trial \
+  --provider cogvideox \
+  --execution-id LM-COGVIDEOX-5S-32STEP-ORIGAMI-YYYYMMDDTHHMMSSZ \
+  --trial-contract experiments/provider_compatibility/cogvideox_five_second_32_steps_origami.json
+```
+
+该合同生成 `41` 帧源输出，再裁切为 `40` 帧、`8 fps`、精确 `5` 秒。若主体质心仍超过既有稳定阈值，只能使用绑定来源摘要的 `cogvideox_origami_temporal_stability_v1.json` 派生新证据，不得修改来源或重跑模型。
+
 九帧分阶段严格对照闭合后，五秒候选观察使用独立合同 `cogvideox_five_second_16_steps.json`。该合同固定十六步质量基线、`41` 帧源输出、`65%` MPS 上限、至少 `5 GiB` 可用内存停止线和最多 `4 GiB` 新增换页停止线；只有源输出完整形成后，运行器才按 `DROP_LAST_FRAME` 派生 `40` 帧、`8 fps`、精确 `5` 秒的 `derived_5s.mp4`：
 
 ```bash
@@ -293,6 +304,8 @@ manifest.json
 | `zai-org/CogVideoX-2b` | 八步为最低可辨识点；三十二步为当前九帧质量基线 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 八步同参数分阶段对照总耗时 104.597 秒，MPS 驱动峰值 4,367,155,200 字节，换页增长为 0；相较旧完整管线八步，MPS 驱动峰值降低 63.884%，九帧船体语义保持；三十二步进一步形成更清楚的倒影、涟漪和雨景语义，但纸张折痕仍不足；执行标识 `LM-COGVIDEOX-8STEP-STAGED-20260809T184407Z` |
 | `zai-org/CogVideoX-2b` 三十二步质量探针 | 九帧雨景与水面改善；折纸材质仍未闭合 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 总耗时 247.653 秒；MPS 驱动峰值 4,367,155,200 字节，新增换页为 0；九帧全部保留船体，最大相邻质心跳变由十六步的 15.54 px 降至 10.58 px，平均值由 7.90 px 降至 4.29 px；水面倒影和同心涟漪明显增强，但最大主体面积变化升至 15.42%，且没有清晰纸张折痕；执行标识 `LM-COGVIDEOX-32STEP-QUALITY-20260809T193147Z` |
 | `zai-org/CogVideoX-2b` 三十二步折纸提示词探针 | 首次形成稳定可辨识的折纸结构 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 只改变提示词主体描述；总耗时 220.365 秒，MPS 驱动峰值 4,356,620,288 字节，新增换页为 0；九帧全部形成交叠三角纸面和持续对角折线，并保留水面倒影与涟漪；但最大相邻质心跳变为 20.45 px、最大主体面积变化为 17.08%，只通过九帧质量门禁，尚未证明五秒连续性；执行标识 `LM-COGVIDEOX-32STEP-ORIGAMI-QUALITY-20260809T193843Z` |
+| `zai-org/CogVideoX-2b` 三十二步折纸五秒候选 | 41 帧质量与资源闭合 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 总耗时 1331.091 秒；MPS 驱动峰值 6,562,824,192 字节，新增换页为 0；41 帧全部保留折纸面、折痕、水面和倒影，并派生精确 5 秒；原始最大相邻质心跳变 7.40 px；执行标识 `LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z` |
+| 折纸五秒时序稳定派生 | 技术连续性阈值全部通过 | 同上 | 不重跑模型；最大相邻质心跳变从 7.40 px 降至 1.27 px，平均值从 3.46 px 降至 0.70 px，最大面积变化降至 2.15%；40 帧折纸结构和场景语义保持；执行标识 `LM-COGVIDEOX-ORIGAMI-STABILITY-DERIVATION-20260809T201042Z` |
 | `zai-org/CogVideoX-2b` 五秒候选观察 | 技术闭合；运动连续性仍需处理 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 十六步生成 41 帧并派生 40 帧、8 fps、精确 5 秒；总耗时 828.230 秒，MPS 驱动峰值 6,562,824,192 字节，新增换页为 0；全部 41 帧保留红色船体，但最大相邻质心跳变约 45.1 px，不能登记正式质量接受；执行标识 `LM-COGVIDEOX-5S-16STEP-20260809T190026Z` |
 | `zai-org/CogVideoX-2b` 五秒时序稳定派生 | 技术连续性阈值闭合；仍待人工质量接受 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 锁定既有五秒来源摘要，不重新运行模型；输出 40 帧、8 fps、精确 5 秒，全部帧保留船体；最大相邻质心跳变由约 45.1 px 降至 2.78 px，平均值由约 12.29 px 降至 1.37 px，最大面积变化为 12.08%；40 帧逐帧未见边缘接缝或明显双影，但雨滴、折痕和水面细节仍不足；执行标识 `LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z` |
 

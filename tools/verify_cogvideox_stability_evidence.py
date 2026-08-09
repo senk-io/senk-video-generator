@@ -21,7 +21,14 @@ PRIVATE_TEXT_PATTERNS = (
     re.compile(r"Hardware UUID", re.IGNORECASE),
 )
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CONTRACT_PATH = REPO_ROOT / "experiments/postprocessing/cogvideox_temporal_stability_v1.json"
+CONTRACT_PATHS = {
+    "CR-0020-COGVIDEOX-TEMPORAL-STABILITY-DERIVATION-001": (
+        REPO_ROOT / "experiments/postprocessing/cogvideox_temporal_stability_v1.json"
+    ),
+    "CR-0020-COGVIDEOX-ORIGAMI-TEMPORAL-STABILITY-DERIVATION-001": (
+        REPO_ROOT / "experiments/postprocessing/cogvideox_origami_temporal_stability_v1.json"
+    ),
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -109,7 +116,8 @@ def main() -> int:
     request = read_json(evidence_dir / "request.json")
     summary = read_json(evidence_dir / "summary.json")
     contract = request["contract"]
-    if contract != read_json(CONTRACT_PATH):
+    contract_path = CONTRACT_PATHS.get(contract.get("contract_id"))
+    if contract_path is None or contract != read_json(contract_path):
         raise SystemExit("证据请求与固定时序稳定合同不一致")
     expected_paths = {entry["path"] for entry in manifest["files"]}
     actual_paths = {
