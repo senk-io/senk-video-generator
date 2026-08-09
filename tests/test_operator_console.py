@@ -20,18 +20,28 @@ from operator_console.contracts import (
 from operator_console.server import ControlError, JobManager, WEB_ROOT, create_server
 from tools.run_provider_compatibility_trial import (
     activate_pipeline_strategy,
+    build_wan_denoiser_pipeline,
     configure_mps_memory_limit,
     load_execution_contract,
+    max_jsonl_metric,
     observe_resource_budget,
+    prepare_wan_prompt_embeddings,
+    request_worker_stop,
     release_pipeline_memory,
 )
 from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
 
 
 class FakeObserver:
-    def __init__(self, active: bool = False, available_bytes: int = 16 * GIB) -> None:
+    def __init__(
+        self,
+        active: bool = False,
+        available_bytes: int = 16 * GIB,
+        swap_used_bytes: int = 2 * GIB,
+    ) -> None:
         self.active = active
         self.available_bytes = available_bytes
+        self.swap_used_bytes = swap_used_bytes
 
     def model_statuses(self) -> list[dict]:
         return [
@@ -62,7 +72,11 @@ class FakeObserver:
                 "used_percent": 55.6,
                 "pressure": "healthy",
             },
-            "swap": {"total_bytes": 32 * GIB, "used_bytes": 2 * GIB, "used_percent": 6.25},
+            "swap": {
+                "total_bytes": 32 * GIB,
+                "used_bytes": self.swap_used_bytes,
+                "used_percent": round(self.swap_used_bytes / (32 * GIB) * 100, 2),
+            },
             "disk": {"total_bytes": 100 * GIB, "used_bytes": 40 * GIB, "free_bytes": 60 * GIB, "used_percent": 40},
         }
 
@@ -137,7 +151,8 @@ else:
             "seed": 42,
             "parameters": profile["parameters"],
             "timeout_seconds": 3600,
-            "preflight_min_available_memory_bytes": 10 * GIB,
+            "preflight_min_available_memory_bytes": 16 * GIB,
+            "preflight_max_swap_used_bytes": 4 * GIB,
             "abort_min_available_memory_bytes": 3 * GIB,
             "max_swap_growth_bytes": 8 * GIB,
             "mps_memory_fraction": 0.75,
@@ -156,6 +171,7 @@ else:
         self.assertEqual(contract["generation_profile_key"], "wan_probe")
         self.assertEqual(contract["execution_strategy"], "mps_model_offload_bounded")
         self.assertEqual(contract["resource_budget"]["mps_memory_fraction"], 0.75)
+        self.assertEqual(contract["resource_budget"]["preflight_max_swap_used_bytes"], 4 * GIB)
         self.assertEqual(contract["resource_budget"]["max_swap_growth_bytes"], 8 * GIB)
         self.assertEqual(contract["contract_status"], "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE")
 
@@ -170,6 +186,18 @@ else:
         self.assertEqual(source, job_spec.resolve())
         self.assertEqual(contract["job_id"], job["job_id"])
         self.assertEqual(contract["providers"]["wan"]["num_frames"], 9)
+
+    def test_legacy_v2_job_remains_readable_with_new_swap_gate(self) -> None:
+        job = self.manager.create_job(self.request())
+        job_spec = self.state_root / "jobs" / job["job_id"] / "request.json"
+        persisted = json.loads(job_spec.read_text(encoding="utf-8"))
+        persisted["schema_version"] = "operator-job.v2"
+        persisted["resource_budget"].pop("preflight_max_swap_used_bytes")
+
+        normalized, errors = validate_persisted_job(persisted)
+
+        self.assertEqual(errors, [])
+        self.assertEqual(normalized["resource_budget"]["preflight_max_swap_used_bytes"], 4 * GIB)
 
     def test_resource_budget_requires_sustained_low_memory_and_blocks_swap_growth(self) -> None:
         samples = 0
@@ -262,6 +290,120 @@ else:
         self.assertTrue(mps.cache_emptied)
         self.assertEqual(release["driver_allocated_bytes"], 200)
 
+    def test_wan_text_encoder_is_released_before_denoiser_load(self) -> None:
+        events: list[str] = []
+
+        class FakeTensor:
+            def detach(self):
+                return self
+
+            def to(self, *_args, **_kwargs):
+                return self
+
+        class FakeMps:
+            @staticmethod
+            def synchronize() -> None:
+                events.append("mps_synchronize")
+
+            @staticmethod
+            def empty_cache() -> None:
+                events.append("mps_empty_cache")
+
+            @staticmethod
+            def current_allocated_memory() -> int:
+                return 0
+
+            @staticmethod
+            def driver_allocated_memory() -> int:
+                return 0
+
+        fake_torch = SimpleNamespace(
+            bfloat16="bfloat16",
+            float32="float32",
+            device=lambda value: value,
+            mps=FakeMps(),
+        )
+
+        def component(name: str):
+            class Component:
+                @classmethod
+                def from_pretrained(cls, *_args, **_kwargs):
+                    events.append(name)
+                    return cls()
+
+            return Component
+
+        class FakePipeline:
+            model_cpu_offload_seq = "text_encoder->transformer->vae"
+
+            def __init__(self, **kwargs) -> None:
+                self.kwargs = kwargs
+                events.append("pipeline")
+
+            def enable_model_cpu_offload(self, device: str) -> None:
+                events.append(f"offload:{device}")
+
+            def encode_prompt(self, **_kwargs):
+                events.append("encode_prompt")
+                return FakeTensor(), FakeTensor()
+
+            def maybe_free_model_hooks(self) -> None:
+                events.append("release_text_encoder")
+
+            def enable_attention_slicing(self) -> None:
+                events.append("attention_slicing")
+
+        prompt = prepare_wan_prompt_embeddings(
+            Path("/snapshot"),
+            "A paper boat.",
+            fake_torch,
+            component("tokenizer"),
+            component("text_encoder"),
+            FakePipeline,
+        )
+        pipe = build_wan_denoiser_pipeline(
+            Path("/snapshot"),
+            fake_torch,
+            component("transformer"),
+            component("vae"),
+            component("scheduler"),
+            FakePipeline,
+        )
+
+        self.assertIsInstance(prompt["prompt_embeds"], FakeTensor)
+        self.assertLess(events.index("release_text_encoder"), events.index("transformer"))
+        self.assertIsNone(pipe.kwargs["text_encoder"])
+        self.assertIsNone(pipe.kwargs["tokenizer"])
+
+    def test_parent_stop_and_metric_fallback_preserve_abort_evidence(self) -> None:
+        class FakeChild:
+            terminated = False
+
+            def terminate(self) -> None:
+                self.terminated = True
+
+        evidence_dir = self.root / "stop-evidence"
+        evidence_dir.mkdir()
+        child = FakeChild()
+        request_worker_stop(evidence_dir, child, "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET")
+        metrics = evidence_dir / "mps_metrics.jsonl"
+        metrics.write_text(
+            '\n'.join(
+                [
+                    json.dumps({"mps_driver_allocated_bytes": 100}),
+                    json.dumps({"mps_driver_allocated_bytes": 400}),
+                    json.dumps({"mps_driver_allocated_bytes": 250}),
+                ]
+            )
+            + '\n',
+            encoding="utf-8",
+        )
+
+        stop_request = json.loads((evidence_dir / "stop_request.json").read_text(encoding="utf-8"))
+        self.assertTrue(child.terminated)
+        self.assertEqual(stop_request["reason"], "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET")
+        self.assertEqual(max_jsonl_metric(metrics, "mps_driver_allocated_bytes"), 400)
+
     def test_profile_parameters_and_mps_fraction_are_fail_closed(self) -> None:
         request = self.request()
         request["parameters"] = {**request["parameters"], "num_frames": 17}
@@ -277,14 +419,24 @@ else:
     def test_operator_evidence_requires_matching_memory_contract(self) -> None:
         request = {
             "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
+            "provider_key": "wan",
             "generation_profile_key": "wan_probe",
             "execution_strategy": "mps_model_offload_bounded",
-            "resource_budget": {"mps_memory_fraction": 0.75},
+            "resource_budget": {
+                "mps_memory_fraction": 0.75,
+                "preflight_max_swap_used_bytes": 4 * GIB,
+            },
         }
         summary = {
             "execution_strategy": "mps_model_offload_bounded",
             "mps_memory_limit": {"fraction": 0.75},
             "mps_strategy_activation": {"strategy": "mps_model_offload_bounded"},
+            "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+            "prompt_encoding_completed": True,
+            "text_encoder_post_release": {
+                "current_allocated_bytes": 0,
+                "driver_allocated_bytes": 0,
+            },
             "inference_completed": True,
             "mps_post_release": {
                 "current_allocated_bytes": 0,
@@ -329,6 +481,16 @@ else:
         mps_check = next(check for check in result["checks"] if check["id"] == "MPS_MEMORY_LIMIT_CONFIGURED")
         self.assertEqual(mps_check["status"], "passed")
         self.assertEqual(mps_check["details"]["mps_memory_fraction"], 0.75)
+
+    def test_preflight_blocks_high_existing_swap_during_recovery(self) -> None:
+        self.manager.observer = FakeObserver(swap_used_bytes=9 * GIB)
+
+        result = self.manager.preflight(self.request("LOCAL-WAN-SWAP-RECOVERY-001"))
+        swap_check = next(check for check in result["checks"] if check["id"] == "SWAP_RECOVERY_READY")
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(swap_check["status"], "blocked")
+        self.assertIn("最多允许", swap_check["message"])
 
     def test_job_registration_is_immutable_and_event_chain_is_linked(self) -> None:
         job = self.manager.create_job(self.request())

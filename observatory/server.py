@@ -35,6 +35,7 @@ MEDIA_FILES = frozenset({"output.mp4", "thumbnail.png"})
 MAX_JSON_BYTES = 4 * 1024 * 1024
 MAX_LOG_BYTES = 96 * 1024
 MAX_METRIC_POINTS = 420
+GIB = 1024**3
 
 MODEL_SPECS = (
     {
@@ -67,6 +68,8 @@ STAGE_DEFINITIONS = (
 PHASE_TO_STAGE = {
     "WORKER_STARTED": "snapshot",
     "RESOLVING_MODEL_SNAPSHOT": "snapshot",
+    "ENCODING_PROMPT": "pipeline",
+    "LOADING_DENOISER_PIPELINE": "pipeline",
     "LOADING_PIPELINE": "pipeline",
     "TRANSFERRING_TO_MPS": "mps",
     "CONFIGURING_MPS_BUDGET": "mps",
@@ -80,6 +83,18 @@ PHASE_TO_STAGE = {
 
 def utc_now() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def classify_memory_pressure(total_bytes: int, available_bytes: int, swap_used_bytes: int) -> tuple[str, str]:
+    """同时依据即时可用内存和换页残留判定本机资源状态。"""
+    available_ratio = available_bytes / total_bytes if total_bytes else 0
+    if available_ratio < 0.08:
+        return "critical", "AVAILABLE_MEMORY_CRITICAL"
+    if available_ratio < 0.18:
+        return "elevated", "AVAILABLE_MEMORY_LOW"
+    if swap_used_bytes >= 4 * GIB:
+        return "recovering", "SWAP_RESIDUE_HIGH"
+    return "healthy", "RESOURCE_READY"
 
 
 def safe_json(path: Path) -> dict[str, Any] | None:
@@ -255,13 +270,7 @@ class ObservatoryState:
         memory = psutil.virtual_memory()
         swap = psutil.swap_memory()
         disk = psutil.disk_usage(self.config.repo_root)
-        available_ratio = memory.available / memory.total if memory.total else 0
-        if available_ratio < 0.08:
-            pressure = "critical"
-        elif available_ratio < 0.18:
-            pressure = "elevated"
-        else:
-            pressure = "healthy"
+        pressure, pressure_reason = classify_memory_pressure(memory.total, memory.available, swap.used)
         return {
             "cpu_percent": round(psutil.cpu_percent(interval=None), 1),
             "logical_cpu_count": psutil.cpu_count(logical=True),
@@ -271,6 +280,7 @@ class ObservatoryState:
                 "available_bytes": memory.available,
                 "used_percent": round((memory.total - memory.available) / memory.total * 100, 1),
                 "pressure": pressure,
+                "pressure_reason": pressure_reason,
             },
             "swap": {
                 "total_bytes": swap.total,
@@ -685,6 +695,14 @@ def derive_warnings(
                 "severity": pressure,
                 "code": "LIVE_MEMORY_PRESSURE",
                 "message": "当前系统可用内存偏低，请避免同时启动新的高内存生成。",
+            }
+        )
+    if pressure == "recovering":
+        warnings.append(
+            {
+                "severity": "elevated",
+                "code": "LIVE_SWAP_RECOVERY",
+                "message": "当前可用内存已经恢复，但换页残留仍高；新的高内存生成应保持阻断。",
             }
         )
     swap_start = summary.get("system_start_swap_used_bytes")

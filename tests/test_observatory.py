@@ -12,6 +12,7 @@ from observatory.server import (
     ObservatoryConfig,
     ObservatoryState,
     WEB_ROOT,
+    classify_memory_pressure,
     create_server,
     derive_lifecycle,
 )
@@ -142,6 +143,20 @@ class ObservatoryTests(unittest.TestCase):
         self.assertFalse(payload["governance_boundary"]["can_start_generation"])
         self.assertNotIn(str(self.repo), selected["log_tail"])
         self.assertNotIn(str(Path.home()), selected["log_tail"])
+
+    def test_memory_health_marks_high_swap_as_recovering(self) -> None:
+        self.assertEqual(
+            classify_memory_pressure(36 * 1024**3, 20 * 1024**3, 9 * 1024**3),
+            ("recovering", "SWAP_RESIDUE_HIGH"),
+        )
+        self.assertEqual(
+            classify_memory_pressure(36 * 1024**3, 20 * 1024**3, 2 * 1024**3),
+            ("healthy", "RESOURCE_READY"),
+        )
+        self.assertEqual(
+            classify_memory_pressure(36 * 1024**3, 2 * 1024**3, 0),
+            ("critical", "AVAILABLE_MEMORY_CRITICAL"),
+        )
 
     def test_lifecycle_marks_unclosed_execution_as_waiting(self) -> None:
         (self.execution / "summary.json").unlink()

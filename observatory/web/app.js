@@ -65,8 +65,11 @@ const phaseLabels = {
   LOADING_PIPELINE: "装载模型管线",
   TRANSFERRING_TO_MPS: "转移至 Metal",
   CONFIGURING_MPS_BUDGET: "设置 MPS 内存上限",
+  ENCODING_PROMPT: "独立编码提示词",
+  LOADING_DENOISER_PIPELINE: "装载去噪与解码组件",
   ACTIVATING_MPS_STRATEGY: "启用分阶段驻留",
   RELEASING_MPS_MEMORY: "释放 MPS 内存",
+  WORKER_STOPPED_BY_PARENT: "保存安全终止证据",
   RUNNING_INFERENCE: "执行推理",
   EXPORTING_VIDEO: "导出视频",
   WORKER_COMPLETED: "工作进程完成",
@@ -238,8 +241,8 @@ function renderSystem(system, runtime) {
   const memory = system.memory;
   const swap = system.swap;
   const disk = system.disk;
-  const ringColor = memory.pressure === "critical" ? "#ff7c82" : memory.pressure === "elevated" ? "#f5c76a" : "#58f2c2";
-  const pressureLabels = { healthy: "资源正常", elevated: "内存偏紧", critical: "内存临界" };
+  const ringColor = memory.pressure === "critical" ? "#ff7c82" : ["elevated", "recovering"].includes(memory.pressure) ? "#f5c76a" : "#58f2c2";
+  const pressureLabels = { healthy: "资源正常", recovering: "换页恢复中", elevated: "内存偏紧", critical: "内存临界" };
   elements.systemCard.innerHTML = `
     <div class="section-heading compact">
       <div><span class="eyebrow">LIVE HOST</span><h2>本机资源</h2></div>

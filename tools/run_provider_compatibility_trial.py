@@ -11,6 +11,7 @@ import os
 import platform
 import queue
 import re
+import signal
 import subprocess
 import sys
 import threading
@@ -35,6 +36,10 @@ PRIVATE_PATH_PATTERNS = (
     re.compile(r"/Users/[^/\s]+"),
     re.compile(r"/home/[^/\s]+"),
 )
+
+
+class WorkerTerminationRequested(RuntimeError):
+    """父进程请求工作进程保存终止证据并释放资源。"""
 
 
 def utc_now() -> str:
@@ -139,6 +144,14 @@ def release_pipeline_memory(torch_module: Any) -> dict[str, int]:
         "current_allocated_bytes": int(torch_module.mps.current_allocated_memory()),
         "driver_allocated_bytes": int(torch_module.mps.driver_allocated_memory()),
     }
+
+
+def request_worker_stop(evidence_dir: Path, child: subprocess.Popen[str], reason: str) -> None:
+    write_json(
+        evidence_dir / "stop_request.json",
+        {"reason": reason, "requested_at": utc_now()},
+    )
+    child.terminate()
 
 
 def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
@@ -270,6 +283,24 @@ def write_manifest(evidence_dir: Path) -> dict[str, Any]:
     return manifest
 
 
+def max_jsonl_metric(path: Path, field: str) -> int | None:
+    maximum: int | None = None
+    if not path.is_file():
+        return None
+    try:
+        with path.open(encoding="utf-8") as handle:
+            for line in handle:
+                try:
+                    value = json.loads(line).get(field)
+                except (json.JSONDecodeError, AttributeError):
+                    continue
+                if isinstance(value, (int, float)):
+                    maximum = max(maximum or 0, int(value))
+    except (OSError, UnicodeDecodeError):
+        return None
+    return maximum
+
+
 def run_parent(args: argparse.Namespace) -> int:
     contract, contract_path = load_execution_contract(args)
     provider = contract["providers"][args.provider]
@@ -358,7 +389,7 @@ def run_parent(args: argparse.Namespace) -> int:
             elapsed = time.perf_counter() - start
             if elapsed > timeout_seconds:
                 timed_out = True
-                child.terminate()
+                request_worker_stop(evidence_dir, child, "EXECUTION_TIMEOUT")
                 try:
                     child.wait(timeout=20)
                 except subprocess.TimeoutExpired:
@@ -393,7 +424,7 @@ def run_parent(args: argparse.Namespace) -> int:
             )
             metrics.flush()
             if safety_abort_reason:
-                child.terminate()
+                request_worker_stop(evidence_dir, child, safety_abort_reason)
                 try:
                     child.wait(timeout=20)
                 except subprocess.TimeoutExpired:
@@ -420,6 +451,11 @@ def run_parent(args: argparse.Namespace) -> int:
         if worker_state_path.exists()
         else {"phase": "WORKER_STATE_UNAVAILABLE"}
     )
+    stop_request_path = evidence_dir / "stop_request.json"
+    try:
+        parent_stop_request = json.loads(stop_request_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        parent_stop_request = None
     elapsed_seconds = time.perf_counter() - start
     output_path = evidence_dir / "output.mp4"
     thumbnail_path = evidence_dir / "thumbnail.png"
@@ -459,11 +495,19 @@ def run_parent(args: argparse.Namespace) -> int:
         "system_peak_used_bytes": peak_system_used,
         "system_start_swap_used_bytes": swap_start.used,
         "system_peak_swap_used_bytes": peak_swap_used,
-        "mps_peak_current_allocated_bytes": worker_state.get("mps_peak_current_allocated_bytes"),
-        "mps_peak_driver_allocated_bytes": worker_state.get("mps_peak_driver_allocated_bytes"),
+        "mps_peak_current_allocated_bytes": worker_state.get("mps_peak_current_allocated_bytes")
+        if worker_state.get("mps_peak_current_allocated_bytes") is not None
+        else max_jsonl_metric(evidence_dir / "mps_metrics.jsonl", "mps_current_allocated_bytes"),
+        "mps_peak_driver_allocated_bytes": worker_state.get("mps_peak_driver_allocated_bytes")
+        if worker_state.get("mps_peak_driver_allocated_bytes") is not None
+        else max_jsonl_metric(evidence_dir / "mps_metrics.jsonl", "mps_driver_allocated_bytes"),
         "mps_memory_limit": worker_state.get("mps_memory_limit"),
         "mps_strategy_activation": worker_state.get("mps_strategy_activation"),
         "mps_post_release": worker_state.get("mps_post_release"),
+        "component_residency_strategy": worker_state.get("component_residency_strategy"),
+        "prompt_encoding_completed": bool(worker_state.get("prompt_encoding_completed")),
+        "text_encoder_post_release": worker_state.get("text_encoder_post_release"),
+        "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
         "output_bytes": output_path.stat().st_size if output_path.exists() else None,
@@ -488,6 +532,7 @@ class MpsSampler:
         self.start = time.perf_counter()
         self.peak_current = 0
         self.peak_driver = 0
+        self.started = False
 
     def _sample(self) -> None:
         import torch
@@ -517,22 +562,136 @@ class MpsSampler:
                 self.stop_event.wait(0.25)
 
     def __enter__(self) -> "MpsSampler":
-        self.thread.start()
+        self.start_sampling()
         return self
 
     def __exit__(self, *_: Any) -> None:
+        self.stop_sampling()
+
+    def start_sampling(self) -> None:
+        if self.started:
+            return
+        self.started = True
+        self.thread.start()
+
+    def stop_sampling(self) -> None:
+        if not self.started:
+            return
         self.stop_event.set()
         self.thread.join(timeout=5)
+        self.started = False
+
+
+def prepare_wan_prompt_embeddings(
+    snapshot_path: Path,
+    prompt: str,
+    torch_module: Any,
+    tokenizer_class: Any,
+    text_encoder_class: Any,
+    pipeline_class: Any,
+) -> dict[str, Any]:
+    """只装载文本编码器形成嵌入，随后在装载 Transformer 前完整释放。"""
+    stage_pipe = None
+    tokenizer = None
+    text_encoder = None
+    result: dict[str, Any] = {}
+    try:
+        tokenizer = tokenizer_class.from_pretrained(
+            snapshot_path,
+            subfolder="tokenizer",
+            local_files_only=True,
+        )
+        text_encoder = text_encoder_class.from_pretrained(
+            snapshot_path,
+            subfolder="text_encoder",
+            torch_dtype=torch_module.bfloat16,
+            low_cpu_mem_usage=True,
+            local_files_only=True,
+        )
+        stage_pipe = pipeline_class(
+            tokenizer=tokenizer,
+            text_encoder=text_encoder,
+            vae=None,
+            scheduler=None,
+            transformer=None,
+        )
+        result["activation"] = activate_pipeline_strategy(
+            stage_pipe,
+            "mps_model_offload_bounded",
+            "mps",
+        )
+        prompt_embeds, negative_prompt_embeds = stage_pipe.encode_prompt(
+            prompt=prompt,
+            negative_prompt="",
+            do_classifier_free_guidance=True,
+            num_videos_per_prompt=1,
+            max_sequence_length=512,
+            device=torch_module.device("mps"),
+            dtype=torch_module.bfloat16,
+        )
+        torch_module.mps.synchronize()
+        result["prompt_embeds"] = prompt_embeds.detach().to("cpu")
+        result["negative_prompt_embeds"] = negative_prompt_embeds.detach().to("cpu")
+        prompt_embeds = None
+        negative_prompt_embeds = None
+    finally:
+        if stage_pipe is not None and hasattr(stage_pipe, "maybe_free_model_hooks"):
+            stage_pipe.maybe_free_model_hooks()
+        stage_pipe = None
+        text_encoder = None
+        tokenizer = None
+        result["post_release"] = release_pipeline_memory(torch_module)
+    return result
+
+
+def build_wan_denoiser_pipeline(
+    snapshot_path: Path,
+    torch_module: Any,
+    transformer_class: Any,
+    vae_class: Any,
+    scheduler_class: Any,
+    pipeline_class: Any,
+) -> Any:
+    """在文本编码器释放后，仅装载去噪和解码所需组件。"""
+    transformer = transformer_class.from_pretrained(
+        snapshot_path,
+        subfolder="transformer",
+        torch_dtype=torch_module.bfloat16,
+        low_cpu_mem_usage=True,
+        local_files_only=True,
+    )
+    vae = vae_class.from_pretrained(
+        snapshot_path,
+        subfolder="vae",
+        torch_dtype=torch_module.float32,
+        low_cpu_mem_usage=True,
+        local_files_only=True,
+    )
+    scheduler = scheduler_class.from_pretrained(
+        snapshot_path,
+        subfolder="scheduler",
+        local_files_only=True,
+    )
+    pipe = pipeline_class(
+        tokenizer=None,
+        text_encoder=None,
+        vae=vae,
+        scheduler=scheduler,
+        transformer=transformer,
+    )
+    pipe.enable_attention_slicing()
+    return pipe
 
 
 def run_worker(args: argparse.Namespace) -> int:
     import imageio.v2 as imageio
     import numpy as np
     import torch
-    from diffusers import AutoencoderKLWan, CogVideoXPipeline, WanPipeline
+    from diffusers import AutoencoderKLWan, CogVideoXPipeline, WanPipeline, WanTransformer3DModel
     from diffusers.schedulers import UniPCMultistepScheduler
     from diffusers.utils import export_to_video
     from huggingface_hub import snapshot_download
+    from transformers import AutoTokenizer, UMT5EncoderModel
 
     contract, _ = load_execution_contract(args)
     provider = contract["providers"][args.provider]
@@ -554,9 +713,20 @@ def run_worker(args: argparse.Namespace) -> int:
         "mps_memory_limit": None,
         "mps_strategy_activation": None,
         "mps_post_release": None,
+        "component_residency_strategy": None,
+        "prompt_encoding_completed": False,
+        "text_encoder_post_release": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
+    pipe: Any = None
+    prompt_embeds: Any = None
+    negative_prompt_embeds: Any = None
+
+    def handle_parent_stop(_signum: int, _frame: Any) -> None:
+        raise WorkerTerminationRequested("父进程请求保存终止证据并释放资源")
+
+    signal.signal(signal.SIGTERM, handle_parent_stop)
     try:
         if not torch.backends.mps.is_available():
             raise RuntimeError("PyTorch MPS backend is unavailable")
@@ -575,6 +745,8 @@ def run_worker(args: argparse.Namespace) -> int:
                 "configured_limit_bytes": None,
             }
         write_json(state_path, state)
+        sampler = MpsSampler(evidence_dir / "mps_metrics.jsonl")
+        sampler.start_sampling()
 
         stage_start = time.perf_counter()
         state["phase"] = "RESOLVING_MODEL_SNAPSHOT"
@@ -583,34 +755,73 @@ def run_worker(args: argparse.Namespace) -> int:
         state["model_snapshot_resolved"] = True
         state["model_snapshot_revision"] = snapshot_path.name
         state["stage_elapsed_seconds"]["snapshot_resolution"] = round(time.perf_counter() - stage_start, 3)
-        state["phase"] = "LOADING_PIPELINE"
-        write_json(state_path, state)
-
-        stage_start = time.perf_counter()
-        if args.provider == "wan":
-            vae = AutoencoderKLWan.from_pretrained(
+        execution_strategy = contract.get("execution_strategy", "mps_full_bounded")
+        if args.provider == "wan" and execution_strategy == "mps_model_offload_bounded":
+            state["component_residency_strategy"] = "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER"
+            state["phase"] = "ENCODING_PROMPT"
+            write_json(state_path, state)
+            stage_start = time.perf_counter()
+            prompt_stage = prepare_wan_prompt_embeddings(
                 snapshot_path,
-                subfolder="vae",
-                torch_dtype=torch.float32,
-                local_files_only=True,
+                contract["shared_prompt"],
+                torch,
+                AutoTokenizer,
+                UMT5EncoderModel,
+                WanPipeline,
             )
-            pipe = WanPipeline.from_pretrained(
+            prompt_embeds = prompt_stage["prompt_embeds"]
+            negative_prompt_embeds = prompt_stage["negative_prompt_embeds"]
+            state["prompt_encoding_completed"] = True
+            state["prompt_stage_activation"] = prompt_stage["activation"]
+            state["text_encoder_post_release"] = prompt_stage["post_release"]
+            state["stage_elapsed_seconds"]["prompt_encoding_and_release"] = round(
+                time.perf_counter() - stage_start,
+                3,
+            )
+            prompt_stage = None
+            state["phase"] = "LOADING_DENOISER_PIPELINE"
+            write_json(state_path, state)
+            stage_start = time.perf_counter()
+            pipe = build_wan_denoiser_pipeline(
                 snapshot_path,
-                vae=vae,
-                torch_dtype=torch.bfloat16,
-                local_files_only=True,
+                torch,
+                WanTransformer3DModel,
+                AutoencoderKLWan,
+                UniPCMultistepScheduler,
+                WanPipeline,
             )
-            pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config, flow_shift=3.0)
-            del vae
         else:
-            pipe = CogVideoXPipeline.from_pretrained(
-                snapshot_path,
-                torch_dtype=torch.float16,
-                local_files_only=True,
-            )
-            pipe.vae.enable_slicing()
-            pipe.vae.enable_tiling()
-        pipe.enable_attention_slicing()
+            state["component_residency_strategy"] = "FULL_PIPELINE_LOAD"
+            state["phase"] = "LOADING_PIPELINE"
+            write_json(state_path, state)
+            stage_start = time.perf_counter()
+            if args.provider == "wan":
+                vae = AutoencoderKLWan.from_pretrained(
+                    snapshot_path,
+                    subfolder="vae",
+                    torch_dtype=torch.float32,
+                    low_cpu_mem_usage=True,
+                    local_files_only=True,
+                )
+                pipe = WanPipeline.from_pretrained(
+                    snapshot_path,
+                    vae=vae,
+                    torch_dtype=torch.bfloat16,
+                    low_cpu_mem_usage=True,
+                    local_files_only=True,
+                )
+                pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config, flow_shift=3.0)
+                del vae
+            else:
+                pipe = CogVideoXPipeline.from_pretrained(
+                    snapshot_path,
+                    torch_dtype=torch.float16,
+                    low_cpu_mem_usage=True,
+                    local_files_only=True,
+                )
+                pipe.vae.enable_slicing()
+                pipe.vae.enable_tiling()
+            pipe.enable_attention_slicing()
         state["pipeline_loaded"] = True
         state["stage_elapsed_seconds"]["pipeline_load"] = round(time.perf_counter() - stage_start, 3)
         state["phase"] = "ACTIVATING_MPS_STRATEGY"
@@ -631,19 +842,28 @@ def run_worker(args: argparse.Namespace) -> int:
 
         generator = torch.Generator(device="cpu").manual_seed(contract["shared_seed"])
         stage_start = time.perf_counter()
-        sampler = MpsSampler(evidence_dir / "mps_metrics.jsonl")
-        with sampler:
-            output = pipe(
-                prompt=contract["shared_prompt"],
-                height=provider["height"],
-                width=provider["width"],
-                num_frames=provider["num_frames"],
-                num_inference_steps=provider["num_inference_steps"],
-                guidance_scale=provider["guidance_scale"],
-                generator=generator,
-                output_type="np",
-            )
-            torch.mps.synchronize()
+        inference_prompt: dict[str, Any]
+        if prompt_embeds is not None:
+            prompt_embeds = prompt_embeds.to(device="mps", dtype=pipe.transformer.dtype)
+            negative_prompt_embeds = negative_prompt_embeds.to(device="mps", dtype=pipe.transformer.dtype)
+            inference_prompt = {
+                "prompt": None,
+                "prompt_embeds": prompt_embeds,
+                "negative_prompt_embeds": negative_prompt_embeds,
+            }
+        else:
+            inference_prompt = {"prompt": contract["shared_prompt"]}
+        output = pipe(
+            **inference_prompt,
+            height=provider["height"],
+            width=provider["width"],
+            num_frames=provider["num_frames"],
+            num_inference_steps=provider["num_inference_steps"],
+            guidance_scale=provider["guidance_scale"],
+            generator=generator,
+            output_type="np",
+        )
+        torch.mps.synchronize()
         frames = output.frames[0]
         del output
         state["inference_completed"] = True
@@ -655,8 +875,14 @@ def run_worker(args: argparse.Namespace) -> int:
         release_start = time.perf_counter()
         if hasattr(pipe, "maybe_free_model_hooks"):
             pipe.maybe_free_model_hooks()
-        del pipe
+        pipe = None
+        prompt_embeds = None
+        negative_prompt_embeds = None
         state["mps_post_release"] = release_pipeline_memory(torch)
+        if sampler is not None:
+            sampler.stop_sampling()
+            state["mps_peak_current_allocated_bytes"] = sampler.peak_current
+            state["mps_peak_driver_allocated_bytes"] = sampler.peak_driver
         state["stage_elapsed_seconds"]["mps_release"] = round(time.perf_counter() - release_start, 3)
         state["phase"] = "EXPORTING_VIDEO"
         write_json(state_path, state)
@@ -685,10 +911,28 @@ def run_worker(args: argparse.Namespace) -> int:
         write_json(state_path, state)
         return 0
     except BaseException as exc:
+        try:
+            if pipe is not None and hasattr(pipe, "maybe_free_model_hooks"):
+                pipe.maybe_free_model_hooks()
+            pipe = None
+            prompt_embeds = None
+            negative_prompt_embeds = None
+            state["mps_post_release"] = release_pipeline_memory(torch)
+        except BaseException as release_exc:
+            state["mps_release_error"] = sanitized_exception(release_exc)
         if sampler is not None:
+            sampler.stop_sampling()
             state["mps_peak_current_allocated_bytes"] = sampler.peak_current
             state["mps_peak_driver_allocated_bytes"] = sampler.peak_driver
-        state["phase"] = "WORKER_FAILED"
+        stop_request_path = evidence_dir / "stop_request.json"
+        stop_request = None
+        if stop_request_path.exists():
+            try:
+                stop_request = json.loads(stop_request_path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                stop_request = {"reason": "PARENT_STOP_REQUEST_UNREADABLE"}
+        state["phase"] = "WORKER_STOPPED_BY_PARENT" if stop_request else "WORKER_FAILED"
+        state["stop_request"] = stop_request
         state["finished_at"] = utc_now()
         state["error_observation"] = sanitized_exception(exc)
         write_json(state_path, state)

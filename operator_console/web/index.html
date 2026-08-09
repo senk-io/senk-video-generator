@@ -108,7 +108,11 @@
             <div class="budget-grid">
               <label class="budget-field">
                 <span><strong>启动前最低可用内存</strong><small>不足时禁止登记或启动</small></span>
-                <span class="number-unit"><input id="preflightMemory" type="number" min="4" max="24" step="1" value="10"><b>GiB</b></span>
+                <span class="number-unit"><input id="preflightMemory" type="number" min="4" max="24" step="1" value="16"><b>GiB</b></span>
+              </label>
+              <label class="budget-field">
+                <span><strong>启动前最大现有换页</strong><small>高换页恢复期禁止开始新作业</small></span>
+                <span class="number-unit"><input id="preflightSwap" type="number" min="0" max="16" step="1" value="4"><b>GiB</b></span>
               </label>
               <label class="budget-field">
                 <span><strong>运行中停止阈值</strong><small>连续 3 秒低于此值时停止</small></span>

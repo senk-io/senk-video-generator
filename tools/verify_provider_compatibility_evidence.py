@@ -48,6 +48,18 @@ def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, 
     activation = summary.get("mps_strategy_activation") or {}
     if activation.get("strategy") != request.get("execution_strategy"):
         raise ValueError("MPS 策略激活证据与作业合同不一致")
+    staged_wan_v3 = (
+        request.get("provider_key") == "wan"
+        and request.get("execution_strategy") == "mps_model_offload_bounded"
+        and "preflight_max_swap_used_bytes" in resource_budget
+    )
+    if staged_wan_v3:
+        if summary.get("component_residency_strategy") != "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER":
+            raise ValueError("分阶段作业缺少文本编码器提前释放策略证据")
+        if summary.get("pipeline_loaded") and not summary.get("prompt_encoding_completed"):
+            raise ValueError("去噪管线已装载但提示词编码未闭合")
+        if summary.get("prompt_encoding_completed") and not summary.get("text_encoder_post_release"):
+            raise ValueError("提示词编码完成后缺少文本编码器释放观察")
     if summary.get("inference_completed") and not summary.get("mps_post_release"):
         raise ValueError("完成推理后缺少 MPS 主动释放观察")
 

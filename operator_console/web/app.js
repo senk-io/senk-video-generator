@@ -24,6 +24,7 @@ const elements = {
   seed: document.querySelector("#seed"),
   timeout: document.querySelector("#timeout"),
   preflightMemory: document.querySelector("#preflightMemory"),
+  preflightSwap: document.querySelector("#preflightSwap"),
   abortMemory: document.querySelector("#abortMemory"),
   swapGrowth: document.querySelector("#swapGrowth"),
   mpsFraction: document.querySelector("#mpsFraction"),
@@ -269,6 +270,7 @@ function formRequest() {
     },
     timeout_seconds: Number(elements.timeout.value),
     preflight_min_available_memory_bytes: Number(elements.preflightMemory.value) * GIB,
+    preflight_max_swap_used_bytes: Number(elements.preflightSwap.value) * GIB,
     abort_min_available_memory_bytes: Number(elements.abortMemory.value) * GIB,
     max_swap_growth_bytes: Number(elements.swapGrowth.value) * GIB,
     mps_memory_fraction: Number(elements.mpsFraction.value) / 100,
@@ -384,7 +386,7 @@ function renderHost() {
         ${hostLine("磁盘", disk.free_bytes, disk.total_bytes)}
       </div>
     </div>
-    <div class="host-foot"><span>内存压力 <strong>${escapeHtml(memory.pressure)}</strong></span><span>生成进程 <strong>${state.overview.active_generation_processes.length}</strong></span></div>`;
+    <div class="host-foot"><span>内存状态 <strong>${escapeHtml(({healthy: "正常", recovering: "换页恢复中", elevated: "偏紧", critical: "临界"})[memory.pressure] || "未知")}</strong></span><span>生成进程 <strong>${state.overview.active_generation_processes.length}</strong></span></div>`;
 }
 
 function hostLine(label, value, total) {
@@ -523,6 +525,7 @@ async function refreshOverview() {
       elements.seed.value = defaults.seed;
       elements.timeout.value = defaults.timeout_seconds;
       elements.preflightMemory.value = defaults.preflight_min_available_memory_bytes / GIB;
+      elements.preflightSwap.value = defaults.preflight_max_swap_used_bytes / GIB;
       elements.abortMemory.value = defaults.abort_min_available_memory_bytes / GIB;
       elements.swapGrowth.value = defaults.max_swap_growth_bytes / GIB;
       elements.mpsFraction.value = defaults.mps_memory_fraction * 100;

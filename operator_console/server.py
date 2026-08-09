@@ -405,6 +405,16 @@ class JobManager:
                 f"当前可用 {system['memory']['available_bytes']} 字节，要求至少 {request['resource_budget']['preflight_min_available_memory_bytes']} 字节。",
             ),
             self._check(
+                "SWAP_RECOVERY_READY",
+                "现有换页已经恢复到启动预算",
+                system["swap"]["used_bytes"] <= request["resource_budget"]["preflight_max_swap_used_bytes"],
+                f"当前换页 {system['swap']['used_bytes']} 字节，启动前最多允许 {request['resource_budget']['preflight_max_swap_used_bytes']} 字节。",
+                {
+                    "pressure": system["memory"]["pressure"],
+                    "pressure_reason": system["memory"].get("pressure_reason"),
+                },
+            ),
+            self._check(
                 "MPS_MEMORY_LIMIT_CONFIGURED",
                 "MPS 进程内存上限已固定",
                 0.5 <= request["resource_budget"]["mps_memory_fraction"] <= 0.9,

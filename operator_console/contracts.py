@@ -8,7 +8,8 @@ from typing import Any
 
 
 EXECUTION_ID_PATTERN = re.compile(r"[A-Z0-9][A-Z0-9._-]{2,127}")
-JOB_SCHEMA_VERSION = "operator-job.v2"
+JOB_SCHEMA_VERSION = "operator-job.v3"
+LEGACY_JOB_SCHEMA_VERSIONS = frozenset({"operator-job.v2"})
 GIB = 1024**3
 JOB_ID_PATTERN = re.compile(r"JOB-[0-9]{8}T[0-9]{6}Z-[A-F0-9]{8}")
 
@@ -157,7 +158,7 @@ EXECUTION_STRATEGIES: dict[str, dict[str, Any]] = {
         "key": "mps_model_offload_bounded",
         "name": "分阶段驻留",
         "recommended": True,
-        "description": "按文本编码器、Transformer、VAE 顺序在 CPU 与 MPS 之间切换。",
+        "description": "先形成提示词嵌入并释放文本编码器，再装载 Transformer 与 VAE。",
     },
     "mps_full_bounded": {
         "key": "mps_full_bounded",
@@ -183,7 +184,8 @@ def public_catalog() -> dict[str, Any]:
             "execution_strategy": "mps_model_offload_bounded",
             "seed": 42,
             "timeout_seconds": 3600,
-            "preflight_min_available_memory_bytes": 10 * GIB,
+            "preflight_min_available_memory_bytes": 16 * GIB,
+            "preflight_max_swap_used_bytes": 4 * GIB,
             "abort_min_available_memory_bytes": 3 * GIB,
             "max_swap_growth_bytes": 8 * GIB,
             "mps_memory_fraction": 0.75,
@@ -231,6 +233,13 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         "preflight_min_available_memory_bytes",
         4 * GIB,
         24 * GIB,
+        errors,
+    )
+    preflight_max_swap = integer_field(
+        value,
+        "preflight_max_swap_used_bytes",
+        0,
+        16 * GIB,
         errors,
     )
     abort_memory = integer_field(
@@ -367,6 +376,7 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         "timeout_seconds": timeout_seconds,
         "resource_budget": {
             "preflight_min_available_memory_bytes": preflight_memory,
+            "preflight_max_swap_used_bytes": preflight_max_swap,
             "abort_min_available_memory_bytes": abort_memory,
             "max_swap_growth_bytes": max_swap_growth,
             "mps_memory_fraction": mps_memory_fraction,
@@ -471,6 +481,8 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
     resource_budget = value.get("resource_budget")
     if not isinstance(resource_budget, dict):
         return None, [{"field": "resource_budget", "code": "INVALID_BUDGET", "message": "资源预算缺失。"}]
+    schema_version = value.get("schema_version")
+    legacy_v2 = schema_version in LEGACY_JOB_SCHEMA_VERSIONS
     raw = {
         "execution_id": value.get("execution_id"),
         "provider_key": value.get("provider_key"),
@@ -482,6 +494,9 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
         "parameters": value.get("parameters"),
         "timeout_seconds": value.get("timeout_seconds"),
         "preflight_min_available_memory_bytes": resource_budget.get("preflight_min_available_memory_bytes"),
+        "preflight_max_swap_used_bytes": resource_budget.get("preflight_max_swap_used_bytes", 4 * GIB)
+        if legacy_v2
+        else resource_budget.get("preflight_max_swap_used_bytes"),
         "abort_min_available_memory_bytes": resource_budget.get("abort_min_available_memory_bytes"),
         "max_swap_growth_bytes": resource_budget.get("max_swap_growth_bytes"),
         "mps_memory_fraction": resource_budget.get("mps_memory_fraction"),
@@ -491,7 +506,7 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
     job_id = str(value.get("job_id", ""))
     if not JOB_ID_PATTERN.fullmatch(job_id):
         errors.append({"field": "job_id", "code": "INVALID_JOB_ID", "message": "作业标识无效。"})
-    if value.get("schema_version") != JOB_SCHEMA_VERSION:
+    if schema_version != JOB_SCHEMA_VERSION and schema_version not in LEGACY_JOB_SCHEMA_VERSIONS:
         errors.append({"field": "schema_version", "code": "INVALID_SCHEMA", "message": "作业规格版本不受支持。"})
     if normalized:
         protected = {
