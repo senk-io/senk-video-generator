@@ -1,0 +1,112 @@
+{
+  "component_residency_strategy": "FULL_PIPELINE_LOAD",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "cross_provider_contract_created": false,
+  "decode_strategy": "LATENT_TO_CPU_THEN_VAE_CPU_TILED",
+  "decode_tile_sample_size": [
+    180,
+    120
+  ],
+  "denoising_completed": true,
+  "elapsed_seconds": 105.095,
+  "error_observation": null,
+  "execution_id": "LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T18:26:42.038167+00:00",
+  "formal_fact_created": false,
+  "generation_profile_key": null,
+  "inference_completed": true,
+  "institution_freeze_created": false,
+  "job_id": null,
+  "last_phase": "WORKER_COMPLETED",
+  "latent_checkpoint": {
+    "dtype": "torch.float32",
+    "path": "denoised_latents.safetensors",
+    "purpose": "DECODE_RETRY_WITHOUT_DENOISING_RERUN",
+    "sha256": "dd973abf7dd8a5852d00fa1d85cf9845dfa897bec3c7899b7df5ddca2f6e064e",
+    "shape": [
+      1,
+      3,
+      16,
+      60,
+      90
+    ]
+  },
+  "model_id": "zai-org/CogVideoX-2b",
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_dtype_normalization": [
+    {
+      "buffer": "patch_embed.pos_embedding",
+      "from_dtype": "float64",
+      "shape": [
+        1,
+        17776,
+        1920
+      ],
+      "to_dtype": "float32"
+    }
+  ],
+  "mps_memory_fraction": 0.65,
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 11563870208,
+  "mps_peak_driver_allocated_bytes": 12091899904,
+  "mps_post_denoise_release": {
+    "current_allocated_bytes": 512,
+    "driver_allocated_bytes": 11223040
+  },
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_bytes": 24176,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "output_sha256": "7ebec64612163b0a54830c84d664681bc3946deab5e9bfb61cd7bf99a25fa5c0",
+  "pipeline_loaded": true,
+  "process_tree_peak_rss_bytes": 14512930816,
+  "prompt_encoding_completed": false,
+  "prompt_stage_activation": null,
+  "provider_identity": "zai-org",
+  "provider_key": "cogvideox",
+  "safety_abort_reason": null,
+  "stage_elapsed_seconds": {
+    "cpu_vae_decode": 62.381,
+    "inference": 100.871,
+    "mps_release": 0.058,
+    "mps_strategy_activation": 0.013,
+    "mps_transfer": 0.013,
+    "pipeline_load": 1.374,
+    "snapshot_resolution": 0.289,
+    "video_export": 0.308
+  },
+  "started_at": "2026-08-09T18:24:56.907469+00:00",
+  "stop_request": null,
+  "system_peak_swap_used_bytes": 7015890944,
+  "system_peak_used_bytes": 34004992000,
+  "system_start_swap_used_bytes": 4019781632,
+  "system_start_used_bytes": 15134064640,
+  "text_encoder_post_release": null,
+  "thumbnail_sha256": "64bdd77e8c39ba74ae733c66b26f65e895a257387bc9ab441db23ed195d8a8f0",
+  "timed_out": false,
+  "worker_exit_code": 0
+}

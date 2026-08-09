@@ -1,0 +1,88 @@
+{
+  "component_residency_strategy": "FULL_PIPELINE_LOAD",
+  "decode_strategy": "LATENT_TO_CPU_THEN_VAE_CPU_TILED",
+  "decode_tile_sample_size": [
+    180,
+    120
+  ],
+  "denoising_completed": true,
+  "execution_id": "LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T18:26:41.324334+00:00",
+  "generation_profile_key": null,
+  "inference_completed": true,
+  "latent_checkpoint": {
+    "dtype": "torch.float32",
+    "path": "denoised_latents.safetensors",
+    "purpose": "DECODE_RETRY_WITHOUT_DENOISING_RERUN",
+    "sha256": "dd973abf7dd8a5852d00fa1d85cf9845dfa897bec3c7899b7df5ddca2f6e064e",
+    "shape": [
+      1,
+      3,
+      16,
+      60,
+      90
+    ]
+  },
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_dtype_normalization": [
+    {
+      "buffer": "patch_embed.pos_embedding",
+      "from_dtype": "float64",
+      "shape": [
+        1,
+        17776,
+        1920
+      ],
+      "to_dtype": "float32"
+    }
+  ],
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 11563870208,
+  "mps_peak_driver_allocated_bytes": 12091899904,
+  "mps_post_denoise_release": {
+    "current_allocated_bytes": 512,
+    "driver_allocated_bytes": 11223040
+  },
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "phase": "WORKER_COMPLETED",
+  "pipeline_loaded": true,
+  "prompt_encoding_completed": false,
+  "provider_key": "cogvideox",
+  "stage_elapsed_seconds": {
+    "cpu_vae_decode": 62.381,
+    "inference": 100.871,
+    "mps_release": 0.058,
+    "mps_strategy_activation": 0.013,
+    "mps_transfer": 0.013,
+    "pipeline_load": 1.374,
+    "snapshot_resolution": 0.289,
+    "video_export": 0.308
+  },
+  "started_at": "2026-08-09T18:24:58.373639+00:00",
+  "text_encoder_post_release": null
+}

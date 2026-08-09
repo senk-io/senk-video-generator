@@ -1,0 +1,30 @@
+
+Fetching 19 files:   0%|          | 0/19 [00:00<?, ?it/s]
+Fetching 19 files: 100%|██████████| 19/19 [00:00<00:00, 12220.79it/s]
+
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading pipeline components...:  20%|██        | 1/5 [00:00<00:00,  5.84it/s]
+Loading pipeline components...:  60%|██████    | 3/5 [00:00<00:00,  8.13it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  2.21it/s][A
+
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.19it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.20it/s]
+
+Loading pipeline components...: 100%|██████████| 5/5 [00:01<00:00,  3.21it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:01<00:00,  3.67it/s]
+
+  0%|          | 0/8 [00:00<?, ?it/s]
+ 12%|█▎        | 1/8 [00:08<00:57,  8.18s/it]
+ 25%|██▌       | 2/8 [00:11<00:31,  5.27s/it]
+ 38%|███▊      | 3/8 [00:14<00:21,  4.34s/it]
+ 50%|█████     | 4/8 [00:17<00:15,  3.90s/it]
+ 62%|██████▎   | 5/8 [00:21<00:10,  3.65s/it]
+ 75%|███████▌  | 6/8 [00:24<00:07,  3.51s/it]
+ 88%|████████▊ | 7/8 [00:27<00:03,  3.44s/it]
+100%|██████████| 8/8 [00:31<00:00,  3.43s/it]
+100%|██████████| 8/8 [00:31<00:00,  3.88s/it]
+There are modules in AutoencoderKLCogVideoX that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+IMAGEIO FFMPEG_WRITER WARNING: input image is not divisible by macro_block_size=16, resizing from (760, 496) to (768, 496) to ensure video compatibility with most codecs and players. To prevent resizing, make your input image divisible by the macro_block_size or set the macro_block_size to 1 (risking incompatibility).

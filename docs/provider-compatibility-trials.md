@@ -156,6 +156,17 @@ CogVideoX：
   --execution-id CR-0019-COGVIDEOX-MAC-001
 ```
 
+CogVideoX 固定八步质量探针：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_provider_compatibility_trial \
+  --provider cogvideox \
+  --execution-id LM-COGVIDEOX-8STEP-QUALITY-YYYYMMDDTHHMMSSZ \
+  --trial-contract experiments/provider_compatibility/cogvideox_quality_8_steps.json
+```
+
+十六步对照使用 `cogvideox_quality_16_steps.json` 和新的执行标识。两个受控合同只允许相对四步基线改变推理步数；模型快照、提示词、种子、画幅、帧数、引导系数、帧率和资源预算保持不变。它们只建立质量观察，不自动创建质量接受或控制台启动权限。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash
@@ -235,9 +246,9 @@ manifest.json
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 质量探针 | 运行闭合但语义不可辨识 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、4 步、8 fps；总耗时 28.624 秒；MPS 驱动峰值 8,413,462,528 字节；换页没有增长；输出 32,028 字节；画面仍为蓝紫色块，不能识别红色纸船；执行标识 `LM-WAN-QUALITY-PROBE-20260809T170134Z` |
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 16 步平衡探针 | 运行闭合并首次出现语义形态 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、16 步、8 fps；总耗时 33.684 秒，其中推理 9.331 秒；MPS 驱动峰值 8,413,462,528 字节；换页没有增长；中央出现红色主体与水面结构，但纸船轮廓仍粗糙；执行标识 `LM-WAN-BALANCE-PROBE-20260809T170402Z` |
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 8 步平衡回测 | 运行闭合，确定当前最低可辨识档位 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、8 步、8 fps；总耗时 30.685 秒，其中推理 5.945 秒；MPS 驱动峰值 8,413,462,528 字节；换页没有增长；全部 9 帧保留红色船体、两端尖角和水面层次，轮廓优于本次 16 步输出；执行标识 `LM-WAN-BALANCE-BACKTEST-20260809T170657Z` |
-| `zai-org/CogVideoX-2b` | 最小去噪、低内存解码与视频导出已闭合；质量尚未验收 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | `720×480`、9 帧、4 步去噪后保存潜变量；使用 `180×120` 中央处理器瓦片独立解码，69.515 秒形成 9 帧、768×496、8 fps、1.13 秒视频；进程常驻内存峰值 13,974,388,736 字节，换页未增长；画面仅有红色船体色块，不能作为质量合格证据；执行标识 `LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z` |
+| `zai-org/CogVideoX-2b` | 八步首次形成明确船体语义；质量尚未验收 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 四步输出只有红色色块；八步保持 `720×480`、9 帧和同一输入，总耗时 105.095 秒，进程常驻内存峰值 14,512,930,816 字节，MPS 驱动峰值 12,091,899,904 字节，新增换页 2,996,109,312 字节；画面出现明确船体、船头和船尾，但水面和纸质细节仍弱；执行标识 `LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z` |
 
-Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的缩小瓦片解码证据位于 `evidence/runtime/LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z/`，已通过专用校验器；它解除的是技术解码阻断，不解除控制台作业和质量阻断。
+Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的缩小瓦片解码证据位于 `evidence/runtime/LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z/`，八步质量证据位于 `evidence/runtime/LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z/`；两者均已通过适用校验器。八步解除的是固定输入下的最低可辨识阻断，不解除五秒镜头、控制台作业或质量接受阻断。
 
 更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
 
