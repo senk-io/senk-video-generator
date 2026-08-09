@@ -1,0 +1,201 @@
+{
+  "component_residency_strategy": "FULL_PIPELINE_LOAD",
+  "decode_strategy": "LATENT_TO_CPU_THEN_VAE_CPU_TILED",
+  "denoising_completed": true,
+  "error_observation": {
+    "frames": [
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "run_worker",
+        "line": 968
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py",
+        "function": "decode_latents",
+        "line": 355
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/utils/accelerate_utils.py",
+        "function": "wrapper",
+        "line": 46
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "decode",
+        "line": 1226
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "_decode",
+        "line": 1183
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "tiled_decode",
+        "line": 1379
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 942
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 633
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 303
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 143
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 64
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/conv.py",
+        "function": "forward",
+        "line": 735
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/conv.py",
+        "function": "_conv_forward",
+        "line": 730
+      },
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "handle_parent_stop",
+        "line": 788
+      }
+    ],
+    "message": "父进程请求保存终止证据并释放资源",
+    "type": "WorkerTerminationRequested"
+  },
+  "execution_id": "LM-COGVIDEOX-CPU-DECODE-R2-20260809T175503Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T17:56:09.465161+00:00",
+  "generation_profile_key": null,
+  "inference_completed": false,
+  "latent_checkpoint": {
+    "dtype": "torch.float32",
+    "path": "denoised_latents.safetensors",
+    "purpose": "DECODE_RETRY_WITHOUT_DENOISING_RERUN",
+    "sha256": "54978e4d98a4b9b51a280ade92ce0e24fb7600d0e59b14ad767ad938c2c102a4",
+    "shape": [
+      1,
+      3,
+      16,
+      60,
+      90
+    ]
+  },
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_dtype_normalization": [
+    {
+      "buffer": "patch_embed.pos_embedding",
+      "from_dtype": "float64",
+      "shape": [
+        1,
+        17776,
+        1920
+      ],
+      "to_dtype": "float32"
+    }
+  ],
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 11543441920,
+  "mps_peak_driver_allocated_bytes": 11996479488,
+  "mps_post_denoise_release": {
+    "current_allocated_bytes": 512,
+    "driver_allocated_bytes": 11223040
+  },
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "output_export_completed": false,
+  "phase": "WORKER_STOPPED_BY_PARENT",
+  "pipeline_loaded": true,
+  "prompt_encoding_completed": false,
+  "provider_key": "cogvideox",
+  "stage_elapsed_seconds": {
+    "mps_strategy_activation": 0.014,
+    "mps_transfer": 0.014,
+    "pipeline_load": 1.009,
+    "snapshot_resolution": 0.303
+  },
+  "started_at": "2026-08-09T17:55:13.773186+00:00",
+  "stop_request": {
+    "reason": "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET",
+    "requested_at": "2026-08-09T17:56:05.921499+00:00"
+  },
+  "text_encoder_post_release": null
+}

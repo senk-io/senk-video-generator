@@ -1,0 +1,24 @@
+
+Fetching 19 files:   0%|          | 0/19 [00:00<?, ?it/s]
+Fetching 19 files: 100%|██████████| 19/19 [00:00<00:00, 8760.23it/s]
+
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading pipeline components...:  20%|██        | 1/5 [00:00<00:01,  2.05it/s]
+Loading pipeline components...:  80%|████████  | 4/5 [00:00<00:00,  7.97it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  2.21it/s][A
+
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.16it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.97it/s]
+
+Loading pipeline components...: 100%|██████████| 5/5 [00:01<00:00,  3.85it/s]
+
+  0%|          | 0/4 [00:00<?, ?it/s]
+ 25%|██▌       | 1/4 [00:08<00:25,  8.60s/it]
+ 50%|█████     | 2/4 [00:11<00:10,  5.47s/it]
+ 75%|███████▌  | 3/4 [00:15<00:04,  4.61s/it]
+100%|██████████| 4/4 [00:18<00:00,  4.18s/it]
+100%|██████████| 4/4 [00:18<00:00,  4.74s/it]
+{"type": "WorkerTerminationRequested", "message": "父进程请求保存终止证据并释放资源", "frames": [{"file": "tools/run_provider_compatibility_trial.py", "line": 917, "function": "run_worker"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/utils/_contextlib.py", "line": 124, "function": "decorate_context"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py", "line": 787, "function": "__call__"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py", "line": 355, "function": "decode_latents"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/utils/accelerate_utils.py", "line": 46, "function": "wrapper"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1226, "function": "decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1183, "function": "_decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1379, "function": "tiled_decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 942, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 639, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/upsampling.py", "line": 396, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/functional.py", "line": 5188, "function": "interpolate"}, {"file": "tools/run_provider_compatibility_trial.py", "line": 779, "function": "handle_parent_stop"}]}

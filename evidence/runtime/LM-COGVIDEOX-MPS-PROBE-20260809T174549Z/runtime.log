@@ -1,0 +1,21 @@
+
+Fetching 19 files:   0%|          | 0/19 [00:00<?, ?it/s]
+Fetching 19 files: 100%|██████████| 19/19 [00:00<00:00, 7962.81it/s]
+
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  2.15it/s][A
+
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.01it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.03it/s]
+
+Loading pipeline components...:  20%|██        | 1/5 [00:01<00:04,  1.05s/it]
+Loading pipeline components...:  80%|████████  | 4/5 [00:01<00:00,  2.56it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:01<00:00,  3.14it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:01<00:00,  2.64it/s]
+
+  0%|          | 0/4 [00:00<?, ?it/s]
+  0%|          | 0/4 [00:02<?, ?it/s]
+{"type": "TypeError", "message": "Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.", "frames": [{"file": "tools/run_provider_compatibility_trial.py", "line": 890, "function": "run_worker"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/utils/_contextlib.py", "line": 124, "function": "decorate_context"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py", "line": 731, "function": "__call__"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py", "line": 187, "function": "new_forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py", "line": 50, "function": "wrapper"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", "line": 1446, "function": "_fn"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py", "line": 763, "function": "pre_forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/modeling_utils.py", "line": 1562, "function": "to"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1383, "function": "to"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 933, "function": "_apply"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1034, "function": "_apply"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1369, "function": "convert"}]}

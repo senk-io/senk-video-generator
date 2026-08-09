@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-08-09T17:48:01.731119+00:00",
+  "file_count": 8,
+  "files": [
+    {
+      "bytes": 1128,
+      "path": "environment.json",
+      "sha256": "7747a4234986adebb35d14f6035167d240a9c094db92b8e8270026b9119db595"
+    },
+    {
+      "bytes": 12066,
+      "path": "mps_metrics.jsonl",
+      "sha256": "87ede18f5ad360b66874011644d07099b011d83746bd8a4ec23c74ee03af8a26"
+    },
+    {
+      "bytes": 12968,
+      "path": "process_metrics.jsonl",
+      "sha256": "641b6bdcd9b367482973a2f93b25b3353f7f5fcb84359ea37309f7c97c641fd0"
+    },
+    {
+      "bytes": 1125,
+      "path": "request.json",
+      "sha256": "9af7e6c93bcb0bbcd201c70001c4faaf493a4f3515c9fc4509452754624d3f34"
+    },
+    {
+      "bytes": 3938,
+      "path": "runtime.log",
+      "sha256": "3580435b75c5fbe92a124e3826e19842b63d8960da60c5002dea1464ed84b1e2"
+    },
+    {
+      "bytes": 109,
+      "path": "stop_request.json",
+      "sha256": "ec1249ff60745ac98d9ea23fb59c31418c0d139735dbd12ca4d35aff082155ba"
+    },
+    {
+      "bytes": 6093,
+      "path": "summary.json",
+      "sha256": "947da1d25ff7503e3dff313fa675c27417ea64689a4d2688147177eef822102d"
+    },
+    {
+      "bytes": 5256,
+      "path": "worker_state.json",
+      "sha256": "f98299a6108e12095c1b9211c3bed9c7ed8ec63f8c20aeb9db7d91254379aaa2"
+    }
+  ]
+}

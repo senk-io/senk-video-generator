@@ -1,0 +1,180 @@
+{
+  "component_residency_strategy": "FULL_PIPELINE_LOAD",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "cross_provider_contract_created": false,
+  "elapsed_seconds": 42.869,
+  "error_observation": {
+    "frames": [
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "run_worker",
+        "line": 917
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/utils/_contextlib.py",
+        "function": "decorate_context",
+        "line": 124
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py",
+        "function": "__call__",
+        "line": 787
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py",
+        "function": "decode_latents",
+        "line": 355
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/utils/accelerate_utils.py",
+        "function": "wrapper",
+        "line": 46
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "decode",
+        "line": 1226
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "_decode",
+        "line": 1183
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "tiled_decode",
+        "line": 1379
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 942
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py",
+        "function": "forward",
+        "line": 639
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/upsampling.py",
+        "function": "forward",
+        "line": 396
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/functional.py",
+        "function": "interpolate",
+        "line": 5188
+      },
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "handle_parent_stop",
+        "line": 779
+      }
+    ],
+    "message": "父进程请求保存终止证据并释放资源",
+    "type": "WorkerTerminationRequested"
+  },
+  "execution_id": "LM-COGVIDEOX-MPS-DTYPE-R1-20260809T174710Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T17:48:01.715351+00:00",
+  "formal_fact_created": false,
+  "generation_profile_key": null,
+  "inference_completed": false,
+  "institution_freeze_created": false,
+  "job_id": null,
+  "last_phase": "WORKER_STOPPED_BY_PARENT",
+  "model_id": "zai-org/CogVideoX-2b",
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_dtype_normalization": [
+    {
+      "buffer": "patch_embed.pos_embedding",
+      "from_dtype": "float64",
+      "shape": [
+        1,
+        17776,
+        1920
+      ],
+      "to_dtype": "float32"
+    }
+  ],
+  "mps_memory_fraction": 0.65,
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 11543441920,
+  "mps_peak_driver_allocated_bytes": 18216271872,
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 11731156992
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "observation": "OBSERVED_EXECUTION_WITHOUT_OUTPUT",
+  "output_bytes": null,
+  "output_export_completed": false,
+  "output_metadata": null,
+  "output_sha256": null,
+  "pipeline_loaded": true,
+  "process_tree_peak_rss_bytes": 7529463808,
+  "prompt_encoding_completed": false,
+  "prompt_stage_activation": null,
+  "provider_identity": "zai-org",
+  "provider_key": "cogvideox",
+  "safety_abort_reason": "SYSTEM_AVAILABLE_MEMORY_BELOW_BUDGET",
+  "stage_elapsed_seconds": {
+    "mps_strategy_activation": 0.013,
+    "mps_transfer": 0.013,
+    "pipeline_load": 1.308,
+    "snapshot_resolution": 0.283
+  },
+  "started_at": "2026-08-09T17:47:18.845040+00:00",
+  "stop_request": {
+    "reason": "SYSTEM_AVAILABLE_MEMORY_BELOW_BUDGET",
+    "requested_at": "2026-08-09T17:47:57.772475+00:00"
+  },
+  "system_peak_swap_used_bytes": 7454392320,
+  "system_peak_used_bytes": 35282567168,
+  "system_start_swap_used_bytes": 3704029184,
+  "system_start_used_bytes": 11028316160,
+  "text_encoder_post_release": null,
+  "thumbnail_sha256": null,
+  "timed_out": false,
+  "worker_exit_code": 1
+}

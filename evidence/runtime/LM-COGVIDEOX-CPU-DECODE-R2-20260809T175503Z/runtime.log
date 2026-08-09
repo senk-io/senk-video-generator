@@ -1,0 +1,26 @@
+
+Fetching 19 files:   0%|          | 0/19 [00:00<?, ?it/s]
+Fetching 19 files: 100%|██████████| 19/19 [00:00<00:00, 10779.36it/s]
+
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+Loading pipeline components...:  20%|██        | 1/5 [00:00<00:00,  7.72it/s]
+Loading pipeline components...:  40%|████      | 2/5 [00:00<00:00,  3.25it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  4.34it/s][A
+
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.89it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.59it/s]
+
+Loading pipeline components...:  80%|████████  | 4/5 [00:00<00:00,  4.30it/s]
+Loading pipeline components...: 100%|██████████| 5/5 [00:00<00:00,  5.01it/s]
+
+  0%|          | 0/4 [00:00<?, ?it/s]
+ 25%|██▌       | 1/4 [00:07<00:23,  7.79s/it]
+ 50%|█████     | 2/4 [00:11<00:10,  5.14s/it]
+ 75%|███████▌  | 3/4 [00:14<00:04,  4.29s/it]
+100%|██████████| 4/4 [00:17<00:00,  3.90s/it]
+100%|██████████| 4/4 [00:17<00:00,  4.41s/it]
+There are modules in AutoencoderKLCogVideoX that should be kept in float32: []. Casting directly with `to()` can lead to inconsistent results; set `torch_dtype` in `from_pretrained()` instead to keep these modules in float32.
+{"type": "WorkerTerminationRequested", "message": "父进程请求保存终止证据并释放资源", "frames": [{"file": "tools/run_provider_compatibility_trial.py", "line": 968, "function": "run_worker"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py", "line": 355, "function": "decode_latents"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/utils/accelerate_utils.py", "line": 46, "function": "wrapper"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1226, "function": "decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1183, "function": "_decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 1379, "function": "tiled_decode"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 942, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 633, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 303, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 143, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1778, "function": "_wrapped_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py", "line": 1789, "function": "_call_impl"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/autoencoders/autoencoder_kl_cogvideox.py", "line": 64, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/conv.py", "line": 735, "function": "forward"}, {"file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/conv.py", "line": 730, "function": "_conv_forward"}, {"file": "tools/run_provider_compatibility_trial.py", "line": 788, "function": "handle_parent_stop"}]}

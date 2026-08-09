@@ -1,0 +1,117 @@
+{
+  "component_residency_strategy": "FULL_PIPELINE_LOAD",
+  "error_observation": {
+    "frames": [
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "run_worker",
+        "line": 890
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/utils/_contextlib.py",
+        "function": "decorate_context",
+        "line": 124
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/cogvideo/pipeline_cogvideox.py",
+        "function": "__call__",
+        "line": 731
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "new_forward",
+        "line": 187
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "wrapper",
+        "line": 50
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py",
+        "function": "_fn",
+        "line": 1446
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "pre_forward",
+        "line": 763
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/models/modeling_utils.py",
+        "function": "to",
+        "line": 1562
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "to",
+        "line": 1383
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_apply",
+        "line": 933
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_apply",
+        "line": 1034
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "convert",
+        "line": 1369
+      }
+    ],
+    "message": "Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.",
+    "type": "TypeError"
+  },
+  "execution_id": "LM-COGVIDEOX-MPS-PROBE-20260809T174549Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T17:46:11.656692+00:00",
+  "generation_profile_key": null,
+  "inference_completed": false,
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 11549061120,
+  "mps_peak_driver_allocated_bytes": 11996479488,
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "output_export_completed": false,
+  "phase": "WORKER_FAILED",
+  "pipeline_loaded": true,
+  "prompt_encoding_completed": false,
+  "provider_key": "cogvideox",
+  "stage_elapsed_seconds": {
+    "mps_strategy_activation": 0.013,
+    "mps_transfer": 0.013,
+    "pipeline_load": 1.894,
+    "snapshot_resolution": 0.269
+  },
+  "started_at": "2026-08-09T17:45:58.602020+00:00",
+  "stop_request": null,
+  "text_encoder_post_release": null
+}
