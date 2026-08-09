@@ -1,0 +1,25 @@
+{
+  "contract_id": "CR-0019-PROVIDER-COMPATIBILITY-TRIAL-CONTRACT-001",
+  "created_at": "2026-08-09T09:18:32.676990+00:00",
+  "cross_provider_contract_creation": "PROHIBITED",
+  "device": "mps",
+  "execution_id": "CR-0019-WAN-MAC-001",
+  "formal_fact_creation": "PROHIBITED",
+  "mps_fallback_to_cpu": true,
+  "prompt": "A small red paper boat drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+  "provider": {
+    "dtype": "bfloat16",
+    "fps": 8,
+    "guidance_scale": 5.0,
+    "height": 240,
+    "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+    "num_frames": 17,
+    "num_inference_steps": 4,
+    "provider_identity": "Wan-AI",
+    "vae_dtype": "float32",
+    "width": 416
+  },
+  "provider_key": "wan",
+  "seed": 42,
+  "timeout_seconds": 7200
+}

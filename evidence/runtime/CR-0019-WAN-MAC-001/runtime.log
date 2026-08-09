@@ -1,0 +1,53 @@
+
+Fetching 31 files:   0%|          | 0/31 [00:00<?, ?it/s]
+Fetching 31 files:  26%|██▌       | 8/31 [00:04<00:13,  1.75it/s]
+Fetching 31 files:  52%|█████▏    | 16/31 [00:05<00:05,  2.78it/s]
+Fetching 31 files:  61%|██████▏   | 19/31 [00:20<00:12,  1.05s/it]
+Fetching 31 files:  65%|██████▍   | 20/31 [00:44<00:24,  2.21s/it]
+Fetching 31 files:  68%|██████▊   | 21/31 [06:23<03:02, 18.28s/it]
+Fetching 31 files:  71%|███████   | 22/31 [06:24<02:37, 17.49s/it]
+Fetching 31 files:  74%|███████▍  | 23/31 [06:25<02:14, 16.76s/it]
+Fetching 31 files:  77%|███████▋  | 24/31 [10:22<03:01, 25.95s/it]
+Fetching 31 files:  81%|████████  | 25/31 [17:14<04:08, 41.40s/it]
+Fetching 31 files:  84%|████████▍ | 26/31 [31:30<06:03, 72.70s/it]
+Fetching 31 files:  87%|████████▋ | 27/31 [35:02<05:11, 77.87s/it]
+Fetching 31 files:  90%|█████████ | 28/31 [42:15<04:31, 90.56s/it]
+Fetching 31 files:  94%|█████████▎| 29/31 [44:10<03:02, 91.39s/it]
+Fetching 31 files:  97%|█████████▋| 30/31 [44:19<01:28, 88.65s/it]
+Fetching 31 files: 100%|██████████| 31/31 [44:21<00:00, 85.85s/it]
+Fetching 31 files: 100%|██████████| 31/31 [44:21<00:00, 85.85s/it]
+
+Loading pipeline components...:   0%|          | 0/5 [00:00<?, ?it/s]
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  50%|█████     | 1/2 [00:05<00:05,  5.18s/it][A
+
+Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  2.63s/it][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:06<00:00,  3.01s/it]
+
+Loading pipeline components...:  20%|██        | 1/5 [00:06<00:24,  6.16s/it]
+Loading pipeline components...:  60%|██████    | 3/5 [00:06<00:03,  1.69s/it]
+
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s][A
+
+Loading checkpoint shards:  20%|██        | 1/5 [00:05<00:23,  5.80s/it][A
+
+Loading checkpoint shards:  40%|████      | 2/5 [00:10<00:15,  5.33s/it][A
+
+Loading checkpoint shards:  60%|██████    | 3/5 [00:15<00:10,  5.25s/it][A
+
+Loading checkpoint shards:  80%|████████  | 4/5 [00:21<00:05,  5.26s/it][A
+
+Loading checkpoint shards: 100%|██████████| 5/5 [00:23<00:00,  4.33s/it][A
+Loading checkpoint shards: 100%|██████████| 5/5 [00:23<00:00,  4.78s/it]
+
+Loading pipeline components...:  80%|████████  | 4/5 [00:30<00:09,  9.38s/it]
+Loading pipeline components...: 100%|██████████| 5/5 [00:30<00:00,  6.08s/it]
+
+  0%|          | 0/4 [00:00<?, ?it/s]
+ 25%|██▌       | 1/4 [00:02<00:08,  2.84s/it]
+ 50%|█████     | 2/4 [00:04<00:04,  2.25s/it]
+ 75%|███████▌  | 3/4 [00:06<00:02,  2.13s/it]
+100%|██████████| 4/4 [00:08<00:00,  2.02s/it]
+100%|██████████| 4/4 [00:08<00:00,  2.13s/it]

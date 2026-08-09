@@ -1,0 +1,49 @@
+{
+  "cross_provider_contract_created": false,
+  "elapsed_seconds": 2730.198,
+  "error_observation": null,
+  "execution_id": "CR-0019-WAN-MAC-001",
+  "finished_at": "2026-08-09T10:04:05.023653+00:00",
+  "formal_fact_created": false,
+  "inference_completed": true,
+  "institution_freeze_created": false,
+  "last_phase": "WORKER_COMPLETED",
+  "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
+  "mps_peak_current_allocated_bytes": 16240202240,
+  "mps_peak_driver_allocated_bytes": 30979096576,
+  "mps_transfer_completed": true,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_bytes": 60478,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 17,
+    "duration_seconds": 2.13,
+    "fps": 8.0,
+    "size": [
+      416,
+      240
+    ]
+  },
+  "output_sha256": "918de664a732cff8b307c7c85d7fb0ee7161ac56f74fb332c755b566a66d03a3",
+  "pipeline_loaded": true,
+  "process_tree_peak_rss_bytes": 7556562944,
+  "provider_identity": "Wan-AI",
+  "provider_key": "wan",
+  "stage_elapsed_seconds": {
+    "inference": 21.666,
+    "mps_transfer": 8.183,
+    "pipeline_load": 30.467,
+    "snapshot_resolution": 2661.848,
+    "video_export": 3.362
+  },
+  "started_at": "2026-08-09T09:18:34.819571+00:00",
+  "system_peak_swap_used_bytes": 44226379776,
+  "system_peak_used_bytes": 35495526400,
+  "system_start_swap_used_bytes": 20838285312,
+  "system_start_used_bytes": 29195616256,
+  "thumbnail_sha256": "7003e28b9e28fd961a7b6a3be890ae9dd27f170271c6219036295053db91c969",
+  "timed_out": false,
+  "worker_exit_code": 0
+}
