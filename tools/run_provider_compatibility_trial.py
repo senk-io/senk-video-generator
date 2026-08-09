@@ -222,23 +222,39 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
             raise ValueError(f"质量探针不得改变提供者基线字段：{field}")
     steps = provider.get("num_inference_steps")
     frames = provider.get("num_frames")
+    expected_derivation = {
+        "strategy": "DROP_LAST_FRAME",
+        "source_frame_count": 41,
+        "derived_frame_count": 40,
+        "fps": 8,
+        "duration_seconds": 5.0,
+        "output_filename": "derived_5s.mp4",
+    }
     if prompt_variant is not None:
-        if temporal_derivation is not None or steps != 32 or frames != baseline_provider["num_frames"]:
-            raise ValueError("折纸提示词探针只允许 9 帧和 32 步")
-        expected_id = "CR-0019-COGVIDEOX-32-STEP-ORIGAMI-PROMPT-QUALITY-TRIAL-001"
+        if temporal_derivation is None:
+            if steps != 32 or frames != baseline_provider["num_frames"]:
+                raise ValueError("折纸提示词探针只允许 9 帧和 32 步")
+            expected_id = "CR-0019-COGVIDEOX-32-STEP-ORIGAMI-PROMPT-QUALITY-TRIAL-001"
+        else:
+            if steps != 32 or frames != 41:
+                raise ValueError("折纸五秒探针只允许 41 帧和 32 步")
+            if temporal_derivation != expected_derivation:
+                raise ValueError("折纸五秒派生合同必须固定为 41 帧裁切至 40 帧、8 fps、5 秒")
+            expected_budget_basis = {
+                "nine_frame_quality_execution_id": "LM-COGVIDEOX-32STEP-ORIGAMI-QUALITY-20260809T193843Z",
+                "prior_41_frame_execution_id": "LM-COGVIDEOX-5S-16STEP-20260809T190026Z",
+                "observed_nine_frame_mps_peak_driver_bytes": 4356620288,
+                "observed_prior_41_frame_mps_peak_driver_bytes": 6562824192,
+                "decision": "KEEP_EXISTING_HARD_LIMITS",
+            }
+            if contract.get("resource_budget_basis") != expected_budget_basis:
+                raise ValueError("折纸五秒探针资源预算依据无效")
+            expected_id = "CR-0019-COGVIDEOX-32-STEP-41-FRAME-ORIGAMI-FIVE-SECOND-TRIAL-001"
     elif temporal_derivation is None:
         if steps not in {8, 16, 32} or frames != baseline_provider["num_frames"]:
             raise ValueError("质量探针只允许 9 帧、8 步、16 步或 32 步")
         expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"
     else:
-        expected_derivation = {
-            "strategy": "DROP_LAST_FRAME",
-            "source_frame_count": 41,
-            "derived_frame_count": 40,
-            "fps": 8,
-            "duration_seconds": 5.0,
-            "output_filename": "derived_5s.mp4",
-        }
         if steps != 16 or frames != 41:
             raise ValueError("五秒探针只允许 41 帧和 16 步")
         if temporal_derivation != expected_derivation:
@@ -254,12 +270,14 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
         "thirty_second_timeline_creation",
     }.issubset(non_goals):
         raise ValueError("五秒探针缺少控制台与三十秒时间线非目标边界")
-    if steps == 32 and not {
+    if steps == 32 and temporal_derivation is None and not {
         "five_second_generation",
         "operator_console_enablement",
         "thirty_second_timeline_creation",
     }.issubset(non_goals):
         raise ValueError("三十二步探针缺少五秒、控制台与三十秒时间线非目标边界")
+    if prompt_variant is not None and temporal_derivation is not None and "automatic_retry" not in non_goals:
+        raise ValueError("折纸五秒探针必须禁止自动重试")
 
 
 def load_execution_contract(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:
