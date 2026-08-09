@@ -180,6 +180,11 @@ else:
         )
         self.assertEqual(quality_profile["parameters"]["width"], 256)
         self.assertEqual(quality_profile["parameters"]["num_inference_steps"], 4)
+        balance_profile = next(
+            item for item in public_catalog()["generation_profiles"] if item["key"] == "wan_balance_probe"
+        )
+        self.assertEqual(balance_profile["parameters"]["width"], 256)
+        self.assertEqual(balance_profile["parameters"]["num_inference_steps"], 16)
 
     def test_persisted_job_is_loaded_by_runner_without_model_import(self) -> None:
         job = self.manager.create_job(self.request())
