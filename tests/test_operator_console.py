@@ -31,6 +31,7 @@ from tools.run_provider_compatibility_trial import (
     request_worker_stop,
     release_pipeline_memory,
 )
+from tools.decode_cogvideox_latent import validate_decode_source
 from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
 
 
@@ -325,6 +326,31 @@ else:
         self.assertEqual(module.patch_embed.pos_embedding.dtype, torch.float32)
         self.assertEqual(observations[0]["buffer"], "patch_embed.pos_embedding")
         self.assertEqual(observations[0]["shape"], [1, 4, 8])
+
+    def test_cogvideox_decode_retry_requires_matching_latent_digest(self) -> None:
+        source_root = self.evidence / "COG-LATENT-SOURCE-001"
+        source_root.mkdir()
+        latent_path = source_root / "denoised_latents.safetensors"
+        latent_path.write_bytes(b"bounded-latent-test")
+        digest = __import__("hashlib").sha256(latent_path.read_bytes()).hexdigest()
+        (source_root / "summary.json").write_text(
+            json.dumps(
+                {
+                    "latent_checkpoint": {
+                        "path": latent_path.name,
+                        "sha256": digest,
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        source = validate_decode_source(self.evidence, source_root.name)
+        self.assertEqual(source["latent_sha256"], digest)
+
+        latent_path.write_bytes(b"tampered")
+        with self.assertRaisesRegex(ValueError, "摘要不匹配"):
+            validate_decode_source(self.evidence, source_root.name)
 
     def test_wan_text_encoder_is_released_before_denoiser_load(self) -> None:
         events: list[str] = []

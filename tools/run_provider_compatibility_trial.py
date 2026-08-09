@@ -531,6 +531,7 @@ def run_parent(args: argparse.Namespace) -> int:
         "denoising_completed": bool(worker_state.get("denoising_completed")),
         "mps_post_denoise_release": worker_state.get("mps_post_denoise_release"),
         "latent_checkpoint": worker_state.get("latent_checkpoint"),
+        "decode_tile_sample_size": worker_state.get("decode_tile_sample_size"),
         "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
@@ -777,6 +778,7 @@ def run_worker(args: argparse.Namespace) -> int:
         "denoising_completed": False,
         "mps_post_denoise_release": None,
         "latent_checkpoint": None,
+        "decode_tile_sample_size": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
@@ -964,6 +966,12 @@ def run_worker(args: argparse.Namespace) -> int:
             write_json(state_path, state)
             decode_start = time.perf_counter()
             pipe.vae.to(device="cpu", dtype=torch.float32)
+            pipe.vae.enable_tiling(
+                tile_sample_min_height=120,
+                tile_sample_min_width=180,
+            )
+            state["decode_tile_sample_size"] = [180, 120]
+            write_json(state_path, state)
             with torch.inference_mode():
                 decoded_video = pipe.decode_latents(latent_video)
                 frames = pipe.video_processor.postprocess_video(
