@@ -25,6 +25,11 @@ import psutil
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "experiments/provider_compatibility/trial_contract.json"
 DEFAULT_EVIDENCE_ROOT = REPO_ROOT / "evidence/runtime"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from operator_console.contracts import compile_runner_contract, validate_persisted_job
+
 PRIVATE_PATH_PATTERNS = (
     re.compile(r"/Users/[^/\s]+"),
     re.compile(r"/home/[^/\s]+"),
@@ -77,8 +82,45 @@ def sanitized_exception(exc: BaseException) -> dict[str, Any]:
     }
 
 
-def load_contract() -> dict[str, Any]:
-    return json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
+def observe_resource_budget(
+    *,
+    available_bytes: int,
+    swap_used_bytes: int,
+    swap_start_bytes: int,
+    abort_min_available_bytes: int,
+    max_swap_growth_bytes: int,
+    low_available_samples: int,
+) -> tuple[int, str | None]:
+    if abort_min_available_bytes and available_bytes < abort_min_available_bytes:
+        low_available_samples += 1
+    else:
+        low_available_samples = 0
+    if low_available_samples >= 6:
+        return low_available_samples, "SYSTEM_AVAILABLE_MEMORY_BELOW_BUDGET"
+    if max_swap_growth_bytes and swap_used_bytes - swap_start_bytes > max_swap_growth_bytes:
+        return low_available_samples, "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET"
+    return low_available_samples, None
+
+
+def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_execution_contract(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:
+    if not args.job_spec:
+        return load_contract(), CONTRACT_PATH
+    job_spec_path = Path(args.job_spec).resolve()
+    try:
+        raw_job = json.loads(job_spec_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"无法读取作业规格：{type(exc).__name__}") from exc
+    job, errors = validate_persisted_job(raw_job)
+    if errors or job is None:
+        codes = ", ".join(error["code"] for error in errors)
+        raise SystemExit(f"作业规格验证失败：{codes}")
+    if job["provider_key"] != args.provider:
+        raise SystemExit("作业规格提供者与命令行提供者不一致")
+    return compile_runner_contract(job), job_spec_path
 
 
 def git_value(*args: str) -> str | None:
@@ -104,7 +146,7 @@ def processor_identity() -> str:
     return result.stdout.strip() if result.returncode == 0 else platform.processor()
 
 
-def hardware_environment(execution_id: str) -> dict[str, Any]:
+def hardware_environment(execution_id: str, contract_path: Path) -> dict[str, Any]:
     import accelerate
     import diffusers
     import huggingface_hub
@@ -137,7 +179,8 @@ def hardware_environment(execution_id: str) -> dict[str, Any]:
         "git_head": git_value("rev-parse", "HEAD"),
         "git_status_porcelain": git_value("status", "--porcelain") or "",
         "harness_sha256": sha256_file(Path(__file__)),
-        "contract_sha256": sha256_file(CONTRACT_PATH),
+        "contract_sha256": sha256_file(contract_path),
+        "contract_source": "operator_job" if contract_path != CONTRACT_PATH else "fixed_trial",
         "sensitive_machine_identifiers_recorded": False,
     }
 
@@ -189,7 +232,7 @@ def write_manifest(evidence_dir: Path) -> dict[str, Any]:
 
 
 def run_parent(args: argparse.Namespace) -> int:
-    contract = load_contract()
+    contract, contract_path = load_execution_contract(args)
     provider = contract["providers"][args.provider]
     evidence_root = Path(args.evidence_root).resolve() if args.evidence_root else DEFAULT_EVIDENCE_ROOT
     evidence_dir = evidence_root / args.execution_id
@@ -201,6 +244,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "execution_id": args.execution_id,
         "created_at": utc_now(),
         "contract_id": contract["contract_id"],
+        "contract_status": contract.get("contract_status"),
+        "job_id": contract.get("job_id"),
+        "task_type": contract.get("task_type", "text_to_video"),
         "provider_key": args.provider,
         "provider": provider,
         "prompt": contract["shared_prompt"],
@@ -212,7 +258,7 @@ def run_parent(args: argparse.Namespace) -> int:
         "cross_provider_contract_creation": "PROHIBITED",
     }
     write_json(evidence_dir / "request.json", request)
-    write_json(evidence_dir / "environment.json", hardware_environment(args.execution_id))
+    write_json(evidence_dir / "environment.json", hardware_environment(args.execution_id, contract_path))
 
     child_args = [
         sys.executable,
@@ -225,6 +271,8 @@ def run_parent(args: argparse.Namespace) -> int:
         "--evidence-root",
         str(evidence_root),
     ]
+    if args.job_spec:
+        child_args.extend(["--job-spec", str(Path(args.job_spec).resolve())])
     child_environment = os.environ.copy()
     child_environment["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
     child_environment["HF_HUB_DISABLE_TELEMETRY"] = "1"
@@ -257,7 +305,12 @@ def run_parent(args: argparse.Namespace) -> int:
     peak_system_used = system_start.total - system_start.available
     peak_swap_used = swap_start.used
     timed_out = False
+    safety_abort_reason: str | None = None
+    low_available_samples = 0
     timeout_seconds = int(contract["timeout_seconds"])
+    resource_budget = contract.get("resource_budget") or {}
+    abort_min_available = int(resource_budget.get("abort_min_available_memory_bytes") or 0)
+    max_swap_growth = int(resource_budget.get("max_swap_growth_bytes") or 0)
     with metrics_path.open("w", encoding="utf-8") as metrics:
         while child.poll() is None:
             elapsed = time.perf_counter() - start
@@ -275,6 +328,14 @@ def run_parent(args: argparse.Namespace) -> int:
             peak_rss = max(peak_rss, rss)
             peak_system_used = max(peak_system_used, memory.total - memory.available)
             peak_swap_used = max(peak_swap_used, swap.used)
+            low_available_samples, safety_abort_reason = observe_resource_budget(
+                available_bytes=memory.available,
+                swap_used_bytes=swap.used,
+                swap_start_bytes=swap_start.used,
+                abort_min_available_bytes=abort_min_available,
+                max_swap_growth_bytes=max_swap_growth,
+                low_available_samples=low_available_samples,
+            )
             metrics.write(
                 json.dumps(
                     {
@@ -289,6 +350,13 @@ def run_parent(args: argparse.Namespace) -> int:
                 + "\n"
             )
             metrics.flush()
+            if safety_abort_reason:
+                child.terminate()
+                try:
+                    child.wait(timeout=20)
+                except subprocess.TimeoutExpired:
+                    child.kill()
+                break
             while True:
                 try:
                     print(messages.get_nowait(), end="", flush=True)
@@ -330,6 +398,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "elapsed_seconds": round(elapsed_seconds, 3),
         "worker_exit_code": return_code,
         "timed_out": timed_out,
+        "safety_abort_reason": safety_abort_reason,
+        "job_id": contract.get("job_id"),
+        "contract_status": contract.get("contract_status"),
         "observation": observation,
         "last_phase": worker_state.get("phase"),
         "model_snapshot_resolved": bool(worker_state.get("model_snapshot_resolved")),
@@ -415,7 +486,7 @@ def run_worker(args: argparse.Namespace) -> int:
     from diffusers.utils import export_to_video
     from huggingface_hub import snapshot_download
 
-    contract = load_contract()
+    contract, _ = load_execution_contract(args)
     provider = contract["providers"][args.provider]
     evidence_dir = Path(args.evidence_root).resolve() / args.execution_id
     state_path = evidence_dir / "worker_state.json"
@@ -547,6 +618,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--provider", choices=("wan", "cogvideox"), required=True)
     parser.add_argument("--execution-id", required=True)
     parser.add_argument("--evidence-root")
+    parser.add_argument("--job-spec")
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Z0-9][A-Z0-9._-]{2,127}", args.execution_id):

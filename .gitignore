@@ -2,5 +2,6 @@
 __pycache__/
 *.py[cod]
 .venv-provider-compat/
+.senknet/operator/
 evidence/runtime/**/governance.db-shm
 evidence/runtime/**/governance.db-wal

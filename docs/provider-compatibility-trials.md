@@ -107,13 +107,21 @@ PY
 
 以下命令会真正加载模型并生成视频，内存需求远高于纯下载。当前 36GB 统一内存 Mac 上的 Wan2.1 实测曾把 Metal 驱动分配推至约 30.98GB，并使系统交换空间增加约 23.39GB；执行前应先阅读第 8 节的实测记录，并关闭其他高内存任务。
 
+日常本地操作优先使用独立作业控制台。它会在真实启动前执行资源预检、登记不可变请求，并要求再次输入完整执行标识：
+
+```bash
+.venv-provider-compat/bin/python -m operator_console --open
+```
+
+控制台默认位于 `http://127.0.0.1:4320/`，完整说明见 [`../operator_console/README.md`](../operator_console/README.md)。当前只有 Wan2.1 文生视频路径允许启动；CogVideoX 虽然缓存完整，但在形成独立运行证据前由控制台失败关闭。
+
 需要在浏览器中实时观看阶段、内存、换页、MPS、日志和证据形成过程时，先在另一个终端启动只读观测台：
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-观测台的完整说明见 `observatory/README.md`。它不启动或控制试运行，因此不能替代本节执行命令所需的明确授权。
+观测台的完整说明见 `observatory/README.md`。它不启动或控制试运行；低层命令行方式仍要求独立明确授权，并且不会替代控制台的风险确认体验。
 
 Wan2.1：
 

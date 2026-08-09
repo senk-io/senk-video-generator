@@ -12,6 +12,16 @@
 
 苹果芯片 Mac 上的 `Wan2.1-T2V-1.3B`、`CogVideoX-2B` 安装、纯下载、运行、证据生成和失败排查方法见 [`docs/provider-compatibility-trials.md`](docs/provider-compatibility-trials.md)，本机实测边界见 [`knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`](knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md)。固定依赖位于 [`requirements-provider-compat.txt`](requirements-provider-compat.txt)，固定试运行输入位于 [`experiments/provider_compatibility/trial_contract.json`](experiments/provider_compatibility/trial_contract.json)。
 
+## 本地作业控制台
+
+仓库包含独立的本地视频作业控制面，用于输入提示词、设置生成参数和资源护栏，并通过预检、不可变登记、执行标识二次确认后启动或停止真实作业：
+
+```bash
+.venv-provider-compat/bin/python -m operator_console --open
+```
+
+默认页面是 `http://127.0.0.1:4320/`。当前可执行类型是文生视频，只需要提示词，不需要图片或视频素材；`Wan2.1-T2V-1.3B` 属于高内存风险路径，`CogVideoX-2B` 在独立运行证据形成前保持启动阻断。完整操作、状态、接口和安全边界见 [`operator_console/README.md`](operator_console/README.md)。
+
 ## 本地构建观测台
 
 仓库包含完整的只读本地观测项目，可实时查看构建阶段、统一内存、换页、MPS、模型缓存、日志、输出与证据闭包：
@@ -20,7 +30,7 @@
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-默认页面是 `http://127.0.0.1:4319/`。完整安装、状态口径、接口和故障排查见 [`observatory/README.md`](observatory/README.md)。观测台只投影既有现实，不启动生成、不执行重试、不创建裁决。
+默认页面是 `http://127.0.0.1:4319/`。完整安装、状态口径、接口和故障排查见 [`observatory/README.md`](observatory/README.md)。观测台只投影既有现实，不启动生成、不执行重试、不创建裁决；需要创建受控作业时使用独立的 `4320` 作业控制台。
 
 ## 五层结构
 

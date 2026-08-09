@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0b0c0b">
+    <meta name="description" content="SENKNET 本地视频作业控制台">
+    <title>SENKNET · 作业控制台</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="glow glow-one" aria-hidden="true"></div>
+    <div class="glow glow-two" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="作业控制台首页">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+        <span><strong>SENKNET</strong><small>LOCAL JOB CONTROL PLANE</small></span>
+      </a>
+      <nav class="top-actions" aria-label="主要导航">
+        <span class="local-badge"><i></i>仅限本机</span>
+        <a class="observatory-link" href="http://127.0.0.1:4319/" target="_blank" rel="noopener">打开观测台 ↗</a>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section class="intro">
+        <div>
+          <span class="eyebrow">CONTROLLED EXECUTION</span>
+          <h1>创建下一次视频作业</h1>
+          <p>先定义输入与资源边界，再预检、登记和确认启动。控制台不会自动采用输出，也不会创建正式事实。</p>
+        </div>
+        <div class="intro-status" id="introStatus">
+          <span>控制服务</span><strong>正在连接…</strong>
+        </div>
+      </section>
+
+      <section class="safety-banner">
+        <span class="safety-icon">!</span>
+        <div>
+          <strong>高内存执行保护已启用</strong>
+          <p>每次启动都重新检查模型快照、活动进程、可用内存和磁盘；运行中超过内存或换页预算会自动停止并保留现实记录。</p>
+        </div>
+      </section>
+
+      <div class="workspace-grid">
+        <form class="composer" id="jobForm" novalidate>
+          <section class="card form-section">
+            <div class="section-head">
+              <span class="step">01</span>
+              <div><h2>选择能力</h2><p>模型和作业类型决定允许的输入与执行路径。</p></div>
+            </div>
+            <div class="provider-grid" id="providerGrid"></div>
+            <div class="task-grid" id="taskGrid"></div>
+            <div class="material-note" id="materialNote"></div>
+          </section>
+
+          <section class="card form-section">
+            <div class="section-head">
+              <span class="step">02</span>
+              <div><h2>定义生成输入</h2><p>文生视频只需要提示词；当前不要求上传素材。</p></div>
+            </div>
+            <label class="field prompt-field">
+              <span class="field-label">提示词 <em>必填</em></span>
+              <textarea id="prompt" name="prompt" rows="6" maxlength="2000" placeholder="描述主体、动作、环境、镜头、光线与不希望出现的文字……"></textarea>
+              <span class="field-foot"><span id="promptHint">建议明确镜头运动和场景约束</span><span id="promptCount">0 / 2000</span></span>
+            </label>
+            <div class="input-row">
+              <label class="field grow">
+                <span class="field-label">执行标识</span>
+                <input id="executionId" name="execution_id" autocomplete="off" spellcheck="false">
+                <span class="field-foot">不可复用；将成为证据目录标识</span>
+              </label>
+              <button class="secondary-button generate-id" id="generateId" type="button">生成新标识</button>
+            </div>
+            <div class="parameter-grid">
+              <label class="field"><span class="field-label">宽度</span><input id="width" name="width" type="number"></label>
+              <label class="field"><span class="field-label">高度</span><input id="height" name="height" type="number"></label>
+              <label class="field"><span class="field-label">帧数</span><input id="numFrames" name="num_frames" type="number"></label>
+              <label class="field"><span class="field-label">推理步数</span><input id="numSteps" name="num_inference_steps" type="number"></label>
+              <label class="field"><span class="field-label">引导强度</span><input id="guidance" name="guidance_scale" type="number" step="0.1"></label>
+              <label class="field"><span class="field-label">帧率</span><input id="fps" name="fps" type="number"></label>
+              <label class="field"><span class="field-label">随机种子</span><input id="seed" name="seed" type="number"></label>
+              <label class="field"><span class="field-label">最长执行</span><select id="timeout" name="timeout_seconds"><option value="1800">30 分钟</option><option value="3600" selected>60 分钟</option><option value="5400">90 分钟</option><option value="7200">120 分钟</option></select></label>
+            </div>
+          </section>
+
+          <section class="card form-section">
+            <div class="section-head">
+              <span class="step">03</span>
+              <div><h2>设置资源护栏</h2><p>这些数字是硬预算，不是界面提示。</p></div>
+            </div>
+            <div class="budget-grid">
+              <label class="budget-field">
+                <span><strong>启动前最低可用内存</strong><small>不足时禁止登记或启动</small></span>
+                <span class="number-unit"><input id="preflightMemory" type="number" min="4" max="24" step="1" value="10"><b>GiB</b></span>
+              </label>
+              <label class="budget-field">
+                <span><strong>运行中停止阈值</strong><small>连续 3 秒低于此值时停止</small></span>
+                <span class="number-unit"><input id="abortMemory" type="number" min="2" max="8" step="1" value="3"><b>GiB</b></span>
+              </label>
+              <label class="budget-field">
+                <span><strong>最大新增换页</strong><small>相对作业启动时的增长上限</small></span>
+                <span class="number-unit"><input id="swapGrowth" type="number" min="2" max="24" step="1" value="8"><b>GiB</b></span>
+              </label>
+            </div>
+            <label class="risk-check">
+              <input id="riskAcknowledged" type="checkbox">
+              <span class="check-mark" aria-hidden="true"></span>
+              <span><strong>我确认这是高内存本地试运行</strong><small id="riskMessage">执行可能明显占用统一内存并增加换页；输出只是候选观察。</small></span>
+            </label>
+          </section>
+
+          <section class="card preflight-card">
+            <div class="preflight-copy">
+              <span class="eyebrow">PREFLIGHT</span>
+              <h2 id="preflightTitle">尚未执行预检</h2>
+              <p id="preflightDescription">填写以上字段后检查当前机器是否允许登记作业。</p>
+            </div>
+            <div class="preflight-results" id="preflightResults"></div>
+            <div class="form-actions">
+              <button class="secondary-button" id="preflightButton" type="button">运行预检</button>
+              <button class="primary-button" id="registerButton" type="button" disabled>登记不可变作业</button>
+            </div>
+          </section>
+        </form>
+
+        <aside class="side-column">
+          <section class="card host-card" id="hostCard">
+            <div class="side-head"><div><span class="eyebrow">LIVE HOST</span><h2>启动资源</h2></div><span class="live-pill"><i></i>实时</span></div>
+            <div class="host-skeleton">正在读取本机状态…</div>
+          </section>
+
+          <section class="card confirmation-card" id="confirmationCard">
+            <div class="side-head"><div><span class="eyebrow">EXPLICIT AUTHORITY</span><h2>启动确认</h2></div></div>
+            <div class="empty-confirmation"><span>⌁</span><strong>尚未登记作业</strong><p>预检通过并登记后，必须再次输入执行标识才能启动。</p></div>
+          </section>
+
+          <section class="card jobs-card">
+            <div class="side-head"><div><span class="eyebrow">LOCAL JOBS</span><h2>本地作业</h2></div><span id="jobCount">0 项</span></div>
+            <div class="job-list" id="jobList"><div class="empty-list">尚无本地作业</div></div>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="boundary-footer">
+        <span class="boundary-icon">CP</span>
+        <div><strong>控制面边界</strong><p>控制台只创建非权威本地执行请求；生成输出仍是候选现实，选择、发布和制度冻结均不在本页面权限内。</p></div>
+        <time id="freshness">--</time>
+      </footer>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
