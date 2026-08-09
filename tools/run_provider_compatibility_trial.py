@@ -938,7 +938,9 @@ def run_worker(args: argparse.Namespace) -> int:
             write_json(state_path, state)
             latent_video = output.frames.detach().to(device="cpu", dtype=torch.float32)
             del output
-            if hasattr(pipe, "maybe_free_model_hooks"):
+            if hasattr(pipe, "remove_all_hooks"):
+                pipe.remove_all_hooks()
+            elif hasattr(pipe, "maybe_free_model_hooks"):
                 pipe.maybe_free_model_hooks()
             pipe.text_encoder = None
             pipe.transformer = None
