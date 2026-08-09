@@ -10,6 +10,8 @@ from types import SimpleNamespace
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
+import numpy as np
+
 from operator_console.contracts import (
     GIB,
     compile_runner_contract,
@@ -36,6 +38,12 @@ from tools.run_provider_compatibility_trial import (
 )
 from tools.decode_cogvideox_latent import preflight_block_reason, validate_decode_source
 from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract, verify_staged_prompt_release
+from tools.stabilize_cogvideox_candidate import (
+    stabilize_frames,
+    subject_observation,
+    threshold_comparisons,
+    validate_contract as validate_stability_contract,
+)
 
 
 class FakeObserver:
@@ -244,6 +252,51 @@ else:
         mutated_derivation["temporal_derivation"]["derived_frame_count"] = 39
         with self.assertRaisesRegex(ValueError, "派生合同必须固定"):
             validate_bounded_trial_variant(mutated_derivation, "cogvideox")
+
+    def test_cogvideox_temporal_stability_contract_and_linear_trajectory_are_fail_closed(self) -> None:
+        contract_path = Path(
+            "experiments/postprocessing/cogvideox_temporal_stability_v1.json"
+        )
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+        validate_stability_contract(contract)
+        mutated = json.loads(json.dumps(contract))
+        mutated["temporal_filter"]["weights"] = [1, 2, 1]
+        with self.assertRaisesRegex(ValueError, "混合权重"):
+            validate_stability_contract(mutated)
+
+        frames = np.full((4, 32, 48, 3), 240, dtype=np.uint8)
+        for index, x in enumerate((4, 18, 8, 22)):
+            frames[index, 12:22, x : x + 12] = (230, 20, 20)
+        measurement = {
+            "red_minimum": 150,
+            "red_to_green_ratio_numerator": 3,
+            "red_to_green_ratio_denominator": 2,
+            "red_to_blue_ratio_numerator": 3,
+            "red_to_blue_ratio_denominator": 2,
+            "minimum_subject_area_pixels": 100,
+        }
+        source = subject_observation(frames, measurement)
+        stabilized, shifts = stabilize_frames(
+            frames,
+            source,
+            {
+                "maximum_translation_pixels": 32,
+            },
+            {"weights": [1, 4, 1]},
+        )
+        observed = subject_observation(stabilized, measurement)
+        comparisons = threshold_comparisons(
+            observed,
+            {
+                "all_frames_retain_subject": True,
+                "maximum_adjacent_centroid_jump_pixels": 7.0,
+                "mean_adjacent_centroid_jump_pixels": 7.0,
+                "maximum_adjacent_subject_area_change_percent": 1.0,
+            },
+        )
+        self.assertEqual(len(shifts), 4)
+        self.assertTrue(observed["all_frames_retain_subject"])
+        self.assertTrue(all(item["within_threshold"] for item in comparisons.values()))
 
     def test_legacy_v2_job_remains_readable_with_new_swap_gate(self) -> None:
         job = self.manager.create_job(self.request())

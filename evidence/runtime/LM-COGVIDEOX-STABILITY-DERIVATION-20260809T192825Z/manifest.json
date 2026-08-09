@@ -1,0 +1,36 @@
+{
+  "created_at": "2026-08-09T19:28:26.099055+00:00",
+  "file_count": 6,
+  "files": [
+    {
+      "bytes": 893,
+      "path": "environment.json",
+      "sha256": "3b4dcc4575d39fdfdbdaf6d56e6decfeefe6640cc2ce5e2c251a78a6a37ab121"
+    },
+    {
+      "bytes": 11164,
+      "path": "frame_metrics.json",
+      "sha256": "85ca472428700a9ab5680280d8d0cedb384f5cc6efc1019baeb530c677b7385a"
+    },
+    {
+      "bytes": 2068,
+      "path": "request.json",
+      "sha256": "d8c145dba2dfa2d67a05cd08506f600b45a9555696ba8624b747a91a67dac12d"
+    },
+    {
+      "bytes": 177531,
+      "path": "stabilized_5s.mp4",
+      "sha256": "e004521cb082a49f83b88cdeaa1e5b2d62f3188ee4b0e55e9de1cd5da0908547"
+    },
+    {
+      "bytes": 10778,
+      "path": "summary.json",
+      "sha256": "b553adfe4bf8099bdf53b3758a667a8893c383151f71ade31fa2bf73ead93d2d"
+    },
+    {
+      "bytes": 59267,
+      "path": "thumbnail.png",
+      "sha256": "a2d967b19bac7319979d570e38aeafaa914951bdc9ea9fd5460dd6c01c6cc23c"
+    }
+  ]
+}

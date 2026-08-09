@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "bundled_ffmpeg_version": "7.1",
+  "contract_sha256": "84c1e0e9be359be3c1c0f576ccdd526d481113e88577bd0724f3ef55937683ea",
+  "execution_id": "LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z",
+  "git_head": "82b85f90270110f9f1465a5f32b07183f4079d41",
+  "git_status_porcelain": "M tests/test_operator_console.py\n?? evidence/runtime/LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z/\n?? experiments/postprocessing/\n?? tools/stabilize_cogvideox_candidate.py\n?? tools/verify_cogvideox_stability_evidence.py",
+  "harness_sha256": "e29e89d79756ddc000cef982d309e60072c6edc4fc6ffd40a55ae157b70e81d5",
+  "imageio_version": null,
+  "numpy_version": "2.5.1",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-09T19:28:25.562686+00:00",
+  "sensitive_machine_identifiers_recorded": false
+}

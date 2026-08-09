@@ -178,6 +178,16 @@ CogVideoX 固定八步质量探针：
 
 五秒合同只允许单次受控执行；失败时保留证据且不自动重试。成功也只产生候选观察，不创建正式质量接受、控制台权限、跨提供方合同、制度冻结或三十秒时间线。运行前仍必须独立确认没有生成进程、内存压力正常并记录换页基线。
 
+既有五秒候选出现主体位置抖动时，可以在不重新运行模型、不修改来源证据的前提下，使用固定派生合同 `cogvideox_temporal_stability_v1.json` 形成一个独立的技术稳定候选。合同锁定来源视频摘要，以首尾红色主体质心之间的直线路径进行整数像素平移，边缘采用复制填充，再执行权重为 `1:4:1` 的对称三帧混合：
+
+```bash
+.venv-provider-compat/bin/python -m tools.stabilize_cogvideox_candidate \
+  --execution-id LM-COGVIDEOX-STABILITY-DERIVATION-YYYYMMDDTHHMMSSZ \
+  --contract experiments/postprocessing/cogvideox_temporal_stability_v1.json
+```
+
+该派生不使用模型或 MPS，不覆盖来源资产，也不修复模型没有生成的雨滴、纸张折痕或水面细节。观察阈值只约束主体是否保留、相邻质心跳变和面积变化；全部满足也不等于视觉质量接受、镜头选择或时间线绑定。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash
@@ -228,6 +238,9 @@ manifest.json
 
 .venv-provider-compat/bin/python -m tools.verify_cogvideox_decode_evidence \
   evidence/runtime/LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z
+
+.venv-provider-compat/bin/python -m tools.verify_cogvideox_stability_evidence \
+  evidence/runtime/LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z
 ```
 
 校验器检查清单摘要、文件闭包、请求与执行标识、输出摘要以及公开仓库禁止出现的绝对用户路径。对于控制台创建的受控作业，它还核对固定生成档位、执行策略、MPS 比例、策略激活和推理后的主动释放观察。校验通过只表示证据包可重新审计，不表示视频质量合格或提供者适用性已经通过。
@@ -241,7 +254,7 @@ manifest.json
 3. 在观测台持续查看统一内存、换页增长、MPS 峰值和阶段变化；
 4. 运行结束后校验证据包，核对推理后主动释放记录；
 5. 只有探针稳定闭合，才允许使用“低内存生成”档位；
-6. CogVideoX 已完成分阶段去噪、小瓦片中央处理器解码、41 帧源输出和精确五秒派生输出观察，但运动连续性与正式质量验收尚未闭合，因此控制台继续保持阻断。
+6. CogVideoX 已完成分阶段去噪、小瓦片中央处理器解码、41 帧源输出、精确五秒派生输出和一次非模型时序稳定派生；技术连续性阈值已经闭合，但雨滴、纸张折痕、场景细节和正式质量验收仍未闭合，因此控制台继续保持阻断。
 
 文本编码器独立阶段形成两次真实失败观察：`LM-WAN-STAGED-PROBE-20260809T161019Z` 证明模型级卸载会让完整 UMT5 进入 MPS；`LM-WAN-LEAF-PROBE-20260809T161726Z` 证明直接调用 `encode_prompt` 时若未禁用自动求导，叶级卸载仍会累积中间状态并触及上限。启用叶级顺序卸载与 `torch.inference_mode()` 后，`LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z` 完成了提示词编码、文本编码器释放、去噪管线装载、推理、视频导出和证据闭包。该结果只允许认定固定内存探针可运行，不得外推到更高档位或画面质量。
 
@@ -259,8 +272,9 @@ manifest.json
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 8 步平衡回测 | 运行闭合，确定当前最低可辨识档位 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、8 步、8 fps；总耗时 30.685 秒，其中推理 5.945 秒；MPS 驱动峰值 8,413,462,528 字节；换页没有增长；全部 9 帧保留红色船体、两端尖角和水面层次，轮廓优于本次 16 步输出；执行标识 `LM-WAN-BALANCE-BACKTEST-20260809T170657Z` |
 | `zai-org/CogVideoX-2b` | 八步为最低可辨识点；十六步为当前质量基线 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 八步同参数分阶段对照总耗时 104.597 秒，MPS 驱动峰值 4,367,155,200 字节，换页增长为 0；相较旧完整管线八步，MPS 驱动峰值降低 63.884%，九帧船体语义保持；十六步仍因水面、倒影和涟漪更完整而作为质量基线；执行标识 `LM-COGVIDEOX-8STEP-STAGED-20260809T184407Z` |
 | `zai-org/CogVideoX-2b` 五秒候选观察 | 技术闭合；运动连续性仍需处理 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 十六步生成 41 帧并派生 40 帧、8 fps、精确 5 秒；总耗时 828.230 秒，MPS 驱动峰值 6,562,824,192 字节，新增换页为 0；全部 41 帧保留红色船体，但最大相邻质心跳变约 45.1 px，不能登记正式质量接受；执行标识 `LM-COGVIDEOX-5S-16STEP-20260809T190026Z` |
+| `zai-org/CogVideoX-2b` 五秒时序稳定派生 | 技术连续性阈值闭合；仍待人工质量接受 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 锁定既有五秒来源摘要，不重新运行模型；输出 40 帧、8 fps、精确 5 秒，全部帧保留船体；最大相邻质心跳变由约 45.1 px 降至 2.78 px，平均值由约 12.29 px 降至 1.37 px，最大面积变化为 12.08%；40 帧逐帧未见边缘接缝或明显双影，但雨滴、折痕和水面细节仍不足；执行标识 `LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z` |
 
-Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的缩小瓦片解码、旧完整管线八步、十六步分阶段、八步分阶段严格对照和五秒候选观察证据分别位于 `evidence/runtime/LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z/`、`evidence/runtime/LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z/`、`evidence/runtime/LM-COGVIDEOX-16STEP-QUALITY-20260809T183132Z/`、`evidence/runtime/LM-COGVIDEOX-8STEP-STAGED-20260809T184407Z/` 和 `evidence/runtime/LM-COGVIDEOX-5S-16STEP-20260809T190026Z/`；五者均已通过适用校验器。五秒观察闭合了当前合同下的技术可运行性，但不解除运动连续性、正式质量接受、控制台作业或三十秒时间线阻断。
+Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的缩小瓦片解码、旧完整管线八步、十六步分阶段、八步分阶段严格对照、五秒候选观察和五秒时序稳定派生证据分别位于 `evidence/runtime/LM-COGVIDEOX-SMALL-TILE-DECODE-20260809T181252Z/`、`evidence/runtime/LM-COGVIDEOX-8STEP-QUALITY-20260809T182455Z/`、`evidence/runtime/LM-COGVIDEOX-16STEP-QUALITY-20260809T183132Z/`、`evidence/runtime/LM-COGVIDEOX-8STEP-STAGED-20260809T184407Z/`、`evidence/runtime/LM-COGVIDEOX-5S-16STEP-20260809T190026Z/` 和 `evidence/runtime/LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z/`；六者均已通过适用校验器。时序派生闭合了当前候选的技术连续性阈值，但不解除雨滴、纸张材质、场景细节、人工质量接受、控制台作业或三十秒时间线阻断。
 
 更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
 
