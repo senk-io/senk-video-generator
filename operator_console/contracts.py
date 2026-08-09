@@ -140,8 +140,8 @@ GENERATION_PROFILES: dict[str, dict[str, Any]] = {
     "wan_balance_backtest": {
         "key": "wan_balance_backtest",
         "provider_key": "wan",
-        "name": "平衡回测",
-        "description": "在 16 步出现语义形态后回测 8 步，寻找更低可用成本。",
+        "name": "推荐平衡",
+        "description": "当前 Mac 已验证的最低可辨识档位：8 步、最低画幅与 9 帧。",
         "parameters": {
             "width": 256,
             "height": 144,
@@ -222,7 +222,7 @@ def public_catalog() -> dict[str, Any]:
         "defaults": {
             "provider_key": "wan",
             "task_type": "text_to_video",
-            "generation_profile_key": "wan_probe",
+            "generation_profile_key": "wan_balance_backtest",
             "execution_strategy": "mps_model_offload_bounded",
             "seed": 42,
             "timeout_seconds": 3600,

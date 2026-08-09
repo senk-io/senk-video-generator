@@ -50,7 +50,7 @@ const state = {
   catalogRendered: false,
   providerKey: "wan",
   taskType: "text_to_video",
-  generationProfileKey: "wan_probe",
+  generationProfileKey: "wan_balance_backtest",
   executionStrategy: "mps_model_offload_bounded",
   preflight: null,
   preflightFingerprint: null,
