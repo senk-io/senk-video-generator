@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#07110f">
+    <meta name="description" content="SENKNET 视频生产治理引擎本地构建观测台">
+    <title>SENKNET · 构建观测台</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="返回观测台首页">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="brand-copy">
+          <strong>SENKNET</strong>
+          <small>VIDEO BUILD OBSERVATORY</small>
+        </span>
+      </a>
+
+      <div class="topbar-actions">
+        <label class="execution-picker">
+          <span>观测执行</span>
+          <select id="executionSelect" aria-label="选择观测执行">
+            <option>正在读取执行记录…</option>
+          </select>
+        </label>
+        <button class="refresh-control is-live" id="refreshControl" type="button" aria-pressed="true">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span id="refreshLabel">实时刷新</span>
+        </button>
+        <div class="clock" id="clock" aria-label="本地时间">--:--:--</div>
+      </div>
+    </header>
+
+    <main class="dashboard-shell">
+      <section class="hero-grid" aria-label="构建总览">
+        <article class="panel build-hero" id="buildHero">
+          <div class="skeleton skeleton-hero"></div>
+        </article>
+
+        <article class="panel system-card" id="systemCard">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">LIVE HOST</span>
+              <h2>本机资源</h2>
+            </div>
+            <span class="source-pill">实时采样</span>
+          </div>
+          <div class="skeleton skeleton-system"></div>
+        </article>
+      </section>
+
+      <section class="alert-stack" id="alertStack" aria-live="polite"></section>
+
+      <section class="panel stage-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">BUILD LIFECYCLE</span>
+            <h2>构建阶段</h2>
+          </div>
+          <div class="section-meta" id="stageMeta">等待状态数据</div>
+        </div>
+        <div class="stage-rail" id="stageRail">
+          <div class="skeleton skeleton-stage"></div>
+        </div>
+      </section>
+
+      <section class="chart-grid" aria-label="资源趋势">
+        <article class="panel chart-panel">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">SYSTEM TREND</span>
+              <h2>内存与换页</h2>
+            </div>
+            <div class="chart-legend" id="systemLegend"></div>
+          </div>
+          <div class="metric-row" id="systemPeaks"></div>
+          <div class="chart-wrap">
+            <canvas id="systemChart" role="img" aria-label="进程、系统内存与交换空间趋势图"></canvas>
+            <div class="chart-empty" id="systemChartEmpty">等待资源采样</div>
+          </div>
+        </article>
+
+        <article class="panel chart-panel">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">METAL TREND</span>
+              <h2>MPS 分配</h2>
+            </div>
+            <div class="chart-legend" id="mpsLegend"></div>
+          </div>
+          <div class="metric-row" id="mpsPeaks"></div>
+          <div class="chart-wrap">
+            <canvas id="mpsChart" role="img" aria-label="MPS 当前分配与驱动分配趋势图"></canvas>
+            <div class="chart-empty" id="mpsChartEmpty">推理开始后显示 MPS 采样</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel model-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">MODEL INVENTORY</span>
+            <h2>模型缓存</h2>
+          </div>
+          <div class="section-meta">缓存扫描每 15 秒更新 · 不加载模型</div>
+        </div>
+        <div class="model-grid" id="modelGrid">
+          <div class="skeleton skeleton-model"></div>
+          <div class="skeleton skeleton-model"></div>
+        </div>
+      </section>
+
+      <section class="detail-grid">
+        <article class="panel output-panel">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">OBSERVED OUTPUT</span>
+              <h2>输出预览</h2>
+            </div>
+            <span class="source-pill">派生读面</span>
+          </div>
+          <div id="outputContent" class="output-content">
+            <div class="empty-state">
+              <span class="empty-glyph">◫</span>
+              <strong>尚无可预览输出</strong>
+              <span>文件出现后将在这里显示</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel evidence-panel">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">EVIDENCE CLOSURE</span>
+              <h2>证据状态</h2>
+            </div>
+            <span class="source-pill">只读投影</span>
+          </div>
+          <div class="evidence-summary" id="evidenceSummary"></div>
+          <div class="evidence-list" id="evidenceList">
+            <div class="skeleton skeleton-list"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel context-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">EXECUTION CONTEXT</span>
+            <h2>执行上下文</h2>
+          </div>
+          <div class="tab-list" role="tablist" aria-label="执行上下文视图">
+            <button class="tab-button is-active" id="requestTab" role="tab" aria-selected="true" data-tab="request" type="button">请求</button>
+            <button class="tab-button" role="tab" aria-selected="false" data-tab="environment" type="button">环境</button>
+            <button class="tab-button" role="tab" aria-selected="false" data-tab="processes" type="button">进程</button>
+          </div>
+        </div>
+        <div class="context-content" id="contextContent"></div>
+      </section>
+
+      <section class="panel log-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">RUNTIME STREAM</span>
+            <h2>运行日志</h2>
+          </div>
+          <div class="log-tools">
+            <label class="log-search">
+              <span class="visually-hidden">筛选日志</span>
+              <input id="logSearch" type="search" placeholder="筛选日志…" autocomplete="off">
+            </label>
+            <button class="ghost-button" id="followLogButton" type="button" aria-pressed="true">跟随末尾</button>
+            <button class="ghost-button" id="copyLogButton" type="button">复制</button>
+          </div>
+        </div>
+        <div class="terminal" id="terminal" tabindex="0" aria-label="运行日志内容">
+          <div class="terminal-bar" aria-hidden="true">
+            <i></i><i></i><i></i><span>runtime.log</span>
+          </div>
+          <pre id="logContent">等待运行日志…</pre>
+        </div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">AUDIT LEDGER</span>
+            <h2>证据包历史</h2>
+          </div>
+          <div class="section-meta" id="historyMeta">0 个证据包</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>执行标识</th>
+                <th>类型</th>
+                <th>现实记录</th>
+                <th>清单</th>
+                <th>正式事实</th>
+                <th>制度冻结</th>
+                <th>更新时间</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="governance-footer">
+        <div class="boundary-mark" aria-hidden="true">R/O</div>
+        <div>
+          <strong>观测边界</strong>
+          <p id="boundaryStatement">观测台只投影既有现实，不执行生成、不裁决通过、不建立正式事实。</p>
+        </div>
+        <div class="freshness">
+          <span>数据更新时间</span>
+          <time id="freshnessTime">--</time>
+        </div>
+      </footer>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
