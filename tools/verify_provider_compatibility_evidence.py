@@ -32,6 +32,26 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, Any]) -> None:
+    """校验受控作业的低内存合同与实际运行证据是否一致。"""
+    if request.get("contract_status") != "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE":
+        return
+    if not request.get("generation_profile_key"):
+        raise ValueError("受控作业缺少固定生成档位")
+    if request.get("execution_strategy") != summary.get("execution_strategy"):
+        raise ValueError("请求与摘要的执行策略不一致")
+    resource_budget = request.get("resource_budget") or {}
+    expected_fraction = resource_budget.get("mps_memory_fraction")
+    observed_limit = summary.get("mps_memory_limit") or {}
+    if expected_fraction != observed_limit.get("fraction"):
+        raise ValueError("MPS 内存上限与作业合同不一致")
+    activation = summary.get("mps_strategy_activation") or {}
+    if activation.get("strategy") != request.get("execution_strategy"):
+        raise ValueError("MPS 策略激活证据与作业合同不一致")
+    if summary.get("inference_completed") and not summary.get("mps_post_release"):
+        raise ValueError("完成推理后缺少 MPS 主动释放观察")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("evidence_dir")
@@ -73,6 +93,11 @@ def main() -> int:
         raise SystemExit("兼容性试运行不得创建跨提供方合同")
     if summary["institution_freeze_created"]:
         raise SystemExit("兼容性试运行不得创建制度冻结")
+
+    try:
+        verify_operator_memory_contract(request, summary)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
     output_path = evidence_dir / "output.mp4"
     if summary["output_export_completed"]:

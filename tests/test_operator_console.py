@@ -6,6 +6,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -18,9 +19,13 @@ from operator_console.contracts import (
 )
 from operator_console.server import ControlError, JobManager, WEB_ROOT, create_server
 from tools.run_provider_compatibility_trial import (
+    activate_pipeline_strategy,
+    configure_mps_memory_limit,
     load_execution_contract,
     observe_resource_budget,
+    release_pipeline_memory,
 )
+from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
 
 
 class FakeObserver:
@@ -120,18 +125,22 @@ else:
         self.temporary.cleanup()
 
     def request(self, execution_id: str = "LOCAL-WAN-TEST-001", prompt: str = "A red paper boat.") -> dict:
-        profile = public_catalog()["providers"][0]
+        catalog = public_catalog()
+        profile = next(item for item in catalog["generation_profiles"] if item["key"] == "wan_probe")
         return {
             "provider_key": "wan",
             "task_type": "text_to_video",
+            "generation_profile_key": "wan_probe",
+            "execution_strategy": "mps_model_offload_bounded",
             "execution_id": execution_id,
             "prompt": prompt,
             "seed": 42,
-            "parameters": profile["defaults"],
+            "parameters": profile["parameters"],
             "timeout_seconds": 3600,
             "preflight_min_available_memory_bytes": 10 * GIB,
             "abort_min_available_memory_bytes": 3 * GIB,
             "max_swap_growth_bytes": 8 * GIB,
+            "mps_memory_fraction": 0.75,
             "risk_acknowledged": True,
         }
 
@@ -143,7 +152,10 @@ else:
         normalized["job_id"] = "JOB-20260809T000000Z-A1B2C3D4"
         contract = compile_runner_contract(normalized)
         self.assertEqual(contract["shared_prompt"], "A red paper boat.")
-        self.assertEqual(contract["providers"]["wan"]["width"], 416)
+        self.assertEqual(contract["providers"]["wan"]["width"], 256)
+        self.assertEqual(contract["generation_profile_key"], "wan_probe")
+        self.assertEqual(contract["execution_strategy"], "mps_model_offload_bounded")
+        self.assertEqual(contract["resource_budget"]["mps_memory_fraction"], 0.75)
         self.assertEqual(contract["resource_budget"]["max_swap_growth_bytes"], 8 * GIB)
         self.assertEqual(contract["contract_status"], "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE")
 
@@ -157,7 +169,7 @@ else:
 
         self.assertEqual(source, job_spec.resolve())
         self.assertEqual(contract["job_id"], job["job_id"])
-        self.assertEqual(contract["providers"]["wan"]["num_frames"], 17)
+        self.assertEqual(contract["providers"]["wan"]["num_frames"], 9)
 
     def test_resource_budget_requires_sustained_low_memory_and_blocks_swap_growth(self) -> None:
         samples = 0
@@ -192,11 +204,106 @@ else:
         )
         self.assertEqual(reason, "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET")
 
+    def test_mps_limit_strategy_activation_and_release_are_explicit(self) -> None:
+        class FakeMps:
+            fraction = None
+            synchronized = False
+            cache_emptied = False
+
+            @staticmethod
+            def recommended_max_memory() -> int:
+                return 30_000
+
+            def set_per_process_memory_fraction(self, fraction: float) -> None:
+                self.fraction = fraction
+
+            def synchronize(self) -> None:
+                self.synchronized = True
+
+            def empty_cache(self) -> None:
+                self.cache_emptied = True
+
+            @staticmethod
+            def current_allocated_memory() -> int:
+                return 100
+
+            @staticmethod
+            def driver_allocated_memory() -> int:
+                return 200
+
+        class FakePipe:
+            model_cpu_offload_seq = "text_encoder->transformer->vae"
+
+            def __init__(self) -> None:
+                self.offload_device = None
+                self.full_device = None
+
+            def enable_model_cpu_offload(self, device: str) -> None:
+                self.offload_device = device
+
+            def to(self, device: str) -> None:
+                self.full_device = device
+
+        mps = FakeMps()
+        limit = configure_mps_memory_limit(mps, 0.75)
+        staged = FakePipe()
+        activation = activate_pipeline_strategy(staged, "mps_model_offload_bounded")
+        full = FakePipe()
+        full_activation = activate_pipeline_strategy(full, "mps_full_bounded")
+        release = release_pipeline_memory(SimpleNamespace(mps=mps))
+
+        self.assertEqual(limit["configured_limit_bytes"], 22_500)
+        self.assertEqual(mps.fraction, 0.75)
+        self.assertEqual(staged.offload_device, "mps")
+        self.assertEqual(activation["offload_sequence"], "text_encoder->transformer->vae")
+        self.assertEqual(full.full_device, "mps")
+        self.assertTrue(full_activation["full_pipeline_transfer"])
+        self.assertTrue(mps.synchronized)
+        self.assertTrue(mps.cache_emptied)
+        self.assertEqual(release["driver_allocated_bytes"], 200)
+
+    def test_profile_parameters_and_mps_fraction_are_fail_closed(self) -> None:
+        request = self.request()
+        request["parameters"] = {**request["parameters"], "num_frames": 17}
+        request["mps_memory_fraction"] = 1.0
+
+        normalized, errors = validate_job_request(request)
+        codes = {error["code"] for error in errors}
+
+        self.assertIsNone(normalized)
+        self.assertIn("PROFILE_PARAMETER_MISMATCH", codes)
+        self.assertIn("OUT_OF_BOUNDS", codes)
+
+    def test_operator_evidence_requires_matching_memory_contract(self) -> None:
+        request = {
+            "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
+            "generation_profile_key": "wan_probe",
+            "execution_strategy": "mps_model_offload_bounded",
+            "resource_budget": {"mps_memory_fraction": 0.75},
+        }
+        summary = {
+            "execution_strategy": "mps_model_offload_bounded",
+            "mps_memory_limit": {"fraction": 0.75},
+            "mps_strategy_activation": {"strategy": "mps_model_offload_bounded"},
+            "inference_completed": True,
+            "mps_post_release": {
+                "current_allocated_bytes": 0,
+                "driver_allocated_bytes": 0,
+            },
+        }
+
+        verify_operator_memory_contract(request, summary)
+        summary["mps_post_release"] = None
+        with self.assertRaisesRegex(ValueError, "主动释放"):
+            verify_operator_memory_contract(request, summary)
+
     def test_unavailable_provider_missing_prompt_and_invalid_budget_are_blocked(self) -> None:
         cog = self.request()
         cog["provider_key"] = "cogvideox"
         cog["prompt"] = ""
-        cog["parameters"] = public_catalog()["providers"][1]["defaults"]
+        cog_profile = next(item for item in public_catalog()["generation_profiles"] if item["key"] == "cogvideox_probe")
+        cog["generation_profile_key"] = "cogvideox_probe"
+        cog["parameters"] = cog_profile["parameters"]
         cog["abort_min_available_memory_bytes"] = cog["preflight_min_available_memory_bytes"]
 
         normalized, errors = validate_job_request(cog)
@@ -218,6 +325,10 @@ else:
         self.assertIn("NO_ACTIVE_GENERATION", blocked)
         self.assertIn("AVAILABLE_MEMORY", blocked)
         self.assertIn("EXECUTION_ID_UNUSED", blocked)
+
+        mps_check = next(check for check in result["checks"] if check["id"] == "MPS_MEMORY_LIMIT_CONFIGURED")
+        self.assertEqual(mps_check["status"], "passed")
+        self.assertEqual(mps_check["details"]["mps_memory_fraction"], 0.75)
 
     def test_job_registration_is_immutable_and_event_chain_is_linked(self) -> None:
         job = self.manager.create_job(self.request())

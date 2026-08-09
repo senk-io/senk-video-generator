@@ -7,6 +7,10 @@ const elements = {
   providerGrid: document.querySelector("#providerGrid"),
   taskGrid: document.querySelector("#taskGrid"),
   materialNote: document.querySelector("#materialNote"),
+  generationProfile: document.querySelector("#generationProfile"),
+  executionStrategy: document.querySelector("#executionStrategy"),
+  profileDescription: document.querySelector("#profileDescription"),
+  strategyDescription: document.querySelector("#strategyDescription"),
   prompt: document.querySelector("#prompt"),
   promptCount: document.querySelector("#promptCount"),
   executionId: document.querySelector("#executionId"),
@@ -22,6 +26,7 @@ const elements = {
   preflightMemory: document.querySelector("#preflightMemory"),
   abortMemory: document.querySelector("#abortMemory"),
   swapGrowth: document.querySelector("#swapGrowth"),
+  mpsFraction: document.querySelector("#mpsFraction"),
   riskAcknowledged: document.querySelector("#riskAcknowledged"),
   riskMessage: document.querySelector("#riskMessage"),
   preflightTitle: document.querySelector("#preflightTitle"),
@@ -44,6 +49,8 @@ const state = {
   catalogRendered: false,
   providerKey: "wan",
   taskType: "text_to_video",
+  generationProfileKey: "wan_probe",
+  executionStrategy: "mps_model_offload_bounded",
   preflight: null,
   preflightFingerprint: null,
   selectedJobId: null,
@@ -142,7 +149,8 @@ function renderCatalog() {
       <p>${escapeHtml(task.description)}</p>
     </label>`).join("");
   bindCatalogEvents();
-  applyProviderDefaults();
+  renderExecutionControls();
+  applyGenerationProfile();
   renderMaterialNote();
   state.catalogRendered = true;
 }
@@ -152,7 +160,8 @@ function bindCatalogEvents() {
     input.addEventListener("change", () => {
       state.providerKey = input.value;
       elements.providerGrid.querySelectorAll(".provider-card").forEach((card) => card.classList.toggle("is-selected", card.dataset.provider === state.providerKey));
-      applyProviderDefaults();
+      renderExecutionControls();
+      applyGenerationProfile();
       invalidatePreflight();
     });
   });
@@ -164,19 +173,59 @@ function bindCatalogEvents() {
       invalidatePreflight();
     });
   });
+  elements.generationProfile.addEventListener("change", () => {
+    state.generationProfileKey = elements.generationProfile.value;
+    applyGenerationProfile();
+    invalidatePreflight();
+  });
+  elements.executionStrategy.addEventListener("change", () => {
+    state.executionStrategy = elements.executionStrategy.value;
+    updateExecutionDescriptions();
+    invalidatePreflight();
+  });
 }
 
-function applyProviderDefaults() {
+function generationProfile(key = state.generationProfileKey) {
+  return state.overview?.catalog.generation_profiles.find((item) => item.key === key);
+}
+
+function executionStrategy(key = state.executionStrategy) {
+  return state.overview?.catalog.execution_strategies.find((item) => item.key === key);
+}
+
+function renderExecutionControls() {
+  const profiles = state.overview.catalog.generation_profiles.filter((item) => item.provider_key === state.providerKey);
+  if (!profiles.some((item) => item.key === state.generationProfileKey)) {
+    const preferred = profiles.find((item) => item.key === state.overview.catalog.defaults.generation_profile_key);
+    state.generationProfileKey = (preferred || profiles[0])?.key || "";
+  }
+  elements.generationProfile.innerHTML = profiles.map((item) => `<option value="${escapeHtml(item.key)}">${escapeHtml(item.name)}</option>`).join("");
+  elements.generationProfile.value = state.generationProfileKey;
+
+  elements.executionStrategy.innerHTML = state.overview.catalog.execution_strategies.map((item) => `
+    <option value="${escapeHtml(item.key)}">${escapeHtml(item.name)}${item.recommended ? "（推荐）" : ""}</option>`).join("");
+  elements.executionStrategy.value = state.executionStrategy;
+  updateExecutionDescriptions();
+}
+
+function updateExecutionDescriptions() {
+  elements.profileDescription.textContent = generationProfile()?.description || "当前提供者没有可用生成档位。";
+  elements.strategyDescription.textContent = executionStrategy()?.description || "执行策略不可用。";
+}
+
+function applyGenerationProfile() {
   const profile = providerProfile(state.providerKey);
-  if (!profile) return;
-  const defaults = profile.defaults;
-  elements.width.value = defaults.width;
-  elements.height.value = defaults.height;
-  elements.numFrames.value = defaults.num_frames;
-  elements.numSteps.value = defaults.num_inference_steps;
-  elements.guidance.value = defaults.guidance_scale;
-  elements.fps.value = defaults.fps;
+  const selected = generationProfile();
+  if (!profile || !selected) return;
+  const parameters = selected.parameters;
+  elements.width.value = parameters.width;
+  elements.height.value = parameters.height;
+  elements.numFrames.value = parameters.num_frames;
+  elements.numSteps.value = parameters.num_inference_steps;
+  elements.guidance.value = parameters.guidance_scale;
+  elements.fps.value = parameters.fps;
   elements.riskMessage.textContent = profile.risk_message;
+  updateExecutionDescriptions();
 }
 
 function renderMaterialNote() {
@@ -205,6 +254,8 @@ function formRequest() {
   return {
     provider_key: state.providerKey,
     task_type: state.taskType,
+    generation_profile_key: state.generationProfileKey,
+    execution_strategy: state.executionStrategy,
     execution_id: elements.executionId.value.trim().toUpperCase(),
     prompt: elements.prompt.value.trim(),
     seed: Number(elements.seed.value),
@@ -220,6 +271,7 @@ function formRequest() {
     preflight_min_available_memory_bytes: Number(elements.preflightMemory.value) * GIB,
     abort_min_available_memory_bytes: Number(elements.abortMemory.value) * GIB,
     max_swap_growth_bytes: Number(elements.swapGrowth.value) * GIB,
+    mps_memory_fraction: Number(elements.mpsFraction.value) / 100,
     risk_acknowledged: elements.riskAcknowledged.checked,
   };
 }
@@ -369,10 +421,14 @@ function renderConfirmation() {
   }
   const head = `<div class="side-head"><div><span class="eyebrow">EXPLICIT AUTHORITY</span><h2>启动确认</h2></div>${jobStateBadge(job)}</div>`;
   if (job.state === "REGISTERED") {
+    const profileName = generationProfile(job.generation_profile_key)?.name || job.generation_profile_key;
+    const strategyName = executionStrategy(job.execution_strategy)?.name || job.execution_strategy;
     elements.confirmationCard.innerHTML = `${head}
       <div class="confirm-spec">
         <div class="confirm-title"><span>不可变执行标识</span><strong>${escapeHtml(job.execution_id)}</strong></div>
         <div class="confirm-title"><span>作业标识</span><strong>${escapeHtml(job.job_id)}</strong></div>
+        <div class="confirm-title"><span>生成档位</span><strong>${escapeHtml(profileName)}</strong></div>
+        <div class="confirm-title"><span>执行策略</span><strong>${escapeHtml(strategyName)}</strong></div>
         <p class="confirm-instruction">输入完整执行标识 <code>${escapeHtml(job.execution_id)}</code>，确认后才会加载模型。</p>
         <input class="confirm-input" id="confirmationInput" autocomplete="off" placeholder="输入执行标识">
         <div class="confirm-actions"><button class="primary-button" id="startJobButton" type="button" disabled>确认并启动</button></div>
@@ -458,8 +514,18 @@ async function refreshOverview() {
     state.overview = await response.json();
     state.csrfToken = state.overview.csrf_token;
     if (!state.catalogRendered) {
+      const defaults = state.overview.catalog.defaults;
+      state.providerKey = defaults.provider_key;
+      state.taskType = defaults.task_type;
+      state.generationProfileKey = defaults.generation_profile_key;
+      state.executionStrategy = defaults.execution_strategy;
       renderCatalog();
-      elements.seed.value = state.overview.catalog.defaults.seed;
+      elements.seed.value = defaults.seed;
+      elements.timeout.value = defaults.timeout_seconds;
+      elements.preflightMemory.value = defaults.preflight_min_available_memory_bytes / GIB;
+      elements.abortMemory.value = defaults.abort_min_available_memory_bytes / GIB;
+      elements.swapGrowth.value = defaults.max_swap_growth_bytes / GIB;
+      elements.mpsFraction.value = defaults.mps_memory_fraction * 100;
       elements.executionId.value = newExecutionId();
     }
     elements.introStatus.innerHTML = '<span>控制服务</span><strong>已连接 · 等待人工操作</strong>';

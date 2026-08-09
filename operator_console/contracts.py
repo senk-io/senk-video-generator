@@ -8,7 +8,7 @@ from typing import Any
 
 
 EXECUTION_ID_PATTERN = re.compile(r"[A-Z0-9][A-Z0-9._-]{2,127}")
-JOB_SCHEMA_VERSION = "operator-job.v1"
+JOB_SCHEMA_VERSION = "operator-job.v2"
 GIB = 1024**3
 JOB_ID_PATTERN = re.compile(r"JOB-[0-9]{8}T[0-9]{6}Z-[A-F0-9]{8}")
 
@@ -93,6 +93,80 @@ TASK_TYPES = {
     },
 }
 
+GENERATION_PROFILES: dict[str, dict[str, Any]] = {
+    "wan_probe": {
+        "key": "wan_probe",
+        "provider_key": "wan",
+        "name": "内存探针",
+        "description": "最小画幅、帧数和步数，用于先验证内存边界。",
+        "parameters": {
+            "width": 256,
+            "height": 144,
+            "num_frames": 9,
+            "num_inference_steps": 1,
+            "guidance_scale": 5.0,
+            "fps": 8,
+        },
+    },
+    "wan_low_memory": {
+        "key": "wan_low_memory",
+        "provider_key": "wan",
+        "name": "低内存生成",
+        "description": "保持已观察画幅，将时长缩短到 9 帧。",
+        "parameters": {
+            "width": 416,
+            "height": 240,
+            "num_frames": 9,
+            "num_inference_steps": 4,
+            "guidance_scale": 5.0,
+            "fps": 8,
+        },
+    },
+    "wan_observed_compatibility": {
+        "key": "wan_observed_compatibility",
+        "provider_key": "wan",
+        "name": "既有兼容基线",
+        "description": "复现已成功的 416×240、17 帧兼容性参数。",
+        "parameters": {
+            "width": 416,
+            "height": 240,
+            "num_frames": 17,
+            "num_inference_steps": 4,
+            "guidance_scale": 5.0,
+            "fps": 8,
+        },
+    },
+    "cogvideox_probe": {
+        "key": "cogvideox_probe",
+        "provider_key": "cogvideox",
+        "name": "CogVideoX 探针",
+        "description": "保留为未来独立运行验证；当前仍禁止启动。",
+        "parameters": {
+            "width": 720,
+            "height": 480,
+            "num_frames": 9,
+            "num_inference_steps": 1,
+            "guidance_scale": 6.0,
+            "fps": 8,
+        },
+    },
+}
+
+EXECUTION_STRATEGIES: dict[str, dict[str, Any]] = {
+    "mps_model_offload_bounded": {
+        "key": "mps_model_offload_bounded",
+        "name": "分阶段驻留",
+        "recommended": True,
+        "description": "按文本编码器、Transformer、VAE 顺序在 CPU 与 MPS 之间切换。",
+    },
+    "mps_full_bounded": {
+        "key": "mps_full_bounded",
+        "name": "全量驻留基线",
+        "recommended": False,
+        "description": "整条管线进入 MPS；仅用于与既有证据比较，内存风险更高。",
+    },
+}
+
 
 def public_catalog() -> dict[str, Any]:
     return {
@@ -100,14 +174,19 @@ def public_catalog() -> dict[str, Any]:
         "task_types": [
             {"key": key, **deepcopy(value)} for key, value in TASK_TYPES.items()
         ],
+        "generation_profiles": [deepcopy(value) for value in GENERATION_PROFILES.values()],
+        "execution_strategies": [deepcopy(value) for value in EXECUTION_STRATEGIES.values()],
         "defaults": {
             "provider_key": "wan",
             "task_type": "text_to_video",
+            "generation_profile_key": "wan_probe",
+            "execution_strategy": "mps_model_offload_bounded",
             "seed": 42,
             "timeout_seconds": 3600,
             "preflight_min_available_memory_bytes": 10 * GIB,
             "abort_min_available_memory_bytes": 3 * GIB,
             "max_swap_growth_bytes": 8 * GIB,
+            "mps_memory_fraction": 0.75,
         },
     }
 
@@ -168,6 +247,7 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         24 * GIB,
         errors,
     )
+    mps_memory_fraction = float_field(value, "mps_memory_fraction", 0.5, 0.9, errors)
     if (
         preflight_memory is not None
         and abort_memory is not None
@@ -178,6 +258,35 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
                 "field": "abort_min_available_memory_bytes",
                 "code": "INVALID_MEMORY_BUDGET_ORDER",
                 "message": "运行中停止阈值必须低于启动前可用内存阈值。",
+            }
+        )
+
+    generation_profile_key = str(value.get("generation_profile_key", ""))
+    generation_profile = GENERATION_PROFILES.get(generation_profile_key)
+    if not generation_profile:
+        errors.append(
+            {
+                "field": "generation_profile_key",
+                "code": "UNKNOWN_GENERATION_PROFILE",
+                "message": "生成档位不受支持。",
+            }
+        )
+    elif generation_profile["provider_key"] != provider_key:
+        errors.append(
+            {
+                "field": "generation_profile_key",
+                "code": "PROFILE_PROVIDER_MISMATCH",
+                "message": "生成档位不适用于当前提供者。",
+            }
+        )
+
+    execution_strategy = str(value.get("execution_strategy", ""))
+    if execution_strategy not in EXECUTION_STRATEGIES:
+        errors.append(
+            {
+                "field": "execution_strategy",
+                "code": "UNKNOWN_EXECUTION_STRATEGY",
+                "message": "执行策略不受支持。",
             }
         )
 
@@ -209,6 +318,16 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
             errors.append({"field": "parameters.height", "code": "INVALID_MULTIPLE", "message": "高度必须是 16 的倍数。"})
         if "num_frames" in parameters and (int(parameters["num_frames"]) - 1) % 4:
             errors.append({"field": "parameters.num_frames", "code": "INVALID_FRAME_COUNT", "message": "帧数必须满足 4n+1。"})
+        if generation_profile and generation_profile["provider_key"] == provider_key:
+            for field, expected in generation_profile["parameters"].items():
+                if parameters.get(field) != expected:
+                    errors.append(
+                        {
+                            "field": f"parameters.{field}",
+                            "code": "PROFILE_PARAMETER_MISMATCH",
+                            "message": f"{field} 必须与固定生成档位一致。",
+                        }
+                    )
 
     risk_acknowledged = value.get("risk_acknowledged") is True
     if profile and profile["startable"] and not risk_acknowledged:
@@ -240,15 +359,17 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         "model_id": profile["model_id"],
         "model_revision": profile["observed_revision"],
         "task_type": task_type,
+        "generation_profile_key": generation_profile_key,
         "prompt": prompt,
         "seed": seed,
         "parameters": parameters,
-        "execution_strategy": "mps_full_bounded",
+        "execution_strategy": execution_strategy,
         "timeout_seconds": timeout_seconds,
         "resource_budget": {
             "preflight_min_available_memory_bytes": preflight_memory,
             "abort_min_available_memory_bytes": abort_memory,
             "max_swap_growth_bytes": max_swap_growth,
+            "mps_memory_fraction": mps_memory_fraction,
         },
         "risk_acknowledged": risk_acknowledged,
         "formal_fact_creation": "PROHIBITED",
@@ -284,6 +405,32 @@ def integer_field(
     return number
 
 
+def float_field(
+    value: dict[str, Any],
+    field: str,
+    minimum: float,
+    maximum: float,
+    errors: list[dict[str, str]],
+) -> float | None:
+    raw = value.get(field)
+    if isinstance(raw, bool):
+        raw = None
+    try:
+        number = float(raw)
+    except (TypeError, ValueError):
+        errors.append({"field": field, "code": "INVALID_FLOAT", "message": f"{field} 必须是数字。"})
+        return None
+    if not minimum <= number <= maximum:
+        errors.append(
+            {
+                "field": field,
+                "code": "OUT_OF_BOUNDS",
+                "message": f"{field} 必须位于 {minimum} 至 {maximum}。",
+            }
+        )
+    return number
+
+
 def compile_runner_contract(job: dict[str, Any]) -> dict[str, Any]:
     profile = PROVIDER_PROFILES[job["provider_key"]]
     provider = {
@@ -299,6 +446,8 @@ def compile_runner_contract(job: dict[str, Any]) -> dict[str, Any]:
         "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
         "job_id": job["job_id"],
         "task_type": job["task_type"],
+        "generation_profile_key": job["generation_profile_key"],
+        "execution_strategy": job["execution_strategy"],
         "shared_prompt": job["prompt"],
         "shared_seed": job["seed"],
         "device": "mps",
@@ -328,11 +477,14 @@ def validate_persisted_job(value: Any) -> tuple[dict[str, Any] | None, list[dict
         "task_type": value.get("task_type"),
         "prompt": value.get("prompt"),
         "seed": value.get("seed"),
+        "generation_profile_key": value.get("generation_profile_key"),
+        "execution_strategy": value.get("execution_strategy"),
         "parameters": value.get("parameters"),
         "timeout_seconds": value.get("timeout_seconds"),
         "preflight_min_available_memory_bytes": resource_budget.get("preflight_min_available_memory_bytes"),
         "abort_min_available_memory_bytes": resource_budget.get("abort_min_available_memory_bytes"),
         "max_swap_growth_bytes": resource_budget.get("max_swap_growth_bytes"),
+        "mps_memory_fraction": resource_budget.get("mps_memory_fraction"),
         "risk_acknowledged": value.get("risk_acknowledged"),
     }
     normalized, errors = validate_job_request(raw)

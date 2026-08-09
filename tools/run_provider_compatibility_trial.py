@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
 import os
@@ -100,6 +101,44 @@ def observe_resource_budget(
     if max_swap_growth_bytes and swap_used_bytes - swap_start_bytes > max_swap_growth_bytes:
         return low_available_samples, "SYSTEM_SWAP_GROWTH_EXCEEDED_BUDGET"
     return low_available_samples, None
+
+
+def configure_mps_memory_limit(mps: Any, fraction: float) -> dict[str, Any]:
+    recommended_bytes = int(mps.recommended_max_memory())
+    mps.set_per_process_memory_fraction(float(fraction))
+    return {
+        "fraction": float(fraction),
+        "recommended_max_memory_bytes": recommended_bytes,
+        "configured_limit_bytes": int(recommended_bytes * float(fraction)),
+    }
+
+
+def activate_pipeline_strategy(pipe: Any, strategy: str, device: str = "mps") -> dict[str, Any]:
+    if strategy == "mps_model_offload_bounded":
+        pipe.enable_model_cpu_offload(device=device)
+        return {
+            "strategy": strategy,
+            "offload_sequence": getattr(pipe, "model_cpu_offload_seq", None),
+            "full_pipeline_transfer": False,
+        }
+    if strategy == "mps_full_bounded":
+        pipe.to(device)
+        return {
+            "strategy": strategy,
+            "offload_sequence": None,
+            "full_pipeline_transfer": True,
+        }
+    raise ValueError(f"不受支持的执行策略：{strategy}")
+
+
+def release_pipeline_memory(torch_module: Any) -> dict[str, int]:
+    gc.collect()
+    torch_module.mps.synchronize()
+    torch_module.mps.empty_cache()
+    return {
+        "current_allocated_bytes": int(torch_module.mps.current_allocated_memory()),
+        "driver_allocated_bytes": int(torch_module.mps.driver_allocated_memory()),
+    }
 
 
 def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
@@ -247,6 +286,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "contract_status": contract.get("contract_status"),
         "job_id": contract.get("job_id"),
         "task_type": contract.get("task_type", "text_to_video"),
+        "generation_profile_key": contract.get("generation_profile_key"),
+        "execution_strategy": contract.get("execution_strategy", "mps_full_bounded"),
+        "resource_budget": contract.get("resource_budget"),
         "provider_key": args.provider,
         "provider": provider,
         "prompt": contract["shared_prompt"],
@@ -401,6 +443,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "safety_abort_reason": safety_abort_reason,
         "job_id": contract.get("job_id"),
         "contract_status": contract.get("contract_status"),
+        "generation_profile_key": contract.get("generation_profile_key"),
+        "execution_strategy": contract.get("execution_strategy", "mps_full_bounded"),
+        "mps_memory_fraction": resource_budget.get("mps_memory_fraction"),
         "observation": observation,
         "last_phase": worker_state.get("phase"),
         "model_snapshot_resolved": bool(worker_state.get("model_snapshot_resolved")),
@@ -416,6 +461,9 @@ def run_parent(args: argparse.Namespace) -> int:
         "system_peak_swap_used_bytes": peak_swap_used,
         "mps_peak_current_allocated_bytes": worker_state.get("mps_peak_current_allocated_bytes"),
         "mps_peak_driver_allocated_bytes": worker_state.get("mps_peak_driver_allocated_bytes"),
+        "mps_memory_limit": worker_state.get("mps_memory_limit"),
+        "mps_strategy_activation": worker_state.get("mps_strategy_activation"),
+        "mps_post_release": worker_state.get("mps_post_release"),
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
         "output_bytes": output_path.stat().st_size if output_path.exists() else None,
@@ -501,12 +549,32 @@ def run_worker(args: argparse.Namespace) -> int:
         "inference_completed": False,
         "output_export_completed": False,
         "stage_elapsed_seconds": {},
+        "generation_profile_key": contract.get("generation_profile_key"),
+        "execution_strategy": contract.get("execution_strategy", "mps_full_bounded"),
+        "mps_memory_limit": None,
+        "mps_strategy_activation": None,
+        "mps_post_release": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
     try:
         if not torch.backends.mps.is_available():
             raise RuntimeError("PyTorch MPS backend is unavailable")
+
+        resource_budget = contract.get("resource_budget") or {}
+        state["phase"] = "CONFIGURING_MPS_BUDGET"
+        if resource_budget.get("mps_memory_fraction") is not None:
+            state["mps_memory_limit"] = configure_mps_memory_limit(
+                torch.mps,
+                float(resource_budget["mps_memory_fraction"]),
+            )
+        else:
+            state["mps_memory_limit"] = {
+                "fraction": None,
+                "recommended_max_memory_bytes": int(torch.mps.recommended_max_memory()),
+                "configured_limit_bytes": None,
+            }
+        write_json(state_path, state)
 
         stage_start = time.perf_counter()
         state["phase"] = "RESOLVING_MODEL_SNAPSHOT"
@@ -533,6 +601,7 @@ def run_worker(args: argparse.Namespace) -> int:
                 local_files_only=True,
             )
             pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config, flow_shift=3.0)
+            del vae
         else:
             pipe = CogVideoXPipeline.from_pretrained(
                 snapshot_path,
@@ -544,14 +613,19 @@ def run_worker(args: argparse.Namespace) -> int:
         pipe.enable_attention_slicing()
         state["pipeline_loaded"] = True
         state["stage_elapsed_seconds"]["pipeline_load"] = round(time.perf_counter() - stage_start, 3)
-        state["phase"] = "TRANSFERRING_TO_MPS"
+        state["phase"] = "ACTIVATING_MPS_STRATEGY"
         write_json(state_path, state)
 
         stage_start = time.perf_counter()
-        pipe.to("mps")
+        state["mps_strategy_activation"] = activate_pipeline_strategy(
+            pipe,
+            contract.get("execution_strategy", "mps_full_bounded"),
+            "mps",
+        )
         torch.mps.synchronize()
         state["mps_transfer_completed"] = True
-        state["stage_elapsed_seconds"]["mps_transfer"] = round(time.perf_counter() - stage_start, 3)
+        state["stage_elapsed_seconds"]["mps_strategy_activation"] = round(time.perf_counter() - stage_start, 3)
+        state["stage_elapsed_seconds"]["mps_transfer"] = state["stage_elapsed_seconds"]["mps_strategy_activation"]
         state["phase"] = "RUNNING_INFERENCE"
         write_json(state_path, state)
 
@@ -571,10 +645,19 @@ def run_worker(args: argparse.Namespace) -> int:
             )
             torch.mps.synchronize()
         frames = output.frames[0]
+        del output
         state["inference_completed"] = True
         state["mps_peak_current_allocated_bytes"] = sampler.peak_current
         state["mps_peak_driver_allocated_bytes"] = sampler.peak_driver
         state["stage_elapsed_seconds"]["inference"] = round(time.perf_counter() - stage_start, 3)
+        state["phase"] = "RELEASING_MPS_MEMORY"
+        write_json(state_path, state)
+        release_start = time.perf_counter()
+        if hasattr(pipe, "maybe_free_model_hooks"):
+            pipe.maybe_free_model_hooks()
+        del pipe
+        state["mps_post_release"] = release_pipeline_memory(torch)
+        state["stage_elapsed_seconds"]["mps_release"] = round(time.perf_counter() - release_start, 3)
         state["phase"] = "EXPORTING_VIDEO"
         write_json(state_path, state)
 

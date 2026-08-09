@@ -421,6 +421,18 @@ input::placeholder { color: #595951; }
 .input-row { display: flex; gap: 9px; align-items: end; margin-top: 15px; }
 .grow { flex: 1; }
 .generate-id { flex: 0 0 auto; margin-bottom: 22px; }
+.execution-config-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid rgba(240,186,100,.14);
+  border-radius: var(--radius-md);
+  background: rgba(240,186,100,.035);
+}
+.execution-config-grid .field-foot { min-height: 25px; line-height: 1.5; }
+input[readonly] { color: #b8b2a7; border-style: dashed; cursor: default; }
 
 .parameter-grid {
   display: grid;
@@ -641,6 +653,7 @@ button:disabled { cursor: not-allowed; opacity: .38; }
   .input-row { display: grid; }
   .generate-id { margin-bottom: 0; }
   .parameter-grid { grid-template-columns: repeat(2,1fr); }
+  .execution-config-grid { grid-template-columns: 1fr; }
   .preflight-results { grid-template-columns: 1fr; }
   .form-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .side-column { grid-template-columns: 1fr; }

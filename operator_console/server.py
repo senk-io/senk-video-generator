@@ -341,6 +341,8 @@ class JobManager:
                 "provider_key": request["provider_key"],
                 "model_id": request["model_id"],
                 "task_type": request["task_type"],
+                "generation_profile_key": request["generation_profile_key"],
+                "execution_strategy": request["execution_strategy"],
                 "prompt": request["prompt"],
                 "parameters": request["parameters"],
                 "resource_budget": request["resource_budget"],
@@ -401,6 +403,16 @@ class JobManager:
                 "可用内存达到启动预算",
                 system["memory"]["available_bytes"] >= request["resource_budget"]["preflight_min_available_memory_bytes"],
                 f"当前可用 {system['memory']['available_bytes']} 字节，要求至少 {request['resource_budget']['preflight_min_available_memory_bytes']} 字节。",
+            ),
+            self._check(
+                "MPS_MEMORY_LIMIT_CONFIGURED",
+                "MPS 进程内存上限已固定",
+                0.5 <= request["resource_budget"]["mps_memory_fraction"] <= 0.9,
+                f"当前上限为设备建议工作集的 {request['resource_budget']['mps_memory_fraction']:.0%}。",
+                {
+                    "execution_strategy": request["execution_strategy"],
+                    "mps_memory_fraction": request["resource_budget"]["mps_memory_fraction"],
+                },
             ),
             self._check(
                 "DISK_FREE",
