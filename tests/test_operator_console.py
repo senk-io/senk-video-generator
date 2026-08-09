@@ -210,7 +210,7 @@ else:
         self.assertEqual(contract["job_id"], job["job_id"])
         self.assertEqual(contract["providers"]["wan"]["num_frames"], 9)
 
-    def test_bounded_cogvideox_quality_contract_changes_only_steps(self) -> None:
+    def test_bounded_cogvideox_quality_and_five_second_contracts_are_fail_closed(self) -> None:
         contract_path = Path("experiments/provider_compatibility/cogvideox_quality_8_steps.json").resolve()
         contract, source = load_execution_contract(
             argparse.Namespace(job_spec=None, trial_contract=str(contract_path), provider="cogvideox")
@@ -222,6 +222,28 @@ else:
         mutated["providers"]["cogvideox"]["width"] = 704
         with self.assertRaisesRegex(ValueError, "不得改变提供者基线字段"):
             validate_bounded_trial_variant(mutated, "cogvideox")
+
+        five_second_path = Path(
+            "experiments/provider_compatibility/cogvideox_five_second_16_steps.json"
+        ).resolve()
+        five_second, source = load_execution_contract(
+            argparse.Namespace(job_spec=None, trial_contract=str(five_second_path), provider="cogvideox")
+        )
+        self.assertEqual(source, five_second_path)
+        self.assertEqual(five_second["providers"]["cogvideox"]["num_frames"], 41)
+        self.assertEqual(five_second["providers"]["cogvideox"]["num_inference_steps"], 16)
+        self.assertEqual(five_second["temporal_derivation"]["derived_frame_count"], 40)
+        self.assertEqual(five_second["temporal_derivation"]["duration_seconds"], 5.0)
+
+        mutated_five_second = json.loads(json.dumps(five_second))
+        mutated_five_second["providers"]["cogvideox"]["num_frames"] = 45
+        with self.assertRaisesRegex(ValueError, "只允许 41 帧和 16 步"):
+            validate_bounded_trial_variant(mutated_five_second, "cogvideox")
+
+        mutated_derivation = json.loads(json.dumps(five_second))
+        mutated_derivation["temporal_derivation"]["derived_frame_count"] = 39
+        with self.assertRaisesRegex(ValueError, "派生合同必须固定"):
+            validate_bounded_trial_variant(mutated_derivation, "cogvideox")
 
     def test_legacy_v2_job_remains_readable_with_new_swap_gate(self) -> None:
         job = self.manager.create_job(self.request())

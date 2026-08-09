@@ -32,6 +32,23 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def read_video_metadata(path: Path) -> dict[str, Any]:
+    import imageio.v2 as imageio
+
+    reader = imageio.get_reader(path)
+    try:
+        metadata = reader.get_meta_data()
+        frame_count = reader.count_frames()
+    finally:
+        reader.close()
+    return {
+        "decoded_frame_count": frame_count,
+        "fps": float(metadata.get("fps") or 0.0),
+        "duration_seconds": float(metadata.get("duration") or 0.0),
+        "size": list(metadata.get("size", ())),
+    }
+
+
 def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, Any]) -> None:
     """校验受控作业的低内存合同与实际运行证据是否一致。"""
     if request.get("contract_status") != "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE":
@@ -138,6 +155,35 @@ def main() -> int:
     elif output_path.exists():
         raise SystemExit("摘要未声明导出完成，但视频文件存在")
 
+    temporal_derivation = request.get("temporal_derivation")
+    summary_derivation = summary.get("temporal_derivation")
+    if temporal_derivation != summary_derivation:
+        raise SystemExit("请求与摘要的五秒派生合同不一致")
+    if temporal_derivation is not None:
+        if summary.get("output_export_completed"):
+            source_metadata = read_video_metadata(output_path)
+            if source_metadata["decoded_frame_count"] != temporal_derivation["source_frame_count"]:
+                raise SystemExit("五秒探针源视频帧数不符合合同")
+            if source_metadata["fps"] != float(temporal_derivation["fps"]):
+                raise SystemExit("五秒探针源视频帧率不符合合同")
+        derived_output_path = evidence_dir / temporal_derivation["output_filename"]
+        if summary.get("derived_output_export_completed"):
+            if not derived_output_path.exists():
+                raise SystemExit("摘要声称五秒派生视频已导出，但文件不存在")
+            if summary.get("derived_output_sha256") != sha256_file(derived_output_path):
+                raise SystemExit("五秒派生视频摘要不一致")
+            derived_metadata = read_video_metadata(derived_output_path)
+            if derived_metadata["decoded_frame_count"] != temporal_derivation["derived_frame_count"]:
+                raise SystemExit("五秒派生视频帧数不符合合同")
+            if derived_metadata["fps"] != float(temporal_derivation["fps"]):
+                raise SystemExit("五秒派生视频帧率不符合合同")
+            if abs(derived_metadata["duration_seconds"] - float(temporal_derivation["duration_seconds"])) > 0.001:
+                raise SystemExit("五秒派生视频时长不符合合同")
+        elif summary.get("observation") == "OBSERVED_OUTPUT_AVAILABLE":
+            raise SystemExit("五秒探针完成但缺少精确五秒派生输出")
+    elif summary.get("derived_output_export_completed"):
+        raise SystemExit("非五秒探针不得声明五秒派生输出")
+
     text_suffixes = {".json", ".jsonl", ".log", ".md", ".txt"}
     public_text_file_count = 0
     for path in evidence_dir.rglob("*"):
@@ -155,6 +201,7 @@ def main() -> int:
         "manifest_file_count": manifest["file_count"],
         "public_text_file_count": public_text_file_count,
         "output_digest_verified": bool(summary["output_export_completed"]),
+        "derived_output_digest_verified": bool(summary.get("derived_output_export_completed")),
         "exact_file_closure": True,
         "sensitive_path_scan": "CLEAR",
         "formal_fact_created": False,

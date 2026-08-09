@@ -1,0 +1,119 @@
+{
+  "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+  "decode_strategy": "LATENT_TO_CPU_THEN_VAE_CPU_TILED",
+  "decode_tile_sample_size": [
+    180,
+    120
+  ],
+  "denoising_completed": true,
+  "derived_output_bytes": 145248,
+  "derived_output_export_completed": true,
+  "derived_output_metadata": {
+    "decoded_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ],
+    "source_frame_count": 41,
+    "strategy": "DROP_LAST_FRAME"
+  },
+  "derived_output_sha256": "0276303f4eb31da3167e9a23d94e0a472f5d35b58834323a3ecc9d157357b8cd",
+  "execution_id": "LM-COGVIDEOX-5S-16STEP-20260809T190026Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T19:14:20.357981+00:00",
+  "generation_profile_key": null,
+  "inference_completed": true,
+  "latent_checkpoint": {
+    "dtype": "torch.float32",
+    "path": "denoised_latents.safetensors",
+    "purpose": "DECODE_RETRY_WITHOUT_DENOISING_RERUN",
+    "sha256": "19e0b8f6140b1784a066fbdecf08801568390c4ca0b13bc0e9757d1b7e928c87",
+    "shape": [
+      1,
+      11,
+      16,
+      60,
+      90
+    ]
+  },
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+  "mps_dtype_normalization": [
+    {
+      "buffer": "patch_embed.pos_embedding",
+      "from_dtype": "float64",
+      "shape": [
+        1,
+        17776,
+        1920
+      ],
+      "to_dtype": "float32"
+    }
+  ],
+  "mps_memory_limit": {
+    "configured_limit_bytes": 19597937049,
+    "fraction": 0.65,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 3776789760,
+  "mps_peak_driver_allocated_bytes": 6562824192,
+  "mps_post_denoise_release": {
+    "current_allocated_bytes": 256,
+    "driver_allocated_bytes": 11223040
+  },
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": {
+    "full_pipeline_transfer": false,
+    "offload_sequence": "text_encoder->transformer->vae",
+    "strategy": "mps_model_offload_bounded"
+  },
+  "mps_transfer_completed": true,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 41,
+    "duration_seconds": 5.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "phase": "WORKER_COMPLETED",
+  "pipeline_loaded": true,
+  "prompt_encoding_completed": true,
+  "prompt_stage_activation": {
+    "full_text_encoder_transfer": false,
+    "offload_granularity": "leaf_module",
+    "strategy": "mps_sequential_cpu_offload"
+  },
+  "provider_key": "cogvideox",
+  "stage_elapsed_seconds": {
+    "cpu_vae_decode": 309.006,
+    "inference": 816.829,
+    "mps_release": 0.051,
+    "mps_strategy_activation": 0.012,
+    "mps_transfer": 0.012,
+    "pipeline_load": 0.174,
+    "prompt_encoding_and_release": 8.069,
+    "snapshot_resolution": 0.263,
+    "video_export": 0.693
+  },
+  "started_at": "2026-08-09T19:00:34.269358+00:00",
+  "temporal_derivation": {
+    "derived_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8,
+    "output_filename": "derived_5s.mp4",
+    "source_frame_count": 41,
+    "strategy": "DROP_LAST_FRAME"
+  },
+  "text_encoder_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  }
+}

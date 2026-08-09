@@ -178,7 +178,7 @@ def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
 
 
 def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) -> None:
-    """只允许固定 CogVideoX 基线的 8/16 步非权威质量观察变体。"""
+    """只允许固定 CogVideoX 基线的质量探针与五秒候选观察变体。"""
     baseline = load_contract()
     invariant_fields = (
         "shared_prompt",
@@ -198,20 +198,47 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
         raise ValueError("质量探针合同只允许包含 CogVideoX")
     provider = contract["providers"][provider_key]
     baseline_provider = baseline["providers"][provider_key]
+    temporal_derivation = contract.get("temporal_derivation")
+    allowed_provider_changes = (
+        {"num_inference_steps", "num_frames"}
+        if temporal_derivation is not None
+        else {"num_inference_steps"}
+    )
     for field, expected in baseline_provider.items():
-        if field == "num_inference_steps":
+        if field in allowed_provider_changes:
             continue
         if provider.get(field) != expected:
             raise ValueError(f"质量探针不得改变提供者基线字段：{field}")
     steps = provider.get("num_inference_steps")
-    if steps not in {8, 16}:
-        raise ValueError("质量探针只允许 8 步或 16 步")
-    expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"
+    frames = provider.get("num_frames")
+    if temporal_derivation is None:
+        if steps not in {8, 16} or frames != baseline_provider["num_frames"]:
+            raise ValueError("质量探针只允许 9 帧、8 步或 16 步")
+        expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"
+    else:
+        expected_derivation = {
+            "strategy": "DROP_LAST_FRAME",
+            "source_frame_count": 41,
+            "derived_frame_count": 40,
+            "fps": 8,
+            "duration_seconds": 5.0,
+            "output_filename": "derived_5s.mp4",
+        }
+        if steps != 16 or frames != 41:
+            raise ValueError("五秒探针只允许 41 帧和 16 步")
+        if temporal_derivation != expected_derivation:
+            raise ValueError("五秒探针派生合同必须固定为 41 帧裁切至 40 帧、8 fps、5 秒")
+        expected_id = "CR-0019-COGVIDEOX-16-STEP-41-FRAME-FIVE-SECOND-TRIAL-001"
     if contract.get("contract_id") != expected_id:
-        raise ValueError("质量探针合同标识与步数不一致")
+        raise ValueError("质量探针合同标识与参数不一致")
     non_goals = set(contract.get("non_goals", []))
     if not {"visual_quality_acceptance", "institution_freeze", "production_readiness"}.issubset(non_goals):
         raise ValueError("质量探针缺少非目标边界")
+    if temporal_derivation is not None and not {
+        "operator_console_enablement",
+        "thirty_second_timeline_creation",
+    }.issubset(non_goals):
+        raise ValueError("五秒探针缺少控制台与三十秒时间线非目标边界")
 
 
 def load_execution_contract(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:
@@ -403,6 +430,7 @@ def run_parent(args: argparse.Namespace) -> int:
         "device": contract["device"],
         "mps_fallback_to_cpu": contract["mps_fallback_to_cpu"],
         "timeout_seconds": contract["timeout_seconds"],
+        "temporal_derivation": contract.get("temporal_derivation"),
         "formal_fact_creation": "PROHIBITED",
         "cross_provider_contract_creation": "PROHIBITED",
     }
@@ -592,6 +620,11 @@ def run_parent(args: argparse.Namespace) -> int:
         "mps_post_denoise_release": worker_state.get("mps_post_denoise_release"),
         "latent_checkpoint": worker_state.get("latent_checkpoint"),
         "decode_tile_sample_size": worker_state.get("decode_tile_sample_size"),
+        "temporal_derivation": worker_state.get("temporal_derivation"),
+        "derived_output_export_completed": bool(worker_state.get("derived_output_export_completed")),
+        "derived_output_sha256": worker_state.get("derived_output_sha256"),
+        "derived_output_bytes": worker_state.get("derived_output_bytes"),
+        "derived_output_metadata": worker_state.get("derived_output_metadata"),
         "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
@@ -936,6 +969,11 @@ def run_worker(args: argparse.Namespace) -> int:
         "mps_post_denoise_release": None,
         "latent_checkpoint": None,
         "decode_tile_sample_size": None,
+        "temporal_derivation": contract.get("temporal_derivation"),
+        "derived_output_export_completed": False,
+        "derived_output_sha256": None,
+        "derived_output_bytes": None,
+        "derived_output_metadata": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
@@ -1193,6 +1231,9 @@ def run_worker(args: argparse.Namespace) -> int:
         write_json(state_path, state)
 
         stage_start = time.perf_counter()
+        temporal_derivation = contract.get("temporal_derivation")
+        if temporal_derivation is not None and len(frames) != temporal_derivation["source_frame_count"]:
+            raise RuntimeError("五秒探针源帧数与派生合同不一致")
         output_path = evidence_dir / "output.mp4"
         export_to_video(frames, output_path, fps=provider["fps"])
         first_frame = np.asarray(frames[0])
@@ -1209,7 +1250,46 @@ def run_worker(args: argparse.Namespace) -> int:
             "size": list(metadata.get("size", ())),
             "duration_seconds": metadata.get("duration"),
         }
+        if temporal_derivation is not None:
+            if decoded_frames != temporal_derivation["source_frame_count"]:
+                raise RuntimeError("五秒探针源视频编码帧数不符合合同")
+            if float(metadata.get("fps") or 0.0) != float(temporal_derivation["fps"]):
+                raise RuntimeError("五秒探针源视频帧率不符合合同")
         state["output_export_completed"] = True
+        write_json(state_path, state)
+        if temporal_derivation is not None:
+            state["phase"] = "DERIVING_EXACT_FIVE_SECOND_OUTPUT"
+            write_json(state_path, state)
+            if temporal_derivation["strategy"] != "DROP_LAST_FRAME":
+                raise RuntimeError("不受支持的五秒派生策略")
+            derived_frames = frames[: temporal_derivation["derived_frame_count"]]
+            if len(derived_frames) != temporal_derivation["derived_frame_count"]:
+                raise RuntimeError("五秒派生帧数不足")
+            derived_output_path = evidence_dir / temporal_derivation["output_filename"]
+            export_to_video(derived_frames, derived_output_path, fps=temporal_derivation["fps"])
+            derived_reader = imageio.get_reader(derived_output_path)
+            derived_metadata = derived_reader.get_meta_data()
+            derived_frame_count = derived_reader.count_frames()
+            derived_reader.close()
+            derived_duration = float(derived_metadata.get("duration") or 0.0)
+            if derived_frame_count != temporal_derivation["derived_frame_count"]:
+                raise RuntimeError("五秒派生视频帧数不符合合同")
+            if float(derived_metadata.get("fps") or 0.0) != float(temporal_derivation["fps"]):
+                raise RuntimeError("五秒派生视频帧率不符合合同")
+            if abs(derived_duration - float(temporal_derivation["duration_seconds"])) > 0.001:
+                raise RuntimeError("五秒派生视频时长不符合合同")
+            state["derived_output_export_completed"] = True
+            state["derived_output_sha256"] = sha256_file(derived_output_path)
+            state["derived_output_bytes"] = derived_output_path.stat().st_size
+            state["derived_output_metadata"] = {
+                "decoded_frame_count": derived_frame_count,
+                "fps": derived_metadata.get("fps"),
+                "size": list(derived_metadata.get("size", ())),
+                "duration_seconds": derived_metadata.get("duration"),
+                "source_frame_count": temporal_derivation["source_frame_count"],
+                "strategy": temporal_derivation["strategy"],
+            }
+            derived_frames = None
         state["stage_elapsed_seconds"]["video_export"] = round(time.perf_counter() - stage_start, 3)
         state["phase"] = "WORKER_COMPLETED"
         state["finished_at"] = utc_now()
