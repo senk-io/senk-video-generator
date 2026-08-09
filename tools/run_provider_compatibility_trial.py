@@ -530,6 +530,7 @@ def run_parent(args: argparse.Namespace) -> int:
         "decode_strategy": worker_state.get("decode_strategy"),
         "denoising_completed": bool(worker_state.get("denoising_completed")),
         "mps_post_denoise_release": worker_state.get("mps_post_denoise_release"),
+        "latent_checkpoint": worker_state.get("latent_checkpoint"),
         "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
@@ -745,6 +746,7 @@ def run_worker(args: argparse.Namespace) -> int:
     from diffusers.schedulers import UniPCMultistepScheduler
     from diffusers.utils import export_to_video
     from huggingface_hub import snapshot_download
+    from safetensors.torch import save_file as save_safetensors
     from transformers import AutoTokenizer, UMT5EncoderModel
 
     contract, _ = load_execution_contract(args)
@@ -774,6 +776,7 @@ def run_worker(args: argparse.Namespace) -> int:
         "decode_strategy": "PIPELINE_DEFAULT",
         "denoising_completed": False,
         "mps_post_denoise_release": None,
+        "latent_checkpoint": None,
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
@@ -938,6 +941,16 @@ def run_worker(args: argparse.Namespace) -> int:
             write_json(state_path, state)
             latent_video = output.frames.detach().to(device="cpu", dtype=torch.float32)
             del output
+            latent_checkpoint_path = evidence_dir / "denoised_latents.safetensors"
+            save_safetensors({"latents": latent_video.contiguous()}, latent_checkpoint_path)
+            state["latent_checkpoint"] = {
+                "path": latent_checkpoint_path.name,
+                "sha256": sha256_file(latent_checkpoint_path),
+                "shape": list(latent_video.shape),
+                "dtype": str(latent_video.dtype),
+                "purpose": "DECODE_RETRY_WITHOUT_DENOISING_RERUN",
+            }
+            write_json(state_path, state)
             if hasattr(pipe, "remove_all_hooks"):
                 pipe.remove_all_hooks()
             elif hasattr(pipe, "maybe_free_model_hooks"):
