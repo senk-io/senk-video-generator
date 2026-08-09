@@ -318,10 +318,18 @@ else:
             def driver_allocated_memory() -> int:
                 return 0
 
+        class FakeInferenceMode:
+            def __enter__(self):
+                events.append("inference_mode_enter")
+
+            def __exit__(self, *_args):
+                events.append("inference_mode_exit")
+
         fake_torch = SimpleNamespace(
             bfloat16="bfloat16",
             float32="float32",
             device=lambda value: value,
+            inference_mode=FakeInferenceMode,
             mps=FakeMps(),
         )
 
@@ -374,6 +382,8 @@ else:
         self.assertIsInstance(prompt["prompt_embeds"], FakeTensor)
         self.assertEqual(prompt["activation"]["strategy"], "mps_sequential_cpu_offload")
         self.assertIn("sequential_offload:mps", events)
+        self.assertLess(events.index("inference_mode_enter"), events.index("encode_prompt"))
+        self.assertLess(events.index("encode_prompt"), events.index("inference_mode_exit"))
         self.assertLess(events.index("release_text_encoder"), events.index("transformer"))
         self.assertIsNone(pipe.kwargs["text_encoder"])
         self.assertIsNone(pipe.kwargs["tokenizer"])

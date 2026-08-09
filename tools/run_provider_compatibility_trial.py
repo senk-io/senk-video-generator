@@ -639,15 +639,16 @@ def prepare_wan_prompt_embeddings(
         result["activation"] = activate_prompt_encoding_strategy(stage_pipe, "mps")
         if observation_callback is not None:
             observation_callback("prompt_stage_activation", result["activation"])
-        prompt_embeds, negative_prompt_embeds = stage_pipe.encode_prompt(
-            prompt=prompt,
-            negative_prompt="",
-            do_classifier_free_guidance=True,
-            num_videos_per_prompt=1,
-            max_sequence_length=512,
-            device=torch_module.device("mps"),
-            dtype=torch_module.bfloat16,
-        )
+        with torch_module.inference_mode():
+            prompt_embeds, negative_prompt_embeds = stage_pipe.encode_prompt(
+                prompt=prompt,
+                negative_prompt="",
+                do_classifier_free_guidance=True,
+                num_videos_per_prompt=1,
+                max_sequence_length=512,
+                device=torch_module.device("mps"),
+                dtype=torch_module.bfloat16,
+            )
         torch_module.mps.synchronize()
         result["prompt_embeds"] = prompt_embeds.detach().to("cpu")
         result["negative_prompt_embeds"] = negative_prompt_embeds.detach().to("cpu")

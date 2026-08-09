@@ -158,7 +158,7 @@ EXECUTION_STRATEGIES: dict[str, dict[str, Any]] = {
         "key": "mps_model_offload_bounded",
         "name": "分阶段驻留",
         "recommended": True,
-        "description": "文本编码器叶级顺序进入 MPS；形成嵌入并释放后再装载 Transformer 与 VAE。",
+        "description": "文本编码器以无梯度叶级顺序进入 MPS；形成嵌入并释放后再装载 Transformer 与 VAE。",
     },
     "mps_full_bounded": {
         "key": "mps_full_bounded",

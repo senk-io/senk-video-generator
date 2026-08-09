@@ -1,0 +1,170 @@
+{
+  "component_residency_strategy": "PRECOMPUTE_PROMPT_THEN_RELEASE_TEXT_ENCODER",
+  "contract_status": "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE",
+  "cross_provider_contract_created": false,
+  "elapsed_seconds": 31.088,
+  "error_observation": {
+    "frames": [
+      {
+        "file": "tools/run_provider_compatibility_trial.py",
+        "function": "prepare_wan_prompt_embeddings",
+        "line": 642
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/wan/pipeline_wan.py",
+        "function": "encode_prompt",
+        "line": 270
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/diffusers/pipelines/wan/pipeline_wan.py",
+        "function": "_get_t5_prompt_embeds",
+        "line": 185
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "new_forward",
+        "line": 192
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 1477
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/transformers/models/umt5/modeling_umt5.py",
+        "function": "forward",
+        "line": 689
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_wrapped_call_impl",
+        "line": 1778
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/nn/modules/module.py",
+        "function": "_call_impl",
+        "line": 1789
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "new_forward",
+        "line": 187
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "wrapper",
+        "line": 50
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py",
+        "function": "_fn",
+        "line": 1446
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "pre_forward",
+        "line": 132
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "wrapper",
+        "line": 50
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py",
+        "function": "_fn",
+        "line": 1446
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/hooks.py",
+        "function": "pre_forward",
+        "line": 388
+      },
+      {
+        "file": ".venv-provider-compat/lib/python3.12/site-packages/accelerate/utils/modeling.py",
+        "function": "set_module_tensor_to_device",
+        "line": 353
+      }
+    ],
+    "message": "MPS backend out of memory (MPS allocated: 19.94 GiB, other allocations: 720.00 KiB, max allowed: 21.06 GiB). Tried to allocate 1.96 GiB on shared pool. Use PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 to disable upper limit for memory allocations (may cause system failure).",
+    "type": "RuntimeError"
+  },
+  "execution_id": "LM-WAN-LEAF-PROBE-20260809T161726Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "finished_at": "2026-08-09T16:17:59.490869+00:00",
+  "formal_fact_created": false,
+  "generation_profile_key": "wan_probe",
+  "inference_completed": false,
+  "institution_freeze_created": false,
+  "job_id": "JOB-20260809T161726Z-10F645EA",
+  "last_phase": "WORKER_FAILED",
+  "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+  "model_snapshot_resolved": true,
+  "model_snapshot_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
+  "mps_memory_fraction": 0.75,
+  "mps_memory_limit": {
+    "configured_limit_bytes": 22613004288,
+    "fraction": 0.75,
+    "recommended_max_memory_bytes": 30150672384
+  },
+  "mps_peak_current_allocated_bytes": 20837816320,
+  "mps_peak_driver_allocated_bytes": 23512973312,
+  "mps_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "mps_strategy_activation": null,
+  "mps_transfer_completed": false,
+  "observation": "OBSERVED_EXECUTION_WITHOUT_OUTPUT",
+  "output_bytes": null,
+  "output_export_completed": false,
+  "output_metadata": null,
+  "output_sha256": null,
+  "pipeline_loaded": false,
+  "process_tree_peak_rss_bytes": 13542637568,
+  "prompt_encoding_completed": false,
+  "prompt_stage_activation": {
+    "full_text_encoder_transfer": false,
+    "offload_granularity": "leaf_module",
+    "strategy": "mps_sequential_cpu_offload"
+  },
+  "provider_identity": "Wan-AI",
+  "provider_key": "wan",
+  "safety_abort_reason": null,
+  "stage_elapsed_seconds": {
+    "snapshot_resolution": 0.269
+  },
+  "started_at": "2026-08-09T16:17:28.401533+00:00",
+  "stop_request": null,
+  "system_peak_swap_used_bytes": 6406471680,
+  "system_peak_used_bytes": 34036957184,
+  "system_start_swap_used_bytes": 2991783936,
+  "system_start_used_bytes": 10356162560,
+  "text_encoder_post_release": {
+    "current_allocated_bytes": 0,
+    "driver_allocated_bytes": 737280
+  },
+  "thumbnail_sha256": null,
+  "timed_out": false,
+  "worker_exit_code": 1
+}
