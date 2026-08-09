@@ -526,6 +526,7 @@ def run_parent(args: argparse.Namespace) -> int:
         "component_residency_strategy": worker_state.get("component_residency_strategy"),
         "prompt_encoding_completed": bool(worker_state.get("prompt_encoding_completed")),
         "text_encoder_post_release": worker_state.get("text_encoder_post_release"),
+        "mps_dtype_normalization": worker_state.get("mps_dtype_normalization", []),
         "stop_request": worker_state.get("stop_request") or parent_stop_request,
         "model_snapshot_revision": worker_state.get("model_snapshot_revision"),
         "output_sha256": sha256_file(output_path) if output_path.exists() else None,
@@ -712,6 +713,27 @@ def build_wan_denoiser_pipeline(
     return pipe
 
 
+def normalize_mps_float64_buffers(module: Any, torch_module: Any) -> list[dict[str, Any]]:
+    """把模型中 MPS 无法承载的 float64 缓冲区降为 float32。"""
+    normalized: list[dict[str, Any]] = []
+    for full_name, buffer in list(module.named_buffers()):
+        if buffer.dtype != torch_module.float64:
+            continue
+        parent_name, _, buffer_name = full_name.rpartition(".")
+        parent = module.get_submodule(parent_name) if parent_name else module
+        converted = buffer.to(dtype=torch_module.float32)
+        setattr(parent, buffer_name, converted)
+        normalized.append(
+            {
+                "buffer": full_name,
+                "from_dtype": "float64",
+                "to_dtype": "float32",
+                "shape": list(buffer.shape),
+            }
+        )
+    return normalized
+
+
 def run_worker(args: argparse.Namespace) -> int:
     import imageio.v2 as imageio
     import numpy as np
@@ -745,6 +767,7 @@ def run_worker(args: argparse.Namespace) -> int:
         "component_residency_strategy": None,
         "prompt_encoding_completed": False,
         "text_encoder_post_release": None,
+        "mps_dtype_normalization": [],
     }
     write_json(state_path, state)
     sampler: MpsSampler | None = None
@@ -855,6 +878,10 @@ def run_worker(args: argparse.Namespace) -> int:
                 )
                 pipe.vae.enable_slicing()
                 pipe.vae.enable_tiling()
+                state["mps_dtype_normalization"] = normalize_mps_float64_buffers(
+                    pipe.transformer,
+                    torch,
+                )
             pipe.enable_attention_slicing()
         state["pipeline_loaded"] = True
         state["stage_elapsed_seconds"]["pipeline_load"] = round(time.perf_counter() - stage_start, 3)

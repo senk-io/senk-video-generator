@@ -25,6 +25,7 @@ from tools.run_provider_compatibility_trial import (
     configure_mps_memory_limit,
     load_execution_contract,
     max_jsonl_metric,
+    normalize_mps_float64_buffers,
     observe_resource_budget,
     prepare_wan_prompt_embeddings,
     request_worker_stop,
@@ -307,6 +308,23 @@ else:
         self.assertTrue(mps.synchronized)
         self.assertTrue(mps.cache_emptied)
         self.assertEqual(release["driver_allocated_bytes"], 200)
+
+    def test_cogvideox_float64_position_buffer_is_normalized_for_mps(self) -> None:
+        import torch
+
+        class PositionModule(torch.nn.Module):
+            def __init__(self) -> None:
+                super().__init__()
+                self.register_buffer("pos_embedding", torch.ones((1, 4, 8), dtype=torch.float64))
+
+        module = torch.nn.Module()
+        module.patch_embed = PositionModule()
+
+        observations = normalize_mps_float64_buffers(module, torch)
+
+        self.assertEqual(module.patch_embed.pos_embedding.dtype, torch.float32)
+        self.assertEqual(observations[0]["buffer"], "patch_embed.pos_embedding")
+        self.assertEqual(observations[0]["shape"], [1, 4, 8])
 
     def test_wan_text_encoder_is_released_before_denoiser_load(self) -> None:
         events: list[str] = []
