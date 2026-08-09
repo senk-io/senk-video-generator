@@ -26,6 +26,7 @@ import psutil
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "experiments/provider_compatibility/trial_contract.json"
+BOUNDED_TRIAL_ROOT = CONTRACT_PATH.parent
 DEFAULT_EVIDENCE_ROOT = REPO_ROOT / "evidence/runtime"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -176,10 +177,61 @@ def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) -> None:
+    """只允许固定 CogVideoX 基线的 8/16 步非权威质量观察变体。"""
+    baseline = load_contract()
+    invariant_fields = (
+        "shared_prompt",
+        "shared_seed",
+        "device",
+        "mps_fallback_to_cpu",
+        "timeout_seconds",
+        "execution_strategy",
+        "resource_budget",
+    )
+    if contract.get("contract_status") != "BOUNDED_TRIAL_ONLY":
+        raise ValueError("试验合同状态无效")
+    for field in invariant_fields:
+        if contract.get(field) != baseline.get(field):
+            raise ValueError(f"试验合同不得改变固定字段：{field}")
+    if provider_key != "cogvideox" or set(contract.get("providers", {})) != {provider_key}:
+        raise ValueError("质量探针合同只允许包含 CogVideoX")
+    provider = contract["providers"][provider_key]
+    baseline_provider = baseline["providers"][provider_key]
+    for field, expected in baseline_provider.items():
+        if field == "num_inference_steps":
+            continue
+        if provider.get(field) != expected:
+            raise ValueError(f"质量探针不得改变提供者基线字段：{field}")
+    steps = provider.get("num_inference_steps")
+    if steps not in {8, 16}:
+        raise ValueError("质量探针只允许 8 步或 16 步")
+    expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"
+    if contract.get("contract_id") != expected_id:
+        raise ValueError("质量探针合同标识与步数不一致")
+    non_goals = set(contract.get("non_goals", []))
+    if not {"visual_quality_acceptance", "institution_freeze", "production_readiness"}.issubset(non_goals):
+        raise ValueError("质量探针缺少非目标边界")
+
+
 def load_execution_contract(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:
-    if not args.job_spec:
+    job_spec = getattr(args, "job_spec", None)
+    trial_contract = getattr(args, "trial_contract", None)
+    if job_spec and trial_contract:
+        raise SystemExit("作业规格与试验合同不能同时使用")
+    if trial_contract:
+        contract_path = Path(trial_contract).resolve()
+        if not contract_path.is_relative_to(BOUNDED_TRIAL_ROOT) or contract_path.suffix != ".json":
+            raise SystemExit("试验合同必须位于受控试验目录")
+        try:
+            contract = load_contract(contract_path)
+            validate_bounded_trial_variant(contract, args.provider)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+            raise SystemExit(f"试验合同验证失败：{exc}") from exc
+        return contract, contract_path
+    if not job_spec:
         return load_contract(), CONTRACT_PATH
-    job_spec_path = Path(args.job_spec).resolve()
+    job_spec_path = Path(job_spec).resolve()
     try:
         raw_job = json.loads(job_spec_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -250,7 +302,13 @@ def hardware_environment(execution_id: str, contract_path: Path) -> dict[str, An
         "git_status_porcelain": git_value("status", "--porcelain") or "",
         "harness_sha256": sha256_file(Path(__file__)),
         "contract_sha256": sha256_file(contract_path),
-        "contract_source": "operator_job" if contract_path != CONTRACT_PATH else "fixed_trial",
+        "contract_source": (
+            "fixed_trial"
+            if contract_path == CONTRACT_PATH
+            else "bounded_trial_variant"
+            if contract_path.is_relative_to(BOUNDED_TRIAL_ROOT)
+            else "operator_job"
+        ),
         "sensitive_machine_identifiers_recorded": False,
     }
 
@@ -364,6 +422,8 @@ def run_parent(args: argparse.Namespace) -> int:
     ]
     if args.job_spec:
         child_args.extend(["--job-spec", str(Path(args.job_spec).resolve())])
+    if args.trial_contract:
+        child_args.extend(["--trial-contract", str(Path(args.trial_contract).resolve())])
     child_environment = os.environ.copy()
     child_environment["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
     child_environment["HF_HUB_DISABLE_TELEMETRY"] = "1"
@@ -1070,7 +1130,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--provider", choices=("wan", "cogvideox"), required=True)
     parser.add_argument("--execution-id", required=True)
     parser.add_argument("--evidence-root")
-    parser.add_argument("--job-spec")
+    contract_source = parser.add_mutually_exclusive_group()
+    contract_source.add_argument("--job-spec")
+    contract_source.add_argument("--trial-contract")
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Z0-9][A-Z0-9._-]{2,127}", args.execution_id):

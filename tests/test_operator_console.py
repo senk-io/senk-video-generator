@@ -30,6 +30,7 @@ from tools.run_provider_compatibility_trial import (
     prepare_wan_prompt_embeddings,
     request_worker_stop,
     release_pipeline_memory,
+    validate_bounded_trial_variant,
 )
 from tools.decode_cogvideox_latent import preflight_block_reason, validate_decode_source
 from tools.verify_provider_compatibility_evidence import verify_operator_memory_contract
@@ -206,6 +207,19 @@ else:
         self.assertEqual(source, job_spec.resolve())
         self.assertEqual(contract["job_id"], job["job_id"])
         self.assertEqual(contract["providers"]["wan"]["num_frames"], 9)
+
+    def test_bounded_cogvideox_quality_contract_changes_only_steps(self) -> None:
+        contract_path = Path("experiments/provider_compatibility/cogvideox_quality_8_steps.json").resolve()
+        contract, source = load_execution_contract(
+            argparse.Namespace(job_spec=None, trial_contract=str(contract_path), provider="cogvideox")
+        )
+
+        self.assertEqual(source, contract_path)
+        self.assertEqual(contract["providers"]["cogvideox"]["num_inference_steps"], 8)
+        mutated = json.loads(json.dumps(contract))
+        mutated["providers"]["cogvideox"]["width"] = 704
+        with self.assertRaisesRegex(ValueError, "不得改变提供者基线字段"):
+            validate_bounded_trial_variant(mutated, "cogvideox")
 
     def test_legacy_v2_job_remains_readable_with_new_swap_gate(self) -> None:
         job = self.manager.create_job(self.request())
