@@ -181,7 +181,6 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
     """只允许固定 CogVideoX 基线的质量探针与五秒候选观察变体。"""
     baseline = load_contract()
     invariant_fields = (
-        "shared_prompt",
         "shared_seed",
         "device",
         "mps_fallback_to_cpu",
@@ -191,6 +190,18 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
     )
     if contract.get("contract_status") != "BOUNDED_TRIAL_ONLY":
         raise ValueError("试验合同状态无效")
+    prompt_variant = contract.get("prompt_variant")
+    expected_prompt_variant = {
+        "strategy": "SINGLE_PROMPT_VARIABLE",
+        "target": "PAPER_FOLD_VISIBILITY",
+        "baseline_prompt": baseline["shared_prompt"],
+        "changed_prompt": "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+    }
+    if prompt_variant is None:
+        if contract.get("shared_prompt") != baseline.get("shared_prompt"):
+            raise ValueError("非提示词探针不得改变固定提示词")
+    elif prompt_variant != expected_prompt_variant or contract.get("shared_prompt") != expected_prompt_variant["changed_prompt"]:
+        raise ValueError("折纸提示词探针必须固定为单提示词变量")
     for field in invariant_fields:
         if contract.get(field) != baseline.get(field):
             raise ValueError(f"试验合同不得改变固定字段：{field}")
@@ -211,7 +222,11 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
             raise ValueError(f"质量探针不得改变提供者基线字段：{field}")
     steps = provider.get("num_inference_steps")
     frames = provider.get("num_frames")
-    if temporal_derivation is None:
+    if prompt_variant is not None:
+        if temporal_derivation is not None or steps != 32 or frames != baseline_provider["num_frames"]:
+            raise ValueError("折纸提示词探针只允许 9 帧和 32 步")
+        expected_id = "CR-0019-COGVIDEOX-32-STEP-ORIGAMI-PROMPT-QUALITY-TRIAL-001"
+    elif temporal_derivation is None:
         if steps not in {8, 16, 32} or frames != baseline_provider["num_frames"]:
             raise ValueError("质量探针只允许 9 帧、8 步、16 步或 32 步")
         expected_id = f"CR-0019-COGVIDEOX-{steps}-STEP-QUALITY-TRIAL-001"

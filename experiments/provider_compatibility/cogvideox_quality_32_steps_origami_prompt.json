@@ -1,0 +1,50 @@
+{
+  "contract_id": "CR-0019-COGVIDEOX-32-STEP-ORIGAMI-PROMPT-QUALITY-TRIAL-001",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "shared_prompt": "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+  "prompt_variant": {
+    "strategy": "SINGLE_PROMPT_VARIABLE",
+    "target": "PAPER_FOLD_VISIBILITY",
+    "baseline_prompt": "A small red paper boat drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+    "changed_prompt": "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text."
+  },
+  "shared_seed": 42,
+  "device": "mps",
+  "mps_fallback_to_cpu": true,
+  "timeout_seconds": 7200,
+  "execution_strategy": "mps_model_offload_bounded",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "max_swap_growth_bytes": 4294967296,
+    "mps_memory_fraction": 0.65
+  },
+  "providers": {
+    "cogvideox": {
+      "provider_identity": "zai-org",
+      "model_id": "zai-org/CogVideoX-2b",
+      "dtype": "float16",
+      "height": 480,
+      "width": 720,
+      "num_frames": 9,
+      "num_inference_steps": 32,
+      "guidance_scale": 6.0,
+      "fps": 8
+    }
+  },
+  "candidate_observations": [
+    "all_frames_retain_subject_semantics",
+    "triangular_origami_fold_structure_is_visible",
+    "paper_crease_detail_is_visible",
+    "rain_or_raindrop_semantics_are_visible",
+    "water_reflection_or_ripple_detail_is_visible"
+  ],
+  "non_goals": [
+    "visual_quality_acceptance",
+    "cross_provider_contract_creation",
+    "institution_freeze",
+    "production_readiness",
+    "five_second_generation",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation"
+  ]
+}

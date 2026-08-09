@@ -1,0 +1,56 @@
+{
+  "created_at": "2026-08-09T19:42:25.510066+00:00",
+  "file_count": 10,
+  "files": [
+    {
+      "bytes": 1036888,
+      "path": "denoised_latents.safetensors",
+      "sha256": "d14495ab5dfe6fee52dbbb890229a89d9978657ffcbb044a56a5d5866da4919c"
+    },
+    {
+      "bytes": 1262,
+      "path": "environment.json",
+      "sha256": "63c8da90358c2fbe02b6fa932a913ff59102b2eed17e90fb8994682860f215e2"
+    },
+    {
+      "bytes": 40452,
+      "path": "mps_metrics.jsonl",
+      "sha256": "69aa52125e0bb1f071fa2c994034ff0649dd63daa232846576b3575796519f72"
+    },
+    {
+      "bytes": 63349,
+      "path": "output.mp4",
+      "sha256": "7a0d619a803512ebe1eb5af44c82860472336a9915d22ff00336a8308f64f184"
+    },
+    {
+      "bytes": 72779,
+      "path": "process_metrics.jsonl",
+      "sha256": "9533ff64b659b1f85eb3f26cdf1caa537cb151a109fc13a8a52356e292a6410b"
+    },
+    {
+      "bytes": 1231,
+      "path": "request.json",
+      "sha256": "50a1b81b6a720899b4d07757a089320e419f0ba6892da5eaccadb58a46e55e00"
+    },
+    {
+      "bytes": 2933,
+      "path": "runtime.log",
+      "sha256": "3bbc3a6180cff5e0dc76a5bb93813e1561e252aad7b0ec8024f20c05fcc02b62"
+    },
+    {
+      "bytes": 3794,
+      "path": "summary.json",
+      "sha256": "995cb88145d43c6108883021e0aa2e121c691bae8a44891fd61f55596af1dc71"
+    },
+    {
+      "bytes": 283978,
+      "path": "thumbnail.png",
+      "sha256": "f0201da17aa205b876ce970de20df5a1906f6e87e3b4925367027bf9aab3dc67"
+    },
+    {
+      "bytes": 2881,
+      "path": "worker_state.json",
+      "sha256": "7777d811d50c80f7bf934833261ef3d6118a855466b9ec2d9ad07a510cebc525"
+    }
+  ]
+}

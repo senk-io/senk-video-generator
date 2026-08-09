@@ -176,6 +176,17 @@ CogVideoX 固定八步质量探针：
 
 三个九帧受控合同只允许相对四步基线改变推理步数；模型快照、提示词、种子、画幅、帧数、引导系数、帧率和资源预算保持不变。它们只建立质量观察，不自动创建质量接受或控制台启动权限。三十二步合同还明确禁止直接生成五秒或进入三十秒时间线。
 
+三十二步固定提示词仍没有形成清楚折痕后，折纸提示词对照使用独立合同，只把提示词中的主体描述改为折叠纸艺和清晰三角折痕；步数、种子、九帧画幅和全部资源边界保持不变：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_provider_compatibility_trial \
+  --provider cogvideox \
+  --execution-id LM-COGVIDEOX-32STEP-ORIGAMI-QUALITY-YYYYMMDDTHHMMSSZ \
+  --trial-contract experiments/provider_compatibility/cogvideox_quality_32_steps_origami_prompt.json
+```
+
+这个合同仍只允许九帧输出，不自动生成五秒。只有折纸结构、主体语义和场景语义逐帧闭合后，才能单独建立新的四十一帧资源合同。
+
 九帧分阶段严格对照闭合后，五秒候选观察使用独立合同 `cogvideox_five_second_16_steps.json`。该合同固定十六步质量基线、`41` 帧源输出、`65%` MPS 上限、至少 `5 GiB` 可用内存停止线和最多 `4 GiB` 新增换页停止线；只有源输出完整形成后，运行器才按 `DROP_LAST_FRAME` 派生 `40` 帧、`8 fps`、精确 `5` 秒的 `derived_5s.mp4`：
 
 ```bash
@@ -281,10 +292,11 @@ manifest.json
 | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` 8 步平衡回测 | 运行闭合，确定当前最低可辨识档位 | `0fad780a534b6463e45facd96134c9f345acfa5b` | `256×144`、9 帧、8 步、8 fps；总耗时 30.685 秒，其中推理 5.945 秒；MPS 驱动峰值 8,413,462,528 字节；换页没有增长；全部 9 帧保留红色船体、两端尖角和水面层次，轮廓优于本次 16 步输出；执行标识 `LM-WAN-BALANCE-BACKTEST-20260809T170657Z` |
 | `zai-org/CogVideoX-2b` | 八步为最低可辨识点；三十二步为当前九帧质量基线 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 八步同参数分阶段对照总耗时 104.597 秒，MPS 驱动峰值 4,367,155,200 字节，换页增长为 0；相较旧完整管线八步，MPS 驱动峰值降低 63.884%，九帧船体语义保持；三十二步进一步形成更清楚的倒影、涟漪和雨景语义，但纸张折痕仍不足；执行标识 `LM-COGVIDEOX-8STEP-STAGED-20260809T184407Z` |
 | `zai-org/CogVideoX-2b` 三十二步质量探针 | 九帧雨景与水面改善；折纸材质仍未闭合 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 总耗时 247.653 秒；MPS 驱动峰值 4,367,155,200 字节，新增换页为 0；九帧全部保留船体，最大相邻质心跳变由十六步的 15.54 px 降至 10.58 px，平均值由 7.90 px 降至 4.29 px；水面倒影和同心涟漪明显增强，但最大主体面积变化升至 15.42%，且没有清晰纸张折痕；执行标识 `LM-COGVIDEOX-32STEP-QUALITY-20260809T193147Z` |
+| `zai-org/CogVideoX-2b` 三十二步折纸提示词探针 | 首次形成稳定可辨识的折纸结构 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 只改变提示词主体描述；总耗时 220.365 秒，MPS 驱动峰值 4,356,620,288 字节，新增换页为 0；九帧全部形成交叠三角纸面和持续对角折线，并保留水面倒影与涟漪；但最大相邻质心跳变为 20.45 px、最大主体面积变化为 17.08%，只通过九帧质量门禁，尚未证明五秒连续性；执行标识 `LM-COGVIDEOX-32STEP-ORIGAMI-QUALITY-20260809T193843Z` |
 | `zai-org/CogVideoX-2b` 五秒候选观察 | 技术闭合；运动连续性仍需处理 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 十六步生成 41 帧并派生 40 帧、8 fps、精确 5 秒；总耗时 828.230 秒，MPS 驱动峰值 6,562,824,192 字节，新增换页为 0；全部 41 帧保留红色船体，但最大相邻质心跳变约 45.1 px，不能登记正式质量接受；执行标识 `LM-COGVIDEOX-5S-16STEP-20260809T190026Z` |
 | `zai-org/CogVideoX-2b` 五秒时序稳定派生 | 技术连续性阈值闭合；仍待人工质量接受 | `1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01` | 锁定既有五秒来源摘要，不重新运行模型；输出 40 帧、8 fps、精确 5 秒，全部帧保留船体；最大相邻质心跳变由约 45.1 px 降至 2.78 px，平均值由约 12.29 px 降至 1.37 px，最大面积变化为 12.08%；40 帧逐帧未见边缘接缝或明显双影，但雨滴、折痕和水面细节仍不足；执行标识 `LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z` |
 
-Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的缩小瓦片解码、旧完整管线八步、十六步分阶段、八步分阶段严格对照、五秒候选观察、五秒时序稳定派生和三十二步九帧质量探针证据均位于对应的 `evidence/runtime/<execution-id>/` 目录，并已通过适用校验器。三十二步把水面与雨景提升为当前最佳九帧观察，但不解除纸张材质、人工质量接受、控制台作业或三十秒时间线阻断；在九帧提示词对照闭合前，不直接建立新的四十一帧合同。
+Wan2.1 的既有成功证据位于 `evidence/runtime/CR-0019-WAN-MAC-001/`，第一轮低内存失败证据位于 `evidence/runtime/LM-WAN-PROBE-20260809T152435Z/`，当前无梯度叶级探针成功证据位于 `evidence/runtime/LM-WAN-INFERENCE-LEAF-PROBE-20260809T162212Z/`，四步质量证据位于 `evidence/runtime/LM-WAN-QUALITY-PROBE-20260809T170134Z/`，十六步平衡证据位于 `evidence/runtime/LM-WAN-BALANCE-PROBE-20260809T170402Z/`，八步平衡回测证据位于 `evidence/runtime/LM-WAN-BALANCE-BACKTEST-20260809T170657Z/`。在同一提示词、种子、画幅、帧数、引导系数和帧率下，4 步不可辨识，8 步可辨识，因此 8 步是当前试验范围内的最低可用点；该结论不外推到其他提示词、种子、分辨率或模型。CogVideoX 的各轮证据均位于对应的 `evidence/runtime/<execution-id>/` 目录，并已通过适用校验器。三十二步固定提示词建立了当前原提示词质量基线；折纸提示词对照进一步闭合了九帧折纸结构门禁，因此允许下一步单独设计四十一帧合同，但不自动证明五秒连续性，也不解除人工质量接受、控制台作业或三十秒时间线阻断。
 
 更完整的观察解释见 `knowledge/Wan2.1_and_CogVideoX_Mac_Compatibility.md`。
 

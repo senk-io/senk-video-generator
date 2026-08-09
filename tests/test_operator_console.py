@@ -268,6 +268,23 @@ else:
         with self.assertRaisesRegex(ValueError, "三十二步探针缺少"):
             validate_bounded_trial_variant(mutated_thirty_two, "cogvideox")
 
+        origami_path = Path(
+            "experiments/provider_compatibility/cogvideox_quality_32_steps_origami_prompt.json"
+        ).resolve()
+        origami, source = load_execution_contract(
+            argparse.Namespace(job_spec=None, trial_contract=str(origami_path), provider="cogvideox")
+        )
+        self.assertEqual(source, origami_path)
+        self.assertEqual(origami["providers"]["cogvideox"]["num_inference_steps"], 32)
+        self.assertIn("triangular creases", origami["shared_prompt"])
+
+        mutated_origami = json.loads(json.dumps(origami))
+        mutated_origami["shared_prompt"] = mutated_origami["shared_prompt"].replace(
+            "triangular creases", "paper folds"
+        )
+        with self.assertRaisesRegex(ValueError, "必须固定为单提示词变量"):
+            validate_bounded_trial_variant(mutated_origami, "cogvideox")
+
     def test_cogvideox_temporal_stability_contract_and_linear_trajectory_are_fail_closed(self) -> None:
         contract_path = Path(
             "experiments/postprocessing/cogvideox_temporal_stability_v1.json"
