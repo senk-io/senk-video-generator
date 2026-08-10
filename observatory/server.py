@@ -258,8 +258,8 @@ class ObservatoryState:
         head = git_value(self.config.repo_root, "rev-parse", "HEAD")
         status = git_value(self.config.repo_root, "status", "--porcelain") or ""
         return {
-            "name": "SENKNET 视频生产治理引擎",
-            "repository": "senk-io/senknet-video-generator",
+            "name": "SENK 视频生产治理引擎",
+            "repository": "senk-io/senk-video-generator",
             "branch": git_value(self.config.repo_root, "branch", "--show-current"),
             "git_head": head[:12] if head else None,
             "worktree_dirty": bool(status),

@@ -1,7 +1,53 @@
+# macOS 与编辑器
 .DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Python 缓存、测试与构建产物
 __pycache__/
 *.py[cod]
-.venv-provider-compat/
-.senknet/operator/
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# 本地虚拟环境
+.venv/
+.venv-*/
+venv/
+env/
+
+# 本地秘密与证书
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials.json
+secrets.json
+
+# Hugging Face、模型权重与本地缓存
+.cache/
+.huggingface/
+huggingface/
+hf-cache/
+model-cache/
+models/
+checkpoints/
+weights/
+
+# 本地控制台运行态；正式运行证据仍由 evidence/runtime/ 显式跟踪
+.senknet/
 evidence/runtime/**/governance.db-shm
 evidence/runtime/**/governance.db-wal
