@@ -1,0 +1,81 @@
+{
+  "contract_id": "CR-0023-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-24PX-DERIVATION-001",
+  "contract_status": "BOUNDED_DIRECTION_DERIVATION_ONLY",
+  "policy_context": {
+    "action": "DERIVE_EXISTING_CANDIDATE",
+    "authorization": "USER_AUTHORIZED_REDUCED_SPEED_SPATIAL_ONLY_DERIVATION",
+    "diagnosis_category": "Manual Modification",
+    "execution_intent": "REDUCE_MAXIMUM_ADJACENT_JUMP_WITHOUT_REINTRODUCING_TEMPORAL_GHOSTING",
+    "gap": "OBSERVED_MAXIMUM_ADJACENT_CENTROID_JUMP_6_103_VS_LIMIT_5_5",
+    "maximum_derivation_runs": 1,
+    "maximum_model_runs": 0
+  },
+  "source": {
+    "execution_id": "LM-COGVIDEOX-32STEP-SHOT-002-QUALITY-20260810T021808Z",
+    "filename": "output.mp4",
+    "sha256": "7954efea01e649e22530cbdc9729a888cf65dc39cfd5a467a3190716a81dfb0b",
+    "decoded_frame_count": 9,
+    "fps": 8,
+    "duration_seconds": 1.13
+  },
+  "subject_measurement": {
+    "red_minimum": 150,
+    "red_to_green_ratio_numerator": 3,
+    "red_to_green_ratio_denominator": 2,
+    "red_to_blue_ratio_numerator": 3,
+    "red_to_blue_ratio_denominator": 2,
+    "minimum_subject_area_pixels": 10000
+  },
+  "trajectory": {
+    "strategy": "LINEAR_CENTROID_RIGHTWARD_OFFSET",
+    "target_horizontal_displacement_pixels": 24,
+    "target_vertical_strategy": "LINEAR_SOURCE_FIRST_TO_LAST",
+    "rounding": "NEAREST_INTEGER_PIXEL",
+    "maximum_translation_pixels": 64,
+    "edge_fill": "EDGE_REPLICATION"
+  },
+  "frame_processing": {
+    "strategy": "SPATIAL_TRANSLATION_ONLY",
+    "temporal_mix": "NONE"
+  },
+  "output": {
+    "filename": "direction_controlled_spatial_only_24px_9f.mp4",
+    "decoded_frame_count": 9,
+    "fps": 8,
+    "duration_seconds": 1.13,
+    "codec": "libx264",
+    "pixel_format": "yuv420p"
+  },
+  "observation_thresholds": {
+    "minimum_net_horizontal_displacement_pixels": 24.0,
+    "minimum_adjacent_horizontal_displacement_pixels": 0.5,
+    "maximum_adjacent_centroid_jump_pixels": 5.5,
+    "maximum_mean_adjacent_centroid_jump_pixels": 4.5,
+    "all_frames_retain_subject": true
+  },
+  "inherited_observation_limits": {
+    "maximum_adjacent_subject_area_change_percent_is_not_repaired": true,
+    "must_remain_reported": true,
+    "does_not_authorize_forty_one_frame_expansion": true
+  },
+  "manual_visual_checks": [
+    "all_nine_frames_retain_origami_folds",
+    "all_nine_frames_retain_water_and_reflection",
+    "no_new_double_contours_or_temporal_ghosting",
+    "boat_bow_orientation_remains_rightward",
+    "no_edge_fill_seam_is_visible"
+  ],
+  "non_goals": [
+    "source_evidence_modification",
+    "model_generation",
+    "automatic_retry",
+    "subject_area_stability_repair",
+    "visual_quality_acceptance",
+    "selection_decision",
+    "forty_one_frame_expansion",
+    "timeline_binding",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "institution_freeze"
+  ]
+}

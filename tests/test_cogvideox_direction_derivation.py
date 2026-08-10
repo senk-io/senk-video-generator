@@ -107,6 +107,26 @@ class CogVideoXDirectionDerivationTest(unittest.TestCase):
         self.assertTrue(np.array_equal(frames[0], derived[0]))
         self.assertTrue(all(item["within_threshold"] for item in comparisons.values()))
 
+        reduced_speed_contract_path = Path(
+            "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_24px_v3.json"
+        )
+        reduced_speed_contract = json.loads(
+            reduced_speed_contract_path.read_text(encoding="utf-8")
+        )
+        validate_contract(reduced_speed_contract)
+        self.assertEqual(
+            reduced_speed_contract["trajectory"]["target_horizontal_displacement_pixels"],
+            24,
+        )
+        self.assertEqual(
+            reduced_speed_contract["observation_thresholds"],
+            contract["observation_thresholds"],
+        )
+        mutated_reduced_speed = json.loads(json.dumps(reduced_speed_contract))
+        mutated_reduced_speed["observation_thresholds"]["maximum_adjacent_centroid_jump_pixels"] = 6.2
+        with self.assertRaisesRegex(ValueError, "固定合同"):
+            validate_contract(mutated_reduced_speed)
+
 
 if __name__ == "__main__":
     unittest.main()

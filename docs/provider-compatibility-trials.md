@@ -245,6 +245,16 @@ CogVideoX 固定八步质量探针：
 
 全部九帧复核确认折纸主轮廓、三角纸面、主要折痕、水面和倒影持续存在，船头保持朝右，未见上一轮半透明双轮廓，也未见边缘复制接缝。证据包通过专用校验，结果为 `VERIFIED_COGVIDEOX_DIRECTION_OBSERVATION_PACKAGE`。该结果证明移除跨帧混合解决了新增重影，但只登记为视觉修复成功且方向轨迹接近门禁；不得把单项最大跳变偏差或既有面积波动视为已经闭合。
 
+针对最大单步跳变超出 `0.603` 像素的独立偏差，后续合同 `cogvideox_shot_002_rightward_spatial_only_24px_v3.json` 只把九帧目标净位移从 `32` 像素收窄到 `24` 像素，继续绑定原始来源并保持纯空间平移。所有观察阈值原样保留，不允许把最大跳变上限从 `5.5` 像素调高：
+
+```bash
+.venv-provider-compat/bin/python -m tools.derive_cogvideox_shot_direction \
+  --execution-id LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-24PX-YYYYMMDDTHHMMSSZ \
+  --contract experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_24px_v3.json
+```
+
+该合同同样只有一次派生和零次模型运行预算。即使全部方向阈值与人工视觉检查闭合，来源固有的面积波动仍是未解决观察，后续只能据此设计四十一帧合同，不得直接执行四十一帧。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash

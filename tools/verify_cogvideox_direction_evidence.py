@@ -28,6 +28,10 @@ CONTRACT_PATHS = {
     "CR-0022-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-DERIVATION-001": (
         REPO_ROOT / "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_v2.json"
     ),
+    "CR-0023-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-24PX-DERIVATION-001": (
+        REPO_ROOT
+        / "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_24px_v3.json"
+    ),
 }
 
 
