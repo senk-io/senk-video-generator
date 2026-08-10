@@ -8,6 +8,7 @@ import numpy as np
 
 from tools.derive_cogvideox_shot_direction import (
     derive_direction_frames,
+    derive_spatial_only_frames,
     direction_observation,
     threshold_comparisons,
     validate_contract,
@@ -63,6 +64,47 @@ class CogVideoXDirectionDerivationTest(unittest.TestCase):
         self.assertEqual(len(shifts), 9)
         self.assertEqual(len(targets), 9)
         self.assertTrue(observed["all_frames_retain_subject"])
+        self.assertTrue(all(item["within_threshold"] for item in comparisons.values()))
+
+    def test_spatial_only_contract_and_direction_path_are_fail_closed(self) -> None:
+        contract_path = Path(
+            "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_v2.json"
+        )
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+        validate_contract(contract)
+        mutated = json.loads(json.dumps(contract))
+        mutated["frame_processing"]["temporal_mix"] = "SYMMETRIC_THREE_FRAME_WEIGHTED_MIX"
+        with self.assertRaisesRegex(ValueError, "固定合同"):
+            validate_contract(mutated)
+
+        frames = np.full((9, 48, 96, 3), 230, dtype=np.uint8)
+        for index, x in enumerate((32, 36, 31, 37, 29, 33, 28, 31, 27)):
+            frames[index, 18:34, x : x + 24] = (230, 20, 20)
+        measurement = {
+            "red_minimum": 150,
+            "red_to_green_ratio_numerator": 3,
+            "red_to_green_ratio_denominator": 2,
+            "red_to_blue_ratio_numerator": 3,
+            "red_to_blue_ratio_denominator": 2,
+            "minimum_subject_area_pixels": 100,
+        }
+        source = direction_observation(frames, measurement)
+        derived, shifts, targets = derive_spatial_only_frames(
+            frames,
+            source,
+            {
+                "target_horizontal_displacement_pixels": 32,
+                "maximum_translation_pixels": 64,
+            },
+        )
+        observed = direction_observation(derived, measurement)
+        comparisons = threshold_comparisons(
+            observed,
+            contract["observation_thresholds"],
+        )
+        self.assertEqual(len(shifts), 9)
+        self.assertEqual(len(targets), 9)
+        self.assertTrue(np.array_equal(frames[0], derived[0]))
         self.assertTrue(all(item["within_threshold"] for item in comparisons.values()))
 
 

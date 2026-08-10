@@ -27,7 +27,10 @@ DEFAULT_CONTRACT = (
 )
 DEFAULT_EVIDENCE_ROOT = REPO_ROOT / "evidence/runtime"
 EXECUTION_ID_PATTERN = re.compile(r"[A-Z0-9][A-Z0-9._-]{2,127}")
-FIXED_CONTRACT_CANONICAL_SHA256 = "87ae5059953af3a6139388a1a188fc7a7822d187908be0a693bc5ef2250a8f42"
+FIXED_CONTRACT_CANONICAL_SHA256S = {
+    "87ae5059953af3a6139388a1a188fc7a7822d187908be0a693bc5ef2250a8f42",
+    "a5e3e1dccaefec7842e990f86a9a3327fae6fea05af25fa987361148008c3ad4",
+}
 
 
 def git_value(*args: str) -> str | None:
@@ -42,11 +45,10 @@ def git_value(*args: str) -> str | None:
     return result.stdout.strip() or None if result.returncode == 0 else None
 
 
-def derive_direction_frames(
+def translate_frames_to_direction(
     frames: np.ndarray,
     observation: dict[str, Any],
     trajectory: dict[str, Any],
-    temporal_filter: dict[str, Any],
 ) -> tuple[np.ndarray, list[list[int]], list[list[float]]]:
     if not observation["all_frames_retain_subject"]:
         raise ValueError("源视频并非每帧都保留可测量红色主体")
@@ -75,7 +77,17 @@ def derive_direction_frames(
         x0 = maximum_translation - int(dx)
         aligned.append(padded[y0 : y0 + height, x0 : x0 + width].copy())
 
-    aligned_array = np.stack(aligned).astype(np.float32)
+    return np.stack(aligned), shifts.tolist(), targets.tolist()
+
+
+def derive_direction_frames(
+    frames: np.ndarray,
+    observation: dict[str, Any],
+    trajectory: dict[str, Any],
+    temporal_filter: dict[str, Any],
+) -> tuple[np.ndarray, list[list[int]], list[list[float]]]:
+    aligned, shifts, targets = translate_frames_to_direction(frames, observation, trajectory)
+    aligned_array = aligned.astype(np.float32)
     weights = np.asarray(temporal_filter["weights"], dtype=np.float32)
     if len(weights) != 3 or weights.sum() <= 0:
         raise ValueError("时域混合权重无效")
@@ -86,7 +98,15 @@ def derive_direction_frames(
         following = aligned_array[min(len(aligned_array) - 1, index + 1)]
         frame = (previous * weights[0] + current * weights[1] + following * weights[2]) / weights.sum()
         mixed.append(np.clip(frame, 0, 255).round().astype(np.uint8))
-    return np.stack(mixed), shifts.tolist(), targets.tolist()
+    return np.stack(mixed), shifts, targets
+
+
+def derive_spatial_only_frames(
+    frames: np.ndarray,
+    observation: dict[str, Any],
+    trajectory: dict[str, Any],
+) -> tuple[np.ndarray, list[list[int]], list[list[float]]]:
+    return translate_frames_to_direction(frames, observation, trajectory)
 
 
 def direction_observation(frames: np.ndarray, measurement: dict[str, Any]) -> dict[str, Any]:
@@ -129,11 +149,12 @@ def threshold_comparisons(observation: dict[str, Any], thresholds: dict[str, Any
             "maximum": float(thresholds["maximum_mean_adjacent_centroid_jump_pixels"]),
             "observed": observation["mean_adjacent_centroid_jump_pixels"],
         },
-        "maximum_adjacent_subject_area_change_percent": {
+    }
+    if "maximum_adjacent_subject_area_change_percent" in thresholds:
+        comparisons["maximum_adjacent_subject_area_change_percent"] = {
             "maximum": float(thresholds["maximum_adjacent_subject_area_change_percent"]),
             "observed": observation["maximum_adjacent_subject_area_change_percent"],
-        },
-    }
+        }
     comparisons["all_frames_retain_subject"]["within_threshold"] = (
         comparisons["all_frames_retain_subject"]["observed"]
         == comparisons["all_frames_retain_subject"]["expected"]
@@ -143,11 +164,13 @@ def threshold_comparisons(observation: dict[str, Any], thresholds: dict[str, Any
             comparisons[key]["observed"] is not None
             and comparisons[key]["observed"] >= comparisons[key]["minimum"]
         )
-    for key in (
+    maximum_keys = [
         "maximum_adjacent_centroid_jump_pixels",
         "mean_adjacent_centroid_jump_pixels",
-        "maximum_adjacent_subject_area_change_percent",
-    ):
+    ]
+    if "maximum_adjacent_subject_area_change_percent" in comparisons:
+        maximum_keys.append("maximum_adjacent_subject_area_change_percent")
+    for key in maximum_keys:
         comparisons[key]["within_threshold"] = (
             comparisons[key]["observed"] is not None
             and comparisons[key]["observed"] <= comparisons[key]["maximum"]
@@ -162,7 +185,7 @@ def validate_contract(contract: dict[str, Any]) -> None:
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
-    if hashlib.sha256(canonical).hexdigest() != FIXED_CONTRACT_CANONICAL_SHA256:
+    if hashlib.sha256(canonical).hexdigest() not in FIXED_CONTRACT_CANONICAL_SHA256S:
         raise ValueError("镜头方向派生合同与固定合同不一致")
     required_non_goals = {
         "source_evidence_modification",
@@ -274,12 +297,19 @@ def main() -> int:
         if abs(source_metadata["duration_seconds"] - float(source["duration_seconds"])) > 0.001:
             raise ValueError("来源视频时长不符合合同")
         source_observation = direction_observation(frames, contract["subject_measurement"])
-        derived, shifts, targets = derive_direction_frames(
-            frames,
-            source_observation,
-            contract["trajectory"],
-            contract["temporal_filter"],
-        )
+        if contract.get("frame_processing", {}).get("strategy") == "SPATIAL_TRANSLATION_ONLY":
+            derived, shifts, targets = derive_spatial_only_frames(
+                frames,
+                source_observation,
+                contract["trajectory"],
+            )
+        else:
+            derived, shifts, targets = derive_direction_frames(
+                frames,
+                source_observation,
+                contract["trajectory"],
+                contract["temporal_filter"],
+            )
         output_path = evidence_dir / contract["output"]["filename"]
         writer = imageio.get_writer(
             output_path,

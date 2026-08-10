@@ -231,6 +231,16 @@ CogVideoX 固定八步质量探针：
 
 首次且唯一一次执行 `LM-COGVIDEOX-SHOT-002-RIGHTWARD-DERIVATION-20260810T023111Z` 将首尾净横向位移从向左 `18.775` 像素改为向右 `31.804` 像素，证明固定平移路径能够改变整体方向观察。但是最后一个相邻步回退 `1.726` 像素，最大相邻质心跳变为 `9.954` 像素，平均跳变为 `4.981` 像素，最大相邻主体面积变化为 `15.767%`，四项门禁没有闭合。全部九帧保留折纸船、水面和倒影，但第 `4`、`5`、`7`、`8`、`9` 帧出现可见的半透明双轮廓。证据包通过独立完整性校验，结果为 `VERIFIED_COGVIDEOX_DIRECTION_OBSERVATION_PACKAGE`；该结果只登记为方向纠正成功、技术稳定性和视觉完整性未通过，不追加第二次派生。
 
+针对已经成立的重影偏差，后续策略必须使用新合同 `cogvideox_shot_002_rightward_spatial_only_v2.json`，重新绑定原始九帧来源而不是绑定失败派生。该合同保持同一条净向右 `32` 像素目标轨迹，但只执行整数像素空间平移，不做任何跨帧混合：
+
+```bash
+.venv-provider-compat/bin/python -m tools.derive_cogvideox_shot_direction \
+  --execution-id LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-YYYYMMDDTHHMMSSZ \
+  --contract experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_v2.json
+```
+
+这一合同只验证方向轨迹、主体保留和是否引入新重影。来源既有的主体面积波动必须继续报告，但不属于纯空间方向派生能够修复的对象，也不能被该合同用作扩大到四十一帧的依据。执行预算仍为一次派生和零次模型运行。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash

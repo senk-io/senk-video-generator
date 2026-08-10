@@ -21,9 +21,14 @@ PRIVATE_TEXT_PATTERNS = (
     re.compile(r"Hardware UUID", re.IGNORECASE),
 )
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CONTRACT_PATH = (
-    REPO_ROOT / "experiments/postprocessing/cogvideox_shot_002_rightward_direction_v1.json"
-)
+CONTRACT_PATHS = {
+    "CR-0021-COGVIDEOX-SHOT-002-RIGHTWARD-DIRECTION-DERIVATION-001": (
+        REPO_ROOT / "experiments/postprocessing/cogvideox_shot_002_rightward_direction_v1.json"
+    ),
+    "CR-0022-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-DERIVATION-001": (
+        REPO_ROOT / "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_v2.json"
+    ),
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -121,7 +126,8 @@ def main() -> int:
     request = read_json(evidence_dir / "request.json")
     summary = read_json(evidence_dir / "summary.json")
     contract = request["contract"]
-    if contract != read_json(CONTRACT_PATH):
+    contract_path = CONTRACT_PATHS.get(contract.get("contract_id"))
+    if contract_path is None or contract != read_json(contract_path):
         raise SystemExit("证据请求与固定镜头方向合同不一致")
     expected_paths = {entry["path"] for entry in manifest["files"]}
     actual_paths = {
@@ -192,9 +198,13 @@ def main() -> int:
         <= float(thresholds["maximum_adjacent_centroid_jump_pixels"])
         and observation["mean_adjacent_centroid_jump_pixels"]
         <= float(thresholds["maximum_mean_adjacent_centroid_jump_pixels"])
-        and observation["maximum_adjacent_subject_area_change_percent"]
-        <= float(thresholds["maximum_adjacent_subject_area_change_percent"])
     )
+    if "maximum_adjacent_subject_area_change_percent" in thresholds:
+        independently_within_threshold = (
+            independently_within_threshold
+            and observation["maximum_adjacent_subject_area_change_percent"]
+            <= float(thresholds["maximum_adjacent_subject_area_change_percent"])
+        )
     if independently_within_threshold != bool(summary.get("all_observation_thresholds_met")):
         raise SystemExit("独立重算的阈值观察与摘要不一致")
     public_text_file_count = 0
