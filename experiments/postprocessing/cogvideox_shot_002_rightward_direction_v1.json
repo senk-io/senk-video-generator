@@ -1,0 +1,70 @@
+{
+  "contract_id": "CR-0021-COGVIDEOX-SHOT-002-RIGHTWARD-DIRECTION-DERIVATION-001",
+  "contract_status": "BOUNDED_DIRECTION_DERIVATION_ONLY",
+  "policy_context": {
+    "action": "DERIVE_EXISTING_CANDIDATE",
+    "authorization": "USER_AUTHORIZED_DIRECTION_ADJUSTMENT",
+    "diagnosis_category": "Provider Limitation",
+    "execution_intent": "CLOSE_SHOT_002_RIGHTWARD_DIRECTION_GAP_WITHOUT_MODEL_RETRY",
+    "gap": "OBSERVED_NET_LEFTWARD_DISPLACEMENT_VS_REQUIRED_LEFT_TO_RIGHT_MOTION",
+    "maximum_derivation_runs": 1,
+    "maximum_model_runs": 0
+  },
+  "source": {
+    "execution_id": "LM-COGVIDEOX-32STEP-SHOT-002-QUALITY-20260810T021808Z",
+    "filename": "output.mp4",
+    "sha256": "7954efea01e649e22530cbdc9729a888cf65dc39cfd5a467a3190716a81dfb0b",
+    "decoded_frame_count": 9,
+    "fps": 8,
+    "duration_seconds": 1.13
+  },
+  "subject_measurement": {
+    "red_minimum": 150,
+    "red_to_green_ratio_numerator": 3,
+    "red_to_green_ratio_denominator": 2,
+    "red_to_blue_ratio_numerator": 3,
+    "red_to_blue_ratio_denominator": 2,
+    "minimum_subject_area_pixels": 10000
+  },
+  "trajectory": {
+    "strategy": "LINEAR_CENTROID_RIGHTWARD_OFFSET",
+    "target_horizontal_displacement_pixels": 32,
+    "target_vertical_strategy": "LINEAR_SOURCE_FIRST_TO_LAST",
+    "rounding": "NEAREST_INTEGER_PIXEL",
+    "maximum_translation_pixels": 64,
+    "edge_fill": "EDGE_REPLICATION"
+  },
+  "temporal_filter": {
+    "strategy": "SYMMETRIC_THREE_FRAME_WEIGHTED_MIX",
+    "weights": [1, 4, 1],
+    "endpoint_behavior": "CLAMP"
+  },
+  "output": {
+    "filename": "direction_controlled_9f.mp4",
+    "decoded_frame_count": 9,
+    "fps": 8,
+    "duration_seconds": 1.13,
+    "codec": "libx264",
+    "pixel_format": "yuv420p"
+  },
+  "observation_thresholds": {
+    "minimum_net_horizontal_displacement_pixels": 24.0,
+    "minimum_adjacent_horizontal_displacement_pixels": 0.5,
+    "maximum_adjacent_centroid_jump_pixels": 5.5,
+    "maximum_mean_adjacent_centroid_jump_pixels": 4.5,
+    "maximum_adjacent_subject_area_change_percent": 13.0,
+    "all_frames_retain_subject": true
+  },
+  "non_goals": [
+    "source_evidence_modification",
+    "model_generation",
+    "automatic_retry",
+    "visual_quality_acceptance",
+    "selection_decision",
+    "forty_one_frame_expansion",
+    "timeline_binding",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "institution_freeze"
+  ]
+}

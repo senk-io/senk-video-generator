@@ -1,0 +1,70 @@
+from __future__ import annotations
+
+import json
+import unittest
+from pathlib import Path
+
+import numpy as np
+
+from tools.derive_cogvideox_shot_direction import (
+    derive_direction_frames,
+    direction_observation,
+    threshold_comparisons,
+    validate_contract,
+)
+
+
+class CogVideoXDirectionDerivationTest(unittest.TestCase):
+    def test_fixed_contract_is_fail_closed(self) -> None:
+        contract_path = Path(
+            "experiments/postprocessing/cogvideox_shot_002_rightward_direction_v1.json"
+        )
+        contract = json.loads(contract_path.read_text(encoding="utf-8"))
+        validate_contract(contract)
+        mutated = json.loads(json.dumps(contract))
+        mutated["trajectory"]["target_horizontal_displacement_pixels"] = 16
+        with self.assertRaisesRegex(ValueError, "固定合同"):
+            validate_contract(mutated)
+
+    def test_direction_derivation_creates_bounded_rightward_path(self) -> None:
+        frames = np.full((9, 48, 96, 3), 230, dtype=np.uint8)
+        for index, x in enumerate((32, 36, 31, 37, 29, 33, 28, 31, 27)):
+            frames[index, 18:34, x : x + 24] = (230, 20, 20)
+        measurement = {
+            "red_minimum": 150,
+            "red_to_green_ratio_numerator": 3,
+            "red_to_green_ratio_denominator": 2,
+            "red_to_blue_ratio_numerator": 3,
+            "red_to_blue_ratio_denominator": 2,
+            "minimum_subject_area_pixels": 100,
+        }
+        source = direction_observation(frames, measurement)
+        derived, shifts, targets = derive_direction_frames(
+            frames,
+            source,
+            {
+                "target_horizontal_displacement_pixels": 32,
+                "maximum_translation_pixels": 64,
+            },
+            {"weights": [1, 4, 1]},
+        )
+        observed = direction_observation(derived, measurement)
+        comparisons = threshold_comparisons(
+            observed,
+            {
+                "all_frames_retain_subject": True,
+                "minimum_net_horizontal_displacement_pixels": 24.0,
+                "minimum_adjacent_horizontal_displacement_pixels": 0.5,
+                "maximum_adjacent_centroid_jump_pixels": 5.5,
+                "maximum_mean_adjacent_centroid_jump_pixels": 4.5,
+                "maximum_adjacent_subject_area_change_percent": 13.0,
+            },
+        )
+        self.assertEqual(len(shifts), 9)
+        self.assertEqual(len(targets), 9)
+        self.assertTrue(observed["all_frames_retain_subject"])
+        self.assertTrue(all(item["within_threshold"] for item in comparisons.values()))
+
+
+if __name__ == "__main__":
+    unittest.main()
