@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
+import imageio.v2 as imageio
 import numpy as np
 
 from tools.derive_cogvideox_shot_direction import (
@@ -13,6 +15,7 @@ from tools.derive_cogvideox_shot_direction import (
     threshold_comparisons,
     validate_contract,
     validate_unbound_five_second_direction_design,
+    write_review_frames,
 )
 
 
@@ -143,6 +146,40 @@ class CogVideoXDirectionDerivationTest(unittest.TestCase):
         mutated["source_binding"]["sha256"] = "0" * 64
         with self.assertRaisesRegex(ValueError, "固定设计"):
             validate_unbound_five_second_direction_design(mutated)
+
+        bound_contract_path = Path(
+            "experiments/postprocessing/cogvideox_shot_002_five_second_rightward_bound_v1.json"
+        )
+        bound_contract = json.loads(bound_contract_path.read_text(encoding="utf-8"))
+        validate_contract(bound_contract)
+        self.assertEqual(
+            bound_contract["source"]["sha256"],
+            "06efd281e3fca0037f4c0aafb94f8683e255563681c55d5377e05a0391643825",
+        )
+        self.assertEqual(bound_contract["output"]["decoded_frame_count"], 40)
+        mutated_bound = json.loads(json.dumps(bound_contract))
+        mutated_bound["source"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "固定合同"):
+            validate_contract(mutated_bound)
+
+    def test_forty_frame_review_artifacts_use_contract_layout(self) -> None:
+        frames = np.zeros((40, 8, 12, 3), dtype=np.uint8)
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_dir = Path(directory)
+            filename, digest = write_review_frames(
+                evidence_dir,
+                frames,
+                {
+                    "frames_directory": "frames",
+                    "contact_sheet_filename": "contact_sheet_40_frames.png",
+                    "contact_sheet_columns": 5,
+                },
+            )
+            self.assertEqual(filename, "contact_sheet_40_frames.png")
+            self.assertEqual(len(list((evidence_dir / "frames").glob("frame_*.png"))), 40)
+            self.assertEqual(len(digest), 64)
+            contact_sheet = np.asarray(imageio.imread(evidence_dir / filename))
+            self.assertEqual(contact_sheet.shape[:2], (100, 84))
 
 
 if __name__ == "__main__":

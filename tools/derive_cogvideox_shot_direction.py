@@ -31,6 +31,7 @@ FIXED_CONTRACT_CANONICAL_SHA256S = {
     "87ae5059953af3a6139388a1a188fc7a7822d187908be0a693bc5ef2250a8f42",
     "a5e3e1dccaefec7842e990f86a9a3327fae6fea05af25fa987361148008c3ad4",
     "dc53f062a51ae38c303fa035d5f726f00e1ac0aa393eb5d39dc7538dca896095",
+    "daa8c55f4d7d72b5d3aecd6702cfb8d1ebfb38676013d55cee10b6e4c8e8399e",
 }
 UNBOUND_FIVE_SECOND_DIRECTION_DESIGN_CANONICAL_SHA256 = (
     "d2fdf60144d57b06dcf480a7f09e0297c56f533c8451117268c5f2f1a19e1524"
@@ -228,22 +229,40 @@ def validate_unbound_five_second_direction_design(design: dict[str, Any]) -> Non
         raise ValueError("五秒方向派生设计不得预造来源摘要")
 
 
-def write_review_frames(evidence_dir: Path, frames: np.ndarray) -> str:
-    frames_dir = evidence_dir / "frames"
+def write_review_frames(
+    evidence_dir: Path,
+    frames: np.ndarray,
+    review_artifacts: dict[str, Any] | None = None,
+) -> tuple[str, str]:
+    review_artifacts = review_artifacts or {}
+    frames_directory = str(review_artifacts.get("frames_directory", "frames"))
+    contact_sheet_filename = str(
+        review_artifacts.get("contact_sheet_filename", "contact_sheet_9_frames.png")
+    )
+    columns = int(review_artifacts.get("contact_sheet_columns", 3))
+    if columns <= 0 or Path(frames_directory).name != frames_directory:
+        raise ValueError("逐帧复核目录或联系图列数无效")
+    if Path(contact_sheet_filename).name != contact_sheet_filename:
+        raise ValueError("联系图文件名无效")
+    frames_dir = evidence_dir / frames_directory
     frames_dir.mkdir()
     for index, frame in enumerate(frames, start=1):
         imageio.imwrite(frames_dir / f"frame_{index:03d}.png", frame)
     height, width = frames.shape[1:3]
     gap = 4
-    sheet = np.zeros((height * 3 + gap * 4, width * 3 + gap * 4, 3), dtype=np.uint8)
+    rows = (len(frames) + columns - 1) // columns
+    sheet = np.zeros(
+        (height * rows + gap * (rows + 1), width * columns + gap * (columns + 1), 3),
+        dtype=np.uint8,
+    )
     for index, frame in enumerate(frames):
-        row, column = divmod(index, 3)
+        row, column = divmod(index, columns)
         y0 = gap + row * (height + gap)
         x0 = gap + column * (width + gap)
         sheet[y0 : y0 + height, x0 : x0 + width] = frame
-    contact_sheet_path = evidence_dir / "contact_sheet_9_frames.png"
+    contact_sheet_path = evidence_dir / contact_sheet_filename
     imageio.imwrite(contact_sheet_path, sheet)
-    return sha256_file(contact_sheet_path)
+    return contact_sheet_filename, sha256_file(contact_sheet_path)
 
 
 def main() -> int:
@@ -357,7 +376,11 @@ def main() -> int:
             raise ValueError("方向派生视频时长不符合合同")
         output_observation = direction_observation(output_frames, contract["subject_measurement"])
         comparisons = threshold_comparisons(output_observation, contract["observation_thresholds"])
-        contact_sheet_sha256 = write_review_frames(evidence_dir, output_frames)
+        contact_sheet_filename, contact_sheet_sha256 = write_review_frames(
+            evidence_dir,
+            output_frames,
+            contract.get("review_artifacts"),
+        )
         write_json(
             evidence_dir / "frame_metrics.json",
             {
@@ -376,6 +399,7 @@ def main() -> int:
                 "output_export_completed": True,
                 "output_sha256": sha256_file(output_path),
                 "output_bytes": output_path.stat().st_size,
+                "contact_sheet_filename": contact_sheet_filename,
                 "contact_sheet_sha256": contact_sheet_sha256,
                 "source_metadata": source_metadata,
                 "source_observation": source_observation,

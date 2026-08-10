@@ -276,6 +276,16 @@ CogVideoX 固定八步质量探针：
 
 全部 `41` 帧保留红色折纸轮廓、暗色三角折痕、水面和倒影，没有主体崩塌或严重形变。源输出最大相邻主体面积变化为 `6.228%`，明显低于第二镜头九帧来源的 `21.895%`。但是模型仍未遵守方向提示：精确五秒派生首尾净向左 `53.262` 像素，最小相邻横向位移为 `-7.597` 像素，最大相邻质心跳变为 `7.602` 像素。派生视频摘要为 `06efd281e3fca0037f4c0aafb94f8683e255563681c55d5377e05a0391643825`。该结果形成合格的五秒方向派生来源观察，不创建方向接受；后续绑定合同必须引用这一真实执行标识和摘要。
 
+来源证据提交后，绑定合同 `cogvideox_shot_002_five_second_rightward_bound_v1.json` 才获得执行资格。合同固定上述真实执行标识和摘要，以每帧 `3` 像素建立四十帧净向右 `117` 像素轨迹，最大空间平移限制为 `192` 像素，保持边缘复制且禁止跨帧混合；工具必须输出全部四十张逐帧复核图和五列联系图：
+
+```bash
+.venv-provider-compat/bin/python -m tools.derive_cogvideox_shot_direction \
+  --execution-id LM-COGVIDEOX-SHOT-002-5S-RIGHTWARD-BOUND-YYYYMMDDTHHMMSSZ \
+  --contract experiments/postprocessing/cogvideox_shot_002_five_second_rightward_bound_v1.json
+```
+
+绑定派生预算为一次执行和零次模型运行。自动观察要求首尾净向右至少 `100` 像素、每个相邻横向位移至少 `0.5` 像素、最大相邻质心跳变不超过 `5.5` 像素、平均不超过 `4.5` 像素，并保留全部四十帧主体。人工检查还必须确认折痕、水面、倒影、船头朝向、边缘接缝和背景平移没有破坏静态相机意图；自动阈值满足不能替代这些视觉观察。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash

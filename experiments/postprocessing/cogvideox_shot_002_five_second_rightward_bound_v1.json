@@ -1,0 +1,88 @@
+{
+  "contract_id": "CR-0024-COGVIDEOX-SHOT-002-FIVE-SECOND-RIGHTWARD-BOUND-DERIVATION-001",
+  "contract_status": "BOUNDED_DIRECTION_DERIVATION_ONLY",
+  "design_id": "PD-0024-COGVIDEOX-SHOT-002-FIVE-SECOND-RIGHTWARD-SPATIAL-DESIGN-001",
+  "policy_context": {
+    "action": "DERIVE_EXISTING_CANDIDATE",
+    "authorization": "USER_AUTHORIZED_FIVE_SECOND_DIRECTION_PROGRESSION",
+    "diagnosis_category": "Provider Limitation",
+    "execution_intent": "CORRECT_VERIFIED_FIVE_SECOND_LEFTWARD_SOURCE_TO_BOUNDED_RIGHTWARD_PATH",
+    "gap": "OBSERVED_FIVE_SECOND_NET_LEFTWARD_DISPLACEMENT_53_262_VS_REQUIRED_RIGHTWARD_MOTION",
+    "maximum_derivation_runs": 1,
+    "maximum_model_runs": 0
+  },
+  "source": {
+    "execution_id": "LM-COGVIDEOX-5S-32STEP-SHOT-002-20260810T030029Z",
+    "filename": "derived_5s.mp4",
+    "sha256": "06efd281e3fca0037f4c0aafb94f8683e255563681c55d5377e05a0391643825",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0
+  },
+  "subject_measurement": {
+    "red_minimum": 150,
+    "red_to_green_ratio_numerator": 3,
+    "red_to_green_ratio_denominator": 2,
+    "red_to_blue_ratio_numerator": 3,
+    "red_to_blue_ratio_denominator": 2,
+    "minimum_subject_area_pixels": 10000
+  },
+  "trajectory": {
+    "strategy": "LINEAR_CENTROID_RIGHTWARD_SPEED",
+    "target_horizontal_speed_pixels_per_frame": 3.0,
+    "target_horizontal_displacement_pixels": 117,
+    "target_vertical_strategy": "LINEAR_SOURCE_FIRST_TO_LAST",
+    "rounding": "NEAREST_INTEGER_PIXEL",
+    "maximum_translation_pixels": 192,
+    "edge_fill": "EDGE_REPLICATION"
+  },
+  "frame_processing": {
+    "strategy": "SPATIAL_TRANSLATION_ONLY",
+    "temporal_mix": "NONE"
+  },
+  "output": {
+    "filename": "direction_controlled_5s.mp4",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0,
+    "codec": "libx264",
+    "pixel_format": "yuv420p"
+  },
+  "review_artifacts": {
+    "frames_directory": "frames",
+    "contact_sheet_filename": "contact_sheet_40_frames.png",
+    "contact_sheet_columns": 5
+  },
+  "observation_thresholds": {
+    "minimum_net_horizontal_displacement_pixels": 100.0,
+    "minimum_adjacent_horizontal_displacement_pixels": 0.5,
+    "maximum_adjacent_centroid_jump_pixels": 5.5,
+    "maximum_mean_adjacent_centroid_jump_pixels": 4.5,
+    "all_frames_retain_subject": true
+  },
+  "inherited_observation_limits": {
+    "source_maximum_adjacent_subject_area_change_percent": 6.228335010622834,
+    "must_remain_reported": true,
+    "does_not_authorize_timeline_binding": true
+  },
+  "manual_visual_checks": [
+    "all_forty_frames_retain_origami_folds",
+    "all_forty_frames_retain_water_and_reflection",
+    "no_new_double_contours_or_temporal_ghosting",
+    "boat_bow_orientation_remains_rightward",
+    "no_edge_fill_seam_is_visible",
+    "background_translation_does_not_break_static_camera_intent"
+  ],
+  "non_goals": [
+    "source_evidence_modification",
+    "model_generation",
+    "automatic_retry",
+    "visual_quality_acceptance",
+    "selection_decision",
+    "forty_one_frame_expansion",
+    "timeline_binding",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "institution_freeze"
+  ]
+}

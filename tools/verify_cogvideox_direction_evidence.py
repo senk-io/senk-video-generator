@@ -32,6 +32,10 @@ CONTRACT_PATHS = {
         REPO_ROOT
         / "experiments/postprocessing/cogvideox_shot_002_rightward_spatial_only_24px_v3.json"
     ),
+    "CR-0024-COGVIDEOX-SHOT-002-FIVE-SECOND-RIGHTWARD-BOUND-DERIVATION-001": (
+        REPO_ROOT
+        / "experiments/postprocessing/cogvideox_shot_002_five_second_rightward_bound_v1.json"
+    ),
 }
 
 
@@ -169,13 +173,23 @@ def main() -> int:
         raise SystemExit("镜头方向派生输出帧率不符合合同")
     if abs(metadata["duration_seconds"] - float(output_contract["duration_seconds"])) > 0.001:
         raise SystemExit("镜头方向派生输出时长不符合合同")
-    frame_paths = sorted((evidence_dir / "frames").glob("frame_*.png"))
+    review_artifacts = contract.get("review_artifacts", {})
+    frames_directory = str(review_artifacts.get("frames_directory", "frames"))
+    contact_sheet_filename = str(
+        review_artifacts.get("contact_sheet_filename", "contact_sheet_9_frames.png")
+    )
+    frame_paths = sorted((evidence_dir / frames_directory).glob("frame_*.png"))
     if len(frame_paths) != output_contract["decoded_frame_count"]:
         raise SystemExit("逐帧复核图数量不符合合同")
     for frame_path, decoded in zip(frame_paths, frames, strict=True):
         if not np.array_equal(imageio.imread(frame_path)[..., :3], decoded):
             raise SystemExit(f"逐帧复核图与视频解码不一致：{frame_path.name}")
-    contact_sheet_path = evidence_dir / "contact_sheet_9_frames.png"
+    contact_sheet_path = evidence_dir / contact_sheet_filename
+    recorded_contact_sheet_filename = summary.get("contact_sheet_filename")
+    if review_artifacts and recorded_contact_sheet_filename != contact_sheet_filename:
+        raise SystemExit("联系图文件名与合同不一致")
+    if not review_artifacts and recorded_contact_sheet_filename not in {None, contact_sheet_filename}:
+        raise SystemExit("联系图文件名与合同不一致")
     if summary.get("contact_sheet_sha256") != sha256_file(contact_sheet_path):
         raise SystemExit("九帧联系图摘要不一致")
     observation = independently_measure(frames, contract["subject_measurement"])
