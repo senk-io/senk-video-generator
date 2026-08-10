@@ -192,6 +192,7 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
         raise ValueError("试验合同状态无效")
     prompt_variant = contract.get("prompt_variant")
     origami_prompt = "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text."
+    fictional_child_crying_closeup_prompt = "Close-up portrait of a fictional young European child actor quietly crying in a safe staged performance, face filling the frame, tears welling in the eyes and one tear rolling down the cheek, subtle trembling lower lip and gentle blinking, static eye-level camera, shallow depth of field, soft diffused window light, neutral blurred indoor background, natural skin texture, age-appropriate clothing, no injury, no bruises, no blood, no abuse, no threat, no text."
     expected_prompt_variants = {
         "PAPER_FOLD_VISIBILITY": {
             "strategy": "SINGLE_PROMPT_VARIABLE",
@@ -206,6 +207,14 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
             "shot_id": "SHOT-002",
             "baseline_prompt": origami_prompt,
             "changed_prompt": "The same small red folded origami paper boat with clearly visible triangular creases drifts slowly from left to right across calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text.",
+        },
+        "FICTIONAL_CHILD_CRYING_CLOSEUP": {
+            "strategy": "EXPLORATORY_SHOT_PROMPT_VARIABLE",
+            "target": "FICTIONAL_CHILD_CRYING_CLOSEUP",
+            "project_id": "EXPLORATORY-LOCAL-CLOSEUP-001",
+            "shot_id": "SHOT-CHILD-CRYING-CLOSEUP-001",
+            "baseline_prompt": baseline["shared_prompt"],
+            "changed_prompt": fictional_child_crying_closeup_prompt,
         },
     }
     if prompt_variant is None:
@@ -269,6 +278,12 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
                 if contract.get("resource_budget_basis") != expected_budget_basis:
                     raise ValueError("第二镜头五秒探针资源预算依据无效")
                 expected_id = "CR-0019-COGVIDEOX-32-STEP-41-FRAME-SHOT-002-FIVE-SECOND-TRIAL-001"
+        elif prompt_target == "FICTIONAL_CHILD_CRYING_CLOSEUP":
+            if temporal_derivation is not None:
+                raise ValueError("儿童哭泣特写探针禁止五秒扩展")
+            if steps != 32 or frames != baseline_provider["num_frames"]:
+                raise ValueError("儿童哭泣特写探针只允许 9 帧和 32 步")
+            expected_id = "CR-0019-COGVIDEOX-32-STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-QUALITY-TRIAL-001"
         elif temporal_derivation is None:
             if steps != 32 or frames != baseline_provider["num_frames"]:
                 raise ValueError("折纸提示词探针只允许 9 帧和 32 步")

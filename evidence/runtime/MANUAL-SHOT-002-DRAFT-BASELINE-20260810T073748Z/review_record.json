@@ -1,0 +1,16 @@
+{
+  "all_frames_human_approved": false,
+  "authority": "EXPLICIT_HUMAN_REVIEW_REQUIRED",
+  "contract_id": "CR-0025-SHOT-002-MANUAL-FRAME-ADJUSTMENT-DRAFT-001",
+  "contract_sha256": "bb4d7d70170155afbd9e69814d3314aa714d69a03387dad6d131e00bac670e2e",
+  "formal_ground_truth_created": false,
+  "formal_visual_quality_acceptance_created": false,
+  "frame_review_status_counts": {
+    "PENDING_REVIEW": 40
+  },
+  "overall_status": "PENDING_REVIEW",
+  "recorded_at": "2026-08-10T07:38:06.137932+00:00",
+  "selection_decision_created": false,
+  "shot_id": "SHOT-002",
+  "timeline_binding_created": false
+}

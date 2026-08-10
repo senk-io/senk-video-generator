@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-08-10T08:23:27.303211+00:00",
+  "file_count": 2,
+  "files": [
+    {
+      "bytes": 1718,
+      "path": "observation.json",
+      "sha256": "11cdd9a8b46b915206c8040ffcbef1195b3ad7deed6975553ccf69f286eaf517"
+    },
+    {
+      "bytes": 711,
+      "path": "request.json",
+      "sha256": "e3cf6a42bd2ab2c69f467af022b589487f4949b93effa0609db23eb7bbaaff8d"
+    }
+  ]
+}

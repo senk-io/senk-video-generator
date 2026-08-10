@@ -1,0 +1,55 @@
+{
+  "formal_visual_quality_acceptance_created": false,
+  "next_execution_authorized": false,
+  "observation_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-OBSERVATION-20260810T082312Z",
+  "recorded_at": "2026-08-10T08:23:27.302816+00:00",
+  "reviewed_frame_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "selection_decision_created": false,
+  "source_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z",
+  "technical_observations": {
+    "adjacent_frame_mad": [
+      6.4030375480651855,
+      4.920738220214844,
+      6.9983415603637695,
+      5.779738903045654,
+      4.672151565551758,
+      1.6277976036071777,
+      3.9628283977508545,
+      3.2504594326019287
+    ],
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "maximum_adjacent_frame_mad": 6.9983415603637695,
+    "mean_adjacent_frame_mad": 4.7018866539001465,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "timeline_binding_created": false,
+  "visual_observations": {
+    "clear_lower_lip_tremble_observed": false,
+    "clear_tear_rolling_motion_observed": false,
+    "closed_eyes_and_sad_expression_observed": true,
+    "closeup_framing_persists_in_all_frames": true,
+    "crying_semantics_observation": "PARTIAL_TEAR_AND_SAD_EXPRESSION_WITHOUT_CLEAR_CRYING_ACTION",
+    "facial_identity_continuity_observed": true,
+    "fictional_light_haired_child_face_visible_in_all_frames": true,
+    "injury_bruising_blood_abuse_or_threat_observed": false,
+    "motion_character": "SUBTLE_FACIAL_AND_IMAGE_CHANGE",
+    "severe_face_morphing_observed": false,
+    "tear_visible_near_outer_eye_in_all_frames": true,
+    "text_or_logo_observed": false
+  }
+}

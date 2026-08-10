@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-08-10T08:22:44.450451+00:00",
+  "formal_visual_quality_acceptance": "PROHIBITED",
+  "model_generation": "PROHIBITED",
+  "operation": "DECODE_ALL_FRAMES_FOR_HUMAN_REVIEW",
+  "review_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-FRAME-REVIEW-20260810T082233Z",
+  "selection_decision_creation": "PROHIBITED",
+  "source_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z",
+  "source_filename": "output.mp4",
+  "source_sha256": "aec19a34c213b270a8d563ed07b017fa00855d7df087d4d9e3ecc9035a59f351",
+  "timeline_binding_creation": "PROHIBITED"
+}

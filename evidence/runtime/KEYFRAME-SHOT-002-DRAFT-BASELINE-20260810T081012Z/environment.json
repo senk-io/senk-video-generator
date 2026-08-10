@@ -1,0 +1,17 @@
+{
+  "architecture": "arm64",
+  "bundled_ffmpeg_version": "7.1",
+  "contract_sha256": "c75eb49cb91ccf72ea3bcee0ad97e14edc1c72d9a76c1aae066f866cdd55ac28",
+  "execution_id": "KEYFRAME-SHOT-002-DRAFT-BASELINE-20260810T081012Z",
+  "expanded_frame_adjustments_sha256": "8d72dd605f7cae9e9036745371cdf804b560150f29cf65097fbea9961f692ea8",
+  "git_head": "bf424fab4b2979dfa4d83bd9d419174a1ae06a02",
+  "git_status_porcelain": "M docs/30-second-pilot.md\n?? evidence/runtime/KEYFRAME-SHOT-002-DRAFT-BASELINE-20260810T081012Z/\n?? evidence/runtime/MANUAL-SHOT-002-DRAFT-BASELINE-20260810T073748Z/\n?? experiments/postprocessing/cogvideox_shot_002_keyframe_adjustment_v2.json\n?? experiments/postprocessing/cogvideox_shot_002_manual_frame_adjustment_v1.json\n?? tests/test_keyframe_adjustments.py\n?? tests/test_manual_frame_adjustments.py\n?? tools/render_keyframe_adjustments.py\n?? tools/render_manual_frame_adjustments.py\n?? tools/verify_keyframe_adjustment_evidence.py\n?? tools/verify_manual_frame_adjustment_evidence.py",
+  "harness_sha256": "f092fee53e50ec31295f1d18556bd2d57e6108433b3953612c8310b3811d23d4",
+  "numpy_version": "2.5.1",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "pillow_version": "12.3.0",
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-10T08:10:17.550889+00:00",
+  "sensitive_machine_identifiers_recorded": false
+}
