@@ -1,0 +1,75 @@
+{
+  "contract_id": "CR-0019-COGVIDEOX-32-STEP-41-FRAME-SHOT-002-FIVE-SECOND-TRIAL-001",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "shared_prompt": "The same small red folded origami paper boat with clearly visible triangular creases drifts slowly from left to right across calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text.",
+  "prompt_variant": {
+    "strategy": "PROJECT_SHOT_PROMPT_VARIABLE",
+    "target": "SHOT_002_RIGHTWARD_DRIFT",
+    "project_id": "PILOT-RED-BOAT-30S-001",
+    "shot_id": "SHOT-002",
+    "baseline_prompt": "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+    "changed_prompt": "The same small red folded origami paper boat with clearly visible triangular creases drifts slowly from left to right across calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text."
+  },
+  "shared_seed": 42,
+  "device": "mps",
+  "mps_fallback_to_cpu": true,
+  "timeout_seconds": 7200,
+  "execution_strategy": "mps_model_offload_bounded",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "max_swap_growth_bytes": 4294967296,
+    "mps_memory_fraction": 0.65
+  },
+  "resource_budget_basis": {
+    "nine_frame_quality_execution_id": "LM-COGVIDEOX-32STEP-SHOT-002-QUALITY-20260810T021808Z",
+    "nine_frame_direction_baseline_execution_id": "LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-24PX-20260810T025213Z",
+    "prior_41_frame_execution_id": "LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z",
+    "observed_nine_frame_mps_peak_driver_bytes": 4367155200,
+    "observed_prior_41_frame_mps_peak_driver_bytes": 6562824192,
+    "observed_nine_frame_swap_growth_bytes": 0,
+    "observed_prior_41_frame_swap_growth_bytes": 0,
+    "decision": "KEEP_EXISTING_HARD_LIMITS"
+  },
+  "providers": {
+    "cogvideox": {
+      "provider_identity": "zai-org",
+      "model_id": "zai-org/CogVideoX-2b",
+      "dtype": "float16",
+      "height": 480,
+      "width": 720,
+      "num_frames": 41,
+      "num_inference_steps": 32,
+      "guidance_scale": 6.0,
+      "fps": 8
+    }
+  },
+  "temporal_derivation": {
+    "strategy": "DROP_LAST_FRAME",
+    "source_frame_count": 41,
+    "derived_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0,
+    "output_filename": "derived_5s.mp4"
+  },
+  "candidate_observations": [
+    "all_source_frames_retain_red_origami_subject_semantics",
+    "triangular_origami_fold_structure_persists_across_all_frames",
+    "paper_crease_detail_persists_across_all_frames",
+    "water_reflection_or_ripple_detail_persists",
+    "source_motion_direction_and_centroid_path_are_recorded_without_acceptance",
+    "derived_output_has_exact_frame_count_fps_and_duration",
+    "visible_flicker_deformation_subject_collapse_or_area_instability_is_recorded"
+  ],
+  "non_goals": [
+    "visual_quality_acceptance",
+    "direction_acceptance",
+    "postprocessing_direction_derivation",
+    "cross_provider_contract_creation",
+    "institution_freeze",
+    "production_readiness",
+    "automatic_retry",
+    "operator_console_enablement",
+    "shot_selection",
+    "thirty_second_timeline_creation"
+  ]
+}

@@ -259,6 +259,19 @@ CogVideoX 固定八步质量探针：
 
 全部九帧复核确认折纸主轮廓、三角纸面、主要折痕、水面和倒影持续存在，船头保持朝右，未见重影、双轮廓或边缘复制接缝。证据包通过独立校验，结果为 `VERIFIED_COGVIDEOX_DIRECTION_OBSERVATION_PACKAGE`，且 `all_observation_thresholds_met` 为真。该结果登记为第二镜头九帧低速方向控制基线，不创建视觉质量接受、镜头选择或时间线绑定。最大相邻主体面积变化仍为 `20.737%`；四十一帧执行前必须单独建立资源合同和绑定未来来源摘要的四十帧方向派生设计，不得假定九帧配方可直接外推。
 
+第二镜头四十一帧资源合同为 `cogvideox_five_second_32_steps_shot_002.json`。它保持三十二步、`41` 帧、`65%` MPS 上限、至少 `5 GiB` 可用内存停止线和最多 `4 GiB` 新增换页停止线；资源预算引用第二镜头九帧实测峰值和既有折纸四十一帧实测峰值，结论为不放宽任何硬限制：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_provider_compatibility_trial \
+  --provider cogvideox \
+  --execution-id LM-COGVIDEOX-5S-32STEP-SHOT-002-YYYYMMDDTHHMMSSZ \
+  --trial-contract experiments/provider_compatibility/cogvideox_five_second_32_steps_shot_002.json
+```
+
+该模型合同只允许一次执行，失败时保留证据且不自动重试。源输出为 `41` 帧，成功后裁切为 `40` 帧、`8 fps`、精确 `5` 秒的 `derived_5s.mp4`。方向提示是否被模型遵守只记录观察，不在生成阶段自动接受或触发派生。
+
+四十帧方向派生目前只存在设计 `cogvideox_shot_002_five_second_direction_design_v1.json`，状态固定为 `UNBOUND_SOURCE_NOT_EXECUTABLE`。设计按九帧基线的每帧约 `3` 像素换算为四十帧净向右 `117` 像素，保持纯空间平移并禁止跨帧混合。它不得预造来源执行标识或摘要；只有四十一帧源证据独立校验、全部四十帧保留可测主体并取得真实摘要后，才能创建新的绑定合同并在提交后执行。背景平移是否破坏静态相机意图必须作为四十帧人工检查项，不能由九帧结果推断通过。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash

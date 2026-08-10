@@ -1,0 +1,77 @@
+{
+  "design_id": "PD-0024-COGVIDEOX-SHOT-002-FIVE-SECOND-RIGHTWARD-SPATIAL-DESIGN-001",
+  "design_status": "UNBOUND_SOURCE_NOT_EXECUTABLE",
+  "source_contract_id": "CR-0019-COGVIDEOX-32-STEP-41-FRAME-SHOT-002-FIVE-SECOND-TRIAL-001",
+  "source_binding": {
+    "execution_id": "MUST_BIND_AFTER_SOURCE_EXECUTION",
+    "filename": "derived_5s.mp4",
+    "sha256": "MUST_BIND_AFTER_SOURCE_EXECUTION",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0
+  },
+  "activation_requirements": [
+    "source_execution_completed_once_without_automatic_retry",
+    "source_evidence_package_independently_verified",
+    "source_output_digest_recorded",
+    "all_forty_frames_retain_measurable_red_origami_subject",
+    "new_bound_contract_committed_before_derivation_execution"
+  ],
+  "subject_measurement": {
+    "red_minimum": 150,
+    "red_to_green_ratio_numerator": 3,
+    "red_to_green_ratio_denominator": 2,
+    "red_to_blue_ratio_numerator": 3,
+    "red_to_blue_ratio_denominator": 2,
+    "minimum_subject_area_pixels": 10000
+  },
+  "trajectory_design": {
+    "strategy": "LINEAR_CENTROID_RIGHTWARD_SPEED",
+    "target_horizontal_speed_pixels_per_frame": 3.0,
+    "derived_frame_count": 40,
+    "target_horizontal_displacement_pixels": 117,
+    "target_vertical_strategy": "LINEAR_SOURCE_FIRST_TO_LAST",
+    "rounding": "NEAREST_INTEGER_PIXEL",
+    "maximum_translation_pixels": 192,
+    "edge_fill": "EDGE_REPLICATION"
+  },
+  "frame_processing": {
+    "strategy": "SPATIAL_TRANSLATION_ONLY",
+    "temporal_mix": "NONE"
+  },
+  "planned_output": {
+    "filename": "direction_controlled_5s.mp4",
+    "decoded_frame_count": 40,
+    "fps": 8,
+    "duration_seconds": 5.0,
+    "codec": "libx264",
+    "pixel_format": "yuv420p"
+  },
+  "planned_observation_thresholds": {
+    "minimum_net_horizontal_displacement_pixels": 100.0,
+    "minimum_adjacent_horizontal_displacement_pixels": 0.5,
+    "maximum_adjacent_centroid_jump_pixels": 5.5,
+    "maximum_mean_adjacent_centroid_jump_pixels": 4.5,
+    "all_frames_retain_subject": true
+  },
+  "manual_visual_checks": [
+    "all_forty_frames_retain_origami_folds",
+    "all_forty_frames_retain_water_and_reflection",
+    "no_new_double_contours_or_temporal_ghosting",
+    "boat_bow_orientation_remains_rightward",
+    "no_edge_fill_seam_is_visible",
+    "background_translation_does_not_break_static_camera_intent"
+  ],
+  "non_goals": [
+    "execution_before_source_digest_binding",
+    "source_evidence_modification",
+    "model_generation",
+    "automatic_retry",
+    "visual_quality_acceptance",
+    "selection_decision",
+    "timeline_binding",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "institution_freeze"
+  ]
+}

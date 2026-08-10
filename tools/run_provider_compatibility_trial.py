@@ -247,9 +247,28 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
     if prompt_variant is not None:
         prompt_target = prompt_variant["target"]
         if prompt_target == "SHOT_002_RIGHTWARD_DRIFT":
-            if temporal_derivation is not None or steps != 32 or frames != baseline_provider["num_frames"]:
-                raise ValueError("第二镜头提示词探针只允许 9 帧和 32 步")
-            expected_id = "CR-0019-COGVIDEOX-32-STEP-SHOT-002-QUALITY-TRIAL-001"
+            if temporal_derivation is None:
+                if steps != 32 or frames != baseline_provider["num_frames"]:
+                    raise ValueError("第二镜头提示词探针只允许 9 帧和 32 步")
+                expected_id = "CR-0019-COGVIDEOX-32-STEP-SHOT-002-QUALITY-TRIAL-001"
+            else:
+                if steps != 32 or frames != 41:
+                    raise ValueError("第二镜头五秒探针只允许 41 帧和 32 步")
+                if temporal_derivation != expected_derivation:
+                    raise ValueError("第二镜头五秒派生合同必须固定为 41 帧裁切至 40 帧、8 fps、5 秒")
+                expected_budget_basis = {
+                    "nine_frame_quality_execution_id": "LM-COGVIDEOX-32STEP-SHOT-002-QUALITY-20260810T021808Z",
+                    "nine_frame_direction_baseline_execution_id": "LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-24PX-20260810T025213Z",
+                    "prior_41_frame_execution_id": "LM-COGVIDEOX-5S-32STEP-ORIGAMI-20260809T194654Z",
+                    "observed_nine_frame_mps_peak_driver_bytes": 4367155200,
+                    "observed_prior_41_frame_mps_peak_driver_bytes": 6562824192,
+                    "observed_nine_frame_swap_growth_bytes": 0,
+                    "observed_prior_41_frame_swap_growth_bytes": 0,
+                    "decision": "KEEP_EXISTING_HARD_LIMITS",
+                }
+                if contract.get("resource_budget_basis") != expected_budget_basis:
+                    raise ValueError("第二镜头五秒探针资源预算依据无效")
+                expected_id = "CR-0019-COGVIDEOX-32-STEP-41-FRAME-SHOT-002-FIVE-SECOND-TRIAL-001"
         elif temporal_derivation is None:
             if steps != 32 or frames != baseline_provider["num_frames"]:
                 raise ValueError("折纸提示词探针只允许 9 帧和 32 步")

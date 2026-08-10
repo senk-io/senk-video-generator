@@ -330,6 +330,39 @@ else:
         with self.assertRaisesRegex(ValueError, "资源预算依据无效"):
             validate_bounded_trial_variant(mutated_origami_budget, "cogvideox")
 
+        shot_two_five_second_path = Path(
+            "experiments/provider_compatibility/cogvideox_five_second_32_steps_shot_002.json"
+        ).resolve()
+        shot_two_five_second, source = load_execution_contract(
+            argparse.Namespace(
+                job_spec=None,
+                trial_contract=str(shot_two_five_second_path),
+                provider="cogvideox",
+            )
+        )
+        self.assertEqual(source, shot_two_five_second_path)
+        self.assertEqual(
+            shot_two_five_second["providers"]["cogvideox"]["num_frames"],
+            41,
+        )
+        self.assertEqual(
+            shot_two_five_second["temporal_derivation"]["derived_frame_count"],
+            40,
+        )
+        self.assertEqual(
+            shot_two_five_second["resource_budget_basis"]["decision"],
+            "KEEP_EXISTING_HARD_LIMITS",
+        )
+        mutated_shot_two_five_second = json.loads(json.dumps(shot_two_five_second))
+        mutated_shot_two_five_second["resource_budget"]["mps_memory_fraction"] = 0.75
+        with self.assertRaisesRegex(ValueError, "不得改变固定字段"):
+            validate_bounded_trial_variant(mutated_shot_two_five_second, "cogvideox")
+
+        mutated_shot_two_five_second_budget = json.loads(json.dumps(shot_two_five_second))
+        mutated_shot_two_five_second_budget["resource_budget_basis"]["decision"] = "RELAX_LIMITS"
+        with self.assertRaisesRegex(ValueError, "第二镜头五秒探针资源预算依据无效"):
+            validate_bounded_trial_variant(mutated_shot_two_five_second_budget, "cogvideox")
+
     def test_cogvideox_temporal_stability_contract_and_linear_trajectory_are_fail_closed(self) -> None:
         contract_path = Path(
             "experiments/postprocessing/cogvideox_temporal_stability_v1.json"

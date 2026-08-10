@@ -12,6 +12,7 @@ from tools.derive_cogvideox_shot_direction import (
     direction_observation,
     threshold_comparisons,
     validate_contract,
+    validate_unbound_five_second_direction_design,
 )
 
 
@@ -126,6 +127,22 @@ class CogVideoXDirectionDerivationTest(unittest.TestCase):
         mutated_reduced_speed["observation_thresholds"]["maximum_adjacent_centroid_jump_pixels"] = 6.2
         with self.assertRaisesRegex(ValueError, "固定合同"):
             validate_contract(mutated_reduced_speed)
+
+    def test_five_second_direction_design_remains_unbound_and_non_executable(self) -> None:
+        design_path = Path(
+            "experiments/postprocessing/cogvideox_shot_002_five_second_direction_design_v1.json"
+        )
+        design = json.loads(design_path.read_text(encoding="utf-8"))
+        validate_unbound_five_second_direction_design(design)
+        self.assertEqual(design["design_status"], "UNBOUND_SOURCE_NOT_EXECUTABLE")
+        self.assertEqual(
+            design["trajectory_design"]["target_horizontal_displacement_pixels"],
+            117,
+        )
+        mutated = json.loads(json.dumps(design))
+        mutated["source_binding"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "固定设计"):
+            validate_unbound_five_second_direction_design(mutated)
 
 
 if __name__ == "__main__":

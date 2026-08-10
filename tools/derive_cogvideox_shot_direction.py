@@ -32,6 +32,9 @@ FIXED_CONTRACT_CANONICAL_SHA256S = {
     "a5e3e1dccaefec7842e990f86a9a3327fae6fea05af25fa987361148008c3ad4",
     "dc53f062a51ae38c303fa035d5f726f00e1ac0aa393eb5d39dc7538dca896095",
 }
+UNBOUND_FIVE_SECOND_DIRECTION_DESIGN_CANONICAL_SHA256 = (
+    "d2fdf60144d57b06dcf480a7f09e0297c56f533c8451117268c5f2f1a19e1524"
+)
 
 
 def git_value(*args: str) -> str | None:
@@ -202,6 +205,27 @@ def validate_contract(contract: dict[str, Any]) -> None:
     }
     if not required_non_goals.issubset(set(contract.get("non_goals", []))):
         raise ValueError("镜头方向派生合同缺少非目标边界")
+
+
+def validate_unbound_five_second_direction_design(design: dict[str, Any]) -> None:
+    canonical = json.dumps(
+        design,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    if (
+        hashlib.sha256(canonical).hexdigest()
+        != UNBOUND_FIVE_SECOND_DIRECTION_DESIGN_CANONICAL_SHA256
+    ):
+        raise ValueError("五秒方向派生设计与固定设计不一致")
+    if design.get("design_status") != "UNBOUND_SOURCE_NOT_EXECUTABLE":
+        raise ValueError("未绑定五秒方向派生设计状态无效")
+    source_binding = design.get("source_binding", {})
+    if source_binding.get("execution_id") != "MUST_BIND_AFTER_SOURCE_EXECUTION":
+        raise ValueError("五秒方向派生设计不得预造来源执行标识")
+    if source_binding.get("sha256") != "MUST_BIND_AFTER_SOURCE_EXECUTION":
+        raise ValueError("五秒方向派生设计不得预造来源摘要")
 
 
 def write_review_frames(evidence_dir: Path, frames: np.ndarray) -> str:
