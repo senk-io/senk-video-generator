@@ -258,7 +258,7 @@ class ObservatoryState:
         head = git_value(self.config.repo_root, "rev-parse", "HEAD")
         status = git_value(self.config.repo_root, "status", "--porcelain") or ""
         return {
-            "name": "SENK 视频生产治理引擎",
+            "name": "senk-video-generator",
             "repository": "senk-io/senk-video-generator",
             "branch": git_value(self.config.repo_root, "branch", "--show-current"),
             "git_head": head[:12] if head else None,
@@ -893,7 +893,7 @@ def create_server(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="启动 SENKNET 本地视频构建观测台")
+    parser = argparse.ArgumentParser(description="启动 senk-video-generator 本地构建观测台")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=4319)
     parser.add_argument("--evidence-root", type=Path, default=DEFAULT_EVIDENCE_ROOT)
@@ -918,7 +918,7 @@ def main() -> int:
         return 2
     host = "127.0.0.1" if args.host == "localhost" else args.host
     url = f"http://{host}:{server.server_address[1]}"
-    print(f"SENKNET 本地观测台已启动：{url}")
+    print(f"senk-video-generator 本地观测台已启动：{url}")
     print("只读模式；按 Ctrl+C 停止。")
     if args.open:
         threading.Timer(0.4, lambda: webbrowser.open(url)).start()

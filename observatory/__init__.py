@@ -1,4 +1,4 @@
-"""SENK 视频生产治理引擎本地观测台。"""
+"""senk-video-generator 本地观测台。"""
 
 from .server import ObservatoryState, create_server
 

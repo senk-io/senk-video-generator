@@ -232,7 +232,7 @@ class ObservatoryTests(unittest.TestCase):
                 self.assertEqual(payload["schema_version"], "observatory.v1")
                 self.assertIn("default-src 'self'", response.headers["Content-Security-Policy"])
             with urlopen(f"{base}/", timeout=3) as response:
-                self.assertIn(b"SENKNET", response.read())
+                self.assertIn(b"senk-video-generator", response.read())
             request = Request(
                 f"{base}/media/{self.execution_id}/output.mp4",
                 headers={"Range": "bytes=2-5"},

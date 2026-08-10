@@ -1,4 +1,4 @@
-"""SENKNET 本地视频作业控制台。"""
+"""senk-video-generator 本地作业控制台。"""
 
 from .contracts import (
     EXECUTION_STRATEGIES,

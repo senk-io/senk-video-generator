@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SENKNET 本地视频作业控制服务。"""
+"""senk-video-generator 本地作业控制服务。"""
 
 from __future__ import annotations
 
@@ -932,7 +932,7 @@ def create_server(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="启动 SENKNET 本地视频作业控制台")
+    parser = argparse.ArgumentParser(description="启动 senk-video-generator 本地作业控制台")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=4320)
     parser.add_argument("--state-root", type=Path, default=DEFAULT_STATE_ROOT)
@@ -959,7 +959,7 @@ def main() -> int:
         return 2
     host = "127.0.0.1" if args.host == "localhost" else args.host
     url = f"http://{host}:{server.server_address[1]}"
-    print(f"SENKNET 本地作业控制台已启动：{url}")
+    print(f"senk-video-generator 本地作业控制台已启动：{url}")
     print("受控执行模式；按 Ctrl+C 停止控制服务，不会自动启动作业。")
     if args.open:
         threading.Timer(0.4, lambda: webbrowser.open(url)).start()
