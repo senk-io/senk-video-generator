@@ -1,0 +1,236 @@
+{
+  "all_observation_thresholds_met": false,
+  "contact_sheet_sha256": "3de1c7bf0529abf7dc348b2aafab87346046bb956607460b3ae214ecd3d8d81a",
+  "contract_id": "CR-0021-COGVIDEOX-SHOT-002-RIGHTWARD-DIRECTION-DERIVATION-001",
+  "contract_status": "BOUNDED_DIRECTION_DERIVATION_ONLY",
+  "elapsed_seconds": 0.412,
+  "execution_id": "LM-COGVIDEOX-SHOT-002-RIGHTWARD-DERIVATION-20260810T023111Z",
+  "finished_at": "2026-08-10T02:31:17.695398+00:00",
+  "formal_fact_created": false,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_bytes": 84120,
+  "output_export_completed": true,
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "output_observation": {
+    "adjacent_horizontal_displacement_pixels": [
+      6.426590190574643,
+      1.990210347911784,
+      1.6630683844940108,
+      5.635348108101084,
+      5.997838618548656,
+      2.4662189577033473,
+      9.350736063844863,
+      -1.72593229927935
+    ],
+    "all_frames_retain_subject": true,
+    "maximum_adjacent_centroid_jump_pixels": 9.95369966368318,
+    "maximum_adjacent_frame_mad": 10.455283763160843,
+    "maximum_adjacent_subject_area_change_percent": 15.766617278904613,
+    "maximum_subject_area_pixels": 39146,
+    "mean_adjacent_centroid_jump_pixels": 4.980653324010791,
+    "mean_adjacent_frame_mad": 8.26939189733143,
+    "mean_adjacent_subject_area_change_percent": 6.549949963515069,
+    "minimum_adjacent_horizontal_displacement_pixels": -1.72593229927935,
+    "minimum_subject_area_pixels": 30443,
+    "net_horizontal_displacement_pixels": 31.80407837189904,
+    "retained_subject_by_frame": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "subject_area_pixels_by_frame": [
+      33362,
+      33489,
+      33562,
+      32221,
+      30443,
+      31189,
+      35191,
+      39146,
+      32974
+    ],
+    "subject_centroid_by_frame": [
+      [
+        341.4167016365925,
+        287.3027995923506
+      ],
+      [
+        347.84329182716715,
+        284.3755561527666
+      ],
+      [
+        349.83350217507893,
+        288.9975865562243
+      ],
+      [
+        351.49657055957294,
+        288.50321219080723
+      ],
+      [
+        357.13191866767403,
+        288.87721315244886
+      ],
+      [
+        363.1297572862227,
+        288.69470005450637
+      ],
+      [
+        365.59597624392603,
+        289.7556477508454
+      ],
+      [
+        374.9467123077709,
+        293.1673734225719
+      ],
+      [
+        373.22078000849154,
+        293.06001698307756
+      ]
+    ]
+  },
+  "output_sha256": "388a987b8f093d049d28ed2742899649c7c0c7be34f72ea76ee5f64e6e934241",
+  "selection_decision_created": false,
+  "source_execution_id": "LM-COGVIDEOX-32STEP-SHOT-002-QUALITY-20260810T021808Z",
+  "source_filename": "output.mp4",
+  "source_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "source_observation": {
+    "adjacent_horizontal_displacement_pixels": [
+      6.16105331100033,
+      -1.834507283203834,
+      2.4180180923933676,
+      -16.486937339047984,
+      -1.0508068361341998,
+      1.4530800420349124,
+      -0.24427331713297917,
+      -9.190605199741526
+    ],
+    "all_frames_retain_subject": true,
+    "maximum_adjacent_centroid_jump_pixels": 20.25930581337196,
+    "maximum_adjacent_frame_mad": 13.23332755796371,
+    "maximum_adjacent_subject_area_change_percent": 21.89455089673446,
+    "maximum_subject_area_pixels": 40759,
+    "mean_adjacent_centroid_jump_pixels": 10.059506082200631,
+    "mean_adjacent_frame_mad": 11.977694494322636,
+    "mean_adjacent_subject_area_change_percent": 9.468836417347049,
+    "minimum_adjacent_horizontal_displacement_pixels": -16.486937339047984,
+    "minimum_subject_area_pixels": 30327,
+    "net_horizontal_displacement_pixels": -18.774978529831913,
+    "retained_subject_by_frame": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "subject_area_pixels_by_frame": [
+      33930,
+      35966,
+      34002,
+      34011,
+      30327,
+      31058,
+      35242,
+      40759,
+      31835
+    ],
+    "subject_centroid_by_frame": [
+      [
+        341.98308281756556,
+        289.1913940465665
+      ],
+      [
+        348.1441361285659,
+        294.2996163042874
+      ],
+      [
+        346.30962884536206,
+        292.49094170931124
+      ],
+      [
+        348.7276469377554,
+        294.22204580870897
+      ],
+      [
+        332.24070959870744,
+        285.2441059122234
+      ],
+      [
+        331.18990276257324,
+        286.5641702620903
+      ],
+      [
+        332.64298280460815,
+        298.35727257249874
+      ],
+      [
+        332.3987094874752,
+        312.67621874923327
+      ],
+      [
+        323.20810428773365,
+        294.62151719805246
+      ]
+    ]
+  },
+  "source_sha256": "7954efea01e649e22530cbdc9729a888cf65dc39cfd5a467a3190716a81dfb0b",
+  "started_at": "2026-08-10T02:31:17.282892+00:00",
+  "threshold_comparisons": {
+    "all_frames_retain_subject": {
+      "expected": true,
+      "observed": true,
+      "within_threshold": true
+    },
+    "maximum_adjacent_centroid_jump_pixels": {
+      "maximum": 5.5,
+      "observed": 9.95369966368318,
+      "within_threshold": false
+    },
+    "maximum_adjacent_subject_area_change_percent": {
+      "maximum": 13.0,
+      "observed": 15.766617278904613,
+      "within_threshold": false
+    },
+    "mean_adjacent_centroid_jump_pixels": {
+      "maximum": 4.5,
+      "observed": 4.980653324010791,
+      "within_threshold": false
+    },
+    "minimum_adjacent_horizontal_displacement_pixels": {
+      "minimum": 0.5,
+      "observed": -1.72593229927935,
+      "within_threshold": false
+    },
+    "net_horizontal_displacement_pixels": {
+      "minimum": 24.0,
+      "observed": 31.80407837189904,
+      "within_threshold": true
+    }
+  },
+  "timeline_binding_created": false
+}

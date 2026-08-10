@@ -229,6 +229,8 @@ CogVideoX 固定八步质量探针：
 
 执行预算只有一次派生和零次模型运行。派生后要求九帧都保留红色主体、首尾净向右至少 `24` 像素、八个相邻横向位移都至少为 `0.5` 像素、最大相邻质心跳变不超过 `5.5` 像素、平均跳变不超过 `4.5` 像素、最大相邻主体面积变化不超过 `13%`。工具同时导出九张独立复核图和一张九帧联系图。阈值满足只闭合九帧方向控制观察；不得直接外推到四十一帧，也不得创建视觉接受、镜头选择或时间线绑定。
 
+首次且唯一一次执行 `LM-COGVIDEOX-SHOT-002-RIGHTWARD-DERIVATION-20260810T023111Z` 将首尾净横向位移从向左 `18.775` 像素改为向右 `31.804` 像素，证明固定平移路径能够改变整体方向观察。但是最后一个相邻步回退 `1.726` 像素，最大相邻质心跳变为 `9.954` 像素，平均跳变为 `4.981` 像素，最大相邻主体面积变化为 `15.767%`，四项门禁没有闭合。全部九帧保留折纸船、水面和倒影，但第 `4`、`5`、`7`、`8`、`9` 帧出现可见的半透明双轮廓。证据包通过独立完整性校验，结果为 `VERIFIED_COGVIDEOX_DIRECTION_OBSERVATION_PACKAGE`；该结果只登记为方向纠正成功、技术稳定性和视觉完整性未通过，不追加第二次派生。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash
@@ -284,7 +286,7 @@ manifest.json
   evidence/runtime/LM-COGVIDEOX-STABILITY-DERIVATION-20260809T192825Z
 
 .venv-provider-compat/bin/python -m tools.verify_cogvideox_direction_evidence \
-  evidence/runtime/LM-COGVIDEOX-SHOT-002-RIGHTWARD-DERIVATION-YYYYMMDDTHHMMSSZ
+  evidence/runtime/LM-COGVIDEOX-SHOT-002-RIGHTWARD-DERIVATION-20260810T023111Z
 ```
 
 校验器检查清单摘要、文件闭包、请求与执行标识、输出摘要以及公开仓库禁止出现的绝对用户路径。对于控制台创建的受控作业，它还核对固定生成档位、执行策略、MPS 比例、策略激活和推理后的主动释放观察。校验通过只表示证据包可重新审计，不表示视频质量合格或提供者适用性已经通过。
