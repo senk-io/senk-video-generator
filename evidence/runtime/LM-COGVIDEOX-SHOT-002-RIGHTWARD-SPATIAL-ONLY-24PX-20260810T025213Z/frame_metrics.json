@@ -1,0 +1,289 @@
+{
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "output_observation": {
+    "adjacent_horizontal_displacement_pixels": [
+      3.9925272416321036,
+      3.2363631319192336,
+      0.777301593809625,
+      4.8593644930367645,
+      3.1612307509062703,
+      2.1145321411547684,
+      4.961966077351008,
+      1.8578988695027192
+    ],
+    "all_frames_retain_subject": true,
+    "maximum_adjacent_centroid_jump_pixels": 5.028435283137402,
+    "maximum_adjacent_frame_mad": 17.070002730174732,
+    "maximum_adjacent_subject_area_change_percent": 20.73745494871084,
+    "maximum_subject_area_pixels": 39677,
+    "mean_adjacent_centroid_jump_pixels": 3.2253744766517,
+    "mean_adjacent_frame_mad": 12.819516745946741,
+    "mean_adjacent_subject_area_change_percent": 9.13364347914639,
+    "minimum_adjacent_horizontal_displacement_pixels": 0.777301593809625,
+    "minimum_subject_area_pixels": 29797,
+    "net_horizontal_displacement_pixels": 24.961184299312492,
+    "retained_subject_by_frame": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "subject_area_pixels_by_frame": [
+      33358,
+      35273,
+      33364,
+      33177,
+      29797,
+      30703,
+      34316,
+      39677,
+      31449
+    ],
+    "subject_centroid_by_frame": [
+      [
+        340.38359613885723,
+        288.3031057017807
+      ],
+      [
+        344.37612338048933,
+        289.17191619652425
+      ],
+      [
+        347.61248651240857,
+        289.3545438196859
+      ],
+      [
+        348.3897881062182,
+        289.91123368598727
+      ],
+      [
+        353.24915259925496,
+        291.0457092995939
+      ],
+      [
+        356.4103833501612,
+        291.4088525551249
+      ],
+      [
+        358.524915491316,
+        291.74956288611725
+      ],
+      [
+        363.486881568667,
+        292.5644579983366
+      ],
+      [
+        365.3447804381697,
+        293.69941810550415
+      ]
+    ]
+  },
+  "source_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "source_observation": {
+    "adjacent_horizontal_displacement_pixels": [
+      6.16105331100033,
+      -1.834507283203834,
+      2.4180180923933676,
+      -16.486937339047984,
+      -1.0508068361341998,
+      1.4530800420349124,
+      -0.24427331713297917,
+      -9.190605199741526
+    ],
+    "all_frames_retain_subject": true,
+    "maximum_adjacent_centroid_jump_pixels": 20.25930581337196,
+    "maximum_adjacent_frame_mad": 13.23332755796371,
+    "maximum_adjacent_subject_area_change_percent": 21.89455089673446,
+    "maximum_subject_area_pixels": 40759,
+    "mean_adjacent_centroid_jump_pixels": 10.059506082200631,
+    "mean_adjacent_frame_mad": 11.977694494322636,
+    "mean_adjacent_subject_area_change_percent": 9.468836417347049,
+    "minimum_adjacent_horizontal_displacement_pixels": -16.486937339047984,
+    "minimum_subject_area_pixels": 30327,
+    "net_horizontal_displacement_pixels": -18.774978529831913,
+    "retained_subject_by_frame": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "subject_area_pixels_by_frame": [
+      33930,
+      35966,
+      34002,
+      34011,
+      30327,
+      31058,
+      35242,
+      40759,
+      31835
+    ],
+    "subject_centroid_by_frame": [
+      [
+        341.98308281756556,
+        289.1913940465665
+      ],
+      [
+        348.1441361285659,
+        294.2996163042874
+      ],
+      [
+        346.30962884536206,
+        292.49094170931124
+      ],
+      [
+        348.7276469377554,
+        294.22204580870897
+      ],
+      [
+        332.24070959870744,
+        285.2441059122234
+      ],
+      [
+        331.18990276257324,
+        286.5641702620903
+      ],
+      [
+        332.64298280460815,
+        298.35727257249874
+      ],
+      [
+        332.3987094874752,
+        312.67621874923327
+      ],
+      [
+        323.20810428773365,
+        294.62151719805246
+      ]
+    ]
+  },
+  "target_centroid_by_frame": [
+    [
+      341.98308281756556,
+      289.1913940465665
+    ],
+    [
+      344.98308281756556,
+      289.8701594405022
+    ],
+    [
+      347.98308281756556,
+      290.54892483443797
+    ],
+    [
+      350.98308281756556,
+      291.2276902283737
+    ],
+    [
+      353.98308281756556,
+      291.90645562230947
+    ],
+    [
+      356.98308281756556,
+      292.5852210162452
+    ],
+    [
+      359.98308281756556,
+      293.26398641018096
+    ],
+    [
+      362.98308281756556,
+      293.9427518041167
+    ],
+    [
+      365.98308281756556,
+      294.62151719805246
+    ]
+  ],
+  "threshold_comparisons": {
+    "all_frames_retain_subject": {
+      "expected": true,
+      "observed": true,
+      "within_threshold": true
+    },
+    "maximum_adjacent_centroid_jump_pixels": {
+      "maximum": 5.5,
+      "observed": 5.028435283137402,
+      "within_threshold": true
+    },
+    "mean_adjacent_centroid_jump_pixels": {
+      "maximum": 4.5,
+      "observed": 3.2253744766517,
+      "within_threshold": true
+    },
+    "minimum_adjacent_horizontal_displacement_pixels": {
+      "minimum": 0.5,
+      "observed": 0.777301593809625,
+      "within_threshold": true
+    },
+    "net_horizontal_displacement_pixels": {
+      "minimum": 24.0,
+      "observed": 24.961184299312492,
+      "within_threshold": true
+    }
+  },
+  "translation_by_frame": [
+    [
+      0,
+      0
+    ],
+    [
+      -3,
+      -4
+    ],
+    [
+      2,
+      -2
+    ],
+    [
+      2,
+      -3
+    ],
+    [
+      22,
+      7
+    ],
+    [
+      26,
+      6
+    ],
+    [
+      27,
+      -5
+    ],
+    [
+      31,
+      -19
+    ],
+    [
+      43,
+      0
+    ]
+  ]
+}
