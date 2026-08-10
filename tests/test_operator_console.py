@@ -983,6 +983,7 @@ else:
         final = self.wait_for_terminal(job["job_id"])
         self.assertEqual(final["state"], "STOPPED")
         self.assertEqual(final["terminal_reason"], "LOCAL_OPERATOR_STOP")
+        self.assertNotIn(job["job_id"], self.manager._monitor_threads)
 
     def test_http_requires_csrf_and_blocks_path_traversal(self) -> None:
         server = create_server("127.0.0.1", 0, self.manager, WEB_ROOT)

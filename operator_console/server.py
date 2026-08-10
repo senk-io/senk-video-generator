@@ -131,6 +131,7 @@ class JobManager:
         self.jobs_root.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._processes: dict[str, subprocess.Popen[bytes]] = {}
+        self._monitor_threads: dict[str, threading.Thread] = {}
         self.observer = ObservatoryState(
             ObservatoryConfig(
                 repo_root=self.repo_root,
@@ -301,10 +302,17 @@ class JobManager:
             atomic_write_json(job_dir / "status.json", status)
             self._append_event(job_dir, "PROCESS_STARTED", {"pid": process.pid})
             self._processes[job_id] = process
-            threading.Thread(target=self._monitor_process, args=(job_id, process), daemon=True).start()
+            monitor_thread = threading.Thread(
+                target=self._monitor_process,
+                args=(job_id, process),
+                daemon=True,
+            )
+            self._monitor_threads[job_id] = monitor_thread
+            monitor_thread.start()
             return self.job_detail(job_id)
 
     def stop_job(self, job_id: str) -> dict[str, Any]:
+        monitor_thread: threading.Thread | None = None
         with self._lock:
             job_dir = self._job_dir(job_id)
             request, status = self._load_job(job_dir)
@@ -321,7 +329,17 @@ class JobManager:
                 self._terminate_process_tree(process)
             except psutil.Error as exc:
                 raise ControlError("STOP_FAILED", "无法向对应进程发送停止信号。", HTTPStatus.CONFLICT) from exc
-            return self.job_detail(job_id)
+            monitor_thread = self._monitor_threads.get(job_id)
+
+        if monitor_thread is not None:
+            monitor_thread.join(timeout=10)
+            if monitor_thread.is_alive():
+                raise ControlError(
+                    "STOP_FINALIZATION_TIMEOUT",
+                    "执行进程已停止，但作业终态记录尚未完成。",
+                    HTTPStatus.CONFLICT,
+                )
+        return self.job_detail(job_id)
 
     def select_pilot_candidate(
         self,
@@ -669,37 +687,44 @@ class JobManager:
         exit_code = process.wait()
         with self._lock:
             try:
-                job_dir = self._job_dir(job_id)
-                request, status = self._load_job(job_dir)
-            except ControlError:
-                return
-            previous_state = status["state"]
-            summary = read_json(self.evidence_root / request["execution_id"] / "summary.json") or {}
-            if previous_state in {"STOP_REQUESTED", "STOPPED"} or status.get("stop_requested_at"):
-                terminal_state = "STOPPED"
-                reason = "LOCAL_OPERATOR_STOP"
-            elif exit_code == 0 and summary.get("observation") == "OBSERVED_OUTPUT_AVAILABLE":
-                terminal_state = "COMPLETED"
-                reason = "OBSERVED_OUTPUT_AVAILABLE"
-            else:
-                terminal_state = "FAILED"
-                reason = summary.get("safety_abort_reason") or summary.get("observation") or "PROCESS_EXITED_WITHOUT_SUMMARY"
-            status.update(
-                {
-                    "state": terminal_state,
-                    "updated_at": utc_now(),
-                    "finished_at": utc_now(),
-                    "exit_code": exit_code,
-                    "terminal_reason": reason,
-                }
-            )
-            atomic_write_json(job_dir / "status.json", status)
-            self._append_event(
-                job_dir,
-                "PROCESS_FINISHED",
-                {"exit_code": exit_code, "state": terminal_state, "terminal_reason": reason},
-            )
-            self._processes.pop(job_id, None)
+                try:
+                    job_dir = self._job_dir(job_id)
+                    request, status = self._load_job(job_dir)
+                except ControlError:
+                    return
+                previous_state = status["state"]
+                summary = read_json(self.evidence_root / request["execution_id"] / "summary.json") or {}
+                if previous_state in {"STOP_REQUESTED", "STOPPED"} or status.get("stop_requested_at"):
+                    terminal_state = "STOPPED"
+                    reason = "LOCAL_OPERATOR_STOP"
+                elif exit_code == 0 and summary.get("observation") == "OBSERVED_OUTPUT_AVAILABLE":
+                    terminal_state = "COMPLETED"
+                    reason = "OBSERVED_OUTPUT_AVAILABLE"
+                else:
+                    terminal_state = "FAILED"
+                    reason = (
+                        summary.get("safety_abort_reason")
+                        or summary.get("observation")
+                        or "PROCESS_EXITED_WITHOUT_SUMMARY"
+                    )
+                status.update(
+                    {
+                        "state": terminal_state,
+                        "updated_at": utc_now(),
+                        "finished_at": utc_now(),
+                        "exit_code": exit_code,
+                        "terminal_reason": reason,
+                    }
+                )
+                atomic_write_json(job_dir / "status.json", status)
+                self._append_event(
+                    job_dir,
+                    "PROCESS_FINISHED",
+                    {"exit_code": exit_code, "state": terminal_state, "terminal_reason": reason},
+                )
+            finally:
+                self._processes.pop(job_id, None)
+                self._monitor_threads.pop(job_id, None)
 
     def _refresh_terminal_state(
         self,
