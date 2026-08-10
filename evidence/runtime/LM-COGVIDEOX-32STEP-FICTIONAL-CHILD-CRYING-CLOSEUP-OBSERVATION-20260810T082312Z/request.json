@@ -1,0 +1,12 @@
+{
+  "contact_sheet_sha256": "f75946d4beae916067f716f1bb1baedc552db115ae115868395de692b7b1e495",
+  "created_at": "2026-08-10T08:23:27.301539+00:00",
+  "frame_review_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-FRAME-REVIEW-20260810T082233Z",
+  "observation_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-OBSERVATION-20260810T082312Z",
+  "observer_role": "CODEX_ASSET_INSPECTOR",
+  "scope": "ALL_NINE_FRAMES",
+  "selection_authority": false,
+  "source_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z",
+  "source_output_sha256": "aec19a34c213b270a8d563ed07b017fa00855d7df087d4d9e3ecc9035a59f351",
+  "visual_quality_acceptance_authority": false
+}

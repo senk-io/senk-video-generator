@@ -290,6 +290,19 @@ CogVideoX 固定八步质量探针：
 
 全部四十帧复核确认折纸轮廓、暗色三角折痕、水面和倒影持续存在，未见重影、双轮廓、主体崩塌或边缘复制接缝，也未观察到明显的刚性镜头平移。专用证据校验结果为 `VERIFIED_COGVIDEOX_DIRECTION_OBSERVATION_PACKAGE`，`all_observation_thresholds_met` 为真。该结果登记为第二镜头精确五秒低速向右技术候选，不创建视觉质量接受、正式选择或时间线绑定，也不授权直接装配三十秒视频。
 
+虚构儿童哭泣特写使用独立合同 `cogvideox_quality_32_steps_fictional_child_crying_closeup.json`，固定为 `CogVideoX-2B`、9 帧、32 步、8 fps，并明确禁止五秒扩展、自动重试、伤害叙事、正式接受和时间线绑定：
+
+```bash
+.venv-provider-compat/bin/python tools/run_provider_compatibility_trial.py \
+  --provider cogvideox \
+  --execution-id LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-YYYYMMDDTHHMMSSZ \
+  --trial-contract experiments/provider_compatibility/cogvideox_quality_32_steps_fictional_child_crying_closeup.json
+```
+
+唯一执行 `LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z` 成功输出 9 帧、`768×496`、8 fps、`1.13` 秒候选，摘要为 `aec19a34c213b270a8d563ed07b017fa00855d7df087d4d9e3ecc9035a59f351`。总耗时 `276.868` 秒，其中推理 `260.281` 秒、中央处理器解码 `91.094` 秒；MPS 驱动分配峰值为 `4,367,155,200` 字节，进程树常驻内存峰值为 `14,135,918,592` 字节，换页峰值较启动增加 `3,798,728,704` 字节，没有触发停止线。证据包通过独立校验。
+
+全部九帧保持浅色头发虚构幼儿的面部身份与近距离构图，未见严重面部坍缩、伤害、瘀伤、血迹、虐待、威胁、文字或标志。眼角泪珠、闭眼和悲伤表情持续可见，但未观察到清晰泪水滚落或下唇颤动，因此哭泣动作语义只形成部分观察。该候选不创建视觉质量接受、选择决策或后续五秒执行许可。
+
 如果完整 CogVideoX 执行已经保存 `denoised_latents.safetensors`，可在不重复去噪的前提下单独执行 `180×120` 中央处理器小瓦片解码：
 
 ```bash

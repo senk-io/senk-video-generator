@@ -1,0 +1,148 @@
+{
+  "contract": {
+    "bounds": {
+      "maximum_absolute_rotation_degrees": 8,
+      "maximum_absolute_translation_pixels": 192,
+      "maximum_local_adjustments_per_frame": 0,
+      "maximum_manual_overrides": 40,
+      "maximum_scale": 1.15,
+      "minimum_scale": 0.85
+    },
+    "contract_id": "CR-0026-SHOT-002-KEYFRAME-ADJUSTMENT-DRAFT-001",
+    "contract_status": "DRAFT_KEYFRAME_AUTOMATION_PENDING_REVIEW",
+    "contract_version": 2,
+    "interpolation": {
+      "exact_keyframe_preservation": true,
+      "frame_domain_end": 40,
+      "frame_domain_start": 1,
+      "manual_override_order": "AFTER_INTERPOLATION",
+      "parameters": [
+        "x_pixels",
+        "y_pixels",
+        "scale",
+        "rotation_degrees"
+      ],
+      "precision_decimal_places": 6,
+      "segment_overshoot": "PROHIBITED",
+      "strategy": "MONOTONE_CUBIC_HERMITE"
+    },
+    "keyframes": [
+      {
+        "adjustment_reason": "BASELINE_NO_CHANGE",
+        "frame_number": 1,
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "BASELINE_NO_CHANGE",
+        "frame_number": 10,
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "BASELINE_NO_CHANGE",
+        "frame_number": 20,
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "BASELINE_NO_CHANGE",
+        "frame_number": 30,
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "BASELINE_NO_CHANGE",
+        "frame_number": 40,
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "x_pixels": 0,
+        "y_pixels": 0
+      }
+    ],
+    "manual_overrides": [],
+    "non_goals": [
+      "model_generation",
+      "automatic_retry",
+      "source_evidence_modification",
+      "cross_frame_pixel_mixing",
+      "automatic_keyframe_selection",
+      "automatic_visual_quality_acceptance",
+      "formal_ground_truth_creation",
+      "selection_decision",
+      "timeline_binding",
+      "thirty_second_timeline_creation"
+    ],
+    "output": {
+      "codec": "libx264",
+      "decoded_frame_count": 40,
+      "duration_seconds": 5.0,
+      "filename": "keyframe_adjusted_5s.mp4",
+      "fps": 8,
+      "pixel_format": "yuv420p"
+    },
+    "policy_context": {
+      "action": "DERIVE_EXISTING_CANDIDATE",
+      "authorization": "USER_AUTHORIZED_KEYFRAME_INTERPOLATION_WORKFLOW",
+      "execution_intent": "REDUCE_MANUAL_FRAME_EDITING_WITH_BOUNDED_REVIEWABLE_INTERPOLATION",
+      "maximum_derivation_runs_per_execution_id": 1,
+      "maximum_model_runs": 0
+    },
+    "purpose": "FIVE_KEYFRAMES_EXPANDED_TO_FORTY_FRAME_ADJUSTMENTS",
+    "review": {
+      "authority": "EXPLICIT_HUMAN_REVIEW_REQUIRED",
+      "formal_ground_truth_creation": "PROHIBITED_BY_THIS_CONTRACT",
+      "formal_visual_quality_acceptance": "PROHIBITED_BY_THIS_CONTRACT",
+      "overall_status": "PENDING_REVIEW",
+      "selection_decision_creation": "PROHIBITED_BY_THIS_CONTRACT",
+      "timeline_binding_creation": "PROHIBITED_BY_THIS_CONTRACT"
+    },
+    "review_artifacts": {
+      "before_after_contact_sheet_filename": "before_after_keyframe_contact_sheet_40_frames.png",
+      "contact_sheet_columns": 5,
+      "thumbnail_width_pixels": 192
+    },
+    "shot_id": "SHOT-002",
+    "source": {
+      "decoded_frame_count": 40,
+      "duration_seconds": 5.0,
+      "execution_id": "LM-COGVIDEOX-SHOT-002-5S-RIGHTWARD-BOUND-20260810T033318Z",
+      "filename": "direction_controlled_5s.mp4",
+      "fps": 8,
+      "sha256": "73278576b53bff3126582cd630f3a3c3a907f6f78b6e25ebde99159eb6a49616"
+    },
+    "transform_semantics": {
+      "coordinate_system": "IMAGE_X_RIGHT_Y_DOWN",
+      "edge_fill": "EDGE_REPLICATION",
+      "edge_replication_padding_pixels": 256,
+      "interpolation": "BICUBIC",
+      "local_adjustment_support": "RESERVED_EMPTY_ONLY_V2",
+      "operation_order": "SCALE_ROTATE_TRANSLATE",
+      "origin": "FRAME_CENTER",
+      "positive_rotation_direction": "CLOCKWISE_IN_IMAGE_COORDINATES",
+      "temporal_mix": "NONE"
+    }
+  },
+  "contract_sha256": "c75eb49cb91ccf72ea3bcee0ad97e14edc1c72d9a76c1aae066f866cdd55ac28",
+  "created_at": "2026-08-10T08:10:17.549595+00:00",
+  "execution_id": "KEYFRAME-SHOT-002-DRAFT-BASELINE-20260810T081012Z",
+  "expanded_frame_adjustments_sha256": "8d72dd605f7cae9e9036745371cdf804b560150f29cf65097fbea9961f692ea8",
+  "formal_ground_truth_creation": "PROHIBITED",
+  "formal_visual_quality_acceptance": "PROHIBITED",
+  "model_generation": "PROHIBITED",
+  "selection_decision_creation": "PROHIBITED",
+  "timeline_binding_creation": "PROHIBITED"
+}

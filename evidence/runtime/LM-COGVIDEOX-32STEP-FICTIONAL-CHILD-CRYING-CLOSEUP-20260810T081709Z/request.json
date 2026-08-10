@@ -1,0 +1,35 @@
+{
+  "contract_id": "CR-0019-COGVIDEOX-32-STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-QUALITY-TRIAL-001",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "created_at": "2026-08-10T08:17:20.591800+00:00",
+  "cross_provider_contract_creation": "PROHIBITED",
+  "device": "mps",
+  "execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z",
+  "execution_strategy": "mps_model_offload_bounded",
+  "formal_fact_creation": "PROHIBITED",
+  "generation_profile_key": null,
+  "job_id": null,
+  "mps_fallback_to_cpu": true,
+  "prompt": "Close-up portrait of a fictional young European child actor quietly crying in a safe staged performance, face filling the frame, tears welling in the eyes and one tear rolling down the cheek, subtle trembling lower lip and gentle blinking, static eye-level camera, shallow depth of field, soft diffused window light, neutral blurred indoor background, natural skin texture, age-appropriate clothing, no injury, no bruises, no blood, no abuse, no threat, no text.",
+  "provider": {
+    "dtype": "float16",
+    "fps": 8,
+    "guidance_scale": 6.0,
+    "height": 480,
+    "model_id": "zai-org/CogVideoX-2b",
+    "num_frames": 9,
+    "num_inference_steps": 32,
+    "provider_identity": "zai-org",
+    "width": 720
+  },
+  "provider_key": "cogvideox",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "max_swap_growth_bytes": 4294967296,
+    "mps_memory_fraction": 0.65
+  },
+  "seed": 42,
+  "task_type": "text_to_video",
+  "temporal_derivation": null,
+  "timeout_seconds": 7200
+}

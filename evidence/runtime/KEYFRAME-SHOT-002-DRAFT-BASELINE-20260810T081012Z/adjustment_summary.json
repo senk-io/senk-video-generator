@@ -1,0 +1,97 @@
+{
+  "interpolation_observation": {
+    "cross_frame_pixel_mixing": false,
+    "exact_keyframe_preservation": true,
+    "expanded_frame_count": 40,
+    "keyframe_count": 5,
+    "keyframe_numbers": [
+      1,
+      10,
+      20,
+      30,
+      40
+    ],
+    "manual_override_count": 0,
+    "parameter_source_counts": {
+      "EXPLICIT_KEYFRAME": 5,
+      "INTERPOLATED_MONOTONE_CUBIC": 35
+    },
+    "segment_overshoot_observed": false,
+    "strategy": "MONOTONE_CUBIC_HERMITE"
+  },
+  "output_metadata": {
+    "decoded_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "parameter_observation": {
+    "all_frames_human_approved": false,
+    "changed_frame_count": 0,
+    "changed_frame_numbers": [],
+    "frame_count": 40,
+    "identity_frame_count": 40,
+    "maximum_absolute_rotation_degrees": 0.0,
+    "maximum_absolute_x_pixels": 0.0,
+    "maximum_absolute_y_pixels": 0.0,
+    "maximum_scale": 1.0,
+    "minimum_scale": 1.0,
+    "review_status_counts": {
+      "PENDING_REVIEW": 40
+    }
+  },
+  "pixel_identical_before_encoding_by_frame": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "source_metadata": {
+    "decoded_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "contract_id": "CR-0019-COGVIDEOX-32-STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-QUALITY-TRIAL-001",
+  "contract_status": "BOUNDED_TRIAL_ONLY",
+  "shared_prompt": "Close-up portrait of a fictional young European child actor quietly crying in a safe staged performance, face filling the frame, tears welling in the eyes and one tear rolling down the cheek, subtle trembling lower lip and gentle blinking, static eye-level camera, shallow depth of field, soft diffused window light, neutral blurred indoor background, natural skin texture, age-appropriate clothing, no injury, no bruises, no blood, no abuse, no threat, no text.",
+  "prompt_variant": {
+    "strategy": "EXPLORATORY_SHOT_PROMPT_VARIABLE",
+    "target": "FICTIONAL_CHILD_CRYING_CLOSEUP",
+    "project_id": "EXPLORATORY-LOCAL-CLOSEUP-001",
+    "shot_id": "SHOT-CHILD-CRYING-CLOSEUP-001",
+    "baseline_prompt": "A small red paper boat drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+    "changed_prompt": "Close-up portrait of a fictional young European child actor quietly crying in a safe staged performance, face filling the frame, tears welling in the eyes and one tear rolling down the cheek, subtle trembling lower lip and gentle blinking, static eye-level camera, shallow depth of field, soft diffused window light, neutral blurred indoor background, natural skin texture, age-appropriate clothing, no injury, no bruises, no blood, no abuse, no threat, no text."
+  },
+  "shared_seed": 42,
+  "device": "mps",
+  "mps_fallback_to_cpu": true,
+  "timeout_seconds": 7200,
+  "execution_strategy": "mps_model_offload_bounded",
+  "resource_budget": {
+    "abort_min_available_memory_bytes": 5368709120,
+    "max_swap_growth_bytes": 4294967296,
+    "mps_memory_fraction": 0.65
+  },
+  "providers": {
+    "cogvideox": {
+      "provider_identity": "zai-org",
+      "model_id": "zai-org/CogVideoX-2b",
+      "dtype": "float16",
+      "height": 480,
+      "width": 720,
+      "num_frames": 9,
+      "num_inference_steps": 32,
+      "guidance_scale": 6.0,
+      "fps": 8
+    }
+  },
+  "candidate_observations": [
+    "fictional_child_face_is_visible_in_all_frames",
+    "closeup_framing_persists",
+    "tear_or_crying_semantics_are_visible",
+    "facial_identity_continuity_is_observable",
+    "safe_staged_context_without_injury_or_threat_is_observable",
+    "no_text_is_visible"
+  ],
+  "non_goals": [
+    "visual_quality_acceptance",
+    "cross_provider_contract_creation",
+    "institution_freeze",
+    "production_readiness",
+    "five_second_generation",
+    "automatic_retry",
+    "operator_console_enablement",
+    "thirty_second_timeline_creation",
+    "formal_selection_decision",
+    "timeline_binding",
+    "real_person_representation",
+    "harm_or_abuse_depiction"
+  ]
+}

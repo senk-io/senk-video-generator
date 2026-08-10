@@ -1,0 +1,19 @@
+{
+  "authority": "EXPLICIT_HUMAN_REVIEW_REQUIRED",
+  "contract_id": "CR-0026-SHOT-002-KEYFRAME-ADJUSTMENT-DRAFT-001",
+  "contract_sha256": "c75eb49cb91ccf72ea3bcee0ad97e14edc1c72d9a76c1aae066f866cdd55ac28",
+  "expanded_frame_review_status_counts": {
+    "PENDING_REVIEW": 40
+  },
+  "formal_ground_truth_created": false,
+  "formal_visual_quality_acceptance_created": false,
+  "keyframe_review_status_counts": {
+    "PENDING_REVIEW": 5
+  },
+  "manual_override_review_status_counts": {},
+  "overall_status": "PENDING_REVIEW",
+  "recorded_at": "2026-08-10T08:10:18.514188+00:00",
+  "selection_decision_created": false,
+  "shot_id": "SHOT-002",
+  "timeline_binding_created": false
+}

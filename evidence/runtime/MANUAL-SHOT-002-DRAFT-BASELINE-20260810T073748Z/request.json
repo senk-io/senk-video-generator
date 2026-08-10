@@ -1,0 +1,522 @@
+{
+  "contract": {
+    "bounds": {
+      "maximum_absolute_rotation_degrees": 8,
+      "maximum_absolute_translation_pixels": 192,
+      "maximum_local_adjustments_per_frame": 0,
+      "maximum_scale": 1.15,
+      "minimum_scale": 0.85
+    },
+    "contract_id": "CR-0025-SHOT-002-MANUAL-FRAME-ADJUSTMENT-DRAFT-001",
+    "contract_status": "DRAFT_MANUAL_GROUND_TRUTH_PENDING_REVIEW",
+    "contract_version": 1,
+    "frames": [
+      {
+        "adjustment_reason": "",
+        "frame_number": 1,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_001.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 2,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_002.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 3,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_003.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 4,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_004.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 5,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_005.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 6,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_006.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 7,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_007.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 8,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_008.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 9,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_009.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 10,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_010.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 11,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_011.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 12,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_012.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 13,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_013.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 14,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_014.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 15,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_015.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 16,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_016.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 17,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_017.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 18,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_018.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 19,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_019.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 20,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_020.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 21,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_021.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 22,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_022.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 23,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_023.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 24,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_024.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 25,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_025.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 26,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_026.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 27,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_027.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 28,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_028.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 29,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_029.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 30,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_030.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 31,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_031.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 32,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_032.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 33,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_033.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 34,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_034.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 35,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_035.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 36,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_036.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 37,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_037.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 38,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_038.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 39,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_039.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      },
+      {
+        "adjustment_reason": "",
+        "frame_number": 40,
+        "local_adjustments": [],
+        "review_status": "PENDING_REVIEW",
+        "rotation_degrees": 0.0,
+        "scale": 1.0,
+        "source_frame": "frames/frame_040.png",
+        "x_pixels": 0,
+        "y_pixels": 0
+      }
+    ],
+    "non_goals": [
+      "model_generation",
+      "automatic_retry",
+      "source_evidence_modification",
+      "cross_frame_pixel_mixing",
+      "automatic_trajectory_interpolation",
+      "formal_visual_quality_acceptance",
+      "selection_decision",
+      "timeline_binding",
+      "thirty_second_timeline_creation"
+    ],
+    "output": {
+      "codec": "libx264",
+      "decoded_frame_count": 40,
+      "duration_seconds": 5.0,
+      "filename": "manually_adjusted_5s.mp4",
+      "fps": 8,
+      "pixel_format": "yuv420p"
+    },
+    "policy_context": {
+      "action": "DERIVE_EXISTING_CANDIDATE",
+      "authorization": "USER_AUTHORIZED_MANUAL_FRAME_WORKFLOW_IMPLEMENTATION",
+      "execution_intent": "CREATE_REPEATABLE_FRAME_BY_FRAME_ADJUSTMENT_BASELINE_WITHOUT_MODEL_RERUN",
+      "maximum_derivation_runs_per_execution_id": 1,
+      "maximum_model_runs": 0
+    },
+    "purpose": "EXPLICIT_FRAME_BY_FRAME_MANUAL_ADJUSTMENT_WORKSPACE",
+    "review": {
+      "authority": "EXPLICIT_HUMAN_REVIEW_REQUIRED",
+      "formal_ground_truth_creation": "PROHIBITED_BY_THIS_CONTRACT",
+      "formal_visual_quality_acceptance": "PROHIBITED_BY_THIS_CONTRACT",
+      "overall_status": "PENDING_REVIEW",
+      "selection_decision_creation": "PROHIBITED_BY_THIS_CONTRACT",
+      "timeline_binding_creation": "PROHIBITED_BY_THIS_CONTRACT"
+    },
+    "review_artifacts": {
+      "before_after_contact_sheet_filename": "before_after_contact_sheet_40_frames.png",
+      "contact_sheet_columns": 5,
+      "thumbnail_width_pixels": 192
+    },
+    "shot_id": "SHOT-002",
+    "source": {
+      "decoded_frame_count": 40,
+      "duration_seconds": 5.0,
+      "execution_id": "LM-COGVIDEOX-SHOT-002-5S-RIGHTWARD-BOUND-20260810T033318Z",
+      "filename": "direction_controlled_5s.mp4",
+      "fps": 8,
+      "sha256": "73278576b53bff3126582cd630f3a3c3a907f6f78b6e25ebde99159eb6a49616"
+    },
+    "transform_semantics": {
+      "edge_fill": "EDGE_REPLICATION",
+      "edge_replication_padding_pixels": 256,
+      "interpolation": "BICUBIC",
+      "local_adjustment_support": "RESERVED_EMPTY_ONLY_V1",
+      "operation_order": "SCALE_ROTATE_TRANSLATE",
+      "origin": "FRAME_CENTER",
+      "temporal_mix": "NONE"
+    }
+  },
+  "contract_sha256": "bb4d7d70170155afbd9e69814d3314aa714d69a03387dad6d131e00bac670e2e",
+  "created_at": "2026-08-10T07:38:05.233204+00:00",
+  "execution_id": "MANUAL-SHOT-002-DRAFT-BASELINE-20260810T073748Z",
+  "formal_ground_truth_creation": "PROHIBITED",
+  "formal_visual_quality_acceptance": "PROHIBITED",
+  "model_generation": "PROHIBITED",
+  "selection_decision_creation": "PROHIBITED",
+  "timeline_binding_creation": "PROHIBITED"
+}

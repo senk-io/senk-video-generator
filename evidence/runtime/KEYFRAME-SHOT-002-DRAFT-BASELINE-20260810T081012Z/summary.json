@@ -1,0 +1,83 @@
+{
+  "before_after_contact_sheet_filename": "before_after_keyframe_contact_sheet_40_frames.png",
+  "before_after_contact_sheet_sha256": "5172d3670a0a8eafc1a183ad89153768837e630d41609029273a0acfe9b60cdd",
+  "contract_id": "CR-0026-SHOT-002-KEYFRAME-ADJUSTMENT-DRAFT-001",
+  "contract_sha256": "c75eb49cb91ccf72ea3bcee0ad97e14edc1c72d9a76c1aae066f866cdd55ac28",
+  "contract_status": "DRAFT_KEYFRAME_AUTOMATION_PENDING_REVIEW",
+  "elapsed_seconds": 0.965,
+  "execution_id": "KEYFRAME-SHOT-002-DRAFT-BASELINE-20260810T081012Z",
+  "expanded_frame_adjustments_filename": "expanded_frame_adjustments.json",
+  "expanded_frame_adjustments_sha256": "8d72dd605f7cae9e9036745371cdf804b560150f29cf65097fbea9961f692ea8",
+  "finished_at": "2026-08-10T08:10:18.514838+00:00",
+  "formal_ground_truth_created": false,
+  "formal_visual_quality_acceptance_created": false,
+  "frame_mapping_filename": "frame_mapping.json",
+  "ground_truth_status": "PENDING_HUMAN_REVIEW",
+  "interpolation_observation": {
+    "cross_frame_pixel_mixing": false,
+    "exact_keyframe_preservation": true,
+    "expanded_frame_count": 40,
+    "keyframe_count": 5,
+    "keyframe_numbers": [
+      1,
+      10,
+      20,
+      30,
+      40
+    ],
+    "manual_override_count": 0,
+    "parameter_source_counts": {
+      "EXPLICIT_KEYFRAME": 5,
+      "INTERPOLATED_MONOTONE_CUBIC": 35
+    },
+    "segment_overshoot_observed": false,
+    "strategy": "MONOTONE_CUBIC_HERMITE"
+  },
+  "model_run_count": 0,
+  "observation": "OBSERVED_OUTPUT_AVAILABLE",
+  "output_bytes": 232435,
+  "output_export_completed": true,
+  "output_filename": "keyframe_adjusted_5s.mp4",
+  "output_metadata": {
+    "decoded_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "output_sha256": "c7b2eedbe3d29319fcf3fc331e863bd20674069e5c643249fb0c152627796d78",
+  "parameter_observation": {
+    "all_frames_human_approved": false,
+    "changed_frame_count": 0,
+    "changed_frame_numbers": [],
+    "frame_count": 40,
+    "identity_frame_count": 40,
+    "maximum_absolute_rotation_degrees": 0.0,
+    "maximum_absolute_x_pixels": 0.0,
+    "maximum_absolute_y_pixels": 0.0,
+    "maximum_scale": 1.0,
+    "minimum_scale": 1.0,
+    "review_status_counts": {
+      "PENDING_REVIEW": 40
+    }
+  },
+  "review_record_filename": "review_record.json",
+  "selection_decision_created": false,
+  "shot_id": "SHOT-002",
+  "source_execution_id": "LM-COGVIDEOX-SHOT-002-5S-RIGHTWARD-BOUND-20260810T033318Z",
+  "source_filename": "direction_controlled_5s.mp4",
+  "source_metadata": {
+    "decoded_frame_count": 40,
+    "duration_seconds": 5.0,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "source_sha256": "73278576b53bff3126582cd630f3a3c3a907f6f78b6e25ebde99159eb6a49616",
+  "started_at": "2026-08-10T08:10:17.549595+00:00",
+  "timeline_binding_created": false
+}

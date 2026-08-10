@@ -301,6 +301,48 @@ else:
         with self.assertRaisesRegex(ValueError, "已登记的单提示词变量"):
             validate_bounded_trial_variant(mutated_shot_two, "cogvideox")
 
+        child_closeup_path = Path(
+            "experiments/provider_compatibility/cogvideox_quality_32_steps_fictional_child_crying_closeup.json"
+        ).resolve()
+        child_closeup, source = load_execution_contract(
+            argparse.Namespace(
+                job_spec=None,
+                trial_contract=str(child_closeup_path),
+                provider="cogvideox",
+            )
+        )
+        self.assertEqual(source, child_closeup_path)
+        self.assertEqual(
+            child_closeup["prompt_variant"]["target"],
+            "FICTIONAL_CHILD_CRYING_CLOSEUP",
+        )
+        self.assertEqual(child_closeup["providers"]["cogvideox"]["num_frames"], 9)
+        self.assertEqual(
+            child_closeup["providers"]["cogvideox"]["num_inference_steps"], 32
+        )
+        self.assertIn("safe staged performance", child_closeup["shared_prompt"])
+        self.assertIn("no abuse", child_closeup["shared_prompt"])
+
+        mutated_child_closeup = json.loads(json.dumps(child_closeup))
+        mutated_child_closeup["shared_prompt"] = mutated_child_closeup[
+            "shared_prompt"
+        ].replace("European child actor", "child actor")
+        with self.assertRaisesRegex(ValueError, "已登记的单提示词变量"):
+            validate_bounded_trial_variant(mutated_child_closeup, "cogvideox")
+
+        expanded_child_closeup = json.loads(json.dumps(child_closeup))
+        expanded_child_closeup["providers"]["cogvideox"]["num_frames"] = 41
+        expanded_child_closeup["temporal_derivation"] = {
+            "strategy": "DROP_LAST_FRAME",
+            "source_frame_count": 41,
+            "derived_frame_count": 40,
+            "fps": 8,
+            "duration_seconds": 5.0,
+            "output_filename": "derived_5s.mp4",
+        }
+        with self.assertRaisesRegex(ValueError, "禁止五秒扩展"):
+            validate_bounded_trial_variant(expanded_child_closeup, "cogvideox")
+
         origami_five_second_path = Path(
             "experiments/provider_compatibility/cogvideox_five_second_32_steps_origami.json"
         ).resolve()

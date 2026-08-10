@@ -1,0 +1,722 @@
+[
+  {
+    "adjustment_reason": "BASELINE_NO_CHANGE",
+    "frame_number": 1,
+    "interpolation_keyframes": [
+      1,
+      1
+    ],
+    "local_adjustments": [],
+    "parameter_source": "EXPLICIT_KEYFRAME",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_001.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 2,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_002.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 3,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_003.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 4,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_004.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 5,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_005.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 6,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_006.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 7,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_007.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 8,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_008.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_1_10",
+    "frame_number": 9,
+    "interpolation_keyframes": [
+      1,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_009.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "BASELINE_NO_CHANGE",
+    "frame_number": 10,
+    "interpolation_keyframes": [
+      10,
+      10
+    ],
+    "local_adjustments": [],
+    "parameter_source": "EXPLICIT_KEYFRAME",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_010.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 11,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_011.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 12,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_012.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 13,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_013.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 14,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_014.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 15,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_015.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 16,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_016.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 17,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_017.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 18,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_018.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_10_20",
+    "frame_number": 19,
+    "interpolation_keyframes": [
+      10,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_019.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "BASELINE_NO_CHANGE",
+    "frame_number": 20,
+    "interpolation_keyframes": [
+      20,
+      20
+    ],
+    "local_adjustments": [],
+    "parameter_source": "EXPLICIT_KEYFRAME",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_020.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 21,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_021.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 22,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_022.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 23,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_023.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 24,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_024.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 25,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_025.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 26,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_026.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 27,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_027.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 28,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_028.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_20_30",
+    "frame_number": 29,
+    "interpolation_keyframes": [
+      20,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_029.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "BASELINE_NO_CHANGE",
+    "frame_number": 30,
+    "interpolation_keyframes": [
+      30,
+      30
+    ],
+    "local_adjustments": [],
+    "parameter_source": "EXPLICIT_KEYFRAME",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_030.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 31,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_031.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 32,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_032.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 33,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_033.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 34,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_034.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 35,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_035.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 36,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_036.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 37,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_037.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 38,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_038.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "AUTO_INTERPOLATED_FROM_KEYFRAMES_30_40",
+    "frame_number": 39,
+    "interpolation_keyframes": [
+      30,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "INTERPOLATED_MONOTONE_CUBIC",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_039.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  },
+  {
+    "adjustment_reason": "BASELINE_NO_CHANGE",
+    "frame_number": 40,
+    "interpolation_keyframes": [
+      40,
+      40
+    ],
+    "local_adjustments": [],
+    "parameter_source": "EXPLICIT_KEYFRAME",
+    "review_status": "PENDING_REVIEW",
+    "reviewed_at": null,
+    "reviewer": null,
+    "rotation_degrees": 0.0,
+    "scale": 1.0,
+    "source_frame": "frames/frame_040.png",
+    "x_pixels": 0.0,
+    "y_pixels": 0.0
+  }
+]

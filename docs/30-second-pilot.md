@@ -85,6 +85,55 @@ uv pip sync \
 
 当前逐镜头进展：`SHOT-001` 已形成精确五秒折纸候选并通过技术连续性阈值，但仍等待按完整镜头标识进行人工选择。`SHOT-002` 已完成四十一帧源探针和绑定真实摘要的四十帧纯空间方向派生。最终候选为 `40` 帧、`8 fps`、精确 `5` 秒，首尾净向右约 `116.30` 像素，三十九个相邻步骤全部向右，最大相邻跳变约 `4.86` 像素；全部帧保留折纸轮廓、折痕、水面和倒影，未见重影或边缘接缝。该结果建立第二镜头技术候选，不自动产生人工质量接受、正式选择或时间线绑定。
 
+## Shot 002 关键帧自动调整
+
+默认工作区使用 [`cogvideox_shot_002_keyframe_adjustment_v2.json`](../experiments/postprocessing/cogvideox_shot_002_keyframe_adjustment_v2.json)。操作者只需调整第 `1`、`10`、`20`、`30`、`40` 帧，系统会把以下参数自动展开到完整四十帧：
+
+- `x_pixels`：正值向右；
+- `y_pixels`：正值向下；
+- `scale`；
+- `rotation_degrees`：画面坐标中的正值为顺时针；
+- `adjustment_reason`；
+- `review_status`、评审者和评审时间。
+
+四类参数分别使用不越过关键帧区间的单调三次插值。关键帧值会原样保留；如果某个自动帧仍有异常，可以在 `manual_overrides` 中增加单帧完整参数，覆盖插值结果。系统不会自动选择关键帧，也不会根据输出反向修改合同。
+
+当前五个关键帧均为恒等变换和 `PENDING_REVIEW`，用于验证自动展开链路。修改关键帧或单帧覆盖时必须填写调整原因；记录 `HUMAN_APPROVED` 或 `HUMAN_REJECTED` 时必须填写评审者和时间。
+
+每次渲染必须使用新的执行标识：
+
+```bash
+.venv-provider-compat/bin/python tools/render_keyframe_adjustments.py \
+  --execution-id KEYFRAME-SHOT-002-<UNIQUE-ID>
+```
+
+渲染器只读取现有 `direction_controlled_5s.mp4`，不加载或运行模型，也不做跨帧像素混合。每次派生会生成独立且拒绝覆盖的证据目录，其中包含：
+
+```text
+expanded_frame_adjustments.json                # 5 个关键帧展开后的 40 帧参数
+adjusted_frames/                               # 全部 40 帧调整结果
+keyframe_adjusted_5s.mp4                       # 5 秒预览候选
+before_after_keyframe_contact_sheet_40_frames.png
+frame_mapping.json                             # 参数来源及关键帧区间
+adjustment_summary.json
+review_record.json
+request.json
+environment.json
+summary.json
+manifest.json
+```
+
+渲染后可独立重算插值并校验来源、输出、四十帧映射和未创建正式事实的边界：
+
+```bash
+.venv-provider-compat/bin/python tools/verify_keyframe_adjustment_evidence.py \
+  evidence/runtime/KEYFRAME-SHOT-002-<UNIQUE-ID>
+```
+
+原始 [`cogvideox_shot_002_manual_frame_adjustment_v1.json`](../experiments/postprocessing/cogvideox_shot_002_manual_frame_adjustment_v1.json) 和 `render_manual_frame_adjustments.py` 继续保留为完整逐帧回退工具，不覆盖其既有证据。
+
+存在自动展开和渲染结果不表示参数已获人工认可，也不创建正式视觉质量接受、镜头选择或时间线绑定。
+
 ## 验证
 
 样片合同、绑定、选择摘要链和 30 秒组装测试不加载模型：

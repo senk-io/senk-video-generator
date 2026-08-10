@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "bundled_ffmpeg_version": "7.1",
+  "contract_sha256": "bb4d7d70170155afbd9e69814d3314aa714d69a03387dad6d131e00bac670e2e",
+  "execution_id": "MANUAL-SHOT-002-DRAFT-BASELINE-20260810T073748Z",
+  "git_head": "bf424fab4b2979dfa4d83bd9d419174a1ae06a02",
+  "git_status_porcelain": "M docs/30-second-pilot.md\n?? evidence/runtime/MANUAL-SHOT-002-DRAFT-BASELINE-20260810T073748Z/\n?? experiments/postprocessing/cogvideox_shot_002_manual_frame_adjustment_v1.json\n?? tests/test_manual_frame_adjustments.py\n?? tools/render_manual_frame_adjustments.py",
+  "harness_sha256": "84385112bad384a1f07af94b2f47dcbe609786992a93e94e66e2f762d5c7695a",
+  "numpy_version": "2.5.1",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "pillow_version": "12.3.0",
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-10T07:38:05.234002+00:00",
+  "sensitive_machine_identifiers_recorded": false
+}

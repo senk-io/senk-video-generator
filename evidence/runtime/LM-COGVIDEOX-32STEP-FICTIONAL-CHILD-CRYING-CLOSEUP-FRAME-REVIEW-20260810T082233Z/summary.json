@@ -1,0 +1,23 @@
+{
+  "all_frames_exported_for_review": true,
+  "contact_sheet_filename": "contact_sheet_9_frames.png",
+  "contact_sheet_sha256": "f75946d4beae916067f716f1bb1baedc552db115ae115868395de692b7b1e495",
+  "decoded_frame_count": 9,
+  "formal_visual_quality_acceptance_created": false,
+  "human_review_status": "PENDING_REVIEW",
+  "output_metadata": {
+    "decoded_frame_count": 9,
+    "duration_seconds": 1.13,
+    "fps": 8.0,
+    "size": [
+      768,
+      496
+    ]
+  },
+  "recorded_at": "2026-08-10T08:22:44.450921+00:00",
+  "review_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-FRAME-REVIEW-20260810T082233Z",
+  "selection_decision_created": false,
+  "source_execution_id": "LM-COGVIDEOX-32STEP-FICTIONAL-CHILD-CRYING-CLOSEUP-20260810T081709Z",
+  "source_sha256": "aec19a34c213b270a8d563ed07b017fa00855d7df087d4d9e3ecc9035a59f351",
+  "timeline_binding_created": false
+}
