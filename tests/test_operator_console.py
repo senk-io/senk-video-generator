@@ -282,8 +282,24 @@ else:
         mutated_origami["shared_prompt"] = mutated_origami["shared_prompt"].replace(
             "triangular creases", "paper folds"
         )
-        with self.assertRaisesRegex(ValueError, "必须固定为单提示词变量"):
+        with self.assertRaisesRegex(ValueError, "必须固定为已登记的单提示词变量"):
             validate_bounded_trial_variant(mutated_origami, "cogvideox")
+
+        shot_two_path = Path(
+            "experiments/provider_compatibility/cogvideox_quality_32_steps_shot_002.json"
+        ).resolve()
+        shot_two, source = load_execution_contract(
+            argparse.Namespace(job_spec=None, trial_contract=str(shot_two_path), provider="cogvideox")
+        )
+        self.assertEqual(source, shot_two_path)
+        self.assertEqual(shot_two["prompt_variant"]["shot_id"], "SHOT-002")
+        self.assertEqual(shot_two["providers"]["cogvideox"]["num_frames"], 9)
+        mutated_shot_two = json.loads(json.dumps(shot_two))
+        mutated_shot_two["shared_prompt"] = mutated_shot_two["shared_prompt"].replace(
+            "left to right", "right to left"
+        )
+        with self.assertRaisesRegex(ValueError, "已登记的单提示词变量"):
+            validate_bounded_trial_variant(mutated_shot_two, "cogvideox")
 
         origami_five_second_path = Path(
             "experiments/provider_compatibility/cogvideox_five_second_32_steps_origami.json"

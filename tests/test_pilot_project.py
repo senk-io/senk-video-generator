@@ -28,6 +28,7 @@ class PilotProjectTests(unittest.TestCase):
         self.assertEqual(len(normalized["shots"]), 6)
         self.assertEqual(sum(item["duration_seconds"] for item in normalized["shots"]), 30)
         self.assertEqual([item["ordinal"] for item in normalized["shots"]], list(range(1, 7)))
+        self.assertTrue(all("folded origami" in item["generation_prompt"] for item in normalized["shots"]))
 
     def test_duration_drift_is_fail_closed(self) -> None:
         invalid = deepcopy(self.project)

@@ -191,17 +191,31 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
     if contract.get("contract_status") != "BOUNDED_TRIAL_ONLY":
         raise ValueError("试验合同状态无效")
     prompt_variant = contract.get("prompt_variant")
-    expected_prompt_variant = {
-        "strategy": "SINGLE_PROMPT_VARIABLE",
-        "target": "PAPER_FOLD_VISIBILITY",
-        "baseline_prompt": baseline["shared_prompt"],
-        "changed_prompt": "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text.",
+    origami_prompt = "A small red folded origami paper boat with clearly visible triangular creases drifts slowly across a shallow rain puddle, static camera, soft daylight, simple background, no text."
+    expected_prompt_variants = {
+        "PAPER_FOLD_VISIBILITY": {
+            "strategy": "SINGLE_PROMPT_VARIABLE",
+            "target": "PAPER_FOLD_VISIBILITY",
+            "baseline_prompt": baseline["shared_prompt"],
+            "changed_prompt": origami_prompt,
+        },
+        "SHOT_002_RIGHTWARD_DRIFT": {
+            "strategy": "PROJECT_SHOT_PROMPT_VARIABLE",
+            "target": "SHOT_002_RIGHTWARD_DRIFT",
+            "project_id": "PILOT-RED-BOAT-30S-001",
+            "shot_id": "SHOT-002",
+            "baseline_prompt": origami_prompt,
+            "changed_prompt": "The same small red folded origami paper boat with clearly visible triangular creases drifts slowly from left to right across calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text.",
+        },
     }
     if prompt_variant is None:
         if contract.get("shared_prompt") != baseline.get("shared_prompt"):
             raise ValueError("非提示词探针不得改变固定提示词")
-    elif prompt_variant != expected_prompt_variant or contract.get("shared_prompt") != expected_prompt_variant["changed_prompt"]:
-        raise ValueError("折纸提示词探针必须固定为单提示词变量")
+    else:
+        prompt_target = prompt_variant.get("target") if isinstance(prompt_variant, dict) else None
+        expected_prompt_variant = expected_prompt_variants.get(prompt_target)
+        if expected_prompt_variant is None or prompt_variant != expected_prompt_variant or contract.get("shared_prompt") != expected_prompt_variant["changed_prompt"]:
+            raise ValueError("提示词探针必须固定为已登记的单提示词变量")
     for field in invariant_fields:
         if contract.get(field) != baseline.get(field):
             raise ValueError(f"试验合同不得改变固定字段：{field}")
@@ -231,7 +245,12 @@ def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) 
         "output_filename": "derived_5s.mp4",
     }
     if prompt_variant is not None:
-        if temporal_derivation is None:
+        prompt_target = prompt_variant["target"]
+        if prompt_target == "SHOT_002_RIGHTWARD_DRIFT":
+            if temporal_derivation is not None or steps != 32 or frames != baseline_provider["num_frames"]:
+                raise ValueError("第二镜头提示词探针只允许 9 帧和 32 步")
+            expected_id = "CR-0019-COGVIDEOX-32-STEP-SHOT-002-QUALITY-TRIAL-001"
+        elif temporal_derivation is None:
             if steps != 32 or frames != baseline_provider["num_frames"]:
                 raise ValueError("折纸提示词探针只允许 9 帧和 32 步")
             expected_id = "CR-0019-COGVIDEOX-32-STEP-ORIGAMI-PROMPT-QUALITY-TRIAL-001"

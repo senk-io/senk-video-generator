@@ -57,10 +57,10 @@
       "title": "起",
       "duration_seconds": 5,
       "purpose": "建立红色纸船、平静水面和柔和日光。",
-      "generation_prompt": "A small red paper boat resting on calm water, soft morning daylight, gentle ripples, cinematic wide shot, fixed camera, realistic paper texture, no people, no text.",
+      "generation_prompt": "A small red folded origami paper boat with clearly visible triangular creases rests on calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text.",
       "continuity_in": "故事起点；纸船完整，船头朝画面右侧。",
       "continuity_out": "纸船开始缓慢向右漂动。",
-      "observable_checks": ["红色纸船从第一帧可辨", "镜头保持稳定", "没有文字和人物"]
+      "observable_checks": ["红色折纸船从第一帧可辨", "三角纸面和主要折痕持续存在", "镜头保持稳定", "没有文字和人物"]
     },
     {
       "shot_id": "SHOT-002",
@@ -68,10 +68,10 @@
       "title": "漂",
       "duration_seconds": 5,
       "purpose": "展示纸船沿水面平稳前行。",
-      "generation_prompt": "The same small red paper boat drifting slowly from left to right across calm water, soft morning daylight, low water-level tracking shot, realistic paper texture, gentle ripples, no people, no text.",
+      "generation_prompt": "The same small red folded origami paper boat with clearly visible triangular creases drifts slowly from left to right across calm shallow water, static camera, soft morning daylight, simple background, gentle ripples, no people, no text.",
       "continuity_in": "承接向右运动，纸船外观与光线不变。",
       "continuity_out": "右前方水纹开始增强。",
-      "observable_checks": ["运动方向持续向右", "纸船颜色与结构连续", "水面没有突变"]
+      "observable_checks": ["运动方向持续向右", "折纸船颜色、三角纸面与折痕连续", "水面没有突变"]
     },
     {
       "shot_id": "SHOT-003",
@@ -79,10 +79,10 @@
       "title": "遇风",
       "duration_seconds": 5,
       "purpose": "微风改变水纹并制造第一次小冲突。",
-      "generation_prompt": "The same red paper boat on water as a gentle gust creates stronger ripples, the boat tilts slightly but stays intact, soft morning daylight, medium cinematic shot, subtle camera push, no people, no text.",
+      "generation_prompt": "The same small red folded origami paper boat with clearly visible triangular creases remains intact as a gentle breeze creates stronger ripples and a slight tilt, static camera, soft morning daylight, simple background, no people, no text.",
       "continuity_in": "纸船继续向右，水纹逐渐增强。",
       "continuity_out": "船头轻微偏向画面左前方。",
-      "observable_checks": ["纸船只轻微倾斜且未破损", "风由水纹体现", "不出现剧烈风暴"]
+      "observable_checks": ["折纸船只轻微倾斜且折痕未破损", "风由水纹体现", "不出现剧烈风暴"]
     },
     {
       "shot_id": "SHOT-004",
@@ -90,7 +90,7 @@
       "title": "转向",
       "duration_seconds": 5,
       "purpose": "让纸船在水流中完成可读的方向调整。",
-      "generation_prompt": "The same red paper boat gently turning in a curved current, recovering balance and pointing toward a quiet shoreline, soft morning daylight, overhead three-quarter shot, smooth motion, no people, no text.",
+      "generation_prompt": "The same small red folded origami paper boat with clearly visible triangular creases gently turns in a curved current toward a quiet shoreline, static camera, soft morning daylight, three-quarter view, simple background, smooth motion, no people, no text.",
       "continuity_in": "从轻微偏航开始，纸船仍完整。",
       "continuity_out": "纸船对准远处安静岸边。",
       "observable_checks": ["转向轨迹清楚", "主体没有瞬移", "纸船恢复平衡"]
@@ -101,7 +101,7 @@
       "title": "穿过倒影",
       "duration_seconds": 5,
       "purpose": "以暖色倒影形成抵达前的视觉高潮。",
-      "generation_prompt": "The same red paper boat gliding through a warm golden reflection on calm water toward the shoreline, soft morning sunlight, cinematic side tracking shot, delicate ripples, realistic paper texture, no people, no text.",
+      "generation_prompt": "The same small red folded origami paper boat with clearly visible triangular creases glides through a warm golden reflection on calm water toward the shoreline, static camera, soft morning sunlight, simple background, delicate ripples, no people, no text.",
       "continuity_in": "纸船朝岸边前进，光线开始变暖。",
       "continuity_out": "岸边进入近景，纸船速度放缓。",
       "observable_checks": ["暖色来自水面倒影", "纸船仍为红色", "岸边方向保持一致"]
@@ -112,7 +112,7 @@
       "title": "抵达",
       "duration_seconds": 5,
       "purpose": "让纸船轻触岸边并稳定结束。",
-      "generation_prompt": "The same red paper boat arriving gently at a quiet shoreline, touching the wet sand and coming to rest, warm soft daylight, close cinematic shot, calm water, realistic paper texture, no people, no text.",
+      "generation_prompt": "The same small red folded origami paper boat with clearly visible triangular creases arrives gently at a quiet shoreline, touches wet sand and comes to rest, static camera, warm soft daylight, calm water, simple background, no people, no text.",
       "continuity_in": "纸船从暖色倒影驶向同一岸边。",
       "continuity_out": "纸船完整停靠，画面平静收束。",
       "observable_checks": ["纸船完成停靠", "结尾至少稳定一秒", "没有主体形变或消失"]
