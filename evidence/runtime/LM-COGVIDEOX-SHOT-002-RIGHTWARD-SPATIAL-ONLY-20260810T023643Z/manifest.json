@@ -1,0 +1,81 @@
+{
+  "created_at": "2026-08-10T02:36:49.441625+00:00",
+  "file_count": 15,
+  "files": [
+    {
+      "bytes": 1415586,
+      "path": "contact_sheet_9_frames.png",
+      "sha256": "ae2383e9cb54c208686d14e080a5f10027aac40b32eab5d7ba805d4ff0671046"
+    },
+    {
+      "bytes": 83650,
+      "path": "direction_controlled_spatial_only_9f.mp4",
+      "sha256": "4e9318efe78ffa7fc024ae604a4f37575eaa96976bed959965973493059f8d3c"
+    },
+    {
+      "bytes": 757,
+      "path": "environment.json",
+      "sha256": "0730c8db9261489d7ab1ab3f4e51624305513fdfa6a4307851cd420953b79cd1"
+    },
+    {
+      "bytes": 5773,
+      "path": "frame_metrics.json",
+      "sha256": "c9dc09882eed76a433c13773d4138f7dff2a6603b37c5ae1f7caca6f8480a7ce"
+    },
+    {
+      "bytes": 142607,
+      "path": "frames/frame_001.png",
+      "sha256": "35afd2f2b3cb31014bbfac41742ed62cbbf654381b8be8f834ca16262ca20372"
+    },
+    {
+      "bytes": 156722,
+      "path": "frames/frame_002.png",
+      "sha256": "4a0a6d8754c14b2d3cec7f0a120aa81f19ccead1696231af318c393640886b88"
+    },
+    {
+      "bytes": 162450,
+      "path": "frames/frame_003.png",
+      "sha256": "b9957aad14d54e27e1b5b4636b512de953d50c4a81566fd55e9e0ac4a0ce44d9"
+    },
+    {
+      "bytes": 171211,
+      "path": "frames/frame_004.png",
+      "sha256": "cc0f17da1eacd62e389d641f0e034a5bf7b660ed3c8300eb6c7ffcae3ef61d43"
+    },
+    {
+      "bytes": 152674,
+      "path": "frames/frame_005.png",
+      "sha256": "e27e28bff48a3b99650f9fda5db040e988653509020b8700b6f58d0f3def2e04"
+    },
+    {
+      "bytes": 155230,
+      "path": "frames/frame_006.png",
+      "sha256": "efd0b28590d5d5ab8aa7f55b09e5dbdf9e32a1e944d37cbb200aff45942faee3"
+    },
+    {
+      "bytes": 163956,
+      "path": "frames/frame_007.png",
+      "sha256": "948f526230a48e984066f7e332c191dc5bd31f34655ed2d4da48c4b5751fcdef"
+    },
+    {
+      "bytes": 167161,
+      "path": "frames/frame_008.png",
+      "sha256": "ea176801a6ca9846ad8bcb53827a0378f93227817b7e236834bc4a0e5b73f489"
+    },
+    {
+      "bytes": 153308,
+      "path": "frames/frame_009.png",
+      "sha256": "ad0283210e0fd43f022b1083a7fd136a31623a1c6c4ba3d01692e904fd1c604a"
+    },
+    {
+      "bytes": 3252,
+      "path": "request.json",
+      "sha256": "f4f087b65c70fae594c60e7a64cb169c0176735de40456c2f5b722f1347dce4b"
+    },
+    {
+      "bytes": 5853,
+      "path": "summary.json",
+      "sha256": "acccdf2bcb9c70551c777bf6344111d93dfe011f345890e5d10078a5b13a76f2"
+    }
+  ]
+}

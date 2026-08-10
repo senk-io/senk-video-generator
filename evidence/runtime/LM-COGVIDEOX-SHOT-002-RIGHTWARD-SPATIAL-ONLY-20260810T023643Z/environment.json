@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "bundled_ffmpeg_version": "7.1",
+  "contract_sha256": "99ae8023af72ffccdf8b39e9fdec06598a557da339c482b9468cdebec1b00193",
+  "execution_id": "LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-20260810T023643Z",
+  "git_head": "4c2c0d4c6d1fb9df2bdd66f9d7fd8baa52f15d90",
+  "git_status_porcelain": "?? evidence/runtime/LM-COGVIDEOX-SHOT-002-RIGHTWARD-SPATIAL-ONLY-20260810T023643Z/",
+  "harness_sha256": "700d52f54477431b94a370c7a591c603b70559528313edb0a35c1054e678a4bc",
+  "imageio_version": null,
+  "numpy_version": "2.5.1",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-10T02:36:49.033952+00:00",
+  "sensitive_machine_identifiers_recorded": false
+}
