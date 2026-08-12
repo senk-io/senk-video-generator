@@ -1,0 +1,16 @@
+{
+  "duration_tolerance_seconds": 0,
+  "expected_scene_count": 1,
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "required_subject_ids": [
+    "SUBJECT-001"
+  ],
+  "schema_version": "shot-planning-request.v1",
+  "shot_count_bounds": {
+    "maximum": 4,
+    "minimum": 1
+  },
+  "source_text": "一个外国小孩子在雨中哭泣的特写镜头",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "target_duration_seconds": 6
+}

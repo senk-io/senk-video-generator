@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-staged-semantic.v4",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "beat",
+  "system": "你是单职责镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名和枚举值不得翻译。\n字符串值必须结合 source_text 填写，不能照抄 instruction 文本。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"explicit_semantic_constraints\": {\"allowed_action_classes\": [\"EXPRESS\"], \"allowed_framings\": [\"CLOSE_UP\", \"EXTREME_CLOSE_UP\"], \"allowed_primary_purposes\": [\"EMPHASIZE_EMOTION\"], \"forbidden_placeholder_values\": [\"none\", \"yes\", \"n/a\", \"无\", \"未知\", \"可观察构图\", \"可观察表演状态\", \"可观察灯光状态\"], \"minimum_free_text_characters\": 3, \"required_action_terms\": [\"哭\"], \"required_environment_terms\": [\"雨\"]}, \"source_text\": \"一个外国小孩子在雨中哭泣的特写镜头\", \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_purpose\": [\"EMPHASIZE_EMOTION\"], \"instruction\": \"只描述覆盖整句的单一叙事节拍；动作不得增加原句不存在的剧情结果。\", \"required_action_terms\": [\"哭\"], \"required_keys\": [\"purpose\", \"action\"]}}"
+}

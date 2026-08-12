@@ -1,0 +1,106 @@
+{
+  "files": [
+    {
+      "bytes": 1538,
+      "path": "environment.json",
+      "sha256": "44c7217b566c2ea32bb43e75b0c9590003a9675179e7c626043696d313f069ef"
+    },
+    {
+      "bytes": 249,
+      "path": "payload_001.json",
+      "sha256": "b5294b204acbb8954c200562cbd3a9c07c5a79e3954bdc0ea8827b1c54f1069f"
+    },
+    {
+      "bytes": 249,
+      "path": "payload_002.json",
+      "sha256": "b5294b204acbb8954c200562cbd3a9c07c5a79e3954bdc0ea8827b1c54f1069f"
+    },
+    {
+      "bytes": 249,
+      "path": "payload_003.json",
+      "sha256": "b5294b204acbb8954c200562cbd3a9c07c5a79e3954bdc0ea8827b1c54f1069f"
+    },
+    {
+      "bytes": 423,
+      "path": "planning_request.json",
+      "sha256": "07cf94a4b08ae0fdc8b396c3d2cc741cf7a7de276674088ed39c1b5ec2cdbe34"
+    },
+    {
+      "bytes": 2892,
+      "path": "prompt_001.json",
+      "sha256": "3472c6ccfc83fc0b8b751ceb80bacbf8c7968b8494fe9a072db7c2eb15f27652"
+    },
+    {
+      "bytes": 2892,
+      "path": "prompt_002.json",
+      "sha256": "3472c6ccfc83fc0b8b751ceb80bacbf8c7968b8494fe9a072db7c2eb15f27652"
+    },
+    {
+      "bytes": 2892,
+      "path": "prompt_003.json",
+      "sha256": "3472c6ccfc83fc0b8b751ceb80bacbf8c7968b8494fe9a072db7c2eb15f27652"
+    },
+    {
+      "bytes": 687,
+      "path": "proposal_001.json",
+      "sha256": "978b391748a7594d665a1b9e0cf38ea0e6ea9176bce092f5addd41187bf934f9"
+    },
+    {
+      "bytes": 687,
+      "path": "proposal_002.json",
+      "sha256": "2a187fc53081baaf5966babc250e81c2ffedd45b3410aa57811bab8a143cd443"
+    },
+    {
+      "bytes": 687,
+      "path": "proposal_003.json",
+      "sha256": "ca32dc0e753d6eb11179b80e43be7aec8155b720f6d9ee30bc6ad1d15d7da6a4"
+    },
+    {
+      "bytes": 2182,
+      "path": "proposal_observation_001.json",
+      "sha256": "c6a2f2dbc7620c39a831427f6511765f09e5febb01751214cc2cdf92c2644166"
+    },
+    {
+      "bytes": 2182,
+      "path": "proposal_observation_002.json",
+      "sha256": "c9650807f2e4aff72bc3d187019bb9a1cd4dfc84febdd4d3e86a12ff39f04731"
+    },
+    {
+      "bytes": 2182,
+      "path": "proposal_observation_003.json",
+      "sha256": "f8d202bede9be8e4395fad7efff2b64214c6ab963a92277de70ee789cdda3e8b"
+    },
+    {
+      "bytes": 226,
+      "path": "raw_output_001.txt",
+      "sha256": "57cf135d241ddf84e6d1dffd187a4c2e9ec1cd49194407e02c1e1b8ee90d7fac"
+    },
+    {
+      "bytes": 226,
+      "path": "raw_output_002.txt",
+      "sha256": "57cf135d241ddf84e6d1dffd187a4c2e9ec1cd49194407e02c1e1b8ee90d7fac"
+    },
+    {
+      "bytes": 226,
+      "path": "raw_output_003.txt",
+      "sha256": "57cf135d241ddf84e6d1dffd187a4c2e9ec1cd49194407e02c1e1b8ee90d7fac"
+    },
+    {
+      "bytes": 8489,
+      "path": "stability_observation.json",
+      "sha256": "e7f2e760e0818a74fb5ea02b6197c499a6c221631be141790853361a00a74472"
+    },
+    {
+      "bytes": 2383,
+      "path": "summary.json",
+      "sha256": "70ce50fcf879413b62eb3111e65a271f63074cd377494ed7a57d028564dd12aa"
+    },
+    {
+      "bytes": 1709,
+      "path": "trial_contract.json",
+      "sha256": "f01155a596eba3affe9beb1fa1f3bf43dc4995a86f5b42cdba216683eec5e369"
+    }
+  ],
+  "formal_fact_creation": false,
+  "schema_version": "local-shot-planner-evidence-manifest.v1"
+}

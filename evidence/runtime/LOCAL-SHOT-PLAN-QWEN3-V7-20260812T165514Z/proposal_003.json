@@ -1,0 +1,84 @@
+{
+  "narrative_beats": [
+    {
+      "action": "一个外国小孩子在雨中哭泣的特写镜头",
+      "beat_id": "BEAT-001",
+      "ordinal": 1,
+      "purpose": "EMPHASIZE_EMOTION",
+      "scene_id": "SCENE-001",
+      "source_span": {
+        "end": 17,
+        "quote": "一个外国小孩子在雨中哭泣的特写镜头",
+        "start": 0
+      },
+      "subject_ids": [
+        "SUBJECT-001"
+      ]
+    }
+  ],
+  "planner": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "prompt_contract_version": "local-shot-planner-tokenized-context.v7",
+    "run_id": "LOCAL-SHOT-PLAN-QWEN3-V7-20260812T165514Z-RUN-003",
+    "sampling": {
+      "seed": 20260811,
+      "temperature": 0.0
+    }
+  },
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V7-20260812T165514Z-003",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-005",
+  "scenes": [
+    {
+      "continuity_anchors": [
+        "同一主体与持续降雨"
+      ],
+      "environment": "持续降雨",
+      "location": "未明确地点",
+      "ordinal": 1,
+      "scene_id": "SCENE-001",
+      "time": "未明确时间"
+    }
+  ],
+  "schema_version": "shot-planning-proposal.v1",
+  "shots": [
+    {
+      "action": {
+        "class": "EXPRESS",
+        "description": "一个外国小孩子在雨中哭泣的特写镜头"
+      },
+      "beat_ids": [
+        "BEAT-001"
+      ],
+      "camera": {
+        "direction": "NONE",
+        "movement": "STATIC",
+        "speed": "NONE"
+      },
+      "composition": "主体位于画面中央，面部占据画面大部分区域，焦点落在眼睛和泪水，雨景在面部后方柔化可见",
+      "continuity_in": "进入镜头时，同一孩子面部已被雨水打湿并正在哭泣，背景保持持续降雨",
+      "continuity_out": "离开镜头时，同一孩子面部、哭泣状态和可见泪水保持连续，背景仍保持持续降雨",
+      "emotion": "眼中蓄满泪水，一滴泪沿面颊滑落，下唇轻微颤抖，哭泣表演强度克制",
+      "framing": "EXTREME_CLOSE_UP",
+      "lighting": "阴天自然光，光线柔和漫射，面部细节清晰可读，泪水高光保持可见",
+      "observable_checks": [
+        "主体 SUBJECT-001 始终保持同一可见身份与面部连续性",
+        "景别保持为极近特写，面部占据画面大部分区域",
+        "主要动作保持为一个外国小孩子在雨中哭泣的特写镜头，同时可观察到一滴泪沿面颊滑落",
+        "场景环境保持持续降雨，背景保持持续降雨并且背景仍保持持续降雨",
+        "相机保持静止，方向和速度均不发生漂移"
+      ],
+      "ordinal": 1,
+      "primary_purpose": "EMPHASIZE_EMOTION",
+      "scene_id": "SCENE-001",
+      "script_segment": "一个外国小孩子在雨中哭泣的特写镜头",
+      "shot_id": "SHOT-001",
+      "subject_ids": [
+        "SUBJECT-001"
+      ],
+      "target_duration_seconds": 6
+    }
+  ],
+  "source_text_sha256": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+  "status": "DRAFT_NON_AUTHORITATIVE"
+}

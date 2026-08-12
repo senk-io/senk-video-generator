@@ -23,8 +23,37 @@
 ## 模型边界
 
 - Seedance 等高质量模型是正式能力提供者候选，只需在适配器层编译其请求和结果，不改变上层治理语义。
-- 当前可执行参考适配器是 `CogVideoX-2B` 与 `Wan2.1-T2V-1.3B`；新增提供者仍需实现并验证对应适配器。
+- 当前参考适配器包括本地 `CogVideoX-2B`、`Wan2.1-T2V-1.3B`，以及远端 `MiniMax-H3` 开放平台 `V2` 接口。三者的运行后端、费用、资源与证据合同彼此独立。
 - 本地小模型用于低成本验证受控生成、资源停止线、证据闭包、后处理和人工选择流程，不代表项目的模型上限或最终画质目标。
+
+### MiniMax H3 接入
+
+`MiniMax-H3` 已作为独立 `ProviderAdapter` 接入。当前 `36GB` 苹果芯片机器不启动公开权重：官方 `BF16` 基础模型包含 `33B` 稠密视频变换器与完整 `Qwen3-VL-32B` 编码器；官方 `ComfyUI` 文生视频量化组合仍约 `39.55 GiB`，且尚无本机已验证的 `MPS` 量化算子路径。因此第一轮效果试验使用官方远端 `V2` 接口，不下载模型权重。
+
+真实密钥只写入未跟踪的 `.env`：
+
+```bash
+cp .env.example .env
+# 在 .env 中填写 MINIMAX_API_KEY
+set -a
+. ./.env
+set +a
+```
+
+默认命令只做无费用预检；只有显式增加 `--execute` 才提交计费任务：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_minimax_h3_trial
+
+.venv-provider-compat/bin/python -m tools.run_minimax_h3_trial \
+  --execute \
+  --execution-id MINIMAX-H3-CLOSEUP-YYYYMMDDTHHMMSSZ
+
+.venv-provider-compat/bin/python -m tools.verify_minimax_h3_evidence \
+  evidence/runtime/MINIMAX-H3-CLOSEUP-YYYYMMDDTHHMMSSZ
+```
+
+固定试验生成 `768P`、`5` 秒、`16:9`、`24 fps` 且包含 `32 kHz` 双声道音频的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。
 
 ### Seedance 接入准备
 
@@ -41,6 +70,22 @@ test -n "${ARK_API_KEY:-}" && echo "Seedance API Key 已载入"
 
 `.env` 已被 Git 忽略。未来适配器只能在进程运行时读取 `ARK_API_KEY`；不得把密钥写入镜头合同、执行请求、日志、证据包或前端状态。
 
+### 一句话镜头规划
+
+本地文本模型可以先把一句创作意图输出为非权威的场景、叙事节拍和镜头草案，再由
+确定性观察器检查原句覆盖、稳定标识、显式语义、单一镜头用途、主体引用、时长和
+连续性。当前参考合同把每轮固定拆为 `scene_context`、`beat_purpose`、`shot_core`、
+`composition`、`performance`、`lighting` 和 `continuity` 七个扁平阶段；三轮共
+二十一次本地调用且不自动重试。场景角色、构图、表演、灯光和连续性标记由系统按
+版本化合同展开，可观察检查项由请求约束和已选标记确定性派生。重复运行分别报告
+结构一致率与受控语义一致率，但不会自动创建正式 `ShotSpec` 或质量裁决。
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial
+```
+
+完整合同与三次运行比较方式见[一句话镜头规划草案](docs/one-sentence-shot-planning.md)。
+
 ## 本地参考验证
 
 | 能力 | 当前观察 |
@@ -49,7 +94,7 @@ test -n "${ARK_API_KEY:-}" && echo "Seedance API Key 已载入"
 | 五秒生成 | 完成 `41` 帧来源生成，并派生为 `40` 帧、`8 fps`、精确 `5.000` 秒候选 |
 | 语义连续 | 全部帧保留红色折纸船、水面、倒影和主要折痕 |
 | 方向控制 | 第二镜头净向右约 `116.30` 像素，全部 `39` 个相邻位移均向右，未见重影或边缘接缝 |
-| 自动回归 | `56` 个单元测试和 `1` 个迁移测试通过，测试不下载或运行模型 |
+| 自动回归 | `116` 个单元测试和 `1` 个迁移测试通过，测试本身不下载或运行模型 |
 
 这些结果证明受控生成过程可以闭合，不表示本地小模型是唯一运行路径，也不构成正式视觉质量接受。
 
@@ -107,6 +152,7 @@ python3.12 -m venv .venv-provider-compat
 | --- | --- |
 | `foundation/`、`execution/`、`video/` | 治理、执行闭环与视频领域模型 |
 | `operator_console/`、`observatory/` | 本地作业控制台与只读观测台 |
+| `provider_adapters/` | 本地或远端提供者专属协议隔离层 |
 | `tools/`、`experiments/` | 执行工具、派生工具和固定试验合同 |
 | `evidence/runtime/` | 可复核的成功与失败证据样本 |
 | `tests/`、`migration_tests/` | 不加载模型的回归测试 |
@@ -117,6 +163,7 @@ python3.12 -m venv .venv-provider-compat
 - [治理制度](foundation/02_Governance.md)
 - [证据模型](foundation/05_Evidence.md)
 - [提供者兼容性与 Mac 实测](docs/provider-compatibility-trials.md)
+- [一句话镜头规划草案](docs/one-sentence-shot-planning.md)
 - [三十秒样片工作流](docs/30-second-pilot.md)
 - [作业控制台](operator_console/README.md)
 - [观测台](observatory/README.md)

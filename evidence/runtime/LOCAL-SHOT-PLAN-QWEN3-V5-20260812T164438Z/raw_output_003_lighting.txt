@@ -1,0 +1,1 @@
+{ "face_readability": "FULLY_READABLE", "light_quality": "SOFT_DIFFUSED", "light_source": "OVERCAST_DAYLIGHT", "tear_highlight": "VISIBLE" }

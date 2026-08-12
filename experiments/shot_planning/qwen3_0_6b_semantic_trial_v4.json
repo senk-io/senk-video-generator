@@ -1,0 +1,66 @@
+{
+  "evidence": {
+    "retain_environment": true,
+    "retain_prompt_per_run": true,
+    "retain_raw_output_per_run": true,
+    "write_manifest": true
+  },
+  "execution": {
+    "backend": "transformers_mps",
+    "do_sample": false,
+    "dtype": "float16",
+    "enable_thinking": false,
+    "max_new_tokens": 3072,
+    "run_count": 3,
+    "seed": 20260811,
+    "temperature": 0.0
+  },
+  "model": {
+    "expected_weight_bytes": 1503300328,
+    "model_id": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "non_goals": [
+    "formal_shot_spec_creation",
+    "formal_quality_acceptance",
+    "provider_prompt_compilation",
+    "video_generation",
+    "automatic_retry",
+    "creative_acceptance"
+  ],
+  "prompt_strategy": {
+    "assistant_prefill": "{",
+    "model_output_scope": "three_flat_creative_stages",
+    "prompt_contract_version": "local-shot-planner-staged-semantic.v4",
+    "semantic_constraints_enforced": true,
+    "stages": [
+      "scene",
+      "beat",
+      "shot"
+    ],
+    "system_owned_envelope": true
+  },
+  "request_binding": {
+    "request_file": "experiments/shot_planning/foreign_child_crying_closeup_request_v2.json",
+    "request_sha256": "cbfa846796fc321ff0f0e55ab25846b13bfb95d17599e7b2b85c7616f591ddac"
+  },
+  "resource_budget": {
+    "maximum_model_calls": 9,
+    "maximum_model_weight_bytes": 1600000000,
+    "maximum_runs": 3,
+    "retry_count": 0
+  },
+  "schema_version": "local-shot-planner-trial.v4",
+  "status": "BOUNDED_NON_AUTHORITATIVE_TRIAL",
+  "strategy_context": {
+    "change": "EXPLICIT_SEMANTIC_CONSTRAINTS",
+    "previous_execution_id": "LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z",
+    "previous_observations": [
+      "STRUCTURAL_CONSISTENCY_RATIO_1_0",
+      "EXPLICIT_CLOSEUP_RENDERED_AS_MEDIUM_WIDE",
+      "CRYING_RENDERED_AS_STATIC_ACTION",
+      "RAIN_ENVIRONMENT_MAPPED_TO_TIME",
+      "PLACEHOLDER_CONTINUITY_AND_OBSERVABLE_TEXT"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "environment": "原句明确的环境状态",
+  "location": "原句明确的地点；未知则写未明确",
+  "scene_ordinal": 1,
+  "source_span": {
+    "end": 17,
+    "start": 0
+  },
+  "time": "原句明确的时间；未知则写未明确"
+}

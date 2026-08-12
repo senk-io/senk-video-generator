@@ -1,0 +1,114 @@
+# 一句话镜头规划草案
+
+本切片把一句自然语言创作意图转换为可观察的非权威镜头草案。它不创建正式
+`ShotSpec`，不调用视频提供者，也不产生质量通过、失败、选择或时间线绑定事实。
+
+```text
+一句话请求
+  -> 显式语义约束
+  -> 本地文本模型分阶段受控载荷
+  -> 系统确定性上下文与可观察文本编译
+  -> 结构观察
+  -> 语义与可观察性检查
+  -> 多次运行稳定性观察
+  -> 人工或获授权策略决定后续动作
+```
+
+## 固定边界
+
+- 请求和草案分别使用 `shot-planning-request.v1` 与 `shot-planning-proposal.v1`。
+- 草案必须保持 `DRAFT_NON_AUTHORITATIVE`。
+- 叙事节拍必须引用原句的精确字符区间，非标点内容不得遗漏。
+- 场景按地点、时间或主要叙事目标变化拆分；镜头按单一画面用途拆分。
+- 每个镜头只有一个 `primary_purpose` 和一个主要 `action`。
+- 提供者专属提示词仍由后续 `ProviderAdapter` 编译。
+- 自动观察不评价艺术质量，创意结果始终保留人工评审入口。
+- 结构一致只表示重复输出结构相同，不表示镜头忠实或可接受。
+- 受控语义一致单独观察构图、表演、灯光、连续性和镜头核心枚举，不用结构一致率
+  代替这些字段的一致性。
+
+## 本地模型提示
+
+模型无关提示合同仍可单独生成：
+
+```bash
+.venv-provider-compat/bin/python -m tools.validate_shot_plan \
+  --request experiments/shot_planning/foreign_child_crying_closeup_request_v1.json \
+  --print-prompt
+```
+
+调用方必须把实际 `model_id`、`model_version`、`run_id`、温度和随机种子写回每次
+原始输出。验证工具不会补造这些执行证据。
+
+当前有界参考试验固定使用 `Qwen/Qwen3-0.6B` 的修订
+`c1899de289a04d12100db370d81485cdf75e47ca`。模型权重为 `1,503,300,328` 字节，
+推理在本机 `MPS` 完成，不调用远端推理接口。省略 `--execute` 时只做预检：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial
+
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial \
+  --execute \
+  --execution-id LOCAL-SHOT-PLAN-QWEN3-V7-YYYYMMDDTHHMMSSZ
+```
+
+当前第七版把每轮规划固定拆成 `scene_context`、`beat_purpose`、`shot_core`、
+`composition`、`performance`、`lighting` 和 `continuity` 七个单职责阶段；三轮共
+二十一次调用，自动重试预算为零。场景上下文只输出受控标记，节拍动作复用同次运行
+的完整 `shot_core.action_description`。稳定标识、原文区间、目标时长、主体引用、
+模型修订、草案状态和可观察检查项均由系统按版本化合同确定性编译，小模型无权生成
+这些治理字段或检查结论。
+
+## 单次结构观察
+
+```bash
+.venv-provider-compat/bin/python -m tools.validate_shot_plan \
+  --request experiments/shot_planning/foreign_child_crying_closeup_request_v1.json \
+  --proposal /absolute/path/to/proposal-001.json
+```
+
+## 重复运行稳定性观察
+
+初次观察建议使用相同模型版本、提示合同和采样设置运行三次：
+
+```bash
+.venv-provider-compat/bin/python -m tools.validate_shot_plan \
+  --request experiments/shot_planning/foreign_child_crying_closeup_request_v1.json \
+  --proposal /absolute/path/to/proposal-001.json \
+  --proposal /absolute/path/to/proposal-002.json \
+  --proposal /absolute/path/to/proposal-003.json
+```
+
+报告一方面记录场景数、节拍数、镜头数、用途序列、动作类别、景别、运镜、场景映射
+和时长分布的结构一致率，另一方面独立记录镜头核心、构图、表演、灯光与连续性受控
+字段及其整组标记的一致率。重复的
+`proposal_id` 或 `run_id` 不会被重复计数；模型版本、提示合同或采样设置不一致时整组
+比较失败关闭。报告只建立观察，不把某个一致率阈值解释为正式稳定或接受裁决。
+
+## 七轮本地观察
+
+| 版本 | 严格 JSON | 可比较草案 | 主要观察 |
+| --- | --- | --- | --- |
+| `v1` | `0/3` | `0/3` | 三轮均出现代码围栏、治理字段层级错误并遗漏镜头数组 |
+| `v2` | `3/3` | `0/3` | 裸 JSON 已稳定，但模型只返回嵌套模板的第一个场景项 |
+| `v3` | `3/3` | `3/3` | 三阶段结构一致率 `1.0`，但人工复核发现“特写、哭泣、雨中”没有被忠实执行 |
+| `v4` | `3/3` | `0/3` | 核心语义已稳定纠正，仍有五项构图、情绪、连续性和检查文本不可观察差异 |
+| `v5` | `3/3` | `3/3` | 七阶段受控文本消除五项短文本差异；人工复核又发现地点、时间角色错误和 `ZOOM + LEFT + FAST` 不相容组合 |
+| `v6` | `3/3` | `0/3` | 地点、时间与相机策略已收敛；模型仍把允许文本“持续降雨”“孩子在雨中哭泣”稳定缩写为“雨”“哭”，系统拒绝编译 |
+| `v7` | `3/3` | `3/3` | 场景改为标记化上下文并复用完整核心动作；三轮七阶段原始输出逐阶段相同且提案阻断观察均为零，结构与受控语义最大精确组比例均为 `1.0` |
+
+第五至第七版没有为了形成零差异而降低 `minimum_free_text_characters` 或接受缩写。
+第七版结果证明当前请求在固定模型、修订、提示合同和受控词表下，可以形成三份结构
+与受控语义一致的可比较草案；它没有证明艺术质量、通用请求覆盖率或视频生成效果，
+所以草案仍保持 `DRAFT_NON_AUTHORITATIVE` 并要求人工创作复核。
+
+七轮证据包都可重新核对文件集合和摘要。第七版实际执行标识为
+`LOCAL-SHOT-PLAN-QWEN3-V7-20260812T165514Z`，证据清单覆盖 `98` 个文件：
+
+```bash
+.venv-provider-compat/bin/python -m tools.verify_local_shot_planner_evidence \
+  evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V7-20260812T165514Z
+```
+
+完整性复核结果为 `COMPLETE_AND_DIGEST_MATCHED`。该结果只说明证据文件集合和摘要与
+固定合同一致，不是正式镜头规格或质量接受。

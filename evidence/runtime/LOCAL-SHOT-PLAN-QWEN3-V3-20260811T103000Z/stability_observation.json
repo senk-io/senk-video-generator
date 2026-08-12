@@ -1,0 +1,211 @@
+{
+  "comparable_run_count": 3,
+  "comparison_context_count": 1,
+  "comparison_contexts": [
+    {
+      "context": {
+        "model_id": "Qwen/Qwen3-0.6B",
+        "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+        "prompt_contract_version": "local-shot-planner-staged.v3",
+        "sampling": {
+          "seed": 20260811,
+          "temperature": 0.0
+        }
+      },
+      "context_sha256": "92a72b09c4eb473a0899ffcc176132dfcd469a8c5adf2e4a0aedb4e922d1a50d"
+    }
+  ],
+  "comparison_performed": true,
+  "creative_review_required": true,
+  "exact_structure_group_count": 1,
+  "exact_structure_groups": [
+    {
+      "proposal_ids": [
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-001",
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-002",
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-003"
+      ],
+      "signature_sha256": "c513167e6eb27cf8916ffec989ca3f7cc1e4638673371f11468afdf1d5ef53ec"
+    }
+  ],
+  "field_consistency": {
+    "beat_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "beat_purpose_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "EMPHASIZE_EMOTION"
+          ],
+          "value_sha256": "fdc727db77fab4cb49129e9b69123c46f81c6e8c906f377e1a8212d52289cd74"
+        }
+      ]
+    },
+    "beat_scene_assignments": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1
+          ],
+          "value_sha256": "080a9ed428559ef602668b4c00f114f1a11c3f6b02a435f0bdc154578e4d7f22"
+        }
+      ]
+    },
+    "duration_profile": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1.0
+          ],
+          "value_sha256": "c2272c0a862f11de35da66ec8be34349001ddebae43b85ab1dafb188f8ad7b30"
+        }
+      ]
+    },
+    "scene_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "shot_action_class_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "STATIC"
+          ],
+          "value_sha256": "abe5ebd7fbbfe2caee0c3ed1a8989f5f499cf08f6628e69b7c0e8b55e134278b"
+        }
+      ]
+    },
+    "shot_camera_movement_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "PAN"
+          ],
+          "value_sha256": "d02243d23ff117a0db0c8e3eb7135d7c454874bd3930213935ce1991a6f1c9a4"
+        }
+      ]
+    },
+    "shot_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "shot_framing_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "MEDIUM_WIDE"
+          ],
+          "value_sha256": "e4635f1d9009c24f5673da5ec897be5e0ef229e2d4e462ec0ee2cd06c47579c1"
+        }
+      ]
+    },
+    "shot_purpose_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "ESTABLISH_CONTEXT"
+          ],
+          "value_sha256": "e8f2afc9f8b61045132818f69b8cd6e4a4b58c8a16fab67633f0198ed6098449"
+        }
+      ]
+    },
+    "shot_scene_assignments": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1
+          ],
+          "value_sha256": "080a9ed428559ef602668b4c00f114f1a11c3f6b02a435f0bdc154578e4d7f22"
+        }
+      ]
+    }
+  },
+  "formal_decision_created": false,
+  "largest_exact_structure_group_ratio": 1.0,
+  "proposal_observations": [
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-001",
+      "proposal_sha256": "7c0aefb05d1d072ca70b7b551085eba7b09fb6016081f48452c348b36c90c310",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-002",
+      "proposal_sha256": "531bd5b6679ca3a2144ac8a4e8930c028946a97d8787029fdb19aa8bad21df9d",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-003",
+      "proposal_sha256": "0795d7cace77d9586237a1d44797328291dbbcc1b767776839a2b1b52bfc8c35",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    }
+  ],
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "run_count": 3,
+  "run_observations": [],
+  "schema_version": "shot-planning-stability-observation.v1"
+}

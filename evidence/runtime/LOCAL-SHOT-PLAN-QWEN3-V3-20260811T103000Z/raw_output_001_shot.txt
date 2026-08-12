@@ -1,0 +1,1 @@
+{ "primary_purpose": "ESTABLISH_CONTEXT", "framing": "MEDIUM_WIDE", "action_class": "STATIC", "action_description": "静止拍摄", "composition": "全景", "camera_movement": "PAN", "camera_direction": "LEFT", "camera_speed": "MODERATE", "emotion": "EMPHASIZE_EMOTION", "lighting": "自然光", "continuity_in": "none", "continuity_out": "none", "observable_check": "yes" }

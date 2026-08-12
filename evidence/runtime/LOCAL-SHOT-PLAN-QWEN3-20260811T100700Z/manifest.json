@@ -1,0 +1,76 @@
+{
+  "files": [
+    {
+      "bytes": 1471,
+      "path": "environment.json",
+      "sha256": "61b18076c891298eda162ac26085182d41d646f6431d7037e67c971bec969037"
+    },
+    {
+      "bytes": 423,
+      "path": "planning_request.json",
+      "sha256": "07cf94a4b08ae0fdc8b396c3d2cc741cf7a7de276674088ed39c1b5ec2cdbe34"
+    },
+    {
+      "bytes": 3542,
+      "path": "prompt_001.json",
+      "sha256": "35cbd324dda077bf7cf555c13feddfa9d7f4fd916a2ba2d5258a3199ab6268a6"
+    },
+    {
+      "bytes": 3542,
+      "path": "prompt_002.json",
+      "sha256": "1b6735569cd0703ea28430a32781a8635ccb04d19874caca9ee78b8c6cf7e70b"
+    },
+    {
+      "bytes": 3542,
+      "path": "prompt_003.json",
+      "sha256": "17f4f64cbcc304333fd50ee862817fa4ffb63995f50f82a193e4a3debda5565a"
+    },
+    {
+      "bytes": 525,
+      "path": "proposal_observation_001.json",
+      "sha256": "96910ab5b917404c30cbc1f079bf60dbc06e5234eec02596cee91b0e17159157"
+    },
+    {
+      "bytes": 525,
+      "path": "proposal_observation_002.json",
+      "sha256": "96910ab5b917404c30cbc1f079bf60dbc06e5234eec02596cee91b0e17159157"
+    },
+    {
+      "bytes": 525,
+      "path": "proposal_observation_003.json",
+      "sha256": "96910ab5b917404c30cbc1f079bf60dbc06e5234eec02596cee91b0e17159157"
+    },
+    {
+      "bytes": 1186,
+      "path": "raw_output_001.txt",
+      "sha256": "f3fd04021c13d87a49986e73290038ba68b47299b3277bb198895943aaf2f715"
+    },
+    {
+      "bytes": 1186,
+      "path": "raw_output_002.txt",
+      "sha256": "32b9d0bfe1c54af277416769097a1075a0538e6a128725a4fe68966d54acae27"
+    },
+    {
+      "bytes": 1186,
+      "path": "raw_output_003.txt",
+      "sha256": "45e6330bc870eddb74b050f89aa626bc23fa6f107ab8a843e8a2d1cde7f14645"
+    },
+    {
+      "bytes": 2594,
+      "path": "stability_observation.json",
+      "sha256": "abdac6203436ec46188b1f3be2751bcb0e3fd76cfd4cfc88b2c165c3f2ec2730"
+    },
+    {
+      "bytes": 2558,
+      "path": "summary.json",
+      "sha256": "e27ac37c2aa69f0a4b8046a42f643e6c97fea53b9caaba6ef201001689f3f677"
+    },
+    {
+      "bytes": 1161,
+      "path": "trial_contract.json",
+      "sha256": "52c3a15a8dd12409e2a101eca75e6307f294eb41439dad69d5417e3f323cf032"
+    }
+  ],
+  "formal_fact_creation": false,
+  "schema_version": "local-shot-planner-evidence-manifest.v1"
+}

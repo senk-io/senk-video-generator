@@ -1,0 +1,20 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "孩子在雨中哭泣"
+      ],
+      "observed": "哭",
+      "path": "$.stages.beat.action"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "beat"
+}

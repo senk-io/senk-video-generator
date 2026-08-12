@@ -1,0 +1,1 @@
+{ "action_class": "EXPRESS", "action_description": "一个外国小孩子在雨中哭泣的特写镜头", "camera_direction": "LEFT", "camera_movement": "ZOOM", "camera_speed": "FAST", "framing": "EXTREME_CLOSE_UP", "primary_purpose": "EMPHASIZE_EMOTION" }

@@ -1,6 +1,62 @@
 # 开源视频模型兼容性试运行
 
-本指南说明如何在苹果芯片 Mac 上复现 `Wan2.1-T2V-1.3B` 与 `CogVideoX-2B` 的低成本兼容性试运行。它只验证真实模型能否完成下载、装载、Metal 转移、推理、解码和证据输出，不评价视频质量，也不创建跨提供方制度合同。
+本指南说明如何复现 `Wan2.1-T2V-1.3B`、`CogVideoX-2B` 的苹果芯片本地兼容性试运行，以及 `MiniMax-H3` 开放平台 `V2` 的受控远端试运行。它只验证指定后端能否完成请求、执行、输出和证据闭包，不评价视频质量，也不创建跨提供方制度合同。
+
+## MiniMax H3 远端效果试验
+
+`MiniMax-H3` 于 `2026-07-31` 发布。官方资料说明其支持文本、图像、视频、音频统一上下文，可输出最长 `15` 秒、最高 `2K`、带原生双声道音频的视频。当前固定试验只使用文本输入与较低的 `768P`、`5` 秒、`16:9` 参数，用于和既有虚构儿童哭泣特写候选作受限语义观察，不形成严格成本或速度基准。
+
+本机不执行公开权重。官方完整仓库逻辑体积约 `464.24 GiB`；官方 `ComfyUI` 文生视频量化组合由约 `19.53 GiB` 视频模型、`14.61 GiB` 文本编码器、`4.85 GiB` 视频 VAE 和 `0.56 GiB` 音频 VAE 组成，合计约 `39.55 GiB`。这个体积已超过当前机器的 `36GB` 统一内存，且 `NVFP4/AWQ` 文本编码器尚无本项目验证过的 `MPS` 执行路径。不得通过下载权重或放宽换页预算碰运气。
+
+官方来源：
+
+- [MiniMax H3 发布说明](https://minimaxi.com/blog/minimax-h3)
+- [MiniMax H3 公开权重仓库](https://github.com/MiniMax-AI/MiniMax-H3)
+- [MiniMax H3 开放平台 V2 接口](https://platform.minimax.io/docs/api-reference/video-generation-v2-create)
+- [ComfyUI MiniMax H3 工作流](https://docs.comfy.org/tutorials/video/minimax/minimax-h3)
+
+固定合同位于：
+
+```text
+experiments/provider_compatibility/minimax_h3_fictional_child_crying_closeup_v1.json
+```
+
+先把密钥放入未跟踪的 `.env` 并载入当前终端。适配器只检查 `MINIMAX_API_KEY` 是否存在，不在任何输出、日志或证据中记录其值：
+
+```bash
+cp .env.example .env
+# 编辑 .env，填写 MINIMAX_API_KEY
+set -a
+. ./.env
+set +a
+```
+
+默认只执行无费用预检，不提交任务：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_minimax_h3_trial
+```
+
+预检通过后，必须显式加入 `--execute` 和新的执行标识才会提交计费任务：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_minimax_h3_trial \
+  --execute \
+  --execution-id MINIMAX-H3-CLOSEUP-YYYYMMDDTHHMMSSZ
+```
+
+适配器固定连接 `https://api.minimax.io`，调用 `/v2/video_generation`，轮询 `/v2/query/video_generation/{task_id}`，成功后立即下载临时输出地址。签名下载地址和授权头不会进入证据。自动技术门禁要求输出短边为 `768` 像素、约 `5` 秒、`24 fps`，并包含 `32 kHz` 双声道音频。
+
+如果本地轮询在远端任务进入终态前失败或超时，适配器会调用 `/v2/video_generation/{task_id}` 尝试取消，并把结果写入 `cancellation_attempt.json`。官方接口只允许取消排队任务，运行中任务可能拒绝取消；因此关闭本地终端不等于云端执行已经停止，必须依据取消证据或随后查询到的终态判断实际费用边界。
+
+独立校验：
+
+```bash
+.venv-provider-compat/bin/python -m tools.verify_minimax_h3_evidence \
+  evidence/runtime/MINIMAX-H3-CLOSEUP-YYYYMMDDTHHMMSSZ
+```
+
+校验成功只表示模型标识、请求参数、任务终态、媒体技术属性、文件摘要、证据闭包和凭据扫描一致。虚构儿童近景、哭泣语义、清晰泪水滚落、下唇颤动、身份连续性、安全表演语境、呼吸或抽泣声音以及音画同步全部保留为逐帧与人工创意评审；不得由生成适配器自行判定通过。
 
 ## 1. 运行边界
 

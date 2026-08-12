@@ -1,0 +1,20 @@
+{
+  "narrative_beats": [],
+  "planner": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "prompt_contract_version": "local-shot-planner-payload.v2",
+    "run_id": "LOCAL-SHOT-PLAN-QWEN3-V2-20260811T102000Z-RUN-002",
+    "sampling": {
+      "seed": 20260811,
+      "temperature": 0.0
+    }
+  },
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V2-20260811T102000Z-002",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "scenes": [],
+  "schema_version": "shot-planning-proposal.v1",
+  "shots": [],
+  "source_text_sha256": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+  "status": "DRAFT_NON_AUTHORITATIVE"
+}

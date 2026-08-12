@@ -1,0 +1,19 @@
+{
+  "architecture": "arm64",
+  "contract_sha256": "5ef961174a40a57c2866142df3276068a1bc7dd8acc1a417e2d718f9ed3c3f2e",
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z",
+  "formal_fact_creation": "PROHIBITED",
+  "git_head": "50b2a6586581c34a33f4257431871fa74c56b0f3",
+  "git_status_porcelain": "M .env.example\n M README.md\n M docs/provider-compatibility-trials.md\n?? docs/one-sentence-shot-planning.md\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-20260811T100700Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V2-20260811T102000Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z/\n?? experiments/provider_compatibility/minimax_h3_fictional_child_crying_closeup_v1.json\n?? experiments/shot_planning/\n?? knowledge/MiniMax_H3_Compatibility.md\n?? provider_adapters/\n?? shot_planning/\n?? tests/test_local_shot_planner_trial.py\n?? tests/test_minimax_h3_provider.py\n?? tests/test_shot_planning.py\n?? tools/run_local_shot_planner_trial.py\n?? tools/run_minimax_h3_trial.py\n?? tools/validate_shot_plan.py\n?? tools/verify_minimax_h3_evidence.py",
+  "model_download_may_use_network": true,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "paid_request": false,
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-11T10:24:48.981855+00:00",
+  "remote_inference_used": false,
+  "request_sha256": "07cf94a4b08ae0fdc8b396c3d2cc741cf7a7de276674088ed39c1b5ec2cdbe34",
+  "runner_sha256": "eb05a07d3f736774f026ccd98a766b312b8676178248e573fb08367aec691786"
+}

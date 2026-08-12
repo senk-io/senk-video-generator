@@ -1,0 +1,1 @@
+{ "location": "一个外国小孩子", "time": "在雨中", "environment": "雨", "continuity_anchor": "孩子" }

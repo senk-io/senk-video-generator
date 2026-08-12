@@ -1,0 +1,80 @@
+{
+  "narrative_beats": [
+    {
+      "action": "哭泣",
+      "beat_id": "BEAT-001",
+      "ordinal": 1,
+      "purpose": "EMPHASIZE_EMOTION",
+      "scene_id": "SCENE-001",
+      "source_span": {
+        "end": 17,
+        "quote": "一个外国小孩子在雨中哭泣的特写镜头",
+        "start": 0
+      },
+      "subject_ids": [
+        "SUBJECT-001"
+      ]
+    }
+  ],
+  "planner": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "prompt_contract_version": "local-shot-planner-staged.v3",
+    "run_id": "LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-RUN-002",
+    "sampling": {
+      "seed": 20260811,
+      "temperature": 0.0
+    }
+  },
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z-002",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "scenes": [
+    {
+      "continuity_anchors": [
+        "雨中"
+      ],
+      "environment": "哭泣的特写镜头",
+      "location": "一个外国的小孩子",
+      "ordinal": 1,
+      "scene_id": "SCENE-001",
+      "time": "雨中"
+    }
+  ],
+  "schema_version": "shot-planning-proposal.v1",
+  "shots": [
+    {
+      "action": {
+        "class": "STATIC",
+        "description": "静止拍摄"
+      },
+      "beat_ids": [
+        "BEAT-001"
+      ],
+      "camera": {
+        "direction": "LEFT",
+        "movement": "PAN",
+        "speed": "MODERATE"
+      },
+      "composition": "全景",
+      "continuity_in": "none",
+      "continuity_out": "none",
+      "emotion": "EMPHASIZE_EMOTION",
+      "framing": "MEDIUM_WIDE",
+      "lighting": "自然光",
+      "observable_checks": [
+        "yes"
+      ],
+      "ordinal": 1,
+      "primary_purpose": "ESTABLISH_CONTEXT",
+      "scene_id": "SCENE-001",
+      "script_segment": "一个外国小孩子在雨中哭泣的特写镜头",
+      "shot_id": "SHOT-001",
+      "subject_ids": [
+        "SUBJECT-001"
+      ],
+      "target_duration_seconds": 6
+    }
+  ],
+  "source_text_sha256": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+  "status": "DRAFT_NON_AUTHORITATIVE"
+}

@@ -1,0 +1,131 @@
+{
+  "controlled_stage_allowed_values": {
+    "composition": {
+      "background_visibility": [
+        "RAIN_SOFTLY_BLURRED"
+      ],
+      "face_coverage": [
+        "FACE_MOST_OF_FRAME"
+      ],
+      "focus_target": [
+        "EYES_AND_TEARS"
+      ],
+      "subject_placement": [
+        "CENTER"
+      ]
+    },
+    "continuity": {
+      "entry_environment_state": [
+        "CONTINUOUS_RAIN"
+      ],
+      "entry_subject_state": [
+        "FACE_WET_AND_CRYING"
+      ],
+      "exit_environment_state": [
+        "CONTINUOUS_RAIN"
+      ],
+      "exit_subject_state": [
+        "SAME_FACE_WITH_VISIBLE_TEARS"
+      ]
+    },
+    "lighting": {
+      "face_readability": [
+        "FULLY_READABLE"
+      ],
+      "light_quality": [
+        "SOFT_DIFFUSED"
+      ],
+      "light_source": [
+        "OVERCAST_DAYLIGHT"
+      ],
+      "tear_highlight": [
+        "VISIBLE"
+      ]
+    },
+    "performance": {
+      "expression_intensity": [
+        "RESTRAINED"
+      ],
+      "eye_state": [
+        "TEARS_WELLING"
+      ],
+      "mouth_state": [
+        "LOWER_LIP_TREMBLING"
+      ],
+      "tear_state": [
+        "ONE_TEAR_ROLLING"
+      ]
+    }
+  },
+  "duration_tolerance_seconds": 0,
+  "expected_scene_count": 1,
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-003",
+  "required_subject_ids": [
+    "SUBJECT-001"
+  ],
+  "schema_version": "shot-planning-request.v1",
+  "semantic_constraints": {
+    "allowed_action_classes": [
+      "EXPRESS"
+    ],
+    "allowed_framings": [
+      "CLOSE_UP",
+      "EXTREME_CLOSE_UP"
+    ],
+    "allowed_primary_purposes": [
+      "EMPHASIZE_EMOTION"
+    ],
+    "forbidden_placeholder_values": [
+      "none",
+      "yes",
+      "n/a",
+      "无",
+      "未知",
+      "可观察构图",
+      "可观察表演状态",
+      "可观察灯光状态"
+    ],
+    "minimum_free_text_characters": 3,
+    "minimum_observable_check_count": 5,
+    "required_action_terms": [
+      "哭"
+    ],
+    "required_composition_terms": [
+      "面部",
+      "泪",
+      "雨"
+    ],
+    "required_continuity_in_terms": [
+      "孩子",
+      "哭",
+      "雨"
+    ],
+    "required_continuity_out_terms": [
+      "孩子",
+      "哭",
+      "雨"
+    ],
+    "required_emotion_terms": [
+      "哭",
+      "泪"
+    ],
+    "required_environment_terms": [
+      "雨"
+    ],
+    "required_observable_terms": [
+      "主体",
+      "面部",
+      "哭",
+      "泪",
+      "雨",
+      "相机"
+    ]
+  },
+  "shot_count_bounds": {
+    "maximum": 4,
+    "minimum": 1
+  },
+  "source_text": "一个外国小孩子在雨中哭泣的特写镜头",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "target_duration_seconds": 6
+}
