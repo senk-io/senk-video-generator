@@ -1,0 +1,6 @@
+{
+  "background_visibility": "STREET_VISIBLE_AROUND_SUBJECT",
+  "focus_target": "SUBJECT_ACTION",
+  "subject_placement": "LEFT_THIRD",
+  "subject_scale": "FULL_SUBJECT_VISIBLE"
+}

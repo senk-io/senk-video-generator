@@ -1,0 +1,29 @@
+{
+  "blocking_observation_count": 2,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 2,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "PROPOSAL_NOT_OBJECT",
+      "expected": "object",
+      "observed": "str",
+      "path": "$"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE"
+      ],
+      "observed": "SMILING",
+      "path": "$.stages.performance.detail_state"
+    }
+  ],
+  "proposal_id": null,
+  "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "request_id": "PLAN-GENERALIZED-SMILE-001",
+  "schema_version": "shot-planning-observation.v1"
+}

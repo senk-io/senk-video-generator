@@ -1,0 +1,21 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE"
+      ],
+      "observed": "SMILING",
+      "path": "$.stages.performance.detail_state"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "performance"
+}

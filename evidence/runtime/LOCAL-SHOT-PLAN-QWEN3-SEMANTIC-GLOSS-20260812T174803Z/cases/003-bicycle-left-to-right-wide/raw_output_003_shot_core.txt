@@ -1,0 +1,1 @@
+{ "action_class": "MOVE", "action_description": "自行车从左向右穿过空旷街道的全景镜头", "camera_direction": "NONE", "camera_movement": "PAN", "camera_speed": "NONE", "framing": "WIDE", "primary_purpose": "DEVELOP_ACTION" }

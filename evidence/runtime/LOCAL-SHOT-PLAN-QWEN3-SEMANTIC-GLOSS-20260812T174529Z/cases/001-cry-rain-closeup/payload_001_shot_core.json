@@ -1,0 +1,9 @@
+{
+  "action_class": "EXPRESS",
+  "action_description": "哭",
+  "camera_direction": "NONE",
+  "camera_movement": "STATIC",
+  "camera_speed": "NONE",
+  "framing": "CLOSE_UP",
+  "primary_purpose": "EMPHASIZE_EMOTION"
+}

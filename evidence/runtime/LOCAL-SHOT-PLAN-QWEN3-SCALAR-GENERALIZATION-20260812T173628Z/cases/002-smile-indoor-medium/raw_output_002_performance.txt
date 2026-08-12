@@ -1,0 +1,1 @@
+{ "detail_state": "TEARS_VISIBLE", "orientation_state": "NATURAL_FORWARD", "performance_intensity": "MODERATE", "visible_action_state": "SMILING" }

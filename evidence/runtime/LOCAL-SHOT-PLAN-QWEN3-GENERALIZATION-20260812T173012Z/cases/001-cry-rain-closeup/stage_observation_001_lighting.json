@@ -1,0 +1,95 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "OVERCAST_DAYLIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "NATURAL_FACE_HIGHLIGHT"
+      ],
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "SOFT_DIFFUSED",
+        "LOW_CONTRAST"
+      ],
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "OVERCAST_DAYLIGHT",
+        "INTERIOR_SOFT_LIGHT"
+      ],
+      "observed": [
+        "OVERCAST_DAYLIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_FULLY_READABLE",
+        "SUBJECT_FULLY_READABLE"
+      ],
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "lighting"
+}

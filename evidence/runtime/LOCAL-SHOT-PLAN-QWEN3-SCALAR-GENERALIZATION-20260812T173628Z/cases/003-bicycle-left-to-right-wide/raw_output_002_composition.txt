@@ -1,0 +1,1 @@
+{ "background_visibility": "RAIN_SOFTLY_BLURRED", "focus_target": "FACE", "subject_placement": "CENTER", "subject_scale": "FACE_DOMINANT" }

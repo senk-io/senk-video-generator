@@ -1,0 +1,341 @@
+{
+  "automatic_retry_count": 0,
+  "comparison_performed": false,
+  "controlled_semantic_comparison_performed": false,
+  "creative_review_required": true,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP",
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "largest_exact_controlled_semantic_group_ratio": null,
+  "largest_exact_structure_group_ratio": null,
+  "model_call_count_observed": 21,
+  "model_call_count_requested": 21,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "parsed_run_count": 3,
+  "prompt_contract_version": "local-shot-planner-semantic-gloss.v10",
+  "run_count_observed": 3,
+  "run_count_requested": 3,
+  "runs": [
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 1,
+      "elapsed_seconds": 8.135893,
+      "proposal_blocking_observation_count": 2,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-001",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-RUN-001",
+      "run_index": 1,
+      "stage_contract_observation_count": 0,
+      "stages": [
+        {
+          "elapsed_seconds": 3.740815,
+          "generation_error": null,
+          "model_call_index": 1,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "11b413a90c20d85782726a60e154146fce1034aa88f2bbe79601259de464343e",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.236832,
+          "generation_error": null,
+          "model_call_index": 2,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "620ec96ad66b2d587cf452de4fd612a05d75d7fabc5ca1718e7672b04f8297b8",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.027391,
+          "generation_error": null,
+          "model_call_index": 3,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "3ba9d4ee0c826e66da51cda20ccb9ddf6f87c0f772ae755169c843499a10b20b",
+          "stage": "shot_core",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.734287,
+          "generation_error": null,
+          "model_call_index": 4,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "57939bc7878dab2bf95295bbf7d69d29fb0584d0dc4871e4e6c8e55c7e53c0f5",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.660606,
+          "generation_error": null,
+          "model_call_index": 5,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4863124ed899920d0e4b60129095c9c2a84706a384590e52f7cd5b4d72974672",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.799793,
+          "generation_error": null,
+          "model_call_index": 6,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "0fcf1902e2e8826190ad86ae08118922fd6396688917da945861cdd28cf1ba22",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.932229,
+          "generation_error": null,
+          "model_call_index": 7,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4999ca8eea2f52562979c94d8f370ff08e126705601082e96265be6cd355850f",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:48:04.752515+00:00",
+      "structural_observation_count": 2
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 1,
+      "elapsed_seconds": 5.10909,
+      "proposal_blocking_observation_count": 2,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-002",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-RUN-002",
+      "run_index": 2,
+      "stage_contract_observation_count": 0,
+      "stages": [
+        {
+          "elapsed_seconds": 0.727997,
+          "generation_error": null,
+          "model_call_index": 8,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "11b413a90c20d85782726a60e154146fce1034aa88f2bbe79601259de464343e",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.23837,
+          "generation_error": null,
+          "model_call_index": 9,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "620ec96ad66b2d587cf452de4fd612a05d75d7fabc5ca1718e7672b04f8297b8",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.043113,
+          "generation_error": null,
+          "model_call_index": 10,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "3ba9d4ee0c826e66da51cda20ccb9ddf6f87c0f772ae755169c843499a10b20b",
+          "stage": "shot_core",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.729171,
+          "generation_error": null,
+          "model_call_index": 11,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "57939bc7878dab2bf95295bbf7d69d29fb0584d0dc4871e4e6c8e55c7e53c0f5",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.67749,
+          "generation_error": null,
+          "model_call_index": 12,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4863124ed899920d0e4b60129095c9c2a84706a384590e52f7cd5b4d72974672",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.783131,
+          "generation_error": null,
+          "model_call_index": 13,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "0fcf1902e2e8826190ad86ae08118922fd6396688917da945861cdd28cf1ba22",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.906125,
+          "generation_error": null,
+          "model_call_index": 14,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4999ca8eea2f52562979c94d8f370ff08e126705601082e96265be6cd355850f",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:48:12.888669+00:00",
+      "structural_observation_count": 2
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 1,
+      "elapsed_seconds": 5.155743,
+      "proposal_blocking_observation_count": 2,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-003",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z-001-CRY_RAIN_CLOSEUP-RUN-003",
+      "run_index": 3,
+      "stage_contract_observation_count": 0,
+      "stages": [
+        {
+          "elapsed_seconds": 0.722265,
+          "generation_error": null,
+          "model_call_index": 15,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "11b413a90c20d85782726a60e154146fce1034aa88f2bbe79601259de464343e",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.233003,
+          "generation_error": null,
+          "model_call_index": 16,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "620ec96ad66b2d587cf452de4fd612a05d75d7fabc5ca1718e7672b04f8297b8",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.027121,
+          "generation_error": null,
+          "model_call_index": 17,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "3ba9d4ee0c826e66da51cda20ccb9ddf6f87c0f772ae755169c843499a10b20b",
+          "stage": "shot_core",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.737726,
+          "generation_error": null,
+          "model_call_index": 18,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "57939bc7878dab2bf95295bbf7d69d29fb0584d0dc4871e4e6c8e55c7e53c0f5",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.683867,
+          "generation_error": null,
+          "model_call_index": 19,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4863124ed899920d0e4b60129095c9c2a84706a384590e52f7cd5b4d72974672",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.825202,
+          "generation_error": null,
+          "model_call_index": 20,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "0fcf1902e2e8826190ad86ae08118922fd6396688917da945861cdd28cf1ba22",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.922484,
+          "generation_error": null,
+          "model_call_index": 21,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4999ca8eea2f52562979c94d8f370ff08e126705601082e96265be6cd355850f",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:48:17.997921+00:00",
+      "structural_observation_count": 2
+    }
+  ],
+  "schema_version": "local-shot-planner-trial-observation.v1",
+  "structurally_observable_run_count": 0
+}

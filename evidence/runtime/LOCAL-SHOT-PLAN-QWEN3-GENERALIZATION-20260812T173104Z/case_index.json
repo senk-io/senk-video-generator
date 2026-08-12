@@ -1,0 +1,20 @@
+[
+  {
+    "case_id": "CRY_RAIN_CLOSEUP",
+    "evidence_path": "cases/001-cry-rain-closeup",
+    "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-001-CRY_RAIN_CLOSEUP",
+    "ordinal": 1
+  },
+  {
+    "case_id": "SMILE_INDOOR_MEDIUM",
+    "evidence_path": "cases/002-smile-indoor-medium",
+    "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM",
+    "ordinal": 2
+  },
+  {
+    "case_id": "BICYCLE_LEFT_TO_RIGHT_WIDE",
+    "evidence_path": "cases/003-bicycle-left-to-right-wide",
+    "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE",
+    "ordinal": 3
+  }
+]

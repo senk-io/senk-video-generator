@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-generalized-observability.v8",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "scene_context",
+  "system": "你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名不得翻译。\n字段值必须逐字选择 allowed_values 对应数组中的一个枚举，不得改写、缩写或翻译。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"source_text\": \"白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止\", \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_values\": {\"continuity_anchor\": [\"SAME_SUBJECT_AND_CONTINUOUS_RAIN\", \"SAME_SUBJECT_AND_ENVIRONMENT\"], \"environment\": [\"CONTINUOUS_RAIN\", \"STABLE_ENVIRONMENT\"], \"location\": [\"OUTDOOR_LOCATION\", \"INDOOR_LOCATION\"], \"time\": [\"NIGHT\", \"DAY\"]}, \"instruction\": \"只选择地点、时间、环境和连续性锚点的语义标记。\", \"required_keys\": [\"continuity_anchor\", \"environment\", \"location\", \"time\"]}}"
+}

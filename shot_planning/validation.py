@@ -8,8 +8,13 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 from .contracts import (
+    PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
+    PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+    PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
     PROPOSAL_SCHEMA_VERSION,
+    PROPOSAL_SCHEMA_VERSION_V2,
+    REQUEST_SCHEMA_VERSION_V2,
     SUBJECT_ID_PATTERN,
     SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS,
     canonical_sha256,
@@ -136,7 +141,11 @@ def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
         return _report(request, {}, observations)
 
     expected_header = {
-        "schema_version": PROPOSAL_SCHEMA_VERSION,
+        "schema_version": (
+            PROPOSAL_SCHEMA_VERSION_V2
+            if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2
+            else PROPOSAL_SCHEMA_VERSION
+        ),
         "request_id": request["request_id"],
         "source_text_sha256": canonical_sha256(request["source_text"]),
         "status": "DRAFT_NON_AUTHORITATIVE",
@@ -170,13 +179,27 @@ def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
                     "non-empty string",
                     planner.get(field),
                 )
-        if planner.get("prompt_contract_version") not in SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS:
+        expected_prompt_versions = (
+            {
+                PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+                PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+                PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
+            }
+            if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2
+            else SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS
+            - {
+                PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+                PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+                PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
+            }
+        )
+        if planner.get("prompt_contract_version") not in expected_prompt_versions:
             _observe(
                 observations,
                 "PROMPT_CONTRACT_VERSION_MISMATCH",
                 "EVIDENCE",
                 "$.planner.prompt_contract_version",
-                sorted(SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS),
+                sorted(expected_prompt_versions),
                 planner.get("prompt_contract_version"),
             )
         sampling = planner.get("sampling")
@@ -229,6 +252,7 @@ def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
         beat_ids,
         beats,
         observations,
+        request_schema_version=request["schema_version"],
     )
 
     expected_scene_count = request.get("expected_scene_count")
@@ -359,6 +383,36 @@ def _observe_semantic_constraints(
                 environment_text,
             )
 
+    scene_term_constraints = {
+        "required_location_terms": (
+            "location",
+            " ".join(
+                str(scene.get("location", ""))
+                for scene in scenes
+                if isinstance(scene, dict)
+            ),
+        ),
+        "required_time_terms": (
+            "time",
+            " ".join(
+                str(scene.get("time", ""))
+                for scene in scenes
+                if isinstance(scene, dict)
+            ),
+        ),
+    }
+    for constraint_field, (scene_field, observed_text) in scene_term_constraints.items():
+        for term in constraints.get(constraint_field, []):
+            if term not in observed_text:
+                _observe(
+                    observations,
+                    "REQUIRED_SCENE_TERM_MISSING",
+                    "SEMANTIC",
+                    f"$.scenes[*].{scene_field}",
+                    term,
+                    observed_text,
+                )
+
     beat_action_text = " ".join(
         str(beat.get("action", "")) for beat in beats if isinstance(beat, dict)
     )
@@ -436,9 +490,14 @@ def _observe_semantic_constraints(
                     sorted(allowed_values),
                     camera.get(camera_field),
                 )
+        performance_field = (
+            "performance"
+            if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2
+            else "emotion"
+        )
         free_text_fields = {
             "composition": shot.get("composition"),
-            "emotion": shot.get("emotion"),
+            performance_field: shot.get(performance_field),
             "lighting": shot.get("lighting"),
             "continuity_in": shot.get("continuity_in"),
             "continuity_out": shot.get("continuity_out"),
@@ -465,7 +524,12 @@ def _observe_semantic_constraints(
 
         semantic_text_fields = {
             "required_composition_terms": ("composition", shot.get("composition")),
-            "required_emotion_terms": ("emotion", shot.get("emotion")),
+            "required_emotion_terms": (performance_field, shot.get(performance_field)),
+            "required_performance_terms": (
+                performance_field,
+                shot.get(performance_field),
+            ),
+            "required_lighting_terms": ("lighting", shot.get("lighting")),
             "required_continuity_in_terms": ("continuity_in", shot.get("continuity_in")),
             "required_continuity_out_terms": (
                 "continuity_out",
@@ -489,6 +553,46 @@ def _observe_semantic_constraints(
                         term,
                         observed_text,
                     )
+        full_proposal_text = " ".join(
+            str(value)
+            for value in (
+                " ".join(
+                    " ".join(
+                        str(scene.get(field, ""))
+                        for field in ("location", "time", "environment")
+                    )
+                    for scene in scenes
+                    if isinstance(scene, dict)
+                ),
+                " ".join(
+                    str(beat.get("action", ""))
+                    for beat in beats
+                    if isinstance(beat, dict)
+                ),
+                shot.get("script_segment"),
+                (shot.get("action") or {}).get("description")
+                if isinstance(shot.get("action"), dict)
+                else "",
+                shot.get("composition"),
+                shot.get(performance_field),
+                shot.get("lighting"),
+                shot.get("continuity_in"),
+                shot.get("continuity_out"),
+                " ".join(str(check) for check in checks)
+                if isinstance(checks, list)
+                else "",
+            )
+        )
+        for term in constraints.get("forbidden_output_terms", []):
+            if term in full_proposal_text:
+                _observe(
+                    observations,
+                    "FORBIDDEN_OUTPUT_TERM_PRESENT",
+                    "OBSERVABILITY",
+                    path,
+                    {"term_absent": term},
+                    full_proposal_text,
+                )
         minimum_check_count = constraints.get("minimum_observable_check_count")
         if isinstance(minimum_check_count, int) and (
             not isinstance(checks, list) or len(checks) < minimum_check_count
@@ -630,6 +734,8 @@ def _observe_shots(
     beat_ids: set[str],
     beats: list[dict[str, Any]],
     observations: list[PlanningObservation],
+    *,
+    request_schema_version: str,
 ) -> tuple[list[dict[str, Any]], set[str]]:
     if not isinstance(value, list) or not value:
         _observe(observations, "SHOTS_REQUIRED", "STRUCTURE", "$.shots", "non-empty array", value)
@@ -786,10 +892,15 @@ def _observe_shots(
                     camera.get("speed"),
                 )
 
+        performance_field = (
+            "performance"
+            if request_schema_version == REQUEST_SCHEMA_VERSION_V2
+            else "emotion"
+        )
         for field in (
             "script_segment",
             "composition",
-            "emotion",
+            performance_field,
             "lighting",
             "continuity_in",
             "continuity_out",

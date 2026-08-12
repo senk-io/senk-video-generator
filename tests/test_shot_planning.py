@@ -173,6 +173,17 @@ class ShotPlanningTest(unittest.TestCase):
         self.assertFalse(report["formal_decision_created"])
         self.assertTrue(report["creative_review_required"])
 
+    def test_v1_proposal_rejects_generalized_prompt_contract(self) -> None:
+        proposal = planning_proposal()
+        proposal["planner"]["prompt_contract_version"] = (
+            "local-shot-planner-semantic-gloss.v10"
+        )
+        report = observe_proposal(planning_request(), proposal)
+        self.assertIn(
+            "PROMPT_CONTRACT_VERSION_MISMATCH",
+            {item["code"] for item in report["observations"]},
+        )
+
     def test_binding_coverage_duration_and_subject_differences_are_separate(self) -> None:
         proposal = planning_proposal()
         proposal["source_text_sha256"] = "0" * 64

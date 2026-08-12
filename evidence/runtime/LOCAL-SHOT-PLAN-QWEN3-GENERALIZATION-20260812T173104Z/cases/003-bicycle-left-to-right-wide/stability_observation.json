@@ -1,0 +1,680 @@
+{
+  "comparable_run_count": 0,
+  "comparison_context_count": 0,
+  "comparison_contexts": [],
+  "comparison_performed": false,
+  "creative_review_required": true,
+  "exact_structure_group_count": 0,
+  "exact_structure_groups": [],
+  "field_consistency": {},
+  "formal_decision_created": false,
+  "largest_exact_structure_group_ratio": null,
+  "proposal_observations": [
+    {
+      "blocking_observation_count": 23,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 23,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v2",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-GENERALIZED-BICYCLE-001",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "3b5e835ad7ccafae48743e6c49731a9b70a2124b367b31614d372b7015fc5968",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 1,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "环境",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "室外",
+          "observed": "",
+          "path": "$.scenes[*].location"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "夜晚",
+          "observed": "",
+          "path": "$.scenes[*].time"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "0872abbf6f8fff0b83b9b624c68891fe25cdb387b71ca73554c6b95193623d05",
+      "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 23,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 23,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v2",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-GENERALIZED-BICYCLE-001",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "3b5e835ad7ccafae48743e6c49731a9b70a2124b367b31614d372b7015fc5968",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 1,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "环境",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "室外",
+          "observed": "",
+          "path": "$.scenes[*].location"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "夜晚",
+          "observed": "",
+          "path": "$.scenes[*].time"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "0872abbf6f8fff0b83b9b624c68891fe25cdb387b71ca73554c6b95193623d05",
+      "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 23,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 23,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v2",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-GENERALIZED-BICYCLE-001",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "3b5e835ad7ccafae48743e6c49731a9b70a2124b367b31614d372b7015fc5968",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 1,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "环境",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "室外",
+          "observed": "",
+          "path": "$.scenes[*].location"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SCENE_TERM_MISSING",
+          "expected": "夜晚",
+          "observed": "",
+          "path": "$.scenes[*].time"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "自行车",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "左",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "右",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "0872abbf6f8fff0b83b9b624c68891fe25cdb387b71ca73554c6b95193623d05",
+      "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+      "schema_version": "shot-planning-observation.v1"
+    }
+  ],
+  "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+  "run_count": 3,
+  "run_observations": [
+    {
+      "code": "RUNS_EXCLUDED_FROM_COMPARISON",
+      "expected": 3,
+      "observed": 0
+    },
+    {
+      "code": "INSUFFICIENT_UNIQUE_COMPARABLE_RUNS",
+      "expected": "at least 2 unique runs in one comparison context",
+      "observed": 0
+    }
+  ],
+  "schema_version": "shot-planning-stability-observation.v1"
+}

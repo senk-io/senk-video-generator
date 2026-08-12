@@ -1,0 +1,1 @@
+{ "action_class": "EXPRESS", "action_description": "一位虚构演员面向相机轻轻微笑", "camera_direction": "RIGHT", "camera_movement": "PAN", "camera_speed": "NONE", "framing": "MEDIUM", "primary_purpose": "DEVELOP_ACTION" }

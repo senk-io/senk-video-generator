@@ -1,0 +1,29 @@
+{
+  "architecture": "arm64",
+  "contract_sha256": "56dc712762a4f621964628507d64af1cfa6386496bf37c9817c8c9fed0da390d",
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE",
+  "formal_fact_creation": "PROHIBITED",
+  "git_head": "293de565e36608f5ad39886c662b20654171a090",
+  "git_status_porcelain": "M shot_planning/contracts.py\n M shot_planning/local_trial.py\n M shot_planning/prompting.py\n M shot_planning/validation.py\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173012Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V9-20260812T173433Z/\n?? experiments/shot_planning/generalized_actor_smile_medium_request_v1.json\n?? experiments/shot_planning/generalized_bicycle_left_to_right_wide_request_v1.json\n?? experiments/shot_planning/generalized_child_crying_closeup_request_v1.json\n?? experiments/shot_planning/qwen3_0_6b_generalization_suite_v1.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_bicycle_trial_v8.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_crying_trial_v8.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_smile_trial_v8.json\n?? experiments/shot_planning/qwen3_0_6b_scalar_choice_bicycle_trial_v9.json\n?? experiments/shot_planning/qwen3_0_6b_scalar_choice_crying_trial_v9.json\n?? experiments/shot_planning/qwen3_0_6b_scalar_choice_generalization_suite_v1.json\n?? experiments/shot_planning/qwen3_0_6b_scalar_choice_smile_trial_v9.json\n?? shot_planning/evaluation_suite.py\n?? shot_planning/generalized_observability.py\n?? tests/test_generalized_shot_planner_trial.py\n?? tests/test_local_shot_planner_suite.py\n?? tools/run_local_shot_planner_suite.py\n?? tools/verify_local_shot_planner_suite.py",
+  "implementation_sha256": {
+    "shot_planning/contracts.py": "81cf2112ea4070140452870f77f822c0c64ffb92dfe51caa1885a17278a6d6dc",
+    "shot_planning/controlled_context.py": "4e87dec6b744aaf3dabd0b21773eda25b5719b2f2807559637b0ce6a22335daf",
+    "shot_planning/generalized_observability.py": "2d77e0bbea6c8d624a2e7c0a11fe55bad1b2b12354f17f183ad501586c8dd4fd",
+    "shot_planning/local_trial.py": "7cc52390cf777333d0e47081be6d1e6d2e5c910e9a9ea82933b13e4937538184",
+    "shot_planning/prompting.py": "30d372a3b3cf6956e73fbefd9ac5abd43cee3fbc3f03ff8787508f58e4b9a106",
+    "shot_planning/stability.py": "d579bcca97c4e3b0ce4eb5a253bf5ccbb18c847a9eaf43d7ffbaa64d54d3a5c9",
+    "shot_planning/structured_observability.py": "7c9689c4db79a6ab5cf5237a98d74d4bb2a2a9e86a1f322c707b41f1bc5c3181",
+    "shot_planning/validation.py": "d7328dd5904bbdbd846528e8cee4d0c0b4caac14ed318ac18c668a92084b3879"
+  },
+  "model_download_may_use_network": true,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "paid_request": false,
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-12T17:37:16.837615+00:00",
+  "remote_inference_used": false,
+  "request_sha256": "e28f84b354e88fba6605b44e20114957cf245679061bed3ab323974db328d14c",
+  "runner_sha256": "b47b4a48e47d16fa144aa0990bcd8fba9fd4414c0c7e9524df4e63e3a6bf38eb"
+}

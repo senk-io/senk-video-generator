@@ -1,0 +1,40 @@
+{
+  "blocking_observation_count": 3,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 3,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "PROPOSAL_NOT_OBJECT",
+      "expected": "object",
+      "observed": "str",
+      "path": "$"
+    },
+    {
+      "category": "CAMERA",
+      "code": "STAGE_CAMERA_DIRECTION_INCOMPATIBLE",
+      "expected": [
+        "LEFT",
+        "RIGHT"
+      ],
+      "observed": "NONE",
+      "path": "$.stages.shot_core.camera_direction"
+    },
+    {
+      "category": "CAMERA",
+      "code": "STAGE_MOVING_CAMERA_SPEED_NONE",
+      "expected": [
+        "SLOW",
+        "MODERATE",
+        "FAST"
+      ],
+      "observed": "NONE",
+      "path": "$.stages.shot_core.camera_speed"
+    }
+  ],
+  "proposal_id": null,
+  "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+  "schema_version": "shot-planning-observation.v1"
+}

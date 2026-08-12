@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-semantic-gloss.v10",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "lighting",
+  "system": "你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名不得翻译。\n每个字段值必须是一个 JSON 字符串标量，形如 \"VALUE\"；严禁输出数组、方括号、对象、数字或布尔值。\n凡字段出现在 allowed_scalar_choices 中，只能从竖线分隔候选里逐字选择一个值，不能输出多个值。\n阅读 choice_glossary 理解候选语义；依据 source_text 选择，不能依据候选顺序猜测。\n主体的运动方向不是相机运动方向；只有原句明确声明相机或镜头运动，才选择非 STATIC 相机。\n没有候选的字符串字段必须结合 source_text 填写。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"source_text\": \"夜晚室外街灯下，固定相机拍摄一辆自行车从左向右穿过空旷街道的全景镜头\", \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_scalar_choices\": {\"highlight_state\": \"TEAR_HIGHLIGHT_VISIBLE | SUBJECT_EDGE_HIGHLIGHT\", \"light_quality\": \"SOFT_DIFFUSED | DIRECTIONAL_LOW_KEY\", \"light_source\": \"OVERCAST_DAYLIGHT | NIGHT_STREET_LIGHT\", \"subject_readability\": \"FACE_FULLY_READABLE | MOTION_FULLY_READABLE\"}, \"choice_glossary\": {\"highlight_state\": {\"SUBJECT_EDGE_HIGHLIGHT\": \"主体边缘高光保持可见\", \"TEAR_HIGHLIGHT_VISIBLE\": \"泪水高光保持可见\"}, \"light_quality\": {\"DIRECTIONAL_LOW_KEY\": \"定向低调光保持环境层次\", \"SOFT_DIFFUSED\": \"光线保持柔和漫射\"}, \"light_source\": {\"NIGHT_STREET_LIGHT\": \"夜间街道光照亮主体\", \"OVERCAST_DAYLIGHT\": \"阴天自然光照亮主体\"}, \"subject_readability\": {\"FACE_FULLY_READABLE\": \"主体面部细节清晰可读\", \"MOTION_FULLY_READABLE\": \"主体运动轮廓清晰可读\"}}, \"instruction\": \"只选择光源、光质、主体可读性和高光状态。\", \"interpretation_rules\": [\"按 source_text 的含义选择，不按候选在字符串中的先后位置选择。\", \"原句出现特写、中景或全景时，选择对应的 framing。\", \"主体从左向右移动只描述主体动作与连续性，不代表相机向右摇摄。\", \"只有原句明确说相机摇、推、拉、平移或手持运动时，才选择非 STATIC 相机运动。\", \"entry 表示镜头开始状态，exit 表示镜头结束状态。\"], \"required_keys\": [\"highlight_state\", \"light_quality\", \"light_source\", \"subject_readability\"], \"selection_rule\": \"每个字段只输出一个 JSON 字符串标量；从竖线分隔候选中逐字选择一个值。\", \"value_type\": \"JSON_STRING_SCALAR_ONLY\"}}"
+}

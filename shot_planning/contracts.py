@@ -9,11 +9,20 @@ from copy import deepcopy
 from typing import Any
 
 from .controlled_context import TOKENIZED_CONTEXT_ALLOWED_VALUES
+from .generalized_observability import (
+    GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+    GENERALIZED_STAGE_ALLOWED_VALUES,
+)
 from .structured_observability import STRUCTURED_STAGE_ALLOWED_VALUES
 
 
 REQUEST_SCHEMA_VERSION = "shot-planning-request.v1"
+REQUEST_SCHEMA_VERSION_V2 = "shot-planning-request.v2"
+SUPPORTED_REQUEST_SCHEMA_VERSIONS = frozenset(
+    {REQUEST_SCHEMA_VERSION, REQUEST_SCHEMA_VERSION_V2}
+)
 PROPOSAL_SCHEMA_VERSION = "shot-planning-proposal.v1"
+PROPOSAL_SCHEMA_VERSION_V2 = "shot-planning-proposal.v2"
 PLANNER_PROMPT_CONTRACT_VERSION = "local-shot-planner.v1"
 PLANNER_PAYLOAD_PROMPT_CONTRACT_VERSION = "local-shot-planner-payload.v2"
 PLANNER_STAGED_PROMPT_CONTRACT_VERSION = "local-shot-planner-staged.v3"
@@ -25,6 +34,15 @@ PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION = "local-shot-planner-controlled-context
 PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION = (
     "local-shot-planner-tokenized-context.v7"
 )
+PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION = (
+    "local-shot-planner-generalized-observability.v8"
+)
+PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION = (
+    "local-shot-planner-scalar-choices.v9"
+)
+PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION = (
+    "local-shot-planner-semantic-gloss.v10"
+)
 SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS = frozenset(
     {
         PLANNER_PROMPT_CONTRACT_VERSION,
@@ -34,6 +52,9 @@ SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS = frozenset(
         PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
         PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
         PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION,
+        PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+        PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+        PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
     }
 )
 REQUEST_ID_PATTERN = re.compile(r"PLAN-[A-Z0-9][A-Z0-9-]{2,95}")
@@ -64,7 +85,8 @@ def validate_request(value: Any) -> dict[str, Any]:
 
     if not isinstance(value, dict):
         raise ShotPlanningContractError("REQUEST_NOT_OBJECT", "规划请求必须是对象。")
-    if value.get("schema_version") != REQUEST_SCHEMA_VERSION:
+    request_schema_version = value.get("schema_version")
+    if request_schema_version not in SUPPORTED_REQUEST_SCHEMA_VERSIONS:
         raise ShotPlanningContractError(
             "REQUEST_SCHEMA_UNSUPPORTED",
             "规划请求版本不受支持。",
@@ -152,6 +174,12 @@ def validate_request(value: Any) -> dict[str, Any]:
             "必需主体标识必须唯一并使用 SUBJECT-000 格式。",
             "$.required_subject_ids",
         )
+    if request_schema_version == REQUEST_SCHEMA_VERSION_V2 and not required_subject_ids:
+        raise ShotPlanningContractError(
+            "REQUEST_V2_SUBJECT_IDS_REQUIRED",
+            "第二版规划请求必须显式声明至少一个主体标识，系统不得补造主体。",
+            "$.required_subject_ids",
+        )
 
     expected_scene_count = value.get("expected_scene_count")
     if expected_scene_count is not None and (
@@ -198,11 +226,16 @@ def validate_request(value: Any) -> dict[str, Any]:
             "allowed_camera_movements",
             "allowed_camera_directions",
             "allowed_camera_speeds",
+            "required_location_terms",
+            "required_time_terms",
             "required_composition_terms",
             "required_emotion_terms",
+            "required_performance_terms",
+            "required_lighting_terms",
             "required_continuity_in_terms",
             "required_continuity_out_terms",
             "required_observable_terms",
+            "forbidden_output_terms",
         )
         for field in optional_list_fields:
             field_value = semantic_constraints.get(field)
@@ -258,6 +291,39 @@ def validate_request(value: Any) -> dict[str, Any]:
                 "$.semantic_constraints.minimum_observable_check_count",
             )
 
+    controlled_observability_version = value.get(
+        "controlled_observability_compiler_version"
+    )
+    if request_schema_version == REQUEST_SCHEMA_VERSION and controlled_observability_version is not None:
+        raise ShotPlanningContractError(
+            "CONTROLLED_OBSERVABILITY_REQUIRES_REQUEST_V2",
+            "第二版受控可观察编译器必须绑定第二版规划请求。",
+            "$.schema_version",
+        )
+    if (
+        request_schema_version == REQUEST_SCHEMA_VERSION_V2
+        and controlled_observability_version
+        != GENERALIZED_OBSERVABILITY_COMPILER_VERSION
+    ):
+        raise ShotPlanningContractError(
+            "REQUEST_V2_COMPILER_REQUIRED",
+            "第二版规划请求必须绑定第二版通用可观察编译器。",
+            "$.controlled_observability_compiler_version",
+        )
+    if controlled_observability_version is not None and (
+        controlled_observability_version != GENERALIZED_OBSERVABILITY_COMPILER_VERSION
+    ):
+        raise ShotPlanningContractError(
+            "CONTROLLED_OBSERVABILITY_COMPILER_VERSION_INVALID",
+            "受控可观察编译版本不受支持。",
+            "$.controlled_observability_compiler_version",
+        )
+    controlled_stage_dictionary = (
+        GENERALIZED_STAGE_ALLOWED_VALUES
+        if controlled_observability_version == GENERALIZED_OBSERVABILITY_COMPILER_VERSION
+        else STRUCTURED_STAGE_ALLOWED_VALUES
+    )
+
     controlled_stage_values = value.get("controlled_stage_allowed_values")
     if controlled_stage_values is not None:
         if not isinstance(controlled_stage_values, dict):
@@ -266,7 +332,7 @@ def validate_request(value: Any) -> dict[str, Any]:
                 "受控阶段允许值必须是对象。",
                 "$.controlled_stage_allowed_values",
             )
-        expected_stages = set(STRUCTURED_STAGE_ALLOWED_VALUES) - {"shot_core"}
+        expected_stages = set(controlled_stage_dictionary) - {"shot_core"}
         if set(controlled_stage_values) != expected_stages:
             raise ShotPlanningContractError(
                 "CONTROLLED_STAGE_SET_INVALID",
@@ -275,7 +341,7 @@ def validate_request(value: Any) -> dict[str, Any]:
             )
         for stage in sorted(expected_stages):
             stage_value = controlled_stage_values.get(stage)
-            expected_fields = set(STRUCTURED_STAGE_ALLOWED_VALUES[stage])
+            expected_fields = set(controlled_stage_dictionary[stage])
             if not isinstance(stage_value, dict) or set(stage_value) != expected_fields:
                 raise ShotPlanningContractError(
                     "CONTROLLED_STAGE_FIELD_SET_INVALID",
@@ -283,7 +349,7 @@ def validate_request(value: Any) -> dict[str, Any]:
                     f"$.controlled_stage_allowed_values.{stage}",
                 )
             for field, values in stage_value.items():
-                global_values = STRUCTURED_STAGE_ALLOWED_VALUES[stage][field]
+                global_values = controlled_stage_dictionary[stage][field]
                 if (
                     not isinstance(values, list)
                     or not values

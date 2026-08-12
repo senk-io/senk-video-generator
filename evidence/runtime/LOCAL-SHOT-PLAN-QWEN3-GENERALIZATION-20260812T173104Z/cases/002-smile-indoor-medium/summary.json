@@ -1,0 +1,341 @@
+{
+  "automatic_retry_count": 0,
+  "comparison_performed": false,
+  "controlled_semantic_comparison_performed": false,
+  "creative_review_required": true,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM",
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "largest_exact_controlled_semantic_group_ratio": null,
+  "largest_exact_structure_group_ratio": null,
+  "model_call_count_observed": 21,
+  "model_call_count_requested": 21,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "parsed_run_count": 3,
+  "prompt_contract_version": "local-shot-planner-generalized-observability.v8",
+  "run_count_observed": 3,
+  "run_count_requested": 3,
+  "runs": [
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 4.928161,
+      "proposal_blocking_observation_count": 34,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-001",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-RUN-001",
+      "run_index": 1,
+      "stage_contract_observation_count": 33,
+      "stages": [
+        {
+          "elapsed_seconds": 0.674241,
+          "generation_error": null,
+          "model_call_index": 1,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b76d17f4f07020b257bff48bd95faf7e33f6d89751ce09caf6dd178aa884e4c0",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.234264,
+          "generation_error": null,
+          "model_call_index": 2,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.08626,
+          "generation_error": null,
+          "model_call_index": 3,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ddecb1c37d657c783e8e7fec6adbe755d4b1da3939e02a4288696b64e4106468",
+          "stage": "shot_core",
+          "stage_observation_count": 1
+        },
+        {
+          "elapsed_seconds": 0.694907,
+          "generation_error": null,
+          "model_call_index": 4,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b2696de42aacc3faadb8fa36cbfb9d07e34ffb5a3f1a589b69d8ccb291fce98e",
+          "stage": "composition",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.648857,
+          "generation_error": null,
+          "model_call_index": 5,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "de5bfd36b20514b38a67984cf880dc8e773336bfb29031f4ff5cee6296454d74",
+          "stage": "performance",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.772198,
+          "generation_error": null,
+          "model_call_index": 6,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "d6f3d8545b35eb4e9d03603eab731ef52cba523206b003fad12617f3dfc74ad1",
+          "stage": "lighting",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.81312,
+          "generation_error": null,
+          "model_call_index": 7,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e880cfd42400d292e600f327e7b446cb8d961dfd3d0769e9afbb58860fecf84c",
+          "stage": "continuity",
+          "stage_observation_count": 8
+        }
+      ],
+      "started_at": "2026-08-12T17:31:22.064628+00:00",
+      "structural_observation_count": 34
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 4.864094,
+      "proposal_blocking_observation_count": 34,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-002",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-RUN-002",
+      "run_index": 2,
+      "stage_contract_observation_count": 33,
+      "stages": [
+        {
+          "elapsed_seconds": 0.668943,
+          "generation_error": null,
+          "model_call_index": 8,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b76d17f4f07020b257bff48bd95faf7e33f6d89751ce09caf6dd178aa884e4c0",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.227806,
+          "generation_error": null,
+          "model_call_index": 9,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.074719,
+          "generation_error": null,
+          "model_call_index": 10,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ddecb1c37d657c783e8e7fec6adbe755d4b1da3939e02a4288696b64e4106468",
+          "stage": "shot_core",
+          "stage_observation_count": 1
+        },
+        {
+          "elapsed_seconds": 0.68902,
+          "generation_error": null,
+          "model_call_index": 11,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b2696de42aacc3faadb8fa36cbfb9d07e34ffb5a3f1a589b69d8ccb291fce98e",
+          "stage": "composition",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.624524,
+          "generation_error": null,
+          "model_call_index": 12,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "de5bfd36b20514b38a67984cf880dc8e773336bfb29031f4ff5cee6296454d74",
+          "stage": "performance",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.766355,
+          "generation_error": null,
+          "model_call_index": 13,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "d6f3d8545b35eb4e9d03603eab731ef52cba523206b003fad12617f3dfc74ad1",
+          "stage": "lighting",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.80829,
+          "generation_error": null,
+          "model_call_index": 14,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e880cfd42400d292e600f327e7b446cb8d961dfd3d0769e9afbb58860fecf84c",
+          "stage": "continuity",
+          "stage_observation_count": 8
+        }
+      ],
+      "started_at": "2026-08-12T17:31:26.992958+00:00",
+      "structural_observation_count": 34
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 4.900815,
+      "proposal_blocking_observation_count": 34,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-003",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM-RUN-003",
+      "run_index": 3,
+      "stage_contract_observation_count": 33,
+      "stages": [
+        {
+          "elapsed_seconds": 0.679618,
+          "generation_error": null,
+          "model_call_index": 15,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b76d17f4f07020b257bff48bd95faf7e33f6d89751ce09caf6dd178aa884e4c0",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.230004,
+          "generation_error": null,
+          "model_call_index": 16,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.072455,
+          "generation_error": null,
+          "model_call_index": 17,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ddecb1c37d657c783e8e7fec6adbe755d4b1da3939e02a4288696b64e4106468",
+          "stage": "shot_core",
+          "stage_observation_count": 1
+        },
+        {
+          "elapsed_seconds": 0.699745,
+          "generation_error": null,
+          "model_call_index": 18,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "b2696de42aacc3faadb8fa36cbfb9d07e34ffb5a3f1a589b69d8ccb291fce98e",
+          "stage": "composition",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.646067,
+          "generation_error": null,
+          "model_call_index": 19,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "de5bfd36b20514b38a67984cf880dc8e773336bfb29031f4ff5cee6296454d74",
+          "stage": "performance",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.752712,
+          "generation_error": null,
+          "model_call_index": 20,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "d6f3d8545b35eb4e9d03603eab731ef52cba523206b003fad12617f3dfc74ad1",
+          "stage": "lighting",
+          "stage_observation_count": 8
+        },
+        {
+          "elapsed_seconds": 0.815986,
+          "generation_error": null,
+          "model_call_index": 21,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e880cfd42400d292e600f327e7b446cb8d961dfd3d0769e9afbb58860fecf84c",
+          "stage": "continuity",
+          "stage_observation_count": 8
+        }
+      ],
+      "started_at": "2026-08-12T17:31:31.857208+00:00",
+      "structural_observation_count": 34
+    }
+  ],
+  "schema_version": "local-shot-planner-trial-observation.v1",
+  "structurally_observable_run_count": 0
+}

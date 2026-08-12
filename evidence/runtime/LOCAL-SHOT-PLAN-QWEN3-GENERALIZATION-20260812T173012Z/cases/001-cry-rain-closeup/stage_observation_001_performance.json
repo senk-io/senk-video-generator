@@ -1,0 +1,95 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "RESTRAINED"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CRYING"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "TEARS_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE"
+      ],
+      "observed": [
+        "TEARS_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACING_CAMERA",
+        "NATURAL_FORWARD"
+      ],
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "observed": [
+        "RESTRAINED"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING",
+        "SMILING"
+      ],
+      "observed": [
+        "CRYING"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "performance"
+}

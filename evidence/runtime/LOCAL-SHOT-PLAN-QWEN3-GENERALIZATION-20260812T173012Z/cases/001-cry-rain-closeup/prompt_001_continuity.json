@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-generalized-observability.v8",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "continuity",
+  "system": "你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名不得翻译。\n字段值必须逐字选择 allowed_values 对应数组中的一个枚举，不得改写、缩写或翻译。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"source_text\": \"白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止\", \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_values\": {\"entry_environment_state\": [\"CONTINUOUS_RAIN\", \"SAME_INDOOR_ENVIRONMENT\"], \"entry_subject_state\": [\"SUBJECT_ALREADY_CRYING\", \"SUBJECT_ALREADY_SMILING\"], \"exit_environment_state\": [\"CONTINUOUS_RAIN\", \"SAME_INDOOR_ENVIRONMENT\"], \"exit_subject_state\": [\"CRYING_CONTINUES\", \"SMILE_CONTINUES\"]}, \"instruction\": \"只选择进入与离开镜头时主体和环境的可见状态。\", \"required_keys\": [\"entry_environment_state\", \"entry_subject_state\", \"exit_environment_state\", \"exit_subject_state\"]}}"
+}

@@ -1,0 +1,9 @@
+{
+  "action_class": "EXPRESS",
+  "action_description": "微笑",
+  "camera_direction": "NONE",
+  "camera_movement": "PAN",
+  "camera_speed": "NONE",
+  "framing": "MEDIUM",
+  "primary_purpose": "DEVELOP_ACTION"
+}

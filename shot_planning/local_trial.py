@@ -14,12 +14,18 @@ from typing import Any, Callable
 
 from .contracts import (
     PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
+    PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
     PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
     PLANNER_PAYLOAD_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
     PLANNER_STAGED_PROMPT_CONTRACT_VERSION,
     PLANNER_SEMANTIC_PROMPT_CONTRACT_VERSION,
     PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION,
+    PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+    PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
+    PROPOSAL_SCHEMA_VERSION,
+    PROPOSAL_SCHEMA_VERSION_V2,
+    REQUEST_SCHEMA_VERSION_V2,
     canonical_sha256,
     validate_request,
 )
@@ -33,14 +39,33 @@ from .controlled_context import (
     tokenized_context_compiler_contract_sha256,
 )
 from .prompting import (
+    build_local_planner_generalized_stage_prompt,
     build_local_planner_context_stage_prompt,
     build_local_planner_observable_stage_prompt,
     build_local_planner_payload_prompt,
     build_local_planner_prompt,
     build_local_planner_stage_prompt,
     build_local_planner_tokenized_context_stage_prompt,
+    build_local_planner_scalar_choice_stage_prompt,
+    build_local_planner_semantic_gloss_stage_prompt,
+)
+from .generalized_observability import (
+    GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+    GENERALIZED_STAGE_ALLOWED_VALUES,
+    GENERALIZED_STAGE_ORDER,
+    GENERALIZED_STAGE_REQUIRED_KEYS,
+    build_generalized_payload,
+    generalized_compiler_contract,
+    generalized_compiler_contract_sha256,
+    observe_generalized_semantic_stability,
+    observe_generalized_stage_consistency,
 )
 from .stability import observe_stability
+from .semantic_choice import (
+    SEMANTIC_CHOICE_GLOSSARY_VERSION,
+    semantic_choice_glossary_contract,
+    semantic_choice_glossary_sha256,
+)
 from .structured_observability import (
     CONTROLLED_OBSERVABILITY_COMPILER_VERSION,
     OBSERVABLE_STAGE_ORDER,
@@ -61,6 +86,9 @@ TRIAL_SCHEMA_VERSION_V4 = "local-shot-planner-trial.v4"
 TRIAL_SCHEMA_VERSION_V5 = "local-shot-planner-trial.v5"
 TRIAL_SCHEMA_VERSION_V6 = "local-shot-planner-trial.v6"
 TRIAL_SCHEMA_VERSION_V7 = "local-shot-planner-trial.v7"
+TRIAL_SCHEMA_VERSION_V8 = "local-shot-planner-trial.v8"
+TRIAL_SCHEMA_VERSION_V9 = "local-shot-planner-trial.v9"
+TRIAL_SCHEMA_VERSION_V10 = "local-shot-planner-trial.v10"
 STAGED_TRIAL_SCHEMA_VERSIONS = frozenset(
     {
         TRIAL_SCHEMA_VERSION_V3,
@@ -68,10 +96,20 @@ STAGED_TRIAL_SCHEMA_VERSIONS = frozenset(
         TRIAL_SCHEMA_VERSION_V5,
         TRIAL_SCHEMA_VERSION_V6,
         TRIAL_SCHEMA_VERSION_V7,
+        TRIAL_SCHEMA_VERSION_V8,
+        TRIAL_SCHEMA_VERSION_V9,
+        TRIAL_SCHEMA_VERSION_V10,
     }
 )
 CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
     {TRIAL_SCHEMA_VERSION_V5, TRIAL_SCHEMA_VERSION_V6, TRIAL_SCHEMA_VERSION_V7}
+)
+GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
+    {TRIAL_SCHEMA_VERSION_V8, TRIAL_SCHEMA_VERSION_V9, TRIAL_SCHEMA_VERSION_V10}
+)
+SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
+    CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+    | GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
 )
 MODEL_ID = "Qwen/Qwen3-0.6B"
 MODEL_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"
@@ -125,6 +163,9 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
         TRIAL_SCHEMA_VERSION_V5,
         TRIAL_SCHEMA_VERSION_V6,
         TRIAL_SCHEMA_VERSION_V7,
+        TRIAL_SCHEMA_VERSION_V8,
+        TRIAL_SCHEMA_VERSION_V9,
+        TRIAL_SCHEMA_VERSION_V10,
     }:
         raise ValueError("本地规划试验合同版本无效。")
     if value.get("status") != "BOUNDED_NON_AUTHORITATIVE_TRIAL":
@@ -156,7 +197,7 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
     }
     if schema_version in {TRIAL_SCHEMA_VERSION_V3, TRIAL_SCHEMA_VERSION_V4}:
         expected_budget["maximum_model_calls"] = 9
-    elif schema_version in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+    elif schema_version in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
         expected_budget["maximum_model_calls"] = 21
     if budget != expected_budget:
         raise ValueError("本地规划资源预算无效。")
@@ -299,6 +340,103 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
             or not strategy_context.get("previous_observations")
         ):
             raise ValueError("第七版试验必须引用第六版自然语言缩写观察。")
+    if schema_version == TRIAL_SCHEMA_VERSION_V8:
+        if value.get("prompt_strategy") != {
+            "assistant_prefill": "{",
+            "camera_constraints_enforced": True,
+            "compiler_contract_sha256": generalized_compiler_contract_sha256(),
+            "compiler_contract_version": GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+            "context_compiler_contract_sha256": (
+                tokenized_context_compiler_contract_sha256()
+            ),
+            "context_compiler_contract_version": TOKENIZED_CONTEXT_COMPILER_VERSION,
+            "context_role_constraints_enforced": True,
+            "cross_stage_consistency_enforced": True,
+            "model_output_scope": "seven_flat_generalized_observability_stages",
+            "prompt_contract_version": (
+                PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION
+            ),
+            "semantic_constraints_enforced": True,
+            "stages": list(GENERALIZED_STAGE_ORDER),
+            "system_owned_beat_action_reuse": True,
+            "system_owned_envelope": True,
+            "system_owned_observable_text_compilation": True,
+        }:
+            raise ValueError("第八版提示策略必须固定通用可观察词表与跨阶段约束。")
+        strategy_context = value.get("strategy_context")
+        if (
+            not isinstance(strategy_context, dict)
+            or strategy_context.get("change")
+            != "GENERALIZED_SUBJECT_OBSERVABILITY_AND_CROSS_STAGE_CONSISTENCY"
+            or not isinstance(strategy_context.get("previous_execution_id"), str)
+            or not strategy_context.get("previous_observations")
+        ):
+            raise ValueError("第八版试验必须引用第七版单请求词表绑定观察。")
+    if schema_version == TRIAL_SCHEMA_VERSION_V9:
+        if value.get("prompt_strategy") != {
+            "assistant_prefill": "{",
+            "camera_constraints_enforced": True,
+            "compiler_contract_sha256": generalized_compiler_contract_sha256(),
+            "compiler_contract_version": GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+            "context_compiler_contract_sha256": (
+                tokenized_context_compiler_contract_sha256()
+            ),
+            "context_compiler_contract_version": TOKENIZED_CONTEXT_COMPILER_VERSION,
+            "context_role_constraints_enforced": True,
+            "cross_stage_consistency_enforced": True,
+            "model_output_scope": "seven_flat_scalar_choice_stages",
+            "prompt_contract_version": PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+            "scalar_choice_encoding": "pipe_delimited_strings",
+            "semantic_constraints_enforced": True,
+            "stages": list(GENERALIZED_STAGE_ORDER),
+            "system_owned_beat_action_reuse": True,
+            "system_owned_envelope": True,
+            "system_owned_observable_text_compilation": True,
+        }:
+            raise ValueError("第九版提示策略必须固定标量候选编码。")
+        strategy_context = value.get("strategy_context")
+        if (
+            not isinstance(strategy_context, dict)
+            or strategy_context.get("change") != "SCALAR_CHOICE_PROMPT_ENCODING"
+            or not isinstance(strategy_context.get("previous_execution_id"), str)
+            or not strategy_context.get("previous_observations")
+        ):
+            raise ValueError("第九版试验必须引用第八版数组输出观察。")
+    if schema_version == TRIAL_SCHEMA_VERSION_V10:
+        if value.get("prompt_strategy") != {
+            "assistant_prefill": "{",
+            "camera_constraints_enforced": True,
+            "choice_glossary_contract_sha256": semantic_choice_glossary_sha256(),
+            "choice_glossary_contract_version": SEMANTIC_CHOICE_GLOSSARY_VERSION,
+            "compiler_contract_sha256": generalized_compiler_contract_sha256(),
+            "compiler_contract_version": GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+            "context_compiler_contract_sha256": (
+                tokenized_context_compiler_contract_sha256()
+            ),
+            "context_compiler_contract_version": TOKENIZED_CONTEXT_COMPILER_VERSION,
+            "context_role_constraints_enforced": True,
+            "cross_stage_consistency_enforced": True,
+            "model_output_scope": "seven_flat_glossed_scalar_choice_stages",
+            "prompt_contract_version": PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
+            "scalar_choice_encoding": "pipe_delimited_strings",
+            "semantic_choice_glossary_enforced": True,
+            "semantic_constraints_enforced": True,
+            "stages": list(GENERALIZED_STAGE_ORDER),
+            "subject_camera_direction_disambiguation": True,
+            "system_owned_beat_action_reuse": True,
+            "system_owned_envelope": True,
+            "system_owned_observable_text_compilation": True,
+        }:
+            raise ValueError("第十版提示策略必须固定候选释义和主体/相机方向边界。")
+        strategy_context = value.get("strategy_context")
+        if (
+            not isinstance(strategy_context, dict)
+            or strategy_context.get("change")
+            != "SEMANTIC_CHOICE_GLOSSARY_AND_SUBJECT_CAMERA_DISAMBIGUATION"
+            or not isinstance(strategy_context.get("previous_execution_id"), str)
+            or not strategy_context.get("previous_observations")
+        ):
+            raise ValueError("第十版试验必须引用第九版候选位置偏置观察。")
     binding = value.get("request_binding")
     if (
         not isinstance(binding, dict)
@@ -311,11 +449,17 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
 
 
 def prompt_contract_version(contract: dict[str, Any]) -> str:
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
+        return PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V9:
+        return PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V8:
+        return PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
         return PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V6:
         return PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION
-    if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+    if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
         return PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V4:
         return PLANNER_SEMANTIC_PROMPT_CONTRACT_VERSION
@@ -331,6 +475,13 @@ def validate_request_binding(
     request: dict[str, Any],
     request_relative_path: str,
 ) -> None:
+    generalized_request = request.get("schema_version") == REQUEST_SCHEMA_VERSION_V2
+    generalized_trial = (
+        contract.get("schema_version")
+        in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+    )
+    if generalized_request != generalized_trial:
+        raise LocalTrialError("规划请求版本与本地试验版本边界不一致。")
     binding = contract["request_binding"]
     if binding["request_file"] != request_relative_path:
         raise LocalTrialError("规划请求路径与固定合同不一致。")
@@ -421,6 +572,7 @@ def compile_payload_to_proposal(
         else []
     )
     raw_shots = payload.get("shots") if isinstance(payload.get("shots"), list) else []
+    generalized_request = request["schema_version"] == REQUEST_SCHEMA_VERSION_V2
     scenes = []
     for index, raw in enumerate(raw_scenes, start=1):
         item = raw if isinstance(raw, dict) else {}
@@ -467,8 +619,7 @@ def compile_payload_to_proposal(
             if isinstance(beat_ordinals, list)
             else beat_ordinals
         )
-        shots.append(
-            {
+        compiled_shot = {
                 "shot_id": f"SHOT-{index:03d}",
                 "ordinal": index,
                 "scene_id": (
@@ -492,15 +643,20 @@ def compile_payload_to_proposal(
                     "direction": item.get("camera_direction"),
                     "speed": item.get("camera_speed"),
                 },
-                "emotion": item.get("emotion"),
                 "lighting": item.get("lighting"),
                 "continuity_in": item.get("continuity_in"),
                 "continuity_out": item.get("continuity_out"),
                 "observable_checks": item.get("observable_checks"),
             }
-        )
+        if generalized_request:
+            compiled_shot["performance"] = item.get("performance")
+        else:
+            compiled_shot["emotion"] = item.get("emotion")
+        shots.append(compiled_shot)
     return {
-        "schema_version": "shot-planning-proposal.v1",
+        "schema_version": (
+            PROPOSAL_SCHEMA_VERSION_V2 if generalized_request else PROPOSAL_SCHEMA_VERSION
+        ),
         "proposal_id": proposal_id,
         "request_id": request["request_id"],
         "source_text_sha256": canonical_sha256(source_text),
@@ -551,9 +707,15 @@ def observe_stage_payload(
     payload: Any,
     *,
     request: dict[str, Any] | None = None,
+    compiler_version: str | None = None,
 ) -> list[dict[str, Any]]:
     observations: list[dict[str, Any]] = []
-    expected_keys = STAGE_KEYS[stage]
+    generalized = compiler_version == GENERALIZED_OBSERVABILITY_COMPILER_VERSION
+    expected_keys = (
+        GENERALIZED_STAGE_REQUIRED_KEYS[stage]
+        if generalized and stage in GENERALIZED_STAGE_REQUIRED_KEYS
+        else STAGE_KEYS[stage]
+    )
     if not isinstance(payload, dict):
         return [
             {
@@ -585,9 +747,14 @@ def observe_stage_payload(
                     "observed": payload[key],
                 }
             )
+    stage_allowed_dictionary = (
+        GENERALIZED_STAGE_ALLOWED_VALUES
+        if generalized
+        else STRUCTURED_STAGE_ALLOWED_VALUES
+    )
     allowed_fields = {
         key: tuple(values)
-        for key, values in STRUCTURED_STAGE_ALLOWED_VALUES.get(stage, {}).items()
+        for key, values in stage_allowed_dictionary.get(stage, {}).items()
     }
     constraints = request.get("semantic_constraints") if isinstance(request, dict) else None
     request_controlled_values = (
@@ -621,7 +788,7 @@ def observe_stage_payload(
                 for key, values in request_context_values[stage].items()
             }
         )
-    if stage in STRUCTURED_STAGE_ALLOWED_VALUES and stage != "shot_core" and isinstance(
+    if stage in stage_allowed_dictionary and stage != "shot_core" and isinstance(
         request_controlled_values, dict
     ):
         allowed_fields = {
@@ -997,6 +1164,48 @@ def compile_tokenized_context_stages_to_proposal(
     )
 
 
+def compile_generalized_stages_to_proposal(
+    stages: dict[str, dict[str, Any]],
+    request: dict[str, Any],
+    contract: dict[str, Any],
+    *,
+    proposal_id: str,
+    run_id: str,
+) -> dict[str, Any]:
+    """把第八版通用受控标记编译成第二版非权威提案。"""
+
+    return compile_payload_to_proposal(
+        build_generalized_payload(stages, request),
+        request,
+        contract,
+        proposal_id=proposal_id,
+        run_id=run_id,
+    )
+
+
+def _build_staged_prompt(
+    contract: dict[str, Any],
+    request: dict[str, Any],
+    stage: str,
+) -> dict[str, Any]:
+    """按试验版本确定性重建阶段提示，供运行器和校验器共用。"""
+
+    schema_version = contract["schema_version"]
+    if schema_version == TRIAL_SCHEMA_VERSION_V10:
+        return build_local_planner_semantic_gloss_stage_prompt(request, stage)
+    if schema_version == TRIAL_SCHEMA_VERSION_V9:
+        return build_local_planner_scalar_choice_stage_prompt(request, stage)
+    if schema_version == TRIAL_SCHEMA_VERSION_V8:
+        return build_local_planner_generalized_stage_prompt(request, stage)
+    if schema_version == TRIAL_SCHEMA_VERSION_V7:
+        return build_local_planner_tokenized_context_stage_prompt(request, stage)
+    if schema_version == TRIAL_SCHEMA_VERSION_V6:
+        return build_local_planner_context_stage_prompt(request, stage)
+    if schema_version == TRIAL_SCHEMA_VERSION_V5:
+        return build_local_planner_observable_stage_prompt(request, stage)
+    return build_local_planner_stage_prompt(request, stage)
+
+
 def _run_staged_trial(
     contract: dict[str, Any],
     request: dict[str, Any],
@@ -1011,7 +1220,18 @@ def _run_staged_trial(
     write_json(evidence_dir / "planning_request.json", request)
     if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
         write_json(evidence_dir / "compiler_contract.json", compiler_contract())
-    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
+    elif contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+        write_json(
+            evidence_dir / "compiler_contract.json", generalized_compiler_contract()
+        )
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
+        write_json(
+            evidence_dir / "choice_glossary_contract.json",
+            semantic_choice_glossary_contract(),
+        )
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7 or contract[
+        "schema_version"
+    ] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
         write_json(
             evidence_dir / "context_compiler_contract.json",
             tokenized_context_compiler_contract(),
@@ -1031,16 +1251,7 @@ def _run_staged_trial(
         stage_observations: list[dict[str, Any]] = []
         raw_outputs: dict[str, str] = {}
         for stage in contract["prompt_strategy"]["stages"]:
-            if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
-                prompt = build_local_planner_tokenized_context_stage_prompt(
-                    request, stage
-                )
-            elif contract["schema_version"] == TRIAL_SCHEMA_VERSION_V6:
-                prompt = build_local_planner_context_stage_prompt(request, stage)
-            elif contract["schema_version"] == TRIAL_SCHEMA_VERSION_V5:
-                prompt = build_local_planner_observable_stage_prompt(request, stage)
-            else:
-                prompt = build_local_planner_stage_prompt(request, stage)
+            prompt = _build_staged_prompt(contract, request, stage)
             write_json(evidence_dir / f"prompt_{run_index:03d}_{stage}.json", prompt)
             model_call_count += 1
             stage_started = time.monotonic()
@@ -1070,8 +1281,11 @@ def _run_staged_trial(
                 request=(
                     request
                     if contract["schema_version"]
-                    in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                    in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
                     else None
+                ),
+                compiler_version=contract["prompt_strategy"].get(
+                    "compiler_contract_version"
                 ),
             )
             stage_observations.extend(payload_observations)
@@ -1097,20 +1311,47 @@ def _run_staged_trial(
                     "formal_decision_created": False,
                 },
             )
-
         all_stages_present = set(stages) == set(contract["prompt_strategy"]["stages"])
-        all_stage_contracts_observable = all_stages_present and not stage_observations
+        cross_stage_observations = (
+            observe_generalized_stage_consistency(stages)
+            if contract["schema_version"]
+            in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+            and all_stages_present
+            and not stage_observations
+            else []
+        )
+        if contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+            write_json(
+                evidence_dir / f"cross_stage_observation_{run_index:03d}.json",
+                {
+                    "observations": cross_stage_observations,
+                    "formal_decision_created": False,
+                },
+            )
+        all_stage_contracts_observable = (
+            all_stages_present
+            and not stage_observations
+            and not cross_stage_observations
+        )
         if all_stages_present and (
             contract["schema_version"]
-            not in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+            not in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
             or all_stage_contracts_observable
         ):
             if (
                 contract["schema_version"]
-                in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
             ):
-                if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
-                    proposal: Any = compile_tokenized_context_stages_to_proposal(
+                if contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+                    proposal = compile_generalized_stages_to_proposal(
+                        stages,
+                        request,
+                        contract,
+                        proposal_id=proposal_id,
+                        run_id=run_id,
+                    )
+                elif contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
+                    proposal = compile_tokenized_context_stages_to_proposal(
                         stages,
                         request,
                         contract,
@@ -1142,13 +1383,17 @@ def _run_staged_trial(
             expected_run_id=run_id,
             contract=contract,
         )
-        combined_observations = [*stage_observations, *binding_observations]
+        combined_observations = [
+            *stage_observations,
+            *cross_stage_observations,
+            *binding_observations,
+        ]
         if combined_observations:
             proposal_observation["observations"].extend(combined_observations)
             proposal_observation["observation_count"] += len(combined_observations)
             proposal_observation["blocking_observation_count"] += len(combined_observations)
         stability_inputs.append(proposal if not combined_observations else raw_outputs)
-        if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+        if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
             controlled_stability_inputs.append(
                 deepcopy(stages) if all_stage_contracts_observable else None
             )
@@ -1171,6 +1416,7 @@ def _run_staged_trial(
                 ),
                 "all_stage_contracts_observable": all_stage_contracts_observable,
                 "stage_contract_observation_count": len(stage_observations),
+                "cross_stage_observation_count": len(cross_stage_observations),
                 "proposal_blocking_observation_count": proposal_observation[
                     "blocking_observation_count"
                 ],
@@ -1183,9 +1429,12 @@ def _run_staged_trial(
     stability = observe_stability(request, stability_inputs)
     write_json(evidence_dir / "stability_observation.json", stability)
     controlled_stability: dict[str, Any] | None = None
-    if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
-        controlled_stability = observe_controlled_semantic_stability(
-            controlled_stability_inputs
+    if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
+        controlled_stability = (
+            observe_generalized_semantic_stability(controlled_stability_inputs)
+            if contract["schema_version"]
+            in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+            else observe_controlled_semantic_stability(controlled_stability_inputs)
         )
         write_json(
             evidence_dir / "controlled_semantic_stability_observation.json",
@@ -1389,8 +1638,11 @@ def environment_record(
     implementation_relative_paths = (
         "shot_planning/contracts.py",
         "shot_planning/controlled_context.py",
+        "shot_planning/evaluation_suite.py",
+        "shot_planning/generalized_observability.py",
         "shot_planning/local_trial.py",
         "shot_planning/prompting.py",
+        "shot_planning/semantic_choice.py",
         "shot_planning/stability.py",
         "shot_planning/structured_observability.py",
         "shot_planning/validation.py",
@@ -1442,6 +1694,95 @@ def write_manifest(evidence_dir: Path) -> dict[str, Any]:
     return manifest
 
 
+def _verify_environment_record(
+    evidence_dir: Path,
+    environment: Any,
+    *,
+    execution_id: str,
+    contract: dict[str, Any],
+) -> None:
+    """核对运行环境的边界字段；测试证据只允许显式最小占位。"""
+
+    if environment == {"test_environment": True}:
+        return
+    base_fields = {
+        "execution_id",
+        "recorded_at",
+        "operating_system",
+        "operating_system_version",
+        "architecture",
+        "python_version",
+        "git_head",
+        "git_status_porcelain",
+        "contract_sha256",
+        "request_sha256",
+        "runner_sha256",
+        "model_id",
+        "model_revision",
+        "remote_inference_used",
+        "model_download_may_use_network",
+        "paid_request",
+        "formal_fact_creation",
+    }
+    allowed_field_sets = {frozenset(base_fields), frozenset(base_fields | {"implementation_sha256"})}
+    if not isinstance(environment, dict) or frozenset(environment) not in allowed_field_sets:
+        raise LocalTrialError("运行环境记录字段集合无效。")
+    if (
+        environment.get("execution_id") != execution_id
+        or not isinstance(environment.get("recorded_at"), str)
+        or not environment["recorded_at"]
+        or environment.get("contract_sha256")
+        != sha256_file(evidence_dir / "trial_contract.json")
+        or environment.get("request_sha256")
+        != sha256_file(evidence_dir / "planning_request.json")
+        or not isinstance(environment.get("runner_sha256"), str)
+        or len(environment["runner_sha256"]) != 64
+        or environment.get("model_id") != contract["model"]["model_id"]
+        or environment.get("model_revision") != contract["model"]["revision"]
+        or environment.get("remote_inference_used") is not False
+        or environment.get("model_download_may_use_network") is not True
+        or environment.get("paid_request") is not False
+        or environment.get("formal_fact_creation") != "PROHIBITED"
+    ):
+        raise LocalTrialError("运行环境记录与固定执行边界不一致。")
+    implementation = environment.get("implementation_sha256")
+    if implementation is not None and (
+        not isinstance(implementation, dict)
+        or not implementation
+        or any(
+            not isinstance(path, str)
+            or not isinstance(digest, str)
+            or len(digest) != 64
+            for path, digest in implementation.items()
+        )
+    ):
+        raise LocalTrialError("运行环境实现摘要无效。")
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10 and (
+        not isinstance(implementation, dict)
+        or "shot_planning/evaluation_suite.py" not in implementation
+    ):
+        raise LocalTrialError("第十版运行环境缺少套件汇总器实现摘要。")
+
+
+def _observation_documents_equal(left: Any, right: Any) -> bool:
+    """观察顺序不承载语义；按完整观察对象的规范 JSON 比较多重集合。"""
+
+    if not isinstance(left, dict) or not isinstance(right, dict):
+        return left == right
+    left_value = deepcopy(left)
+    right_value = deepcopy(right)
+    for value in (left_value, right_value):
+        observations = value.get("observations")
+        if isinstance(observations, list):
+            value["observations"] = sorted(
+                observations,
+                key=lambda item: json.dumps(
+                    item, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+                ),
+            )
+    return left_value == right_value
+
+
 def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
     """重新计算本地规划证据包完整性，不创建镜头或质量裁决。"""
 
@@ -1477,7 +1818,7 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
     )
     if canonical_sha256(request) != contract["request_binding"]["request_sha256"]:
         raise LocalTrialError("证据中的请求与试验合同摘要不一致。")
-    if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+    if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
         compiler_path = evidence_dir / "compiler_contract.json"
         if not compiler_path.is_file():
             raise LocalTrialError("受控可观察试验证据缺少编译合同。")
@@ -1490,21 +1831,36 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
             "compiler_contract_sha256"
         ]:
             raise LocalTrialError("受控可观察试验的编译合同摘要不一致。")
-    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
+        glossary_path = evidence_dir / "choice_glossary_contract.json"
+        if not glossary_path.is_file():
+            raise LocalTrialError("第十版证据缺少候选释义合同。")
+        observed_glossary = json.loads(glossary_path.read_text(encoding="utf-8"))
+        if observed_glossary.get("schema_version") != contract[
+            "prompt_strategy"
+        ]["choice_glossary_contract_version"]:
+            raise LocalTrialError("第十版候选释义合同版本不一致。")
+        if canonical_sha256(observed_glossary) != contract["prompt_strategy"][
+            "choice_glossary_contract_sha256"
+        ]:
+            raise LocalTrialError("第十版候选释义合同摘要不一致。")
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7 or contract[
+        "schema_version"
+    ] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
         context_compiler_path = evidence_dir / "context_compiler_contract.json"
         if not context_compiler_path.is_file():
-            raise LocalTrialError("第七版证据缺少上下文编译合同。")
+            raise LocalTrialError("标记化上下文证据缺少上下文编译合同。")
         observed_context_compiler = json.loads(
             context_compiler_path.read_text(encoding="utf-8")
         )
         if observed_context_compiler.get("schema_version") != contract[
             "prompt_strategy"
         ]["context_compiler_contract_version"]:
-            raise LocalTrialError("第七版上下文编译合同版本不一致。")
+            raise LocalTrialError("标记化上下文编译合同版本不一致。")
         if canonical_sha256(observed_context_compiler) != contract[
             "prompt_strategy"
         ]["context_compiler_contract_sha256"]:
-            raise LocalTrialError("第七版上下文编译合同摘要不一致。")
+            raise LocalTrialError("标记化上下文编译合同摘要不一致。")
     summary = json.loads((evidence_dir / "summary.json").read_text(encoding="utf-8"))
     stability = json.loads(
         (evidence_dir / "stability_observation.json").read_text(encoding="utf-8")
@@ -1533,6 +1889,14 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
         raise LocalTrialError("摘要越权声明正式镜头规格。")
     if summary.get("formal_quality_acceptance_created") is not False:
         raise LocalTrialError("摘要越权声明质量接受。")
+    environment_path = evidence_dir / "environment.json"
+    if environment_path.is_file():
+        _verify_environment_record(
+            evidence_dir,
+            json.loads(environment_path.read_text(encoding="utf-8")),
+            execution_id=summary.get("execution_id"),
+            contract=contract,
+        )
     if stability.get("formal_decision_created") is not False:
         raise LocalTrialError("稳定性观察越权声明正式裁决。")
     staged = contract["schema_version"] in STAGED_TRIAL_SCHEMA_VERSIONS
@@ -1550,6 +1914,8 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
     expected_run_indices = list(range(1, contract["execution"]["run_count"] + 1))
     if [run.get("run_index") for run in summary["runs"]] != expected_run_indices:
         raise LocalTrialError("摘要中的运行编号不连续。")
+    recomputed_stability_inputs: list[Any] = []
+    recomputed_controlled_inputs: list[dict[str, dict[str, Any]] | None] = []
     for run in summary["runs"]:
         run_index = run["run_index"]
         if staged:
@@ -1558,10 +1924,28 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
                 item.get("stage") for item in stage_records if isinstance(item, dict)
             ] != contract["prompt_strategy"]["stages"]:
                 raise LocalTrialError("逐运行阶段顺序与固定合同不一致。")
+            stages: dict[str, dict[str, Any]] = {}
+            raw_outputs: dict[str, str] = {}
+            combined_stage_observations: list[dict[str, Any]] = []
             for stage_record in run["stages"]:
                 stage = stage_record["stage"]
+                if set(stage_record) != {
+                    "stage",
+                    "model_call_index",
+                    "elapsed_seconds",
+                    "raw_output_sha256",
+                    "parse_observation",
+                    "stage_observation_count",
+                    "generation_error",
+                }:
+                    raise LocalTrialError("阶段运行记录字段集合无效。")
                 if stage_record.get("model_call_index") != expected_call_index:
                     raise LocalTrialError("阶段模型调用编号不连续。")
+                if not isinstance(stage_record.get("elapsed_seconds"), (int, float)) or (
+                    isinstance(stage_record.get("elapsed_seconds"), bool)
+                    or stage_record["elapsed_seconds"] < 0
+                ):
+                    raise LocalTrialError("阶段耗时记录无效。")
                 expected_call_index += 1
                 prompt_path = evidence_dir / f"prompt_{run_index:03d}_{stage}.json"
                 raw_path = evidence_dir / f"raw_output_{run_index:03d}_{stage}.txt"
@@ -1571,23 +1955,280 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
                 if not prompt_path.is_file() or not observation_path.is_file():
                     raise LocalTrialError("缺少阶段提示或阶段观察文件。")
                 prompt = json.loads(prompt_path.read_text(encoding="utf-8"))
-                if (
-                    prompt.get("stage") != stage
-                    or prompt.get("prompt_contract_version")
-                    != prompt_contract_version(contract)
-                ):
-                    raise LocalTrialError("阶段提示与固定合同不一致。")
+                if prompt != _build_staged_prompt(contract, request, stage):
+                    raise LocalTrialError("阶段提示与确定性固定合同不一致。")
+                if not raw_path.is_file():
+                    raise LocalTrialError("缺少阶段原始输出文件。")
                 if sha256_file(raw_path) != stage_record["raw_output_sha256"]:
                     raise LocalTrialError("阶段原始输出摘要不一致。")
-                parse_observation = stage_record.get("parse_observation", {})
-                if (
-                    parse_observation.get("parsed") is True
-                    and parse_observation.get("root_type") == "dict"
-                    and not (
-                        evidence_dir / f"payload_{run_index:03d}_{stage}.json"
-                    ).is_file()
+                raw_output = raw_path.read_text(encoding="utf-8")
+                raw_outputs[stage] = raw_output
+                generation_error = stage_record.get("generation_error")
+                if generation_error is None:
+                    payload, parse_observation = strict_parse_model_output(raw_output)
+                else:
+                    if not isinstance(generation_error, dict) or raw_output != "":
+                        raise LocalTrialError("阶段生成错误记录与原始输出不一致。")
+                    payload = raw_output
+                    parse_observation = {
+                        "parsed": False,
+                        "generation_error": generation_error,
+                        "automatic_repair_attempted": False,
+                    }
+                if stage_record.get("parse_observation") != parse_observation:
+                    raise LocalTrialError("阶段解析观察无法由原始输出重算。")
+                payload_observations = observe_stage_payload(
+                    stage,
+                    payload,
+                    request=(
+                        request
+                        if contract["schema_version"]
+                        in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
+                        else None
+                    ),
+                    compiler_version=contract["prompt_strategy"].get(
+                        "compiler_contract_version"
+                    ),
+                )
+                expected_stage_observation = {
+                    "stage": stage,
+                    "parse_observation": parse_observation,
+                    "observations": payload_observations,
+                    "formal_decision_created": False,
+                }
+                actual_stage_observation = json.loads(
+                    observation_path.read_text(encoding="utf-8")
+                )
+                generalized_trial = (
+                    contract["schema_version"]
+                    in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                )
+                if generalized_trial and not _observation_documents_equal(
+                    actual_stage_observation, expected_stage_observation
                 ):
-                    raise LocalTrialError("缺少已解析阶段载荷文件。")
+                    raise LocalTrialError("阶段观察文件无法由原始输出重算。")
+                if generalized_trial:
+                    payload_observations = actual_stage_observation["observations"]
+                if not generalized_trial:
+                    if (
+                        actual_stage_observation.get("stage") != stage
+                        or actual_stage_observation.get("parse_observation")
+                        != parse_observation
+                        or not isinstance(
+                            actual_stage_observation.get("observations"), list
+                        )
+                        or actual_stage_observation.get("formal_decision_created")
+                        is not False
+                    ):
+                        raise LocalTrialError("历史阶段观察与解析证据不一致。")
+                    payload_observations = actual_stage_observation["observations"]
+                if stage_record.get("stage_observation_count") != len(
+                    payload_observations
+                ):
+                    raise LocalTrialError("阶段观察数量与逐阶段证据不一致。")
+                combined_stage_observations.extend(payload_observations)
+                payload_path = evidence_dir / f"payload_{run_index:03d}_{stage}.json"
+                if isinstance(payload, dict):
+                    if not payload_path.is_file() or json.loads(
+                        payload_path.read_text(encoding="utf-8")
+                    ) != payload:
+                        raise LocalTrialError("阶段载荷文件无法由原始输出重算。")
+                    stages[stage] = payload
+                elif payload_path.exists():
+                    raise LocalTrialError("未解析为对象的阶段不得保留载荷文件。")
+            all_stages_present = set(stages) == set(
+                contract["prompt_strategy"]["stages"]
+            )
+            cross_stage_observations = (
+                observe_generalized_stage_consistency(stages)
+                if contract["schema_version"]
+                in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                and all_stages_present
+                and not combined_stage_observations
+                else []
+            )
+            if contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+                cross_stage_path = (
+                    evidence_dir / f"cross_stage_observation_{run_index:03d}.json"
+                )
+                if not cross_stage_path.is_file():
+                    raise LocalTrialError("第八版证据缺少跨阶段一致性观察。")
+                cross_stage = json.loads(cross_stage_path.read_text(encoding="utf-8"))
+                if not _observation_documents_equal(
+                    cross_stage,
+                    {
+                        "observations": cross_stage_observations,
+                        "formal_decision_created": False,
+                    },
+                ):
+                    raise LocalTrialError("跨阶段观察无法由阶段载荷重算。")
+                cross_stage_observations = cross_stage["observations"]
+            all_stage_contracts_observable = (
+                all_stages_present
+                and not combined_stage_observations
+                and not cross_stage_observations
+            )
+            proposal_id = f"PROPOSAL-{summary['execution_id']}-{run_index:03d}"
+            run_id = f"{summary['execution_id']}-RUN-{run_index:03d}"
+            if all_stages_present and (
+                contract["schema_version"]
+                not in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
+                or all_stage_contracts_observable
+            ):
+                if contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+                    proposal = compile_generalized_stages_to_proposal(
+                        stages,
+                        request,
+                        contract,
+                        proposal_id=proposal_id,
+                        run_id=run_id,
+                    )
+                elif contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7:
+                    proposal = compile_tokenized_context_stages_to_proposal(
+                        stages,
+                        request,
+                        contract,
+                        proposal_id=proposal_id,
+                        run_id=run_id,
+                    )
+                elif contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+                    proposal = compile_observable_stages_to_proposal(
+                        stages,
+                        request,
+                        contract,
+                        proposal_id=proposal_id,
+                        run_id=run_id,
+                    )
+                else:
+                    proposal = compile_stages_to_proposal(
+                        stages,
+                        request,
+                        contract,
+                        proposal_id=proposal_id,
+                        run_id=run_id,
+                    )
+            else:
+                proposal = json.dumps(raw_outputs, ensure_ascii=False, sort_keys=True)
+            proposal_path = evidence_dir / f"proposal_{run_index:03d}.json"
+            if isinstance(proposal, dict):
+                if not proposal_path.is_file() or json.loads(
+                    proposal_path.read_text(encoding="utf-8")
+                ) != proposal:
+                    raise LocalTrialError("提案文件无法由阶段原始输出重算。")
+            elif proposal_path.exists():
+                raise LocalTrialError("阻断运行不得保留可比较提案文件。")
+            proposal_observation = observe_proposal(request, proposal)
+            binding_observations = _binding_observations(
+                proposal,
+                expected_proposal_id=proposal_id,
+                expected_run_id=run_id,
+                contract=contract,
+            )
+            combined_observations = [
+                *combined_stage_observations,
+                *cross_stage_observations,
+                *binding_observations,
+            ]
+            if combined_observations:
+                proposal_observation["observations"].extend(combined_observations)
+                proposal_observation["observation_count"] += len(
+                    combined_observations
+                )
+                proposal_observation["blocking_observation_count"] += len(
+                    combined_observations
+                )
+            proposal_observation_path = (
+                evidence_dir / f"proposal_observation_{run_index:03d}.json"
+            )
+            if not proposal_observation_path.is_file():
+                raise LocalTrialError("缺少逐运行提案观察。")
+            stored_proposal_observation = json.loads(
+                proposal_observation_path.read_text(encoding="utf-8")
+            )
+            if (
+                contract["schema_version"]
+                in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                and not _observation_documents_equal(
+                    stored_proposal_observation, proposal_observation
+                )
+            ):
+                raise LocalTrialError("提案观察无法由阶段原始输出重算。")
+            recorded_blocking_count = (
+                proposal_observation["blocking_observation_count"]
+                if contract["schema_version"]
+                in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+                else stored_proposal_observation.get("blocking_observation_count")
+            )
+            if not isinstance(recorded_blocking_count, int):
+                raise LocalTrialError("提案观察缺少阻断观察数量。")
+            base_run_fields = {
+                "run_index",
+                "proposal_id",
+                "run_id",
+                "started_at",
+                "elapsed_seconds",
+                "stages",
+                "all_stages_parsed",
+                "structural_observation_count",
+            }
+            derived_run_fields = {
+                "all_stage_contracts_observable",
+                "stage_contract_observation_count",
+                "proposal_blocking_observation_count",
+            }
+            cross_stage_run_fields = {"cross_stage_observation_count"}
+            allowed_run_field_sets = {
+                frozenset(base_run_fields),
+                frozenset(base_run_fields | derived_run_fields),
+                frozenset(
+                    base_run_fields | derived_run_fields | cross_stage_run_fields
+                ),
+            }
+            if frozenset(run) not in allowed_run_field_sets:
+                raise LocalTrialError("逐运行摘要字段集合无效。")
+            if (
+                run.get("proposal_id") != proposal_id
+                or run.get("run_id") != run_id
+                or not isinstance(run.get("started_at"), str)
+                or not run["started_at"]
+                or not isinstance(run.get("elapsed_seconds"), (int, float))
+                or isinstance(run.get("elapsed_seconds"), bool)
+                or run["elapsed_seconds"] < 0
+                or run.get("all_stages_parsed")
+                != all(
+                    item["parse_observation"]["parsed"] for item in stage_records
+                )
+                or (
+                    "all_stage_contracts_observable" in run
+                    and run["all_stage_contracts_observable"]
+                    != all_stage_contracts_observable
+                )
+                or (
+                    "stage_contract_observation_count" in run
+                    and run["stage_contract_observation_count"]
+                    != len(combined_stage_observations)
+                )
+                or (
+                    "cross_stage_observation_count" in run
+                    and run["cross_stage_observation_count"]
+                    != len(cross_stage_observations)
+                )
+                or (
+                    "proposal_blocking_observation_count" in run
+                    and run["proposal_blocking_observation_count"]
+                    != recorded_blocking_count
+                )
+                or run.get("structural_observation_count")
+                != recorded_blocking_count
+            ):
+                raise LocalTrialError("逐运行摘要无法由原始输出重算。")
+            recomputed_stability_inputs.append(
+                proposal if not combined_observations else raw_outputs
+            )
+            if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
+                recomputed_controlled_inputs.append(
+                    deepcopy(stages) if all_stage_contracts_observable else None
+                )
         else:
             raw_path = evidence_dir / f"raw_output_{run_index:03d}.txt"
             if sha256_file(raw_path) != run["raw_output_sha256"]:
@@ -1596,17 +2237,27 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
             raise LocalTrialError("缺少逐运行规划观察。")
     if staged and expected_call_index - 1 != contract["resource_budget"]["maximum_model_calls"]:
         raise LocalTrialError("证据中的阶段模型调用总数不一致。")
-    if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS and not (
+    if staged and contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+        recomputed_stability = observe_stability(request, recomputed_stability_inputs)
+        if stability != recomputed_stability:
+            raise LocalTrialError("稳定性观察无法由阶段原始输出重算。")
+    if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS and not (
         evidence_dir / "environment.json"
     ).is_file():
         raise LocalTrialError("受控可观察试验证据缺少运行环境记录。")
-    if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+    if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
         controlled_path = evidence_dir / "controlled_semantic_stability_observation.json"
         if not controlled_path.is_file():
             raise LocalTrialError("第五版证据缺少受控语义一致性观察。")
         controlled = json.loads(controlled_path.read_text(encoding="utf-8"))
-        if controlled.get("formal_decision_created") is not False:
-            raise LocalTrialError("受控语义一致性观察越权声明正式裁决。")
+        recomputed_controlled = (
+            observe_generalized_semantic_stability(recomputed_controlled_inputs)
+            if contract["schema_version"]
+            in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
+            else observe_controlled_semantic_stability(recomputed_controlled_inputs)
+        )
+        if controlled != recomputed_controlled:
+            raise LocalTrialError("受控语义一致性观察无法由阶段原始输出重算。")
         if summary.get("controlled_semantic_comparison_performed") != controlled.get(
             "comparison_performed"
         ):
@@ -1615,6 +2266,46 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
             "largest_exact_controlled_semantic_group_ratio"
         ) != controlled.get("largest_exact_controlled_semantic_group_ratio"):
             raise LocalTrialError("摘要中的受控语义一致率不一致。")
+    if contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
+        expected_summary_fields = {
+            "schema_version",
+            "execution_id",
+            "model_id",
+            "model_revision",
+            "prompt_contract_version",
+            "run_count_requested",
+            "run_count_observed",
+            "model_call_count_requested",
+            "model_call_count_observed",
+            "parsed_run_count",
+            "structurally_observable_run_count",
+            "comparison_performed",
+            "largest_exact_structure_group_ratio",
+            "runs",
+            "formal_shot_spec_created",
+            "formal_quality_acceptance_created",
+            "creative_review_required",
+            "automatic_retry_count",
+            "controlled_semantic_comparison_performed",
+            "largest_exact_controlled_semantic_group_ratio",
+        }
+        if set(summary) != expected_summary_fields:
+            raise LocalTrialError("通用规划摘要字段集合无效。")
+        if (
+            summary.get("schema_version")
+            != "local-shot-planner-trial-observation.v1"
+            or summary.get("structurally_observable_run_count")
+            != sum(
+                run["structural_observation_count"] == 0
+                for run in summary["runs"]
+            )
+            or summary.get("comparison_performed")
+            != stability.get("comparison_performed")
+            or summary.get("largest_exact_structure_group_ratio")
+            != stability.get("largest_exact_structure_group_ratio")
+            or summary.get("creative_review_required") is not True
+        ):
+            raise LocalTrialError("通用规划摘要无法由逐运行证据重算。")
     return {
         "schema_version": "local-shot-planner-evidence-verification.v1",
         "execution_id": summary["execution_id"],

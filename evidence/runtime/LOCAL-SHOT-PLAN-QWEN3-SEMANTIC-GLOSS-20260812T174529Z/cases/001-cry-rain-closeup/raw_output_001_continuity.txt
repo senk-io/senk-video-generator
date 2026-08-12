@@ -1,0 +1,1 @@
+{ "entry_environment_state": "SAME_INDOOR_ENVIRONMENT", "entry_subject_state": "SUBJECT_ALREADY_CRYING", "exit_environment_state": "SAME_INDOOR_ENVIRONMENT", "exit_subject_state": "CRYING_CONTINUES" }

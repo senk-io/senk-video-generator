@@ -7,13 +7,18 @@ from typing import Any
 
 from .contracts import (
     PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
+    PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
     PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
     PLANNER_STAGED_PROMPT_CONTRACT_VERSION,
     PLANNER_SEMANTIC_PROMPT_CONTRACT_VERSION,
     PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION,
+    PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
+    PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
     PLANNER_PAYLOAD_PROMPT_CONTRACT_VERSION,
     PROPOSAL_SCHEMA_VERSION,
+    REQUEST_SCHEMA_VERSION_V2,
+    ShotPlanningContractError,
     canonical_sha256,
     validate_request,
 )
@@ -21,11 +26,18 @@ from .controlled_context import (
     TOKENIZED_CONTEXT_STAGE_KEYS,
     TOKENIZED_CONTEXT_STAGE_ORDER,
 )
+from .generalized_observability import (
+    GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+    GENERALIZED_STAGE_ALLOWED_VALUES,
+    GENERALIZED_STAGE_ORDER,
+    GENERALIZED_STAGE_REQUIRED_KEYS,
+)
 from .structured_observability import (
     OBSERVABLE_STAGE_ORDER,
     STRUCTURED_STAGE_ALLOWED_VALUES,
     STRUCTURED_STAGE_REQUIRED_KEYS,
 )
+from .semantic_choice import choice_glossary_for_stage
 
 
 def build_local_planner_prompt(
@@ -35,6 +47,12 @@ def build_local_planner_prompt(
     planner_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     request = validate_request(request_value)
+    if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2:
+        raise ShotPlanningContractError(
+            "REQUEST_V2_REQUIRES_STAGED_PROMPT",
+            "第二版规划请求必须使用第八版至第十版的七阶段提示合同。",
+            "$.schema_version",
+        )
     planner = planner_metadata or {
         "model_id": "实际本地模型标识",
         "model_version": "实际模型版本",
@@ -133,6 +151,12 @@ def build_local_planner_payload_prompt(request_value: Any) -> dict[str, Any]:
     """只让小模型表达创意载荷；标识、证据和状态由系统编译。"""
 
     request = validate_request(request_value)
+    if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2:
+        raise ShotPlanningContractError(
+            "REQUEST_V2_REQUIRES_STAGED_PROMPT",
+            "第二版规划请求必须使用第八版至第十版的七阶段提示合同。",
+            "$.schema_version",
+        )
     payload_shape = {
         "scenes": [
             {
@@ -600,4 +624,152 @@ def build_local_planner_tokenized_context_stage_prompt(
     prompt[
         "prompt_contract_version"
     ] = PLANNER_TOKENIZED_CONTEXT_PROMPT_CONTRACT_VERSION
+    return prompt
+
+
+def build_local_planner_generalized_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第八版提示：通用主体尺度、行为、灯光和连续性标记。"""
+
+    request = validate_request(request_value)
+    if (
+        request.get("controlled_observability_compiler_version")
+        != GENERALIZED_OBSERVABILITY_COMPILER_VERSION
+    ):
+        raise ValueError("通用可观察提示要求请求绑定第二版编译词表。")
+    if stage not in GENERALIZED_STAGE_ORDER:
+        raise ValueError("不受支持的通用可观察规划阶段。")
+    if stage in {"scene_context", "beat_purpose", "shot_core"}:
+        prompt = build_local_planner_tokenized_context_stage_prompt(request, stage)
+        if stage == "shot_core":
+            body = json.loads(prompt["user"])
+            constraints = request["semantic_constraints"]
+            body["input"]["explicit_semantic_constraints"] = {
+                "allowed_action_classes": constraints["allowed_action_classes"],
+                "allowed_camera_directions": constraints[
+                    "allowed_camera_directions"
+                ],
+                "allowed_camera_movements": constraints[
+                    "allowed_camera_movements"
+                ],
+                "allowed_camera_speeds": constraints["allowed_camera_speeds"],
+                "allowed_framings": constraints["allowed_framings"],
+                "allowed_primary_purposes": constraints[
+                    "allowed_primary_purposes"
+                ],
+                "required_action_terms": constraints["required_action_terms"],
+            }
+            prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
+        prompt[
+            "prompt_contract_version"
+        ] = PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION
+        return prompt
+
+    request_controlled_values = request.get("controlled_stage_allowed_values")
+    if not isinstance(request_controlled_values, dict):
+        raise ValueError("通用可观察提示要求请求绑定受控阶段允许值。")
+    if set(request_controlled_values[stage]) != set(
+        GENERALIZED_STAGE_ALLOWED_VALUES[stage]
+    ):
+        raise ValueError("通用可观察阶段字段与第二版编译词表不一致。")
+    stage_instructions = {
+        "composition": "只选择主体位置、主体尺度、焦点和背景可见性。",
+        "performance": "只选择主体朝向、可见动作、可见细节和动作强度。",
+        "lighting": "只选择光源、光质、主体可读性和高光状态。",
+        "continuity": "只选择进入与离开镜头时主体和环境的可见状态。",
+    }
+    stage_contract = {
+        "required_keys": sorted(GENERALIZED_STAGE_REQUIRED_KEYS[stage]),
+        "instruction": stage_instructions[stage],
+        "allowed_values": request_controlled_values[stage],
+    }
+    system_instruction = """你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。
+必须包含且仅包含 required_keys 中的字段，字段名不得翻译。
+字段值必须逐字选择 allowed_values 对应数组中的一个枚举，不得改写、缩写或翻译。
+只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
+    return {
+        "prompt_contract_version": (
+            PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION
+        ),
+        "stage": stage,
+        "assistant_prefill": "{",
+        "recommended_sampling": {
+            "temperature": 0.0,
+            "seed": "fixed_when_supported",
+        },
+        "system": system_instruction,
+        "user": json.dumps(
+            {
+                "input": {
+                    "source_text": request["source_text"],
+                    "target_duration_seconds": request["target_duration_seconds"],
+                },
+                "stage_contract": stage_contract,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+    }
+
+
+def build_local_planner_scalar_choice_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第九版提示：用分隔字符串表达候选，禁止把选中值包装成数组。"""
+
+    prompt = build_local_planner_generalized_stage_prompt(request_value, stage)
+    body = json.loads(prompt["user"])
+    stage_contract = body["stage_contract"]
+    allowed_values = stage_contract.pop("allowed_values", {})
+    stage_contract["allowed_scalar_choices"] = {
+        field: " | ".join(values) for field, values in allowed_values.items()
+    }
+    stage_contract["selection_rule"] = (
+        "每个字段只输出一个 JSON 字符串标量；从竖线分隔候选中逐字选择一个值。"
+    )
+    stage_contract["value_type"] = "JSON_STRING_SCALAR_ONLY"
+    prompt["system"] = """你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。
+必须包含且仅包含 required_keys 中的字段，字段名不得翻译。
+每个字段值必须是一个 JSON 字符串标量，形如 \"VALUE\"；严禁输出数组、方括号、对象、数字或布尔值。
+凡字段出现在 allowed_scalar_choices 中，只能从竖线分隔候选里逐字选择一个值，不能输出多个值。
+没有候选的字符串字段必须结合 source_text 填写。
+只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
+    prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
+    prompt["prompt_contract_version"] = PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION
+    return prompt
+
+
+def build_local_planner_semantic_gloss_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第十版提示：为允许候选增加通用释义，不注入保留答案。"""
+
+    prompt = build_local_planner_scalar_choice_stage_prompt(request_value, stage)
+    body = json.loads(prompt["user"])
+    stage_contract = body["stage_contract"]
+    allowed_choices = stage_contract["allowed_scalar_choices"]
+    stage_contract["choice_glossary"] = choice_glossary_for_stage(
+        stage, allowed_choices
+    )
+    stage_contract["interpretation_rules"] = [
+        "按 source_text 的含义选择，不按候选在字符串中的先后位置选择。",
+        "原句出现特写、中景或全景时，选择对应的 framing。",
+        "主体从左向右移动只描述主体动作与连续性，不代表相机向右摇摄。",
+        "只有原句明确说相机摇、推、拉、平移或手持运动时，才选择非 STATIC 相机运动。",
+        "entry 表示镜头开始状态，exit 表示镜头结束状态。",
+    ]
+    prompt["system"] = """你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。
+必须包含且仅包含 required_keys 中的字段，字段名不得翻译。
+每个字段值必须是一个 JSON 字符串标量，形如 \"VALUE\"；严禁输出数组、方括号、对象、数字或布尔值。
+凡字段出现在 allowed_scalar_choices 中，只能从竖线分隔候选里逐字选择一个值，不能输出多个值。
+阅读 choice_glossary 理解候选语义；依据 source_text 选择，不能依据候选顺序猜测。
+主体的运动方向不是相机运动方向；只有原句明确声明相机或镜头运动，才选择非 STATIC 相机。
+没有候选的字符串字段必须结合 source_text 填写。
+只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
+    prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
+    prompt["prompt_contract_version"] = PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION
     return prompt
