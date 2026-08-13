@@ -30,6 +30,12 @@ SEMANTIC_GLOSS_SUITE_PATH = (
     / "shot_planning"
     / "qwen3_0_6b_semantic_gloss_generalization_suite_v1.json"
 )
+HYBRID_SOURCE_FACTS_SUITE_PATH = (
+    ROOT
+    / "experiments"
+    / "shot_planning"
+    / "qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json"
+)
 
 
 def load(path: Path) -> dict:
@@ -71,6 +77,25 @@ class LocalShotPlannerSuiteTest(unittest.TestCase):
                 for loaded in cases
             },
             {"local-shot-planner-semantic-gloss.v10"},
+        )
+
+    def test_hybrid_suite_binds_three_uniform_v11_cases(self) -> None:
+        suite, cases = load_suite_cases(load(HYBRID_SOURCE_FACTS_SUITE_PATH), ROOT)
+        self.assertEqual(
+            suite["suite_id"], "LOCAL-SHOT-PLANNER-HYBRID-SOURCE-FACTS-001"
+        )
+        self.assertEqual(len(cases), 3)
+        self.assertEqual(suite["resource_budget"]["maximum_model_calls"], 63)
+        self.assertEqual(
+            {loaded["trial"]["schema_version"] for loaded in cases},
+            {"local-shot-planner-trial.v11"},
+        )
+        self.assertEqual(
+            {
+                loaded["trial"]["prompt_strategy"]["prompt_contract_version"]
+                for loaded in cases
+            },
+            {"local-shot-planner-hybrid-source-facts.v11"},
         )
 
     def test_suite_rejects_order_path_digest_or_budget_drift(self) -> None:
@@ -267,6 +292,71 @@ class LocalShotPlannerSuiteTest(unittest.TestCase):
             case_index = load(evidence_dir / "case_index.json")
             write_suite_manifest(evidence_dir, case_index)
             with self.assertRaisesRegex(LocalTrialError, "套件运行环境"):
+                verify_suite_evidence(evidence_dir)
+
+    def test_hybrid_suite_runs_residual_calls_and_detects_extraction_tampering(self) -> None:
+        suite = load(HYBRID_SOURCE_FACTS_SUITE_PATH)
+        outputs = stage_outputs_by_source()
+        calls: list[tuple[int, str, str, tuple[str, ...]]] = []
+
+        def generate(prompt: dict, global_call_index: int) -> str:
+            body = json.loads(prompt["user"])
+            source = body["input"]["source_text"]
+            required = tuple(body["stage_contract"]["required_keys"])
+            calls.append((global_call_index, source, prompt["stage"], required))
+            return json.dumps(
+                {field: outputs[source][prompt["stage"]][field] for field in required},
+                ensure_ascii=False,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-HYBRID-SUITE-TEST-001"
+            observation = run_suite(
+                suite,
+                repo_root=ROOT,
+                suite_contract_path=HYBRID_SOURCE_FACTS_SUITE_PATH,
+                runner_path=Path(__file__),
+                execution_id="LOCAL-HYBRID-SUITE-TEST-001",
+                evidence_dir=evidence_dir,
+                generate=generate,
+                model_load_count_observed=1,
+            )
+            self.assertEqual(len(calls), 63)
+            self.assertEqual([item[0] for item in calls], list(range(1, 64)))
+            self.assertTrue(all(item[3] for item in calls))
+            self.assertEqual(observation["run_count_observed"], 9)
+            self.assertEqual(observation["held_out_observation_count"], 0)
+            self.assertEqual(observation["exact_source_echo_run_count"], 9)
+            self.assertEqual(observation["automatic_retry_count"], 0)
+            expected_locked_counts = [9, 11, 9]
+            case_index = load(evidence_dir / "case_index.json")
+            for index_item, expected_count in zip(
+                case_index, expected_locked_counts, strict=True
+            ):
+                case_dir = evidence_dir / index_item["evidence_path"]
+                ownership = load(case_dir / "field_ownership.json")
+                self.assertEqual(len(ownership["locked_fields"]), expected_count)
+                self.assertEqual(
+                    len(list(case_dir.glob("model_residual_payload_*.json"))), 21
+                )
+                self.assertEqual(
+                    len(list(case_dir.glob("merge_observation_*.json"))), 21
+                )
+            self.assertEqual(
+                verify_suite_evidence(evidence_dir)[
+                    "package_integrity_observation"
+                ],
+                "COMPLETE_AND_DIGEST_MATCHED",
+            )
+
+            first_case = evidence_dir / case_index[0]["evidence_path"]
+            extraction_path = first_case / "source_fact_extraction.json"
+            extraction = load(extraction_path)
+            extraction["locked_fields"]["shot_core.framing"] = "WIDE"
+            write_json(extraction_path, extraction)
+            write_manifest(first_case)
+            write_suite_manifest(evidence_dir, case_index)
+            with self.assertRaisesRegex(LocalTrialError, "原句事实提取无法"):
                 verify_suite_evidence(evidence_dir)
 
 

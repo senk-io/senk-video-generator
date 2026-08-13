@@ -698,7 +698,9 @@ class LocalShotPlannerTrialTest(unittest.TestCase):
             self.assertTrue((evidence_dir / "compiler_contract.json").is_file())
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
-            verification = verify_evidence(evidence_dir)
+            verification = verify_evidence(
+                evidence_dir, allow_test_environment=True
+            )
             self.assertEqual(
                 verification["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
@@ -765,7 +767,9 @@ class LocalShotPlannerTrialTest(unittest.TestCase):
             )
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
-            verification = verify_evidence(evidence_dir)
+            verification = verify_evidence(
+                evidence_dir, allow_test_environment=True
+            )
             self.assertEqual(
                 verification["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
@@ -802,7 +806,9 @@ class LocalShotPlannerTrialTest(unittest.TestCase):
             )
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
-            verification = verify_evidence(evidence_dir)
+            verification = verify_evidence(
+                evidence_dir, allow_test_environment=True
+            )
             self.assertEqual(
                 verification["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",

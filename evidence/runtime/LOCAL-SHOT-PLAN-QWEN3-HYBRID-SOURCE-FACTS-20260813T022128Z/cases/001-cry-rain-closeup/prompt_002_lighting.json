@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-hybrid-source-facts.v11",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "lighting",
+  "system": "你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名不得翻译。\nsystem_locked_source_facts 是系统从 source_text 提取的只读事实；严禁输出、重复、覆盖或改写这些字段。\n每个 required_keys 字段值必须是一个 JSON 字符串标量，形如 \"VALUE\"；严禁输出数组、方括号、对象、数字或布尔值。\n凡字段出现在 allowed_scalar_choices 中，只能从竖线分隔候选里逐字选择一个值，不能输出多个值。\n阅读 choice_glossary 理解候选语义；依据 source_text 与只读事实选择，不能依据候选顺序猜测。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"held_out_observation_used\": false, \"locked_field_values\": {}, \"source_text\": \"白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止\", \"system_locked_source_facts\": [], \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_scalar_choices\": {\"highlight_state\": \"TEAR_HIGHLIGHT_VISIBLE | NATURAL_FACE_HIGHLIGHT\", \"light_quality\": \"SOFT_DIFFUSED | LOW_CONTRAST\", \"light_source\": \"OVERCAST_DAYLIGHT | INTERIOR_SOFT_LIGHT\", \"subject_readability\": \"FACE_FULLY_READABLE | SUBJECT_FULLY_READABLE\"}, \"choice_glossary\": {\"highlight_state\": {\"NATURAL_FACE_HIGHLIGHT\": \"面部自然高光保持可见\", \"TEAR_HIGHLIGHT_VISIBLE\": \"泪水高光保持可见\"}, \"light_quality\": {\"LOW_CONTRAST\": \"画面对比度保持柔和\", \"SOFT_DIFFUSED\": \"光线保持柔和漫射\"}, \"light_source\": {\"INTERIOR_SOFT_LIGHT\": \"室内柔和光照亮主体\", \"OVERCAST_DAYLIGHT\": \"阴天自然光照亮主体\"}, \"subject_readability\": {\"FACE_FULLY_READABLE\": \"主体面部细节清晰可读\", \"SUBJECT_FULLY_READABLE\": \"主体整体细节清晰可读\"}}, \"field_ownership_rule\": \"只输出 required_keys；system_locked_source_facts 由系统持有，模型不得重复、覆盖或改写。\", \"instruction\": \"只为 required_keys 中列出的残余字段选择一个受控字符串值；不得填写其他字段。\", \"interpretation_rules\": [\"按 source_text 的含义选择，不按候选在字符串中的先后位置选择。\", \"只提议 required_keys 的残余字段；已锁定字段不属于模型职责。\"], \"required_keys\": [\"highlight_state\", \"light_quality\", \"light_source\", \"subject_readability\"], \"selection_rule\": \"每个字段只输出一个 JSON 字符串标量；从竖线分隔候选中逐字选择一个值。\", \"value_type\": \"JSON_STRING_SCALAR_ONLY\"}}"
+}

@@ -1,0 +1,234 @@
+{
+  "aggregation_contract": {
+    "average_stability_ratios": false,
+    "create_quality_threshold": false,
+    "observe_cross_case_fingerprints": true,
+    "observe_exact_source_echo": true,
+    "retain_per_case_observations": true
+  },
+  "case_order": [
+    "CRY_RAIN_CLOSEUP",
+    "SMILE_INDOOR_MEDIUM",
+    "BICYCLE_LEFT_TO_RIGHT_WIDE"
+  ],
+  "cases": [
+    {
+      "case_id": "CRY_RAIN_CLOSEUP",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "NEGATIVE_EMOTION",
+        "RAIN",
+        "CLOSE_UP",
+        "STATIC_CAMERA"
+      ],
+      "held_out_observation": {
+        "excluded_compiled_terms": [
+          "微笑",
+          "自行车",
+          "街道"
+        ],
+        "expected_controlled_values": {
+          "beat_purpose.purpose": "EMPHASIZE_EMOTION",
+          "composition.background_visibility": "RAIN_SOFTLY_BLURRED",
+          "composition.focus_target": "EYES_AND_TEARS",
+          "composition.subject_placement": "CENTER",
+          "composition.subject_scale": "FACE_DOMINANT",
+          "continuity.entry_environment_state": "CONTINUOUS_RAIN",
+          "continuity.entry_subject_state": "SUBJECT_ALREADY_CRYING",
+          "continuity.exit_environment_state": "CONTINUOUS_RAIN",
+          "continuity.exit_subject_state": "CRYING_CONTINUES",
+          "lighting.highlight_state": "TEAR_HIGHLIGHT_VISIBLE",
+          "lighting.light_quality": "SOFT_DIFFUSED",
+          "lighting.light_source": "OVERCAST_DAYLIGHT",
+          "lighting.subject_readability": "FACE_FULLY_READABLE",
+          "performance.detail_state": "TEARS_VISIBLE",
+          "performance.orientation_state": "FACING_CAMERA",
+          "performance.performance_intensity": "RESTRAINED",
+          "performance.visible_action_state": "CRYING",
+          "scene_context.continuity_anchor": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+          "scene_context.environment": "CONTINUOUS_RAIN",
+          "scene_context.location": "OUTDOOR_LOCATION",
+          "scene_context.time": "DAY",
+          "shot_core.action_class": "EXPRESS",
+          "shot_core.camera_direction": "NONE",
+          "shot_core.camera_movement": "STATIC",
+          "shot_core.camera_speed": "NONE",
+          "shot_core.framing": "CLOSE_UP",
+          "shot_core.primary_purpose": "EMPHASIZE_EMOTION"
+        },
+        "required_compiled_terms": [
+          "小孩",
+          "哭",
+          "泪",
+          "雨",
+          "面部",
+          "相机保持静止"
+        ]
+      },
+      "request_binding": {
+        "request_file": "experiments/shot_planning/generalized_child_crying_closeup_request_v1.json",
+        "request_sha256": "77bb70b2ca125a7f30098270b631e538166b0aeb7be29c73cf70ac5ac9027f39"
+      },
+      "trial_binding": {
+        "trial_contract_file": "experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_crying_trial_v11.json",
+        "trial_contract_sha256": "dc05db8dca4107b0d17f98473864fed7995d3d59ab9ec6af7a8690dd0edcd105"
+      }
+    },
+    {
+      "case_id": "SMILE_INDOOR_MEDIUM",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "POSITIVE_EMOTION",
+        "INDOOR",
+        "MEDIUM",
+        "STATIC_CAMERA",
+        "NO_TEARS"
+      ],
+      "held_out_observation": {
+        "excluded_compiled_terms": [
+          "哭",
+          "泪",
+          "雨",
+          "自行车"
+        ],
+        "expected_controlled_values": {
+          "beat_purpose.purpose": "EMPHASIZE_EMOTION",
+          "composition.background_visibility": "BACKGROUND_SOFTLY_BLURRED",
+          "composition.focus_target": "FACE",
+          "composition.subject_placement": "CENTER",
+          "composition.subject_scale": "UPPER_BODY_VISIBLE",
+          "continuity.entry_environment_state": "SAME_INDOOR_ENVIRONMENT",
+          "continuity.entry_subject_state": "SUBJECT_ALREADY_SMILING",
+          "continuity.exit_environment_state": "SAME_INDOOR_ENVIRONMENT",
+          "continuity.exit_subject_state": "SMILE_CONTINUES",
+          "lighting.highlight_state": "NATURAL_FACE_HIGHLIGHT",
+          "lighting.light_quality": "LOW_CONTRAST",
+          "lighting.light_source": "INTERIOR_SOFT_LIGHT",
+          "lighting.subject_readability": "FACE_FULLY_READABLE",
+          "performance.detail_state": "RELAXED_FACE_VISIBLE",
+          "performance.orientation_state": "FACING_CAMERA",
+          "performance.performance_intensity": "GENTLE",
+          "performance.visible_action_state": "SMILING",
+          "scene_context.continuity_anchor": "SAME_SUBJECT_AND_ENVIRONMENT",
+          "scene_context.environment": "STABLE_ENVIRONMENT",
+          "scene_context.location": "INDOOR_LOCATION",
+          "scene_context.time": "DAY",
+          "shot_core.action_class": "EXPRESS",
+          "shot_core.camera_direction": "NONE",
+          "shot_core.camera_movement": "STATIC",
+          "shot_core.camera_speed": "NONE",
+          "shot_core.framing": "MEDIUM",
+          "shot_core.primary_purpose": "EMPHASIZE_EMOTION"
+        },
+        "required_compiled_terms": [
+          "演员",
+          "微笑",
+          "上半身",
+          "室内",
+          "中景",
+          "相机保持静止"
+        ]
+      },
+      "request_binding": {
+        "request_file": "experiments/shot_planning/generalized_actor_smile_medium_request_v1.json",
+        "request_sha256": "028a408107e70d9e7e3f98deedb58bd8a216e69a23af041a06e2d6aad5067c66"
+      },
+      "trial_binding": {
+        "trial_contract_file": "experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json",
+        "trial_contract_sha256": "0918bccfed33605ec29024358bd700f950ae63f76857764abcc00aae04a82417"
+      }
+    },
+    {
+      "case_id": "BICYCLE_LEFT_TO_RIGHT_WIDE",
+      "coverage_tags": [
+        "NON_HUMAN_SUBJECT",
+        "SUBJECT_MOTION",
+        "LEFT_TO_RIGHT",
+        "NIGHT",
+        "WIDE",
+        "STATIC_CAMERA"
+      ],
+      "held_out_observation": {
+        "excluded_compiled_terms": [
+          "哭",
+          "泪",
+          "微笑",
+          "面部"
+        ],
+        "expected_controlled_values": {
+          "beat_purpose.purpose": "DEVELOP_ACTION",
+          "composition.background_visibility": "STREET_VISIBLE_AROUND_SUBJECT",
+          "composition.focus_target": "SUBJECT_ACTION",
+          "composition.subject_placement": "LEFT_THIRD",
+          "composition.subject_scale": "FULL_SUBJECT_VISIBLE",
+          "continuity.entry_environment_state": "SAME_NIGHT_STREET",
+          "continuity.entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+          "continuity.exit_environment_state": "SAME_NIGHT_STREET",
+          "continuity.exit_subject_state": "SUBJECT_EXITS_RIGHT",
+          "lighting.highlight_state": "SUBJECT_EDGE_HIGHLIGHT",
+          "lighting.light_quality": "DIRECTIONAL_LOW_KEY",
+          "lighting.light_source": "NIGHT_STREET_LIGHT",
+          "lighting.subject_readability": "MOTION_FULLY_READABLE",
+          "performance.detail_state": "MOTION_DETAIL_VISIBLE",
+          "performance.orientation_state": "MOVING_LEFT_TO_RIGHT",
+          "performance.performance_intensity": "MODERATE",
+          "performance.visible_action_state": "FORWARD_MOTION",
+          "scene_context.continuity_anchor": "SAME_SUBJECT_AND_ENVIRONMENT",
+          "scene_context.environment": "STABLE_ENVIRONMENT",
+          "scene_context.location": "OUTDOOR_LOCATION",
+          "scene_context.time": "NIGHT",
+          "shot_core.action_class": "MOVE",
+          "shot_core.camera_direction": "NONE",
+          "shot_core.camera_movement": "STATIC",
+          "shot_core.camera_speed": "NONE",
+          "shot_core.framing": "WIDE",
+          "shot_core.primary_purpose": "DEVELOP_ACTION"
+        },
+        "required_compiled_terms": [
+          "自行车",
+          "左",
+          "右",
+          "街道",
+          "全景",
+          "相机保持静止"
+        ]
+      },
+      "request_binding": {
+        "request_file": "experiments/shot_planning/generalized_bicycle_left_to_right_wide_request_v1.json",
+        "request_sha256": "57f28c020774bf7fb257a8daa3c99117eba4c0d89d3b762426480945deb680e7"
+      },
+      "trial_binding": {
+        "trial_contract_file": "experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_bicycle_trial_v11.json",
+        "trial_contract_sha256": "3a5d1eb9f2b521f5c568d79fe563e1dabc9cb30fa7a0e21204a7d1afed582694"
+      }
+    }
+  ],
+  "methodology_invariants": {
+    "model_load_count_maximum": 1,
+    "retry_count": 0,
+    "runs_per_case": 3,
+    "same_execution_parameters": true,
+    "same_model_revision": true,
+    "same_prompt_and_compiler_contracts": true
+  },
+  "non_goals": [
+    "formal_shot_spec_creation",
+    "formal_quality_acceptance",
+    "provider_prompt_compilation",
+    "video_generation",
+    "automatic_retry",
+    "creative_acceptance",
+    "cross_case_quality_ranking"
+  ],
+  "resource_budget": {
+    "maximum_cases": 3,
+    "maximum_model_calls": 63,
+    "maximum_model_loads": 1,
+    "maximum_model_weight_bytes": 1600000000,
+    "maximum_runs": 9,
+    "retry_count": 0
+  },
+  "schema_version": "local-shot-planner-evaluation-suite.v1",
+  "status": "BOUNDED_NON_AUTHORITATIVE_EVALUATION",
+  "suite_id": "LOCAL-SHOT-PLANNER-HYBRID-SOURCE-FACTS-001"
+}

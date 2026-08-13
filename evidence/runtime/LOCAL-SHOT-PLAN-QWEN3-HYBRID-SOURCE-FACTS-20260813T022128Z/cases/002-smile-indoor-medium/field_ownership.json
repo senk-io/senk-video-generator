@@ -1,0 +1,185 @@
+{
+  "blocking_issue_count": 0,
+  "delegable_fields": [
+    "scene_context.continuity_anchor",
+    "scene_context.environment",
+    "beat_purpose.purpose",
+    "shot_core.primary_purpose",
+    "composition.background_visibility",
+    "composition.focus_target",
+    "composition.subject_placement",
+    "composition.subject_scale",
+    "performance.detail_state",
+    "lighting.highlight_state",
+    "lighting.light_quality",
+    "lighting.light_source",
+    "lighting.subject_readability",
+    "continuity.entry_environment_state",
+    "continuity.entry_subject_state",
+    "continuity.exit_environment_state",
+    "continuity.exit_subject_state"
+  ],
+  "field_resolutions": [
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "scene_context.continuity_anchor",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "scene_context.environment",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "scene_context.location",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "scene_context.time",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "beat_purpose.purpose",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.action_class",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.action_description",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_direction",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_movement",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_speed",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.framing",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "shot_core.primary_purpose",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.background_visibility",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.focus_target",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.subject_placement",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.subject_scale",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "performance.detail_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "performance.orientation_state",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "performance.performance_intensity",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "performance.visible_action_state",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.highlight_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.light_quality",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.light_source",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.subject_readability",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.entry_environment_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.entry_subject_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.exit_environment_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.exit_subject_state",
+      "state": "NOT_STATED"
+    }
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {
+    "performance.orientation_state": "FACING_CAMERA",
+    "performance.performance_intensity": "GENTLE",
+    "performance.visible_action_state": "SMILING",
+    "scene_context.location": "INDOOR_LOCATION",
+    "scene_context.time": "DAY",
+    "shot_core.action_class": "EXPRESS",
+    "shot_core.action_description": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止",
+    "shot_core.camera_direction": "NONE",
+    "shot_core.camera_movement": "STATIC",
+    "shot_core.camera_speed": "NONE",
+    "shot_core.framing": "MEDIUM"
+  },
+  "model_may_write_locked_fields": false,
+  "request_binding": {
+    "request_id": "PLAN-GENERALIZED-SMILE-001",
+    "request_sha256": "028a408107e70d9e7e3f98deedb58bd8a216e69a23af041a06e2d6aad5067c66",
+    "source_text_sha256": "2d382f6ac891a5d31bffd7c3a65931404b60873108ede1c1e3395b5770e76284"
+  },
+  "schema_version": "shot-planning-hybrid-merge.v1"
+}

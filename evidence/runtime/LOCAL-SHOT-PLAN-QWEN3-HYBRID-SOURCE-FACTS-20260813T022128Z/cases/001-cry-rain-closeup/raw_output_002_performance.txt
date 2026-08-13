@@ -1,0 +1,1 @@
+{ "detail_state": "TEARS_VISIBLE", "orientation_state": "FACING_CAMERA", "performance_intensity": "MODERATE" }

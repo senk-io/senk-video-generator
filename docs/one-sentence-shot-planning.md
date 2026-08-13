@@ -6,7 +6,9 @@
 ```text
 一句话请求
   -> 显式语义约束
-  -> 本地文本模型分阶段受控载荷
+  -> 确定性原句事实提取与字段所有权
+  -> 本地文本模型分阶段残余载荷
+  -> 系统确定性合并
   -> 系统确定性上下文与可观察文本编译
   -> 结构观察
   -> 语义与可观察性检查
@@ -17,7 +19,7 @@
 ## 固定边界
 
 - 第一至第七版请求和草案使用 `shot-planning-request.v1` 与
-  `shot-planning-proposal.v1`；通用性套件并行使用 `shot-planning-request.v2` 与
+  `shot-planning-proposal.v1`；第八至第十一版通用性套件并行使用 `shot-planning-request.v2` 与
   `shot-planning-proposal.v2`，不迁移或改写历史证据。
 - 草案必须保持 `DRAFT_NON_AUTHORITATIVE`。
 - 叙事节拍必须引用原句的精确字符区间，非标点内容不得遗漏。
@@ -68,12 +70,12 @@
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite \
-  --suite experiments/shot_planning/qwen3_0_6b_semantic_gloss_generalization_suite_v1.json
+  --suite experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json
 
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite \
-  --suite experiments/shot_planning/qwen3_0_6b_semantic_gloss_generalization_suite_v1.json \
+  --suite experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json \
   --execute \
-  --execution-id LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-YYYYMMDDTHHMMSSZ
+  --execution-id LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-YYYYMMDDTHHMMSSZ
 ```
 
 ## 单次结构观察
@@ -126,12 +128,14 @@
 | `v8` | `9/9` | `0/9` | `228` | 多候选以单元素数组输出；系统按合同拒绝类型错误，没有自动拆箱或修补 |
 | `v9` | `9/9` | `3/9` | `153` | 标量候选消除数组形状问题；哭泣用例可编译但三轮都误选 `WIDE`，微笑与自行车用例仍被阶段约束阻断 |
 | `v10` | `9/9` | `0/9` | `120` | 候选中文释义减少错误选择，但仍出现环境连续性错误、非法枚举以及把主体横向运动误判为相机 `PAN` |
+| `v11` | `9/9` | `0/9` | `93` | 确定性提取分别锁定 `9/11/9` 个显式与可确定派生字段；模型没有写入锁定字段，但残余的连续性、构图和灯光选择仍阻断所有运行 |
 
 三轮内部受控指纹相同只能说明模型重复了相同选择；当选择本身错误时，不得把这种
-一致性解释为语义稳定或质量通过。第十版结果表明当前瓶颈已不是 JSON 输出格式，
-而是 `Qwen3-0.6B` 在多字段、多候选、跨阶段条件下的语义选择容量。继续增加提示文本
-没有形成可比较草案，因此下一步应比较更强的本地文本模型，或把明确可由原句规则
-提取的字段交给确定性解析器，而不是降低观察阈值。
+一致性解释为语义稳定或质量通过。第十一版证明明确事实所有权能减少观察：雨中哭泣、室内微笑和自行车
+用例每轮的受控值不匹配数分别从 `6/9/7` 降为 `5/7/6`，微笑用例的三轮提案也保留了精确原句回显。
+但 `Qwen3-0.6B` 对剩余 `17–19` 个字段的跨阶段语义选择仍不足，两个用例在合并后被连续性
+观察阻断，微笑用例也未满足可观察文本要求。下一步应在同一残余字段合同上比较更强的本地
+文本模型，或只对新的明确、无歧义句式扩展确定性规则；不应推断未声明的连续性，也不应降低观察阈值。
 
 七轮证据包都可重新核对文件集合和摘要。第七版实际执行标识为
 `LOCAL-SHOT-PLAN-QWEN3-V7-20260812T165514Z`，证据清单覆盖 `98` 个文件：
@@ -144,18 +148,20 @@
 完整性复核结果为 `COMPLETE_AND_DIGEST_MATCHED`。该结果只说明证据文件集合和摘要与
 固定合同一致，不是正式镜头规格或质量接受。
 
-第八至第十版套件证据也均可复核。当前可追溯的第十版执行标识为
-`LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z`，记录了套件汇总器、提示、
-编译器和验证器的实现摘要；三用例共六十三次调用、一次模型加载、零自动重试：
+第八至第十一版套件证据也均可复核。第十一版执行标识为
+`LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z`，记录了提取器、字段所有权、
+模型残余载荷、确定性合并和套件汇总器的实现摘要；三用例共六十三次调用、一次模型加载、
+零自动重试：
 
 ```bash
 .venv-provider-compat/bin/python -m tools.verify_local_shot_planner_suite \
-  evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z
+  evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z
 ```
 
 复核结果同样为 `COMPLETE_AND_DIGEST_MATCHED`，但套件明确保留
 `formal_shot_spec_created=false`、`formal_quality_acceptance_created=false` 和人工复核
-要求。较早的 `v8`、`v9` 套件执行分别为
+要求。第十版执行仍保留为
+`LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z`；较早的 `v8`、`v9` 套件执行分别为
 `LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z` 与
 `LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z`；首次因实现缺口中止的
 `LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173012Z` 原样保留，不作为完整套件引用。

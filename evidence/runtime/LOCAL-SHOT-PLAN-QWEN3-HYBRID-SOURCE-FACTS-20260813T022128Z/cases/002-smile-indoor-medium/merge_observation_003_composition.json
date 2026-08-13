@@ -1,0 +1,13 @@
+{
+  "automatic_repair_attempted": false,
+  "expected_model_fields": [
+    "background_visibility",
+    "focus_target",
+    "subject_placement",
+    "subject_scale"
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {},
+  "observations": [],
+  "stage": "composition"
+}

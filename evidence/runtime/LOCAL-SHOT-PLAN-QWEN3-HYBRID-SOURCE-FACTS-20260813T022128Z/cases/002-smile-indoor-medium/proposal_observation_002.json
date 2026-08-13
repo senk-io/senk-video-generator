@@ -1,0 +1,26 @@
+{
+  "blocking_observation_count": 2,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 2,
+  "observations": [
+    {
+      "category": "OBSERVABILITY",
+      "code": "REQUIRED_OBSERVABLE_TERM_MISSING",
+      "expected": "上半身",
+      "observed": "主体位于画面左侧三分线，主体面部占据画面大部分区域，焦点落在主体面部，主体后方背景柔化可见",
+      "path": "$.shots[0].composition"
+    },
+    {
+      "category": "OBSERVABILITY",
+      "code": "REQUIRED_OBSERVABLE_TERM_MISSING",
+      "expected": "室内",
+      "observed": "阴天自然光照亮主体，光线保持柔和漫射，主体整体细节清晰可读，面部自然高光保持可见",
+      "path": "$.shots[0].lighting"
+    }
+  ],
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z-002-SMILE_INDOOR_MEDIUM-002",
+  "proposal_sha256": "12327b7c0c9eba533a9db75c2f54bd4848a7a9d8d677977dbb43308e4ab906e8",
+  "request_id": "PLAN-GENERALIZED-SMILE-001",
+  "schema_version": "shot-planning-observation.v1"
+}

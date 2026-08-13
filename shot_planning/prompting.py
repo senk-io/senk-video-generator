@@ -8,6 +8,7 @@ from typing import Any
 from .contracts import (
     PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
     PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+    PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
     PLANNER_STAGED_PROMPT_CONTRACT_VERSION,
@@ -38,6 +39,11 @@ from .structured_observability import (
     STRUCTURED_STAGE_REQUIRED_KEYS,
 )
 from .semantic_choice import choice_glossary_for_stage
+from .source_facts import (
+    extract_source_facts,
+    locked_fields_for_stage,
+    residual_fields_for_stage,
+)
 
 
 def build_local_planner_prompt(
@@ -772,4 +778,101 @@ def build_local_planner_semantic_gloss_stage_prompt(
 只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
     prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
     prompt["prompt_contract_version"] = PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION
+    return prompt
+
+
+def build_local_planner_hybrid_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第十一版提示：模型只填写未被原句事实锁定的残余字段。"""
+
+    request = validate_request(request_value)
+    extraction = extract_source_facts(request)
+    if extraction["blocking_issue_count"]:
+        raise ValueError("原句事实提取存在冲突或歧义，不能构建混合提示。")
+    prompt = build_local_planner_semantic_gloss_stage_prompt(request, stage)
+    body = json.loads(prompt["user"])
+    stage_contract = body["stage_contract"]
+    residual_fields = residual_fields_for_stage(extraction, stage)
+    locked_fields = locked_fields_for_stage(extraction, stage)
+    stage_contract["required_keys"] = residual_fields
+    stage_contract["allowed_scalar_choices"] = {
+        field: encoded
+        for field, encoded in stage_contract.get(
+            "allowed_scalar_choices", {}
+        ).items()
+        if field in residual_fields
+    }
+    stage_contract["choice_glossary"] = {
+        field: descriptions
+        for field, descriptions in stage_contract.get(
+            "choice_glossary", {}
+        ).items()
+        if field in residual_fields
+    }
+    stage_contract.pop("required_action_terms", None)
+    body["input"].pop("explicit_semantic_constraints", None)
+    if residual_fields:
+        stage_contract["instruction"] = (
+            "只为 required_keys 中列出的残余字段选择一个受控字符串值；"
+            "不得填写其他字段。"
+        )
+    else:
+        stage_contract["instruction"] = (
+            "required_keys 为空；只输出空 JSON 对象，不得写入任何字段。"
+        )
+    interpretation_rules = [
+        "按 source_text 的含义选择，不按候选在字符串中的先后位置选择。",
+        "只提议 required_keys 的残余字段；已锁定字段不属于模型职责。",
+    ]
+    residual_set = set(residual_fields)
+    if "framing" in residual_set:
+        interpretation_rules.append(
+            "原句明确出现特写、中景或全景时，选择对应的 framing。"
+        )
+    if residual_set & {"camera_movement", "camera_direction", "camera_speed"}:
+        interpretation_rules.extend(
+            [
+                "主体的运动方向不是相机运动方向。",
+                "只有原句明确声明相机或镜头运动，才选择非 STATIC 相机。",
+            ]
+        )
+    if stage == "performance" and "orientation_state" in residual_set:
+        interpretation_rules.append(
+            "主体从左向右移动只描述主体方向，不代表相机向右摇摄。"
+        )
+    if stage == "continuity":
+        interpretation_rules.append(
+            "entry 表示镜头开始状态，exit 表示镜头结束状态。"
+        )
+    stage_contract["interpretation_rules"] = interpretation_rules
+    stage_contract["field_ownership_rule"] = (
+        "只输出 required_keys；system_locked_source_facts 由系统持有，"
+        "模型不得重复、覆盖或改写。"
+    )
+    body["input"]["system_locked_source_facts"] = [
+        {
+            "field": fact["field"],
+            "value": fact["value"],
+            "provenance": fact["provenance"],
+            "rule_ids": fact["rule_ids"],
+            "source_spans": fact["source_spans"],
+        }
+        for fact in extraction["facts"]
+        if fact["field"].startswith(f"{stage}.")
+    ]
+    body["input"]["locked_field_values"] = locked_fields
+    body["input"]["held_out_observation_used"] = False
+    prompt["system"] = """你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。
+必须包含且仅包含 required_keys 中的字段，字段名不得翻译。
+system_locked_source_facts 是系统从 source_text 提取的只读事实；严禁输出、重复、覆盖或改写这些字段。
+每个 required_keys 字段值必须是一个 JSON 字符串标量，形如 "VALUE"；严禁输出数组、方括号、对象、数字或布尔值。
+凡字段出现在 allowed_scalar_choices 中，只能从竖线分隔候选里逐字选择一个值，不能输出多个值。
+阅读 choice_glossary 理解候选语义；依据 source_text 与只读事实选择，不能依据候选顺序猜测。
+只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
+    prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
+    prompt[
+        "prompt_contract_version"
+    ] = PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION
     return prompt

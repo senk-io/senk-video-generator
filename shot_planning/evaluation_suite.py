@@ -16,6 +16,7 @@ from .local_trial import (
     TRIAL_SCHEMA_VERSION_V8,
     TRIAL_SCHEMA_VERSION_V9,
     TRIAL_SCHEMA_VERSION_V10,
+    TRIAL_SCHEMA_VERSION_V11,
     environment_record,
     run_trial,
     sha256_file,
@@ -255,8 +256,9 @@ def load_suite_cases(
             TRIAL_SCHEMA_VERSION_V8,
             TRIAL_SCHEMA_VERSION_V9,
             TRIAL_SCHEMA_VERSION_V10,
+            TRIAL_SCHEMA_VERSION_V11,
         }:
-            raise ValueError("通用性套件只允许第八版至第十版单用例试验。")
+            raise ValueError("通用性套件只允许第八版至第十一版单用例试验。")
         if canonical_sha256(request) != case["request_binding"]["request_sha256"]:
             raise ValueError("评测用例请求摘要漂移。")
         if canonical_sha256(trial) != case["trial_binding"][
@@ -730,8 +732,9 @@ def verify_suite_evidence(evidence_dir: Path) -> dict[str, Any]:
     observation = json.loads(
         (evidence_dir / "suite_observation.json").read_text(encoding="utf-8")
     )
-    v10_suite = all(
-        trial.get("schema_version") == TRIAL_SCHEMA_VERSION_V10
+    implementation_bound_suite = all(
+        trial.get("schema_version")
+        in {TRIAL_SCHEMA_VERSION_V10, TRIAL_SCHEMA_VERSION_V11}
         for trial in embedded_trials
     )
     base_environment_fields = {
@@ -750,7 +753,7 @@ def verify_suite_evidence(evidence_dir: Path) -> dict[str, Any]:
     }
     allowed_environment_field_sets = (
         {frozenset(base_environment_fields | {"implementation_sha256"})}
-        if v10_suite
+        if implementation_bound_suite
         else {
             frozenset(base_environment_fields),
             frozenset(base_environment_fields | {"implementation_sha256"}),
@@ -783,7 +786,7 @@ def verify_suite_evidence(evidence_dir: Path) -> dict[str, Any]:
         or environment.get("formal_fact_creation") != "PROHIBITED"
     ):
         raise LocalTrialError("套件运行环境与子用例及固定边界不一致。")
-    if v10_suite and (
+    if implementation_bound_suite and (
         environment.get("implementation_sha256")
         != first_child_environment.get("implementation_sha256")
         or "shot_planning/evaluation_suite.py"
@@ -794,8 +797,8 @@ def verify_suite_evidence(evidence_dir: Path) -> dict[str, Any]:
             for child in child_environments
         )
     ):
-        raise LocalTrialError("第十版套件实现摘要与子用例不一致。")
-    if not v10_suite and "implementation_sha256" in environment and any(
+        raise LocalTrialError("第十版及以后套件实现摘要与子用例不一致。")
+    if not implementation_bound_suite and "implementation_sha256" in environment and any(
         child.get("implementation_sha256") != environment["implementation_sha256"]
         for child in child_environments
     ):

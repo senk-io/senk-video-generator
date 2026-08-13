@@ -1,0 +1,69 @@
+{
+  "allowed_values": {
+    "scene_context": {
+      "continuity_anchor": [
+        "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+        "SAME_SUBJECT_AND_ENVIRONMENT"
+      ],
+      "environment": [
+        "CONTINUOUS_RAIN",
+        "STABLE_ENVIRONMENT"
+      ],
+      "location": [
+        "UNSPECIFIED_LOCATION",
+        "INDOOR_LOCATION",
+        "OUTDOOR_LOCATION"
+      ],
+      "time": [
+        "UNSPECIFIED_TIME",
+        "DAY",
+        "NIGHT"
+      ]
+    }
+  },
+  "automatic_repair": false,
+  "beat_action_derivation": "reuse_shot_core_action_description",
+  "creative_fact_defaulting": false,
+  "formal_decision_created": false,
+  "required_keys": {
+    "beat_purpose": [
+      "purpose"
+    ],
+    "scene_context": [
+      "continuity_anchor",
+      "environment",
+      "location",
+      "time"
+    ]
+  },
+  "schema_version": "tokenized-context-compiler.v1",
+  "stage_order": [
+    "scene_context",
+    "beat_purpose",
+    "shot_core",
+    "composition",
+    "performance",
+    "lighting",
+    "continuity"
+  ],
+  "token_descriptions": {
+    "continuity_anchor": {
+      "SAME_SUBJECT_AND_CONTINUOUS_RAIN": "同一主体与持续降雨",
+      "SAME_SUBJECT_AND_ENVIRONMENT": "同一主体与同一环境状态"
+    },
+    "environment": {
+      "CONTINUOUS_RAIN": "持续降雨",
+      "STABLE_ENVIRONMENT": "环境状态保持稳定"
+    },
+    "location": {
+      "INDOOR_LOCATION": "室内地点",
+      "OUTDOOR_LOCATION": "室外地点",
+      "UNSPECIFIED_LOCATION": "未明确地点"
+    },
+    "time": {
+      "DAY": "白天",
+      "NIGHT": "夜晚",
+      "UNSPECIFIED_TIME": "未明确时间"
+    }
+  }
+}

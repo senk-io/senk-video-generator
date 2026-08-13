@@ -1,0 +1,14 @@
+{
+  "automatic_repair_attempted": false,
+  "expected_model_fields": [
+    "detail_state"
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {
+    "orientation_state": "FACING_CAMERA",
+    "performance_intensity": "GENTLE",
+    "visible_action_state": "SMILING"
+  },
+  "observations": [],
+  "stage": "performance"
+}

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import platform
+import re
 import subprocess
 import time
 from copy import deepcopy
@@ -15,6 +16,7 @@ from typing import Any, Callable
 from .contracts import (
     PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
     PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+    PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
     PLANNER_PAYLOAD_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
@@ -40,6 +42,7 @@ from .controlled_context import (
 )
 from .prompting import (
     build_local_planner_generalized_stage_prompt,
+    build_local_planner_hybrid_stage_prompt,
     build_local_planner_context_stage_prompt,
     build_local_planner_observable_stage_prompt,
     build_local_planner_payload_prompt,
@@ -66,6 +69,17 @@ from .semantic_choice import (
     semantic_choice_glossary_contract,
     semantic_choice_glossary_sha256,
 )
+from .source_facts import (
+    HYBRID_MERGE_CONTRACT_VERSION,
+    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION,
+    extract_source_facts,
+    field_ownership_view,
+    hybrid_merge_contract,
+    hybrid_merge_contract_sha256,
+    merge_hybrid_stage_payload,
+    source_fact_extractor_contract,
+    source_fact_extractor_contract_sha256,
+)
 from .structured_observability import (
     CONTROLLED_OBSERVABILITY_COMPILER_VERSION,
     OBSERVABLE_STAGE_ORDER,
@@ -89,6 +103,7 @@ TRIAL_SCHEMA_VERSION_V7 = "local-shot-planner-trial.v7"
 TRIAL_SCHEMA_VERSION_V8 = "local-shot-planner-trial.v8"
 TRIAL_SCHEMA_VERSION_V9 = "local-shot-planner-trial.v9"
 TRIAL_SCHEMA_VERSION_V10 = "local-shot-planner-trial.v10"
+TRIAL_SCHEMA_VERSION_V11 = "local-shot-planner-trial.v11"
 STAGED_TRIAL_SCHEMA_VERSIONS = frozenset(
     {
         TRIAL_SCHEMA_VERSION_V3,
@@ -99,13 +114,19 @@ STAGED_TRIAL_SCHEMA_VERSIONS = frozenset(
         TRIAL_SCHEMA_VERSION_V8,
         TRIAL_SCHEMA_VERSION_V9,
         TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
     }
 )
 CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
     {TRIAL_SCHEMA_VERSION_V5, TRIAL_SCHEMA_VERSION_V6, TRIAL_SCHEMA_VERSION_V7}
 )
 GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
-    {TRIAL_SCHEMA_VERSION_V8, TRIAL_SCHEMA_VERSION_V9, TRIAL_SCHEMA_VERSION_V10}
+    {
+        TRIAL_SCHEMA_VERSION_V8,
+        TRIAL_SCHEMA_VERSION_V9,
+        TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
+    }
 )
 SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS = frozenset(
     CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS
@@ -166,6 +187,7 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
         TRIAL_SCHEMA_VERSION_V8,
         TRIAL_SCHEMA_VERSION_V9,
         TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
     }:
         raise ValueError("本地规划试验合同版本无效。")
     if value.get("status") != "BOUNDED_NON_AUTHORITATIVE_TRIAL":
@@ -437,6 +459,55 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
             or not strategy_context.get("previous_observations")
         ):
             raise ValueError("第十版试验必须引用第九版候选位置偏置观察。")
+    if schema_version == TRIAL_SCHEMA_VERSION_V11:
+        if value.get("prompt_strategy") != {
+            "assistant_prefill": "{",
+            "camera_constraints_enforced": True,
+            "choice_glossary_contract_sha256": semantic_choice_glossary_sha256(),
+            "choice_glossary_contract_version": SEMANTIC_CHOICE_GLOSSARY_VERSION,
+            "compiler_contract_sha256": generalized_compiler_contract_sha256(),
+            "compiler_contract_version": GENERALIZED_OBSERVABILITY_COMPILER_VERSION,
+            "context_compiler_contract_sha256": (
+                tokenized_context_compiler_contract_sha256()
+            ),
+            "context_compiler_contract_version": TOKENIZED_CONTEXT_COMPILER_VERSION,
+            "context_role_constraints_enforced": True,
+            "cross_stage_consistency_enforced": True,
+            "field_ownership_enforced": True,
+            "held_out_observation_input": False,
+            "hybrid_merge_contract_sha256": hybrid_merge_contract_sha256(),
+            "hybrid_merge_contract_version": HYBRID_MERGE_CONTRACT_VERSION,
+            "model_may_write_locked_fields": False,
+            "model_output_scope": "seven_flat_hybrid_residual_stages",
+            "prompt_contract_version": (
+                PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION
+            ),
+            "scalar_choice_encoding": "pipe_delimited_strings",
+            "semantic_choice_glossary_enforced": True,
+            "semantic_constraints_enforced": True,
+            "source_fact_extractor_contract_sha256": (
+                source_fact_extractor_contract_sha256()
+            ),
+            "source_fact_extractor_contract_version": (
+                SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION
+            ),
+            "source_fact_provenance_required": True,
+            "stages": list(GENERALIZED_STAGE_ORDER),
+            "subject_camera_direction_disambiguation": True,
+            "system_owned_beat_action_reuse": True,
+            "system_owned_envelope": True,
+            "system_owned_observable_text_compilation": True,
+        }:
+            raise ValueError("第十一版提示策略必须固定原句事实所有权和混合合并。")
+        strategy_context = value.get("strategy_context")
+        if (
+            not isinstance(strategy_context, dict)
+            or strategy_context.get("change")
+            != "DETERMINISTIC_SOURCE_FACT_OWNERSHIP_AND_RESIDUAL_MODEL_OUTPUT"
+            or not isinstance(strategy_context.get("previous_execution_id"), str)
+            or not strategy_context.get("previous_observations")
+        ):
+            raise ValueError("第十一版试验必须引用第十版语义容量观察。")
     binding = value.get("request_binding")
     if (
         not isinstance(binding, dict)
@@ -449,6 +520,8 @@ def validate_trial_contract(value: Any) -> dict[str, Any]:
 
 
 def prompt_contract_version(contract: dict[str, Any]) -> str:
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11:
+        return PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
         return PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V9:
@@ -900,6 +973,49 @@ def observe_stage_payload(
     return observations
 
 
+def _prepare_stage_payload(
+    contract: dict[str, Any],
+    request: dict[str, Any],
+    stage: str,
+    model_payload: Any,
+    source_extraction: dict[str, Any] | None,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]], dict[str, Any] | None]:
+    """把模型原始阶段载荷转换为可观察的规范阶段载荷。"""
+
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11:
+        if source_extraction is None:
+            raise LocalTrialError("第十一版运行缺少原句事实提取。")
+        merged, merge_observations, merge_document = merge_hybrid_stage_payload(
+            stage, model_payload, source_extraction
+        )
+        observations = list(merge_observations)
+        if isinstance(merged, dict):
+            observations.extend(
+                observe_stage_payload(
+                    stage,
+                    merged,
+                    request=request,
+                    compiler_version=contract["prompt_strategy"].get(
+                        "compiler_contract_version"
+                    ),
+                )
+            )
+        return merged, observations, merge_document
+    observations = observe_stage_payload(
+        stage,
+        model_payload,
+        request=(
+            request
+            if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
+            else None
+        ),
+        compiler_version=contract["prompt_strategy"].get(
+            "compiler_contract_version"
+        ),
+    )
+    return model_payload if isinstance(model_payload, dict) else None, observations, None
+
+
 def compile_stages_to_proposal(
     stages: dict[str, dict[str, Any]],
     request: dict[str, Any],
@@ -1191,6 +1307,8 @@ def _build_staged_prompt(
     """按试验版本确定性重建阶段提示，供运行器和校验器共用。"""
 
     schema_version = contract["schema_version"]
+    if schema_version == TRIAL_SCHEMA_VERSION_V11:
+        return build_local_planner_hybrid_stage_prompt(request, stage)
     if schema_version == TRIAL_SCHEMA_VERSION_V10:
         return build_local_planner_semantic_gloss_stage_prompt(request, stage)
     if schema_version == TRIAL_SCHEMA_VERSION_V9:
@@ -1218,13 +1336,40 @@ def _run_staged_trial(
     evidence_dir.mkdir(parents=True)
     write_json(evidence_dir / "trial_contract.json", contract)
     write_json(evidence_dir / "planning_request.json", request)
+    source_extraction = (
+        extract_source_facts(request)
+        if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11
+        else None
+    )
+    if source_extraction is not None:
+        if source_extraction["blocking_issue_count"]:
+            raise LocalTrialError("原句事实提取存在阻断问题，不能启动第十一版运行。")
+        write_json(
+            evidence_dir / "source_fact_extractor_contract.json",
+            source_fact_extractor_contract(),
+        )
+        write_json(
+            evidence_dir / "hybrid_merge_contract.json",
+            hybrid_merge_contract(),
+        )
+        write_json(
+            evidence_dir / "source_fact_extraction.json",
+            source_extraction,
+        )
+        write_json(
+            evidence_dir / "field_ownership.json",
+            field_ownership_view(source_extraction),
+        )
     if contract["schema_version"] in CONTROLLED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
         write_json(evidence_dir / "compiler_contract.json", compiler_contract())
     elif contract["schema_version"] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
         write_json(
             evidence_dir / "compiler_contract.json", generalized_compiler_contract()
         )
-    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
+    if contract["schema_version"] in {
+        TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
+    }:
         write_json(
             evidence_dir / "choice_glossary_contract.json",
             semantic_choice_glossary_contract(),
@@ -1267,27 +1412,36 @@ def _run_staged_trial(
                 encoding="utf-8",
             )
             if generation_error is None:
-                payload, parse_observation = strict_parse_model_output(raw_output)
+                model_payload, parse_observation = strict_parse_model_output(raw_output)
             else:
-                payload = raw_output
+                model_payload = raw_output
                 parse_observation = {
                     "parsed": False,
                     "generation_error": generation_error,
                     "automatic_repair_attempted": False,
                 }
-            payload_observations = observe_stage_payload(
+            if (
+                contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11
+                and isinstance(model_payload, dict)
+            ):
+                write_json(
+                    evidence_dir
+                    / f"model_residual_payload_{run_index:03d}_{stage}.json",
+                    model_payload,
+                )
+            payload, payload_observations, merge_document = _prepare_stage_payload(
+                contract,
+                request,
                 stage,
-                payload,
-                request=(
-                    request
-                    if contract["schema_version"]
-                    in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
-                    else None
-                ),
-                compiler_version=contract["prompt_strategy"].get(
-                    "compiler_contract_version"
-                ),
+                model_payload,
+                source_extraction,
             )
+            if merge_document is not None:
+                write_json(
+                    evidence_dir
+                    / f"merge_observation_{run_index:03d}_{stage}.json",
+                    merge_document,
+                )
             stage_observations.extend(payload_observations)
             if isinstance(payload, dict):
                 stages[stage] = payload
@@ -1484,6 +1638,8 @@ def run_trial(
 ) -> dict[str, Any]:
     contract = validate_trial_contract(contract_value)
     request = validate_request(request_value)
+    if canonical_sha256(request) != contract["request_binding"]["request_sha256"]:
+        raise LocalTrialError("规划请求内容摘要与固定合同不一致。")
     if contract["schema_version"] in STAGED_TRIAL_SCHEMA_VERSIONS:
         return _run_staged_trial(
             contract,
@@ -1643,6 +1799,7 @@ def environment_record(
         "shot_planning/local_trial.py",
         "shot_planning/prompting.py",
         "shot_planning/semantic_choice.py",
+        "shot_planning/source_facts.py",
         "shot_planning/stability.py",
         "shot_planning/structured_observability.py",
         "shot_planning/validation.py",
@@ -1700,11 +1857,14 @@ def _verify_environment_record(
     *,
     execution_id: str,
     contract: dict[str, Any],
+    allow_test_environment: bool,
 ) -> None:
     """核对运行环境的边界字段；测试证据只允许显式最小占位。"""
 
     if environment == {"test_environment": True}:
-        return
+        if allow_test_environment:
+            return
+        raise LocalTrialError("生产证据校验不接受测试环境占位。")
     base_fields = {
         "execution_id",
         "recorded_at",
@@ -1752,16 +1912,24 @@ def _verify_environment_record(
         or any(
             not isinstance(path, str)
             or not isinstance(digest, str)
-            or len(digest) != 64
+            or not re.fullmatch(r"[0-9a-f]{64}", digest)
             for path, digest in implementation.items()
         )
     ):
         raise LocalTrialError("运行环境实现摘要无效。")
-    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10 and (
+    if contract["schema_version"] in {
+        TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
+    } and (
         not isinstance(implementation, dict)
         or "shot_planning/evaluation_suite.py" not in implementation
     ):
-        raise LocalTrialError("第十版运行环境缺少套件汇总器实现摘要。")
+        raise LocalTrialError("第十版及以后运行环境缺少套件汇总器实现摘要。")
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11 and (
+        not isinstance(implementation, dict)
+        or "shot_planning/source_facts.py" not in implementation
+    ):
+        raise LocalTrialError("第十一版运行环境缺少原句事实提取器实现摘要。")
 
 
 def _observation_documents_equal(left: Any, right: Any) -> bool:
@@ -1783,7 +1951,11 @@ def _observation_documents_equal(left: Any, right: Any) -> bool:
     return left_value == right_value
 
 
-def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
+def verify_evidence(
+    evidence_dir: Path,
+    *,
+    allow_test_environment: bool = False,
+) -> dict[str, Any]:
     """重新计算本地规划证据包完整性，不创建镜头或质量裁决。"""
 
     manifest = json.loads((evidence_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -1818,6 +1990,57 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
     )
     if canonical_sha256(request) != contract["request_binding"]["request_sha256"]:
         raise LocalTrialError("证据中的请求与试验合同摘要不一致。")
+    source_extraction: dict[str, Any] | None = None
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11:
+        extractor_contract_path = (
+            evidence_dir / "source_fact_extractor_contract.json"
+        )
+        merge_contract_path = evidence_dir / "hybrid_merge_contract.json"
+        extraction_path = evidence_dir / "source_fact_extraction.json"
+        ownership_path = evidence_dir / "field_ownership.json"
+        if not all(
+            path.is_file()
+            for path in (
+                extractor_contract_path,
+                merge_contract_path,
+                extraction_path,
+                ownership_path,
+            )
+        ):
+            raise LocalTrialError("第十一版证据缺少原句事实或字段所有权合同。")
+        observed_extractor_contract = json.loads(
+            extractor_contract_path.read_text(encoding="utf-8")
+        )
+        if (
+            observed_extractor_contract != source_fact_extractor_contract()
+            or canonical_sha256(observed_extractor_contract)
+            != contract["prompt_strategy"][
+                "source_fact_extractor_contract_sha256"
+            ]
+        ):
+            raise LocalTrialError("原句事实提取合同无法由固定实现重建。")
+        observed_merge_contract = json.loads(
+            merge_contract_path.read_text(encoding="utf-8")
+        )
+        if (
+            observed_merge_contract != hybrid_merge_contract()
+            or canonical_sha256(observed_merge_contract)
+            != contract["prompt_strategy"]["hybrid_merge_contract_sha256"]
+        ):
+            raise LocalTrialError("混合合并合同无法由固定实现重建。")
+        source_extraction = extract_source_facts(request)
+        if json.loads(extraction_path.read_text(encoding="utf-8")) != source_extraction:
+            raise LocalTrialError("原句事实提取无法由内嵌请求独立重算。")
+        if json.loads(ownership_path.read_text(encoding="utf-8")) != field_ownership_view(
+            source_extraction
+        ):
+            raise LocalTrialError("字段所有权无法由原句事实独立重算。")
+        if (
+            source_extraction["blocking_issue_count"] != 0
+            or source_extraction["held_out_observation_used"] is not False
+            or source_extraction["formal_decision_created"] is not False
+        ):
+            raise LocalTrialError("第十一版原句事实越过非权威失败关闭边界。")
     if contract["schema_version"] in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS:
         compiler_path = evidence_dir / "compiler_contract.json"
         if not compiler_path.is_file():
@@ -1831,19 +2054,22 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
             "compiler_contract_sha256"
         ]:
             raise LocalTrialError("受控可观察试验的编译合同摘要不一致。")
-    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V10:
+    if contract["schema_version"] in {
+        TRIAL_SCHEMA_VERSION_V10,
+        TRIAL_SCHEMA_VERSION_V11,
+    }:
         glossary_path = evidence_dir / "choice_glossary_contract.json"
         if not glossary_path.is_file():
-            raise LocalTrialError("第十版证据缺少候选释义合同。")
+            raise LocalTrialError("第十版及以后证据缺少候选释义合同。")
         observed_glossary = json.loads(glossary_path.read_text(encoding="utf-8"))
         if observed_glossary.get("schema_version") != contract[
             "prompt_strategy"
         ]["choice_glossary_contract_version"]:
-            raise LocalTrialError("第十版候选释义合同版本不一致。")
+            raise LocalTrialError("第十版及以后候选释义合同版本不一致。")
         if canonical_sha256(observed_glossary) != contract["prompt_strategy"][
             "choice_glossary_contract_sha256"
         ]:
-            raise LocalTrialError("第十版候选释义合同摘要不一致。")
+            raise LocalTrialError("第十版及以后候选释义合同摘要不一致。")
     if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V7 or contract[
         "schema_version"
     ] in GENERALIZED_OBSERVABILITY_TRIAL_SCHEMA_VERSIONS:
@@ -1896,6 +2122,7 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
             json.loads(environment_path.read_text(encoding="utf-8")),
             execution_id=summary.get("execution_id"),
             contract=contract,
+            allow_test_environment=allow_test_environment,
         )
     if stability.get("formal_decision_created") is not False:
         raise LocalTrialError("稳定性观察越权声明正式裁决。")
@@ -1965,11 +2192,13 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
                 raw_outputs[stage] = raw_output
                 generation_error = stage_record.get("generation_error")
                 if generation_error is None:
-                    payload, parse_observation = strict_parse_model_output(raw_output)
+                    model_payload, parse_observation = strict_parse_model_output(
+                        raw_output
+                    )
                 else:
                     if not isinstance(generation_error, dict) or raw_output != "":
                         raise LocalTrialError("阶段生成错误记录与原始输出不一致。")
-                    payload = raw_output
+                    model_payload = raw_output
                     parse_observation = {
                         "parsed": False,
                         "generation_error": generation_error,
@@ -1977,19 +2206,47 @@ def verify_evidence(evidence_dir: Path) -> dict[str, Any]:
                     }
                 if stage_record.get("parse_observation") != parse_observation:
                     raise LocalTrialError("阶段解析观察无法由原始输出重算。")
-                payload_observations = observe_stage_payload(
-                    stage,
-                    payload,
-                    request=(
-                        request
-                        if contract["schema_version"]
-                        in SEMANTIC_STABILITY_TRIAL_SCHEMA_VERSIONS
-                        else None
-                    ),
-                    compiler_version=contract["prompt_strategy"].get(
-                        "compiler_contract_version"
-                    ),
+                residual_path = (
+                    evidence_dir
+                    / f"model_residual_payload_{run_index:03d}_{stage}.json"
                 )
+                if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11:
+                    if isinstance(model_payload, dict):
+                        if not residual_path.is_file() or json.loads(
+                            residual_path.read_text(encoding="utf-8")
+                        ) != model_payload:
+                            raise LocalTrialError(
+                                "模型残余载荷无法由原始输出重算。"
+                            )
+                    elif residual_path.exists():
+                        raise LocalTrialError(
+                            "未解析的模型输出不得保留残余载荷对象。"
+                        )
+                payload, payload_observations, merge_document = (
+                    _prepare_stage_payload(
+                        contract,
+                        request,
+                        stage,
+                        model_payload,
+                        source_extraction,
+                    )
+                )
+                merge_path = (
+                    evidence_dir
+                    / f"merge_observation_{run_index:03d}_{stage}.json"
+                )
+                if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V11:
+                    if (
+                        merge_document is None
+                        or not merge_path.is_file()
+                        or not _observation_documents_equal(
+                            json.loads(merge_path.read_text(encoding="utf-8")),
+                            merge_document,
+                        )
+                    ):
+                        raise LocalTrialError("混合合并观察无法独立重算。")
+                elif merge_path.exists():
+                    raise LocalTrialError("历史试验不得包含第十一版混合合并观察。")
                 expected_stage_observation = {
                     "stage": stage,
                     "parse_observation": parse_observation,

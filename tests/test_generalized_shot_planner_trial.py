@@ -36,10 +36,16 @@ from shot_planning.prompting import (
 )
 from shot_planning.prompting import build_local_planner_scalar_choice_stage_prompt
 from shot_planning.prompting import build_local_planner_semantic_gloss_stage_prompt
+from shot_planning.prompting import build_local_planner_hybrid_stage_prompt
 from shot_planning.semantic_choice import (
     SEMANTIC_CHOICE_GLOSSARY_VERSION,
     choice_glossary_for_stage,
     semantic_choice_glossary_sha256,
+)
+from shot_planning.source_facts import (
+    extract_source_facts,
+    hybrid_merge_contract_sha256,
+    source_fact_extractor_contract_sha256,
 )
 from shot_planning.structured_observability import (
     STRUCTURED_STAGE_ALLOWED_VALUES,
@@ -63,6 +69,11 @@ CASE_FILES = {
         "generalized_bicycle_left_to_right_wide_request_v1.json",
         "qwen3_0_6b_generalized_bicycle_trial_v8.json",
     ),
+}
+V11_CASE_FILES = {
+    "crying": "qwen3_0_6b_hybrid_source_facts_crying_trial_v11.json",
+    "smile": "qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json",
+    "bicycle": "qwen3_0_6b_hybrid_source_facts_bicycle_trial_v11.json",
 }
 
 
@@ -475,7 +486,9 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             )
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
-            verification = verify_evidence(evidence_dir)
+            verification = verify_evidence(
+                evidence_dir, allow_test_environment=True
+            )
             self.assertEqual(
                 verification["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
@@ -548,7 +561,9 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
             self.assertEqual(
-                verify_evidence(evidence_dir)["package_integrity_observation"],
+                verify_evidence(
+                    evidence_dir, allow_test_environment=True
+                )["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
             )
             self.assertFalse((evidence_dir / "choice_glossary_contract.json").exists())
@@ -560,7 +575,7 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             with self.assertRaisesRegex(
                 LocalTrialError, "阶段提示与确定性固定合同不一致"
             ):
-                verify_evidence(evidence_dir)
+                verify_evidence(evidence_dir, allow_test_environment=True)
 
     def test_v10_prompt_adds_candidate_glosses_without_held_out_observation(self) -> None:
         request, _contract, _stages = case_values("bicycle")
@@ -687,7 +702,9 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             write_json(evidence_dir / "environment.json", {"test_environment": True})
             write_manifest(evidence_dir)
             self.assertEqual(
-                verify_evidence(evidence_dir)["package_integrity_observation"],
+                verify_evidence(
+                    evidence_dir, allow_test_environment=True
+                )["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
             )
             prompt_path = evidence_dir / "prompt_001_shot_core.json"
@@ -703,7 +720,105 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
                 LocalTrialError,
                 "阶段提示与确定性固定合同不一致",
             ):
+                verify_evidence(evidence_dir, allow_test_environment=True)
+
+    def test_v11_contracts_and_prompts_bind_residual_field_ownership(self) -> None:
+        expected_locked_counts = {"crying": 9, "smile": 11, "bicycle": 9}
+        for case_name, contract_name in V11_CASE_FILES.items():
+            request, _v8_contract, _stages = case_values(case_name)
+            contract = validate_trial_contract(load(EXPERIMENT_ROOT / contract_name))
+            validate_request_binding(
+                contract,
+                request,
+                contract["request_binding"]["request_file"],
+            )
+            self.assertEqual(contract["schema_version"], "local-shot-planner-trial.v11")
+            self.assertEqual(
+                contract["prompt_strategy"]["source_fact_extractor_contract_sha256"],
+                source_fact_extractor_contract_sha256(),
+            )
+            self.assertEqual(
+                contract["prompt_strategy"]["hybrid_merge_contract_sha256"],
+                hybrid_merge_contract_sha256(),
+            )
+            extraction = extract_source_facts(request)
+            self.assertEqual(
+                len(extraction["locked_fields"]), expected_locked_counts[case_name]
+            )
+            for stage in contract["prompt_strategy"]["stages"]:
+                prompt = build_local_planner_hybrid_stage_prompt(request, stage)
+                body = json.loads(prompt["user"])
+                required = set(body["stage_contract"]["required_keys"])
+                locked = set(body["input"]["locked_field_values"])
+                self.assertTrue(required.isdisjoint(locked))
+                self.assertEqual(
+                    set(body["stage_contract"]["allowed_scalar_choices"]), required
+                )
+                self.assertEqual(set(body["stage_contract"]["choice_glossary"]), required)
+                self.assertFalse(body["input"]["held_out_observation_used"])
+                self.assertNotIn("expected_controlled_values", prompt["user"])
+
+    def test_v11_runner_merges_residual_payload_and_recomputes_evidence(self) -> None:
+        request, _v8_contract, stages = case_values("smile")
+        contract = load(
+            EXPERIMENT_ROOT / "qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json"
+        )
+        prompts: list[dict] = []
+
+        def generate(prompt: dict, _call_index: int) -> str:
+            prompts.append(prompt)
+            body = json.loads(prompt["user"])
+            return json.dumps(
+                {
+                    field: stages[prompt["stage"]][field]
+                    for field in body["stage_contract"]["required_keys"]
+                },
+                ensure_ascii=False,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-V11-HYBRID-TEST"
+            summary = run_trial(
+                contract,
+                request,
+                "LOCAL-V11-HYBRID-TEST",
+                evidence_dir,
+                generate,
+            )
+            self.assertEqual(len(prompts), 21)
+            self.assertEqual(summary["structurally_observable_run_count"], 3)
+            self.assertTrue((evidence_dir / "source_fact_extraction.json").is_file())
+            self.assertTrue((evidence_dir / "field_ownership.json").is_file())
+            self.assertEqual(
+                len(list(evidence_dir.glob("model_residual_payload_*.json"))), 21
+            )
+            self.assertEqual(
+                len(list(evidence_dir.glob("merge_observation_*.json"))), 21
+            )
+            merged_core = load(evidence_dir / "payload_001_shot_core.json")
+            residual_core = load(
+                evidence_dir / "model_residual_payload_001_shot_core.json"
+            )
+            self.assertEqual(residual_core, {"primary_purpose": "EMPHASIZE_EMOTION"})
+            self.assertEqual(merged_core["framing"], "MEDIUM")
+            self.assertEqual(merged_core["action_description"], request["source_text"])
+            write_json(evidence_dir / "environment.json", {"test_environment": True})
+            write_manifest(evidence_dir)
+            with self.assertRaisesRegex(LocalTrialError, "不接受测试环境占位"):
                 verify_evidence(evidence_dir)
+            self.assertEqual(
+                verify_evidence(
+                    evidence_dir, allow_test_environment=True
+                )["package_integrity_observation"],
+                "COMPLETE_AND_DIGEST_MATCHED",
+            )
+            extraction_path = evidence_dir / "source_fact_extraction.json"
+            tampered = load(extraction_path)
+            tampered["locked_fields"]["shot_core.framing"] = "CLOSE_UP"
+            write_json(extraction_path, tampered)
+            write_manifest(evidence_dir)
+            with self.assertRaisesRegex(LocalTrialError, "原句事实提取无法"):
+                verify_evidence(evidence_dir, allow_test_environment=True)
 
 
 if __name__ == "__main__":
