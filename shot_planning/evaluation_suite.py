@@ -17,6 +17,7 @@ from .local_trial import (
     TRIAL_SCHEMA_VERSION_V9,
     TRIAL_SCHEMA_VERSION_V10,
     TRIAL_SCHEMA_VERSION_V11,
+    TRIAL_SCHEMA_VERSION_V12,
     environment_record,
     run_trial,
     sha256_file,
@@ -257,8 +258,9 @@ def load_suite_cases(
             TRIAL_SCHEMA_VERSION_V9,
             TRIAL_SCHEMA_VERSION_V10,
             TRIAL_SCHEMA_VERSION_V11,
+            TRIAL_SCHEMA_VERSION_V12,
         }:
-            raise ValueError("通用性套件只允许第八版至第十一版单用例试验。")
+            raise ValueError("通用性套件只允许第八版至第十二版单用例试验。")
         if canonical_sha256(request) != case["request_binding"]["request_sha256"]:
             raise ValueError("评测用例请求摘要漂移。")
         if canonical_sha256(trial) != case["trial_binding"][
@@ -565,6 +567,10 @@ def run_suite(
             case_execution_id,
             case_dir,
             case_generate,
+            request_relative_path=loaded["request_path"]
+            .resolve()
+            .relative_to(repo_root.resolve())
+            .as_posix(),
         )
         write_json(
             case_dir / "environment.json",
@@ -734,7 +740,11 @@ def verify_suite_evidence(evidence_dir: Path) -> dict[str, Any]:
     )
     implementation_bound_suite = all(
         trial.get("schema_version")
-        in {TRIAL_SCHEMA_VERSION_V10, TRIAL_SCHEMA_VERSION_V11}
+        in {
+            TRIAL_SCHEMA_VERSION_V10,
+            TRIAL_SCHEMA_VERSION_V11,
+            TRIAL_SCHEMA_VERSION_V12,
+        }
         for trial in embedded_trials
     )
     base_environment_fields = {

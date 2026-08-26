@@ -8,6 +8,7 @@ from typing import Any
 from .contracts import (
     PLANNER_CONTEXT_PROMPT_CONTRACT_VERSION,
     PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+    PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_OBSERVABLE_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
@@ -40,6 +41,8 @@ from .structured_observability import (
 )
 from .semantic_choice import choice_glossary_for_stage
 from .source_facts import (
+    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
+    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
     extract_source_facts,
     locked_fields_for_stage,
     residual_fields_for_stage,
@@ -56,7 +59,7 @@ def build_local_planner_prompt(
     if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2:
         raise ShotPlanningContractError(
             "REQUEST_V2_REQUIRES_STAGED_PROMPT",
-            "第二版规划请求必须使用第八版至第十版的七阶段提示合同。",
+            "第二版规划请求必须使用第八版及以后的七阶段提示合同。",
             "$.schema_version",
         )
     planner = planner_metadata or {
@@ -160,7 +163,7 @@ def build_local_planner_payload_prompt(request_value: Any) -> dict[str, Any]:
     if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2:
         raise ShotPlanningContractError(
             "REQUEST_V2_REQUIRES_STAGED_PROMPT",
-            "第二版规划请求必须使用第八版至第十版的七阶段提示合同。",
+            "第二版规划请求必须使用第八版及以后的七阶段提示合同。",
             "$.schema_version",
         )
     payload_shape = {
@@ -781,14 +784,20 @@ def build_local_planner_semantic_gloss_stage_prompt(
     return prompt
 
 
-def build_local_planner_hybrid_stage_prompt(
+def _build_local_planner_hybrid_stage_prompt(
     request_value: Any,
     stage: str,
+    *,
+    extractor_contract_version: str,
+    prompt_contract_version: str,
 ) -> dict[str, Any]:
-    """第十一版提示：模型只填写未被原句事实锁定的残余字段。"""
+    """按版本提取原句事实，模型只填写未锁定的残余字段。"""
 
     request = validate_request(request_value)
-    extraction = extract_source_facts(request)
+    extraction = extract_source_facts(
+        request,
+        contract_version=extractor_contract_version,
+    )
     if extraction["blocking_issue_count"]:
         raise ValueError("原句事实提取存在冲突或歧义，不能构建混合提示。")
     prompt = build_local_planner_semantic_gloss_stage_prompt(request, stage)
@@ -872,7 +881,33 @@ system_locked_source_facts 是系统从 source_text 提取的只读事实；严�
 阅读 choice_glossary 理解候选语义；依据 source_text 与只读事实选择，不能依据候选顺序猜测。
 只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。"""
     prompt["user"] = json.dumps(body, ensure_ascii=False, sort_keys=True)
-    prompt[
-        "prompt_contract_version"
-    ] = PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION
+    prompt["prompt_contract_version"] = prompt_contract_version
     return prompt
+
+
+def build_local_planner_hybrid_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第十一版历史提示：固定使用第一版原句事实合同。"""
+
+    return _build_local_planner_hybrid_stage_prompt(
+        request_value,
+        stage,
+        extractor_contract_version=SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
+        prompt_contract_version=PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+    )
+
+
+def build_local_planner_guarded_source_fact_stage_prompt(
+    request_value: Any,
+    stage: str,
+) -> dict[str, Any]:
+    """第十二版提示：使用收紧否定及主体/相机边界的提取合同。"""
+
+    return _build_local_planner_hybrid_stage_prompt(
+        request_value,
+        stage,
+        extractor_contract_version=SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
+        prompt_contract_version=PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+    )

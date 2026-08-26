@@ -1,4 +1,5 @@
 # senk-video-generator
+> 这不是 SENK Workfit 的业务仓!!!.
 
 > 由 SENK 管理，为 Seedance、本地开源模型及其他视频能力提供统一、可验证、可修正、可审计的受控生产过程。
 
@@ -82,17 +83,26 @@ test -n "${ARK_API_KEY:-}" && echo "Seedance API Key 已载入"
 
 默认单请求命令仍保留已取证的 `v7` 哭泣特写基线。通用性观察另使用版本化的
 `request.v2`、中立主体词表和三用例套件，避免把单一请求下的稳定性误写成跨请求
-理解能力。当前 `v11` 先用失败关闭的确定性提取器锁定原句明确事实，模型只输出残余字段。
+理解能力。已取证的 `v11` 先用失败关闭的确定性提取器锁定原句明确事实，模型只输出残余字段。
 雨中哭泣、室内微笑和自行车用例分别锁定 `9`、`11`、`9` 个字段；`63/63`
 次本地调用和 `9/9` 轮严格解析全部完成，模型没有写入锁定字段。保留观察从
 `v10` 的 `120` 项降到 `93` 项，但残余的场景连续性、构图、灯光和动作连续性选择仍使
 `0/9` 形成结构可观察草案。因此该 `0.6B` 路径仍只能提供诊断观察，不能自动批准镜头。
+
+后续 `v12` 只收紧确定性边界：新增独立的提取器 `v2`，逐词法命中保留可重算的极性决定；
+命中已登记受控词法或守卫词根的明确否定，若没有受控的同字段正向替代，会在证据落盘和模型调用前
+阻断，不能再作为残余字段交给模型猜测。受控的“而是/反而/改用”纠正、肯定惯用语、主体/摄影机穿越和“固定相机参数”
+另有固定边界。`v11` 继续永久绑定提取器 `v1`，既有证据不会被新语义重释。`v12` 目前只有
+固定合同、对抗回归和伪模型证据重算，没有新的真实模型运行或质量提升结论。
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial
 
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite \
   --suite experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json
+
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial \
+  --contract experiments/shot_planning/qwen3_0_6b_guarded_source_facts_smile_trial_v12.json
 ```
 
 完整合同与三次运行比较方式见[一句话镜头规划草案](docs/one-sentence-shot-planning.md)。
@@ -105,7 +115,7 @@ test -n "${ARK_API_KEY:-}" && echo "Seedance API Key 已载入"
 | 五秒生成 | 完成 `41` 帧来源生成，并派生为 `40` 帧、`8 fps`、精确 `5.000` 秒候选 |
 | 语义连续 | 全部帧保留红色折纸船、水面、倒影和主要折痕 |
 | 方向控制 | 第二镜头净向右约 `116.30` 像素，全部 `39` 个相邻位移均向右，未见重影或边缘接缝 |
-| 自动回归 | `156` 个单元测试和 `1` 个迁移测试通过，测试本身不下载或运行模型 |
+| 自动回归 | `161` 个单元测试和 `1` 个迁移测试通过，测试本身不下载或运行模型 |
 
 这些结果证明受控生成过程可以闭合，不表示本地小模型是唯一运行路径，也不构成正式视觉质量接受。
 

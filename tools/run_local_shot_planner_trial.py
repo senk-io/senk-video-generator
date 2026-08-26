@@ -183,7 +183,14 @@ def main() -> int:
 
     evidence_dir = args.evidence_root.resolve() / args.execution_id
     generator = build_lazy_generator(contract)
-    summary = run_trial(contract, request, args.execution_id, evidence_dir, generator)
+    summary = run_trial(
+        contract,
+        request,
+        args.execution_id,
+        evidence_dir,
+        generator,
+        request_relative_path=relative_repo_path(request_path),
+    )
     write_json(
         evidence_dir / "environment.json",
         environment_record(

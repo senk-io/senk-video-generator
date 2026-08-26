@@ -9,6 +9,7 @@ from typing import Any
 
 from .contracts import (
     PLANNER_GENERALIZED_OBSERVABILITY_PROMPT_CONTRACT_VERSION,
+    PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
     PLANNER_PROMPT_CONTRACT_VERSION,
     PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
@@ -186,6 +187,7 @@ def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
                 PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
                 PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
                 PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+                PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
             }
             if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2
             else SUPPORTED_PLANNER_PROMPT_CONTRACT_VERSIONS
@@ -194,6 +196,7 @@ def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
                 PLANNER_SCALAR_CHOICE_PROMPT_CONTRACT_VERSION,
                 PLANNER_SEMANTIC_GLOSS_PROMPT_CONTRACT_VERSION,
                 PLANNER_HYBRID_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+                PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
             }
         )
         if planner.get("prompt_contract_version") not in expected_prompt_versions:

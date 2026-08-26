@@ -6,7 +6,12 @@ import unittest
 from copy import deepcopy
 from pathlib import Path
 
-from shot_planning.contracts import ShotPlanningContractError, validate_request
+from shot_planning.contracts import (
+    PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+    ShotPlanningContractError,
+    canonical_sha256,
+    validate_request,
+)
 from shot_planning.controlled_context import (
     TOKENIZED_CONTEXT_ALLOWED_VALUES,
     tokenized_context_compiler_contract_sha256,
@@ -37,12 +42,17 @@ from shot_planning.prompting import (
 from shot_planning.prompting import build_local_planner_scalar_choice_stage_prompt
 from shot_planning.prompting import build_local_planner_semantic_gloss_stage_prompt
 from shot_planning.prompting import build_local_planner_hybrid_stage_prompt
+from shot_planning.prompting import (
+    build_local_planner_guarded_source_fact_stage_prompt,
+)
 from shot_planning.semantic_choice import (
     SEMANTIC_CHOICE_GLOSSARY_VERSION,
     choice_glossary_for_stage,
     semantic_choice_glossary_sha256,
 )
 from shot_planning.source_facts import (
+    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
+    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
     extract_source_facts,
     hybrid_merge_contract_sha256,
     source_fact_extractor_contract_sha256,
@@ -75,6 +85,7 @@ V11_CASE_FILES = {
     "smile": "qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json",
     "bicycle": "qwen3_0_6b_hybrid_source_facts_bicycle_trial_v11.json",
 }
+V12_SMILE_TRIAL_FILE = "qwen3_0_6b_guarded_source_facts_smile_trial_v12.json"
 
 
 def load(path: Path) -> dict:
@@ -735,13 +746,18 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             self.assertEqual(contract["schema_version"], "local-shot-planner-trial.v11")
             self.assertEqual(
                 contract["prompt_strategy"]["source_fact_extractor_contract_sha256"],
-                source_fact_extractor_contract_sha256(),
+                source_fact_extractor_contract_sha256(
+                    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1
+                ),
             )
             self.assertEqual(
                 contract["prompt_strategy"]["hybrid_merge_contract_sha256"],
                 hybrid_merge_contract_sha256(),
             )
-            extraction = extract_source_facts(request)
+            extraction = extract_source_facts(
+                request,
+                contract_version=SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
+            )
             self.assertEqual(
                 len(extraction["locked_fields"]), expected_locked_counts[case_name]
             )
@@ -778,12 +794,40 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary:
             evidence_dir = Path(temporary) / "LOCAL-V11-HYBRID-TEST"
+            with self.assertRaisesRegex(
+                LocalTrialError,
+                "混合试验直接调用必须提供请求相对路径",
+            ):
+                run_trial(
+                    contract,
+                    request,
+                    "LOCAL-V11-HYBRID-TEST",
+                    evidence_dir,
+                    generate,
+                )
+            self.assertFalse(evidence_dir.exists())
+            self.assertEqual(prompts, [])
+            with self.assertRaisesRegex(
+                LocalTrialError,
+                "规划请求路径与固定合同不一致",
+            ):
+                run_trial(
+                    contract,
+                    request,
+                    "LOCAL-V11-HYBRID-TEST",
+                    evidence_dir,
+                    generate,
+                    request_relative_path="experiments/shot_planning/wrong.json",
+                )
+            self.assertFalse(evidence_dir.exists())
+            self.assertEqual(prompts, [])
             summary = run_trial(
                 contract,
                 request,
                 "LOCAL-V11-HYBRID-TEST",
                 evidence_dir,
                 generate,
+                request_relative_path=contract["request_binding"]["request_file"],
             )
             self.assertEqual(len(prompts), 21)
             self.assertEqual(summary["structurally_observable_run_count"], 3)
@@ -812,6 +856,16 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
                 )["package_integrity_observation"],
                 "COMPLETE_AND_DIGEST_MATCHED",
             )
+            unexpected_path = evidence_dir / "unexpected-v11-artifact.json"
+            write_json(unexpected_path, {"unexpected": True})
+            write_manifest(evidence_dir)
+            with self.assertRaisesRegex(
+                LocalTrialError,
+                "混合证据包文件集合与固定合同不一致",
+            ):
+                verify_evidence(evidence_dir, allow_test_environment=True)
+            unexpected_path.unlink()
+            write_manifest(evidence_dir)
             extraction_path = evidence_dir / "source_fact_extraction.json"
             tampered = load(extraction_path)
             tampered["locked_fields"]["shot_core.framing"] = "CLOSE_UP"
@@ -819,6 +873,200 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
             write_manifest(evidence_dir)
             with self.assertRaisesRegex(LocalTrialError, "原句事实提取无法"):
                 verify_evidence(evidence_dir, allow_test_environment=True)
+
+    def test_v11_source_fact_conflict_fails_before_evidence_side_effects(self) -> None:
+        request, _v8_contract, _stages = case_values("smile")
+        request = deepcopy(request)
+        request["source_text"] = "固定相机，相机向右摇摄"
+        contract = load(
+            EXPERIMENT_ROOT / "qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json"
+        )
+        contract["request_binding"]["request_sha256"] = canonical_sha256(request)
+        model_call_count = 0
+
+        def generate(_prompt: dict, _call_index: int) -> str:
+            nonlocal model_call_count
+            model_call_count += 1
+            return "{}"
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-V11-CONFLICT-TEST"
+            with self.assertRaisesRegex(
+                LocalTrialError,
+                "原句事实提取存在阻断问题",
+            ):
+                run_trial(
+                    contract,
+                    request,
+                    "LOCAL-V11-CONFLICT-TEST",
+                    evidence_dir,
+                    generate,
+                    request_relative_path=contract["request_binding"][
+                        "request_file"
+                    ],
+                )
+            self.assertFalse(evidence_dir.exists())
+            self.assertEqual(model_call_count, 0)
+
+    def test_v12_binds_guarded_extractor_and_recomputes_fake_evidence(self) -> None:
+        request, _v8_contract, stages = case_values("smile")
+        contract = validate_trial_contract(
+            load(EXPERIMENT_ROOT / V12_SMILE_TRIAL_FILE)
+        )
+        self.assertEqual(contract["schema_version"], "local-shot-planner-trial.v12")
+        self.assertEqual(
+            contract["prompt_strategy"]["source_fact_extractor_contract_sha256"],
+            source_fact_extractor_contract_sha256(
+                SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2
+            ),
+        )
+        prompt = build_local_planner_guarded_source_fact_stage_prompt(
+            request,
+            "shot_core",
+        )
+        self.assertEqual(
+            prompt["prompt_contract_version"],
+            PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+        )
+
+        v11_contract = load(
+            EXPERIMENT_ROOT / V11_CASE_FILES["smile"]
+        )
+        v11_contract["prompt_strategy"][
+            "source_fact_extractor_contract_version"
+        ] = SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2
+        v11_contract["prompt_strategy"][
+            "source_fact_extractor_contract_sha256"
+        ] = source_fact_extractor_contract_sha256(
+            SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2
+        )
+        with self.assertRaisesRegex(ValueError, "第十一版提示策略"):
+            validate_trial_contract(v11_contract)
+
+        v12_with_v1 = deepcopy(contract)
+        v12_with_v1["prompt_strategy"][
+            "source_fact_extractor_contract_version"
+        ] = SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1
+        v12_with_v1["prompt_strategy"][
+            "source_fact_extractor_contract_sha256"
+        ] = source_fact_extractor_contract_sha256(
+            SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1
+        )
+        with self.assertRaisesRegex(ValueError, "第十二版提示策略"):
+            validate_trial_contract(v12_with_v1)
+
+        def generate(stage_prompt: dict, _call_index: int) -> str:
+            body = json.loads(stage_prompt["user"])
+            return json.dumps(
+                {
+                    field: stages[stage_prompt["stage"]][field]
+                    for field in body["stage_contract"]["required_keys"]
+                },
+                ensure_ascii=False,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-V12-GUARDED-TEST"
+            summary = run_trial(
+                contract,
+                request,
+                "LOCAL-V12-GUARDED-TEST",
+                evidence_dir,
+                generate,
+                request_relative_path=contract["request_binding"]["request_file"],
+            )
+            self.assertEqual(summary["model_call_count_observed"], 21)
+            self.assertEqual(
+                load(evidence_dir / "source_fact_extraction.json")["extractor"][
+                    "contract_version"
+                ],
+                SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
+            )
+            self.assertTrue(
+                load(evidence_dir / "source_fact_extraction.json")[
+                    "match_decisions"
+                ]
+            )
+            write_json(evidence_dir / "environment.json", {"test_environment": True})
+            write_manifest(evidence_dir)
+            self.assertEqual(
+                verify_evidence(
+                    evidence_dir,
+                    allow_test_environment=True,
+                )["package_integrity_observation"],
+                "COMPLETE_AND_DIGEST_MATCHED",
+            )
+
+        invalid_call_count = 0
+
+        def generate_one_non_object(
+            stage_prompt: dict,
+            call_index: int,
+        ) -> str:
+            nonlocal invalid_call_count
+            invalid_call_count += 1
+            if invalid_call_count == 1:
+                return "[]"
+            return generate(stage_prompt, call_index)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-V12-NON-OBJECT-TEST"
+            run_trial(
+                contract,
+                request,
+                "LOCAL-V12-NON-OBJECT-TEST",
+                evidence_dir,
+                generate_one_non_object,
+                request_relative_path=contract["request_binding"]["request_file"],
+            )
+            self.assertFalse(
+                (evidence_dir / "model_residual_payload_001_scene_context.json").exists()
+            )
+            self.assertFalse(
+                (evidence_dir / "payload_001_scene_context.json").exists()
+            )
+            self.assertFalse((evidence_dir / "proposal_001.json").exists())
+            write_json(evidence_dir / "environment.json", {"test_environment": True})
+            write_manifest(evidence_dir)
+            self.assertEqual(
+                verify_evidence(
+                    evidence_dir,
+                    allow_test_environment=True,
+                )["package_integrity_observation"],
+                "COMPLETE_AND_DIGEST_MATCHED",
+            )
+
+    def test_v12_negation_blocks_before_evidence_or_model_call(self) -> None:
+        request, _v8_contract, _stages = case_values("smile")
+        request = deepcopy(request)
+        request["source_text"] = "演员并非微笑"
+        contract = load(EXPERIMENT_ROOT / V12_SMILE_TRIAL_FILE)
+        contract["request_binding"]["request_sha256"] = canonical_sha256(request)
+        model_call_count = 0
+
+        def generate(_prompt: dict, _call_index: int) -> str:
+            nonlocal model_call_count
+            model_call_count += 1
+            return "{}"
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-V12-NEGATION-TEST"
+            with self.assertRaisesRegex(
+                LocalTrialError,
+                "原句事实提取存在阻断问题",
+            ):
+                run_trial(
+                    contract,
+                    request,
+                    "LOCAL-V12-NEGATION-TEST",
+                    evidence_dir,
+                    generate,
+                    request_relative_path=contract["request_binding"][
+                        "request_file"
+                    ],
+                )
+            self.assertFalse(evidence_dir.exists())
+            self.assertEqual(model_call_count, 0)
 
 
 if __name__ == "__main__":
