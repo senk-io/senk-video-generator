@@ -1,0 +1,9 @@
+{
+  "action_class": "MOVE",
+  "action_description": "夜晚室外街灯下，固定相机拍摄一辆自行车从左向右穿过空旷街道的全景镜头",
+  "camera_direction": "NONE",
+  "camera_movement": "STATIC",
+  "camera_speed": "NONE",
+  "framing": "WIDE",
+  "primary_purpose": "EMPHASIZE_EMOTION"
+}

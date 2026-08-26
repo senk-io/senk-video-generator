@@ -1,0 +1,321 @@
+{
+  "comparable_run_count": 3,
+  "comparison_performed": true,
+  "creative_review_required": true,
+  "exact_controlled_semantic_group_count": 1,
+  "excluded_run_indices": [],
+  "field_consistency": {
+    "composition.background_visibility": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "RAIN_SOFTLY_BLURRED"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.face_coverage": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FACE_MOST_OF_FRAME"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.focus_target": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "EYES_AND_TEARS"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.subject_placement": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "CENTER"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.entry_environment_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "CONTINUOUS_RAIN"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.entry_subject_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FACE_WET_AND_CRYING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.exit_environment_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "CONTINUOUS_RAIN"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.exit_subject_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SAME_FACE_WITH_VISIBLE_TEARS"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.face_readability": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FULLY_READABLE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.light_quality": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SOFT_DIFFUSED"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.light_source": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "OVERCAST_DAYLIGHT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.tear_highlight": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "VISIBLE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.expression_intensity": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "RESTRAINED"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.eye_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "TEARS_WELLING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.mouth_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "LOWER_LIP_TREMBLING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.tear_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "ONE_TEAR_ROLLING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.action_class": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "EXPRESS"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_direction": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "LEFT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_movement": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "ZOOM"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_speed": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FAST"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.framing": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "EXTREME_CLOSE_UP"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.primary_purpose": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "EMPHASIZE_EMOTION"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    }
+  },
+  "formal_decision_created": false,
+  "largest_exact_controlled_semantic_group_ratio": 1.0,
+  "run_count": 3,
+  "schema_version": "controlled-semantic-stability-observation.v1"
+}

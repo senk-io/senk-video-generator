@@ -1,0 +1,52 @@
+{
+  "blocking_observation_count": 4,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 4,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "PROPOSAL_NOT_OBJECT",
+      "expected": "object",
+      "observed": "str",
+      "path": "$"
+    },
+    {
+      "category": "CROSS_STAGE_SEMANTIC",
+      "code": "GENERALIZED_TEAR_HIGHLIGHT_WITHOUT_VISIBLE_TEARS",
+      "expected": "performance.detail_state=TEARS_VISIBLE",
+      "observed": "MOTION_DETAIL_VISIBLE",
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_LEFT_TO_RIGHT_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "SUBJECT_EXITS_RIGHT"
+      },
+      "observed": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "CRYING_CONTINUES"
+      },
+      "path": "$.stages.continuity"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_ACTION_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "SUBJECT_EXITS_RIGHT"
+      },
+      "observed": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "CRYING_CONTINUES"
+      },
+      "path": "$.stages.continuity"
+    }
+  ],
+  "proposal_id": null,
+  "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+  "schema_version": "shot-planning-observation.v1"
+}

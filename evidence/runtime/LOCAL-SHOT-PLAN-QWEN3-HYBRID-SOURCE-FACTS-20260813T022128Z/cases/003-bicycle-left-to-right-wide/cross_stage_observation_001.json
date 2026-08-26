@@ -1,0 +1,38 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "CROSS_STAGE_SEMANTIC",
+      "code": "GENERALIZED_TEAR_HIGHLIGHT_WITHOUT_VISIBLE_TEARS",
+      "expected": "performance.detail_state=TEARS_VISIBLE",
+      "observed": "MOTION_DETAIL_VISIBLE",
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_LEFT_TO_RIGHT_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "SUBJECT_EXITS_RIGHT"
+      },
+      "observed": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "CRYING_CONTINUES"
+      },
+      "path": "$.stages.continuity"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_ACTION_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "SUBJECT_EXITS_RIGHT"
+      },
+      "observed": {
+        "entry_subject_state": "SUBJECT_ENTERING_FROM_LEFT",
+        "exit_subject_state": "CRYING_CONTINUES"
+      },
+      "path": "$.stages.continuity"
+    }
+  ]
+}

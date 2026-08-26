@@ -1,0 +1,14 @@
+{
+  "automatic_repair_attempted": false,
+  "expected_model_fields": [
+    "continuity_anchor",
+    "environment"
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {
+    "location": "INDOOR_LOCATION",
+    "time": "DAY"
+  },
+  "observations": [],
+  "stage": "scene_context"
+}

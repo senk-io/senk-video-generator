@@ -1,0 +1,10 @@
+{
+  "formal_decision_created": false,
+  "observations": [],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "beat"
+}

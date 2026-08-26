@@ -1,0 +1,46 @@
+{
+  "case_manifests": [
+    {
+      "bytes": 16647,
+      "case_id": "CRY_RAIN_CLOSEUP",
+      "path": "cases/001-cry-rain-closeup/manifest.json",
+      "sha256": "76daed7249e4b538121041cbcab58e0e8f531922783f0f24126b7a7116fa12e3"
+    },
+    {
+      "bytes": 16195,
+      "case_id": "SMILE_INDOOR_MEDIUM",
+      "path": "cases/002-smile-indoor-medium/manifest.json",
+      "sha256": "01074bb79ad9774e64d6933f4777996bd6983c2be98ffe8a4018eb7c5a039782"
+    },
+    {
+      "bytes": 16195,
+      "case_id": "BICYCLE_LEFT_TO_RIGHT_WIDE",
+      "path": "cases/003-bicycle-left-to-right-wide/manifest.json",
+      "sha256": "78adbb3bd6353802618c4c8f49311cfa81c57b9d91bf50c4e7dc2a736fb3a5a3"
+    }
+  ],
+  "formal_decision_created": false,
+  "root_files": [
+    {
+      "bytes": 9140,
+      "path": "suite_contract.json",
+      "sha256": "2d36aaf4b4657a0420aa80323a2d216ba4a2fe273a91bf410615ea352e99217c"
+    },
+    {
+      "bytes": 693,
+      "path": "case_index.json",
+      "sha256": "3a906de9d15caae40a08fce2cf1c70d86c51297aeb2e384a938a16dc9ab5c415"
+    },
+    {
+      "bytes": 2170,
+      "path": "suite_environment.json",
+      "sha256": "304368d27edb8ab8a192539ea5034c94df25a585dd9ef6b6fb3f76317501bf12"
+    },
+    {
+      "bytes": 29252,
+      "path": "suite_observation.json",
+      "sha256": "38a8cdc046809134c3cce33140cfea7d0f86612cb3e6809d0ee6d2452eb01e08"
+    }
+  ],
+  "schema_version": "local-shot-planner-suite-manifest.v1"
+}

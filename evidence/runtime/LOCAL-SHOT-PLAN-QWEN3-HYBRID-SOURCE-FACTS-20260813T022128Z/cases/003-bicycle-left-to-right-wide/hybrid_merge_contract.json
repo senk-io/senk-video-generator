@@ -1,0 +1,63 @@
+{
+  "automatic_repair": false,
+  "extra_residual_field_behavior": "BLOCK",
+  "formal_decision_created": false,
+  "locked_field_precedence": "SYSTEM_SOURCE_FACT_ONLY",
+  "merge_is_deterministic": true,
+  "missing_residual_field_behavior": "BLOCK",
+  "model_locked_field_write_behavior": "BLOCK",
+  "schema_version": "shot-planning-hybrid-merge.v1",
+  "stage_order": [
+    "scene_context",
+    "beat_purpose",
+    "shot_core",
+    "composition",
+    "performance",
+    "lighting",
+    "continuity"
+  ],
+  "stage_required_keys": {
+    "beat_purpose": [
+      "purpose"
+    ],
+    "composition": [
+      "background_visibility",
+      "focus_target",
+      "subject_placement",
+      "subject_scale"
+    ],
+    "continuity": [
+      "entry_environment_state",
+      "entry_subject_state",
+      "exit_environment_state",
+      "exit_subject_state"
+    ],
+    "lighting": [
+      "highlight_state",
+      "light_quality",
+      "light_source",
+      "subject_readability"
+    ],
+    "performance": [
+      "detail_state",
+      "orientation_state",
+      "performance_intensity",
+      "visible_action_state"
+    ],
+    "scene_context": [
+      "continuity_anchor",
+      "environment",
+      "location",
+      "time"
+    ],
+    "shot_core": [
+      "action_class",
+      "action_description",
+      "camera_direction",
+      "camera_movement",
+      "camera_speed",
+      "framing",
+      "primary_purpose"
+    ]
+  }
+}

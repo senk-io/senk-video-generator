@@ -1,0 +1,15 @@
+{
+  "action_class": "EXPRESS",
+  "action_description": "哭泣",
+  "camera_direction": "UP",
+  "camera_movement": "ZOOM",
+  "camera_speed": "FAST",
+  "composition": "雨中",
+  "continuity_in": "镜头",
+  "continuity_out": "镜头",
+  "emotion": "悲伤",
+  "framing": "EXTREME_CLOSE_UP",
+  "lighting": "自然光",
+  "observable_check": "哭泣",
+  "primary_purpose": "EMPHASIZE_EMOTION"
+}

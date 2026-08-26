@@ -1,0 +1,306 @@
+{
+  "allowed_values": {
+    "composition": {
+      "background_visibility": [
+        "RAIN_SOFTLY_BLURRED",
+        "BACKGROUND_SOFTLY_BLURRED",
+        "ENVIRONMENT_VISIBLE_BEHIND_SUBJECT",
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "focus_target": [
+        "EYES_AND_TEARS",
+        "FACE",
+        "SUBJECT",
+        "SUBJECT_ACTION"
+      ],
+      "subject_placement": [
+        "CENTER",
+        "LEFT_THIRD",
+        "RIGHT_THIRD"
+      ],
+      "subject_scale": [
+        "FACE_DOMINANT",
+        "UPPER_BODY_VISIBLE",
+        "FULL_SUBJECT_VISIBLE",
+        "SUBJECT_SMALL_IN_ENVIRONMENT"
+      ]
+    },
+    "continuity": {
+      "entry_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT",
+        "SAME_NIGHT_STREET"
+      ],
+      "entry_subject_state": [
+        "SUBJECT_ALREADY_CRYING",
+        "SUBJECT_ALREADY_SMILING",
+        "SUBJECT_ENTERING_FROM_LEFT"
+      ],
+      "exit_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT",
+        "SAME_NIGHT_STREET"
+      ],
+      "exit_subject_state": [
+        "CRYING_CONTINUES",
+        "SMILE_CONTINUES",
+        "SUBJECT_EXITS_RIGHT"
+      ]
+    },
+    "lighting": {
+      "highlight_state": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "NATURAL_FACE_HIGHLIGHT",
+        "SUBJECT_EDGE_HIGHLIGHT",
+        "NO_SPECIAL_HIGHLIGHT"
+      ],
+      "light_quality": [
+        "SOFT_DIFFUSED",
+        "LOW_CONTRAST",
+        "DIRECTIONAL_LOW_KEY"
+      ],
+      "light_source": [
+        "OVERCAST_DAYLIGHT",
+        "INTERIOR_SOFT_LIGHT",
+        "NIGHT_STREET_LIGHT"
+      ],
+      "subject_readability": [
+        "FACE_FULLY_READABLE",
+        "SUBJECT_FULLY_READABLE",
+        "MOTION_FULLY_READABLE"
+      ]
+    },
+    "performance": {
+      "detail_state": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE",
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "orientation_state": [
+        "FACING_CAMERA",
+        "NATURAL_FORWARD",
+        "MOVING_LEFT_TO_RIGHT"
+      ],
+      "performance_intensity": [
+        "RESTRAINED",
+        "GENTLE",
+        "MODERATE"
+      ],
+      "visible_action_state": [
+        "CRYING",
+        "SMILING",
+        "FORWARD_MOTION"
+      ]
+    },
+    "shot_core": {
+      "action_class": [
+        "STATIC",
+        "MOVE",
+        "PERFORM",
+        "EXPRESS",
+        "INTERACT",
+        "TRANSITION"
+      ],
+      "camera_direction": [
+        "NONE",
+        "LEFT",
+        "RIGHT",
+        "UP",
+        "DOWN",
+        "IN",
+        "OUT"
+      ],
+      "camera_movement": [
+        "STATIC",
+        "PAN",
+        "TILT",
+        "DOLLY",
+        "TRUCK",
+        "PEDESTAL",
+        "ZOOM",
+        "ARC",
+        "HANDHELD"
+      ],
+      "camera_speed": [
+        "NONE",
+        "SLOW",
+        "MODERATE",
+        "FAST"
+      ],
+      "framing": [
+        "EXTREME_WIDE",
+        "WIDE",
+        "MEDIUM_WIDE",
+        "MEDIUM",
+        "MEDIUM_CLOSE_UP",
+        "CLOSE_UP",
+        "EXTREME_CLOSE_UP"
+      ],
+      "primary_purpose": [
+        "ESTABLISH_CONTEXT",
+        "DEVELOP_ACTION",
+        "EMPHASIZE_EMOTION",
+        "REVEAL_INFORMATION",
+        "TRANSITION",
+        "CLOSE_SEQUENCE"
+      ]
+    }
+  },
+  "automatic_repair": false,
+  "creative_fact_defaulting": false,
+  "cross_stage_consistency_rules": [
+    "eyes_and_tears_focus_requires_visible_tears",
+    "tear_highlight_requires_visible_tears",
+    "visible_action_requires_matching_entry_and_exit_subject_state",
+    "scene_environment_requires_matching_continuity_environment",
+    "scene_environment_requires_matching_continuity_anchor",
+    "left_to_right_motion_requires_left_entry_and_right_exit"
+  ],
+  "formal_decision_created": false,
+  "observable_check_derivation": [
+    "request_subject_identity_and_selected_continuity",
+    "selected_framing_and_subject_scale",
+    "selected_action_and_visible_performance",
+    "selected_scene_environment_and_continuity",
+    "selected_camera_contract"
+  ],
+  "required_keys": {
+    "composition": [
+      "background_visibility",
+      "focus_target",
+      "subject_placement",
+      "subject_scale"
+    ],
+    "continuity": [
+      "entry_environment_state",
+      "entry_subject_state",
+      "exit_environment_state",
+      "exit_subject_state"
+    ],
+    "lighting": [
+      "highlight_state",
+      "light_quality",
+      "light_source",
+      "subject_readability"
+    ],
+    "performance": [
+      "detail_state",
+      "orientation_state",
+      "performance_intensity",
+      "visible_action_state"
+    ],
+    "shot_core": [
+      "action_class",
+      "action_description",
+      "camera_direction",
+      "camera_movement",
+      "camera_speed",
+      "framing",
+      "primary_purpose"
+    ]
+  },
+  "schema_version": "structured-observability-compiler.v2",
+  "stage_order": [
+    "scene_context",
+    "beat_purpose",
+    "shot_core",
+    "composition",
+    "performance",
+    "lighting",
+    "continuity"
+  ],
+  "token_descriptions": {
+    "composition": {
+      "background_visibility": {
+        "BACKGROUND_SOFTLY_BLURRED": "主体后方背景柔化可见",
+        "ENVIRONMENT_VISIBLE_BEHIND_SUBJECT": "主体后方环境保持可见",
+        "RAIN_SOFTLY_BLURRED": "主体后方雨景柔化可见",
+        "STREET_VISIBLE_AROUND_SUBJECT": "主体周围街道环境保持可见"
+      },
+      "focus_target": {
+        "EYES_AND_TEARS": "焦点落在眼睛与可见泪水",
+        "FACE": "焦点落在主体面部",
+        "SUBJECT": "焦点落在主体整体",
+        "SUBJECT_ACTION": "焦点落在主体的可见动作"
+      },
+      "subject_placement": {
+        "CENTER": "主体位于画面中央",
+        "LEFT_THIRD": "主体位于画面左侧三分线",
+        "RIGHT_THIRD": "主体位于画面右侧三分线"
+      },
+      "subject_scale": {
+        "FACE_DOMINANT": "主体面部占据画面大部分区域",
+        "FULL_SUBJECT_VISIBLE": "主体整体保持完整可见",
+        "SUBJECT_SMALL_IN_ENVIRONMENT": "主体在环境中保持较小画面占比",
+        "UPPER_BODY_VISIBLE": "主体上半身保持完整可见"
+      }
+    },
+    "continuity": {
+      "entry_environment_state": {
+        "CONTINUOUS_RAIN": "进入镜头时背景保持持续降雨",
+        "SAME_INDOOR_ENVIRONMENT": "进入镜头时室内环境保持连续",
+        "SAME_NIGHT_STREET": "进入镜头时夜间街道环境保持连续"
+      },
+      "entry_subject_state": {
+        "SUBJECT_ALREADY_CRYING": "主体进入镜头时已经哭泣",
+        "SUBJECT_ALREADY_SMILING": "主体进入镜头时已经微笑",
+        "SUBJECT_ENTERING_FROM_LEFT": "主体从画面左侧进入"
+      },
+      "exit_environment_state": {
+        "CONTINUOUS_RAIN": "离开镜头时背景仍保持持续降雨",
+        "SAME_INDOOR_ENVIRONMENT": "离开镜头时室内环境继续保持连续",
+        "SAME_NIGHT_STREET": "离开镜头时夜间街道环境继续保持连续"
+      },
+      "exit_subject_state": {
+        "CRYING_CONTINUES": "主体离开镜头时继续哭泣",
+        "SMILE_CONTINUES": "主体离开镜头时继续微笑",
+        "SUBJECT_EXITS_RIGHT": "主体从画面右侧离开"
+      }
+    },
+    "lighting": {
+      "highlight_state": {
+        "NATURAL_FACE_HIGHLIGHT": "面部自然高光保持可见",
+        "NO_SPECIAL_HIGHLIGHT": "主体不依赖特殊高光辨识",
+        "SUBJECT_EDGE_HIGHLIGHT": "主体边缘高光保持可见",
+        "TEAR_HIGHLIGHT_VISIBLE": "泪水高光保持可见"
+      },
+      "light_quality": {
+        "DIRECTIONAL_LOW_KEY": "定向低调光保持环境层次",
+        "LOW_CONTRAST": "画面对比度保持柔和",
+        "SOFT_DIFFUSED": "光线保持柔和漫射"
+      },
+      "light_source": {
+        "INTERIOR_SOFT_LIGHT": "室内柔和光照亮主体",
+        "NIGHT_STREET_LIGHT": "夜间街道光照亮主体",
+        "OVERCAST_DAYLIGHT": "阴天自然光照亮主体"
+      },
+      "subject_readability": {
+        "FACE_FULLY_READABLE": "主体面部细节清晰可读",
+        "MOTION_FULLY_READABLE": "主体运动轮廓清晰可读",
+        "SUBJECT_FULLY_READABLE": "主体整体细节清晰可读"
+      }
+    },
+    "performance": {
+      "detail_state": {
+        "MOTION_DETAIL_VISIBLE": "运动细节清楚可见",
+        "RELAXED_FACE_VISIBLE": "放松的面部细节清楚可见",
+        "TEARS_VISIBLE": "面部泪水清楚可见"
+      },
+      "orientation_state": {
+        "FACING_CAMERA": "主体朝向相机",
+        "MOVING_LEFT_TO_RIGHT": "主体从画面左侧向右侧移动",
+        "NATURAL_FORWARD": "主体保持自然朝前"
+      },
+      "performance_intensity": {
+        "GENTLE": "可见动作强度保持轻柔",
+        "MODERATE": "可见动作强度保持适中",
+        "RESTRAINED": "可见动作强度保持克制"
+      },
+      "visible_action_state": {
+        "CRYING": "哭泣状态清楚可见",
+        "FORWARD_MOTION": "向前运动状态清楚可见",
+        "SMILING": "微笑状态清楚可见"
+      }
+    }
+  }
+}

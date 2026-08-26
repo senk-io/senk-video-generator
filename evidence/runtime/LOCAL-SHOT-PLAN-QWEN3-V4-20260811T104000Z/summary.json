@@ -1,0 +1,171 @@
+{
+  "automatic_retry_count": 0,
+  "comparison_performed": false,
+  "creative_review_required": true,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z",
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "largest_exact_structure_group_ratio": null,
+  "model_call_count_observed": 9,
+  "model_call_count_requested": 9,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "parsed_run_count": 3,
+  "prompt_contract_version": "local-shot-planner-staged-semantic.v4",
+  "run_count_observed": 3,
+  "run_count_requested": 3,
+  "runs": [
+    {
+      "all_stages_parsed": true,
+      "elapsed_seconds": 4.907284,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-001",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-RUN-001",
+      "run_index": 1,
+      "stages": [
+        {
+          "elapsed_seconds": 2.854704,
+          "generation_error": null,
+          "model_call_index": 1,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "2952612169447913f413afddfdb5d537d7401b7ed25f2062bf757344ee027b40",
+          "stage": "scene",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.314329,
+          "generation_error": null,
+          "model_call_index": 2,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e9f2075d43d3b5f7bc14f714a2eea35a629356f400231607b060e77ec59c3d10",
+          "stage": "beat",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.736662,
+          "generation_error": null,
+          "model_call_index": 3,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "fdb1af98e0362ef4de775bcc586ac9ff9a2c0acc0bd1a441f02f7134486300b7",
+          "stage": "shot",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-11T10:27:00.496128+00:00",
+      "structural_observation_count": 5
+    },
+    {
+      "all_stages_parsed": true,
+      "elapsed_seconds": 2.555651,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-002",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-RUN-002",
+      "run_index": 2,
+      "stages": [
+        {
+          "elapsed_seconds": 0.493476,
+          "generation_error": null,
+          "model_call_index": 4,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "2952612169447913f413afddfdb5d537d7401b7ed25f2062bf757344ee027b40",
+          "stage": "scene",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.336635,
+          "generation_error": null,
+          "model_call_index": 5,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e9f2075d43d3b5f7bc14f714a2eea35a629356f400231607b060e77ec59c3d10",
+          "stage": "beat",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.723472,
+          "generation_error": null,
+          "model_call_index": 6,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "fdb1af98e0362ef4de775bcc586ac9ff9a2c0acc0bd1a441f02f7134486300b7",
+          "stage": "shot",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-11T10:27:05.403449+00:00",
+      "structural_observation_count": 5
+    },
+    {
+      "all_stages_parsed": true,
+      "elapsed_seconds": 2.573926,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-003",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-RUN-003",
+      "run_index": 3,
+      "stages": [
+        {
+          "elapsed_seconds": 0.538612,
+          "generation_error": null,
+          "model_call_index": 7,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "2952612169447913f413afddfdb5d537d7401b7ed25f2062bf757344ee027b40",
+          "stage": "scene",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.343154,
+          "generation_error": null,
+          "model_call_index": 8,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "e9f2075d43d3b5f7bc14f714a2eea35a629356f400231607b060e77ec59c3d10",
+          "stage": "beat",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.690471,
+          "generation_error": null,
+          "model_call_index": 9,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "fdb1af98e0362ef4de775bcc586ac9ff9a2c0acc0bd1a441f02f7134486300b7",
+          "stage": "shot",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-11T10:27:07.959124+00:00",
+      "structural_observation_count": 5
+    }
+  ],
+  "schema_version": "local-shot-planner-trial-observation.v1",
+  "structurally_observable_run_count": 0
+}

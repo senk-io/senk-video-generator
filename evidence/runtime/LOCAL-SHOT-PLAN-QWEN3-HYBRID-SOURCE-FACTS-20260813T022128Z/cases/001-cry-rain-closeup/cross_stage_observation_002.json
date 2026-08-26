@@ -1,0 +1,38 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_ACTION_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_subject_state": "SUBJECT_ALREADY_CRYING",
+        "exit_subject_state": "CRYING_CONTINUES"
+      },
+      "observed": {
+        "entry_subject_state": "SUBJECT_ALREADY_CRYING",
+        "exit_subject_state": "SMILE_CONTINUES"
+      },
+      "path": "$.stages.continuity"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_CONTEXT_ANCHOR_MISMATCH",
+      "expected": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+      "observed": "SAME_SUBJECT_AND_ENVIRONMENT",
+      "path": "$.stages.scene_context.continuity_anchor"
+    },
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_ENVIRONMENT_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_environment_state": "CONTINUOUS_RAIN",
+        "exit_environment_state": "CONTINUOUS_RAIN"
+      },
+      "observed": {
+        "entry_environment_state": "CONTINUOUS_RAIN",
+        "exit_environment_state": "SAME_INDOOR_ENVIRONMENT"
+      },
+      "path": "$.stages.continuity"
+    }
+  ]
+}

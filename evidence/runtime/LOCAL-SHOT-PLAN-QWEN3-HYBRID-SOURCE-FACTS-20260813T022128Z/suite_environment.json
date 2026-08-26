@@ -1,0 +1,27 @@
+{
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z",
+  "formal_fact_creation": "PROHIBITED",
+  "git_head": "87c997dbf5ba149bfa84492ddb6314253909206c",
+  "git_status_porcelain": "M shot_planning/contracts.py\n M shot_planning/evaluation_suite.py\n M shot_planning/local_trial.py\n M shot_planning/prompting.py\n M shot_planning/validation.py\n M tests/test_generalized_shot_planner_trial.py\n M tests/test_local_shot_planner_suite.py\n M tests/test_local_shot_planner_trial.py\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z/\n?? experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_bicycle_trial_v11.json\n?? experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_crying_trial_v11.json\n?? experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json\n?? experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_smile_trial_v11.json\n?? shot_planning/source_facts.py\n?? tests/test_source_fact_extraction.py",
+  "implementation_sha256": {
+    "shot_planning/contracts.py": "c098d175f9938146d9d1e56c4c3686165e9bff9fb5b859a207a31318d95160bd",
+    "shot_planning/controlled_context.py": "4e87dec6b744aaf3dabd0b21773eda25b5719b2f2807559637b0ce6a22335daf",
+    "shot_planning/evaluation_suite.py": "9a80cd3490516325436870555bf44eaeb4f43d39d780913562bca1fc7542b671",
+    "shot_planning/generalized_observability.py": "1638ee9d1f87263302942b17bc3576aedd053965ad892152a7b2bbdb366fda9d",
+    "shot_planning/local_trial.py": "c8d48e8693363344850168498b87ffb8ef252255f6c2c3a4b537eb85cfef8eab",
+    "shot_planning/prompting.py": "f628b6163c761ef97ff6181f6baecf03c28db7153ee6a02cc8b17db70162565f",
+    "shot_planning/semantic_choice.py": "6a006849a04526a8fc95a6d07b973597c1bc7ac5c53141f15adbb48d659dfb1f",
+    "shot_planning/source_facts.py": "82723956d9860b7b1af4d8c02ab26065ced76cf138425750baa69ae25678a156",
+    "shot_planning/stability.py": "d579bcca97c4e3b0ce4eb5a253bf5ccbb18c847a9eaf43d7ffbaa64d54d3a5c9",
+    "shot_planning/structured_observability.py": "7c9689c4db79a6ab5cf5237a98d74d4bb2a2a9e86a1f322c707b41f1bc5c3181",
+    "shot_planning/validation.py": "91033cb4377178af3a5274c827a7e05251c6984a0ad9984aab99b3458ceb0fde"
+  },
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_load_count_observed": 1,
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "paid_request": false,
+  "recorded_at": "2026-08-13T02:22:23.297597+00:00",
+  "remote_inference_used": false,
+  "runner_sha256": "b47b4a48e47d16fa144aa0990bcd8fba9fd4414c0c7e9524df4e63e3a6bf38eb",
+  "suite_contract_sha256": "ff2112acbb09077fd7e561eca5910f33c68747054e3f2e1cc0a86dcf0bda6db3"
+}

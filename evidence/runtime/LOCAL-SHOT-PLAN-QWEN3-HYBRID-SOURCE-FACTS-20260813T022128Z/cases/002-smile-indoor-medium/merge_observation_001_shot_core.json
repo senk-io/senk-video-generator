@@ -1,0 +1,17 @@
+{
+  "automatic_repair_attempted": false,
+  "expected_model_fields": [
+    "primary_purpose"
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {
+    "action_class": "EXPRESS",
+    "action_description": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止",
+    "camera_direction": "NONE",
+    "camera_movement": "STATIC",
+    "camera_speed": "NONE",
+    "framing": "MEDIUM"
+  },
+  "observations": [],
+  "stage": "shot_core"
+}

@@ -1,0 +1,84 @@
+{
+  "narrative_beats": [
+    {
+      "action": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止",
+      "beat_id": "BEAT-001",
+      "ordinal": 1,
+      "purpose": "DEVELOP_ACTION",
+      "scene_id": "SCENE-001",
+      "source_span": {
+        "end": 31,
+        "quote": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止",
+        "start": 0
+      },
+      "subject_ids": [
+        "SUBJECT-001"
+      ]
+    }
+  ],
+  "planner": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "prompt_contract_version": "local-shot-planner-hybrid-source-facts.v11",
+    "run_id": "LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z-002-SMILE_INDOOR_MEDIUM-RUN-002",
+    "sampling": {
+      "seed": 20260811,
+      "temperature": 0.0
+    }
+  },
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-20260813T022128Z-002-SMILE_INDOOR_MEDIUM-002",
+  "request_id": "PLAN-GENERALIZED-SMILE-001",
+  "scenes": [
+    {
+      "continuity_anchors": [
+        "同一主体与同一环境状态"
+      ],
+      "environment": "环境状态保持稳定",
+      "location": "室内地点",
+      "ordinal": 1,
+      "scene_id": "SCENE-001",
+      "time": "白天"
+    }
+  ],
+  "schema_version": "shot-planning-proposal.v2",
+  "shots": [
+    {
+      "action": {
+        "class": "EXPRESS",
+        "description": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止"
+      },
+      "beat_ids": [
+        "BEAT-001"
+      ],
+      "camera": {
+        "direction": "NONE",
+        "movement": "STATIC",
+        "speed": "NONE"
+      },
+      "composition": "主体位于画面左侧三分线，主体面部占据画面大部分区域，焦点落在主体面部，主体后方背景柔化可见",
+      "continuity_in": "进入镜头时，主体进入镜头时已经微笑，进入镜头时室内环境保持连续",
+      "continuity_out": "离开镜头时，主体离开镜头时继续微笑，离开镜头时室内环境继续保持连续",
+      "framing": "MEDIUM",
+      "lighting": "阴天自然光照亮主体，光线保持柔和漫射，主体整体细节清晰可读，面部自然高光保持可见",
+      "observable_checks": [
+        "主体 SUBJECT-001 始终保持同一可见身份",
+        "景别保持为中景，主体面部占据画面大部分区域",
+        "主要动作保持为白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止，同时微笑状态清楚可见",
+        "场景环境保持环境状态保持稳定，进入镜头时室内环境保持连续并且离开镜头时室内环境继续保持连续",
+        "相机保持静止，方向和速度均不发生漂移"
+      ],
+      "ordinal": 1,
+      "performance": "主体朝向相机，微笑状态清楚可见，放松的面部细节清楚可见，可见动作强度保持轻柔",
+      "primary_purpose": "DEVELOP_ACTION",
+      "scene_id": "SCENE-001",
+      "script_segment": "白天室内柔光下，一位虚构演员面向相机轻轻微笑，中景镜头保持静止",
+      "shot_id": "SHOT-001",
+      "subject_ids": [
+        "SUBJECT-001"
+      ],
+      "target_duration_seconds": 6
+    }
+  ],
+  "source_text_sha256": "2d382f6ac891a5d31bffd7c3a65931404b60873108ede1c1e3395b5770e76284",
+  "status": "DRAFT_NON_AUTHORITATIVE"
+}

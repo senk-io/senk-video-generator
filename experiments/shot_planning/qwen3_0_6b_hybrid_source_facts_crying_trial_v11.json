@@ -1,0 +1,92 @@
+{
+  "evidence": {
+    "retain_environment": true,
+    "retain_prompt_per_run": true,
+    "retain_raw_output_per_run": true,
+    "write_manifest": true
+  },
+  "execution": {
+    "backend": "transformers_mps",
+    "do_sample": false,
+    "dtype": "float16",
+    "enable_thinking": false,
+    "max_new_tokens": 3072,
+    "run_count": 3,
+    "seed": 20260811,
+    "temperature": 0.0
+  },
+  "model": {
+    "expected_weight_bytes": 1503300328,
+    "model_id": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "non_goals": [
+    "formal_shot_spec_creation",
+    "formal_quality_acceptance",
+    "provider_prompt_compilation",
+    "video_generation",
+    "automatic_retry",
+    "creative_acceptance"
+  ],
+  "prompt_strategy": {
+    "assistant_prefill": "{",
+    "camera_constraints_enforced": true,
+    "choice_glossary_contract_sha256": "be4418dbca8a4f401c89a1d8e4d15c1d418dfc848dddb5e71b0b491e05da4fd7",
+    "choice_glossary_contract_version": "semantic-choice-glossary.v1",
+    "compiler_contract_sha256": "e56d6777fab573f55aba8a8e264e8dbb9ccb9ab60aad671e2be4d743cab1c0b5",
+    "compiler_contract_version": "structured-observability-compiler.v2",
+    "context_compiler_contract_sha256": "9da95ac0bd954b3f6491a8a38bf6670d4096caf25ea26fad765c7f2fb5131067",
+    "context_compiler_contract_version": "tokenized-context-compiler.v1",
+    "context_role_constraints_enforced": true,
+    "cross_stage_consistency_enforced": true,
+    "field_ownership_enforced": true,
+    "held_out_observation_input": false,
+    "hybrid_merge_contract_sha256": "b628afbcaca37d045628c447c05d4c88f0d7e17533d052b69a75a6d997efc15d",
+    "hybrid_merge_contract_version": "shot-planning-hybrid-merge.v1",
+    "model_may_write_locked_fields": false,
+    "model_output_scope": "seven_flat_hybrid_residual_stages",
+    "prompt_contract_version": "local-shot-planner-hybrid-source-facts.v11",
+    "scalar_choice_encoding": "pipe_delimited_strings",
+    "semantic_choice_glossary_enforced": true,
+    "semantic_constraints_enforced": true,
+    "source_fact_extractor_contract_sha256": "e7e80ae9c924c933e0b95c6ee14b0c93f53c969bde6e218826ed8242261ea0f1",
+    "source_fact_extractor_contract_version": "shot-source-fact-extractor-contract.v1",
+    "source_fact_provenance_required": true,
+    "stages": [
+      "scene_context",
+      "beat_purpose",
+      "shot_core",
+      "composition",
+      "performance",
+      "lighting",
+      "continuity"
+    ],
+    "subject_camera_direction_disambiguation": true,
+    "system_owned_beat_action_reuse": true,
+    "system_owned_envelope": true,
+    "system_owned_observable_text_compilation": true
+  },
+  "request_binding": {
+    "request_file": "experiments/shot_planning/generalized_child_crying_closeup_request_v1.json",
+    "request_sha256": "77bb70b2ca125a7f30098270b631e538166b0aeb7be29c73cf70ac5ac9027f39"
+  },
+  "resource_budget": {
+    "maximum_model_calls": 21,
+    "maximum_model_weight_bytes": 1600000000,
+    "maximum_runs": 3,
+    "retry_count": 0
+  },
+  "schema_version": "local-shot-planner-trial.v11",
+  "status": "BOUNDED_NON_AUTHORITATIVE_TRIAL",
+  "strategy_context": {
+    "change": "DETERMINISTIC_SOURCE_FACT_OWNERSHIP_AND_RESIDUAL_MODEL_OUTPUT",
+    "previous_execution_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z",
+    "previous_observations": [
+      "NINE_OF_NINE_RUNS_STRICTLY_PARSED",
+      "ZERO_OF_NINE_RUNS_COMPARABLE_PROPOSALS",
+      "ONE_HUNDRED_TWENTY_HELD_OUT_OBSERVATIONS",
+      "ZERO_AUTOMATIC_RETRY",
+      "COMPLETE_EVIDENCE_DIGEST_MATCHED"
+    ]
+  }
+}

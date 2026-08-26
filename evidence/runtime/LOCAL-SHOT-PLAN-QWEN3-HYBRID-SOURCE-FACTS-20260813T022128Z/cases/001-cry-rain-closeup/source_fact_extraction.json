@@ -1,0 +1,353 @@
+{
+  "blocking_issue_count": 0,
+  "clarification_required_fields": [],
+  "creative_review_required": true,
+  "delegable_fields": [
+    "scene_context.continuity_anchor",
+    "scene_context.environment",
+    "beat_purpose.purpose",
+    "shot_core.primary_purpose",
+    "composition.background_visibility",
+    "composition.focus_target",
+    "composition.subject_placement",
+    "composition.subject_scale",
+    "performance.detail_state",
+    "performance.orientation_state",
+    "performance.performance_intensity",
+    "lighting.highlight_state",
+    "lighting.light_quality",
+    "lighting.light_source",
+    "lighting.subject_readability",
+    "continuity.entry_environment_state",
+    "continuity.entry_subject_state",
+    "continuity.exit_environment_state",
+    "continuity.exit_subject_state"
+  ],
+  "extractor": {
+    "contract_sha256": "e7e80ae9c924c933e0b95c6ee14b0c93f53c969bde6e218826ed8242261ea0f1",
+    "contract_version": "shot-source-fact-extractor-contract.v1"
+  },
+  "facts": [
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-001",
+      "field": "performance.visible_action_state",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_ids": [
+        "ACTION-CRYING-001"
+      ],
+      "source_spans": [
+        {
+          "end": 26,
+          "quote": "哭泣",
+          "start": 24
+        }
+      ],
+      "value": "CRYING"
+    },
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-002",
+      "field": "scene_context.location",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_ids": [
+        "LOCATION-OUTDOOR-001"
+      ],
+      "source_spans": [
+        {
+          "end": 4,
+          "quote": "室外",
+          "start": 2
+        }
+      ],
+      "value": "OUTDOOR_LOCATION"
+    },
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-003",
+      "field": "scene_context.time",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_ids": [
+        "TIME-DAY-001"
+      ],
+      "source_spans": [
+        {
+          "end": 2,
+          "quote": "白天",
+          "start": 0
+        }
+      ],
+      "value": "DAY"
+    },
+    {
+      "depends_on_fact_ids": [
+        "SOURCE-FACT-001"
+      ],
+      "fact_id": "SOURCE-FACT-004",
+      "field": "shot_core.action_class",
+      "provenance": "DETERMINISTIC_DERIVATION",
+      "rule_ids": [
+        "CRYING-CLASS-EXPRESS-001"
+      ],
+      "source_spans": [
+        {
+          "end": 26,
+          "quote": "哭泣",
+          "start": 24
+        }
+      ],
+      "value": "EXPRESS"
+    },
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-005",
+      "field": "shot_core.action_description",
+      "provenance": "REQUEST_PASSTHROUGH",
+      "rule_ids": [
+        "REQUEST-SOURCE-TEXT-PASSTHROUGH-001"
+      ],
+      "source_spans": [
+        {
+          "end": 35,
+          "quote": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止",
+          "start": 0
+        }
+      ],
+      "value": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止"
+    },
+    {
+      "depends_on_fact_ids": [
+        "SOURCE-FACT-007"
+      ],
+      "fact_id": "SOURCE-FACT-006",
+      "field": "shot_core.camera_direction",
+      "provenance": "DETERMINISTIC_DERIVATION",
+      "rule_ids": [
+        "STATIC-CAMERA-DIRECTION-NONE-001"
+      ],
+      "source_spans": [
+        {
+          "end": 35,
+          "quote": "镜头保持静止",
+          "start": 29
+        }
+      ],
+      "value": "NONE"
+    },
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-007",
+      "field": "shot_core.camera_movement",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_ids": [
+        "CAMERA-STATIC-001"
+      ],
+      "source_spans": [
+        {
+          "end": 35,
+          "quote": "镜头保持静止",
+          "start": 29
+        }
+      ],
+      "value": "STATIC"
+    },
+    {
+      "depends_on_fact_ids": [
+        "SOURCE-FACT-007"
+      ],
+      "fact_id": "SOURCE-FACT-008",
+      "field": "shot_core.camera_speed",
+      "provenance": "DETERMINISTIC_DERIVATION",
+      "rule_ids": [
+        "STATIC-CAMERA-SPEED-NONE-001"
+      ],
+      "source_spans": [
+        {
+          "end": 35,
+          "quote": "镜头保持静止",
+          "start": 29
+        }
+      ],
+      "value": "NONE"
+    },
+    {
+      "depends_on_fact_ids": [],
+      "fact_id": "SOURCE-FACT-009",
+      "field": "shot_core.framing",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_ids": [
+        "FRAMING-CLOSE-UP-001"
+      ],
+      "source_spans": [
+        {
+          "end": 29,
+          "quote": "特写",
+          "start": 27
+        }
+      ],
+      "value": "CLOSE_UP"
+    }
+  ],
+  "field_resolutions": [
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "scene_context.continuity_anchor",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "scene_context.environment",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "scene_context.location",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "scene_context.time",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "beat_purpose.purpose",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.action_class",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.action_description",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_direction",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_movement",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.camera_speed",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "shot_core.framing",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "shot_core.primary_purpose",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.background_visibility",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.focus_target",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.subject_placement",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "composition.subject_scale",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "performance.detail_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "performance.orientation_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "performance.performance_intensity",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "SYSTEM_OWNED_READ_ONLY",
+      "field": "performance.visible_action_state",
+      "state": "LOCKED_SOURCE_FACT"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.highlight_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.light_quality",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.light_source",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "lighting.subject_readability",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.entry_environment_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.entry_subject_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.exit_environment_state",
+      "state": "NOT_STATED"
+    },
+    {
+      "delegation": "MODEL_PROPOSABLE_NON_AUTHORITATIVE",
+      "field": "continuity.exit_subject_state",
+      "state": "NOT_STATED"
+    }
+  ],
+  "formal_decision_created": false,
+  "held_out_observation_used": false,
+  "issues": [],
+  "locked_fields": {
+    "performance.visible_action_state": "CRYING",
+    "scene_context.location": "OUTDOOR_LOCATION",
+    "scene_context.time": "DAY",
+    "shot_core.action_class": "EXPRESS",
+    "shot_core.action_description": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止",
+    "shot_core.camera_direction": "NONE",
+    "shot_core.camera_movement": "STATIC",
+    "shot_core.camera_speed": "NONE",
+    "shot_core.framing": "CLOSE_UP"
+  },
+  "request_binding": {
+    "request_id": "PLAN-GENERALIZED-CRYING-001",
+    "request_sha256": "77bb70b2ca125a7f30098270b631e538166b0aeb7be29c73cf70ac5ac9027f39",
+    "source_text_sha256": "9de1b16f74c0f55d7af0ac0708ea8274dd4db7f4d62011d4767410f7d86eb9c2"
+  },
+  "schema_version": "shot-source-fact-extraction.v1"
+}

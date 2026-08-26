@@ -1,0 +1,506 @@
+{
+  "comparable_run_count": 0,
+  "comparison_context_count": 0,
+  "comparison_contexts": [],
+  "comparison_performed": false,
+  "creative_review_required": true,
+  "exact_structure_group_count": 0,
+  "exact_structure_groups": [],
+  "field_consistency": {},
+  "formal_decision_created": false,
+  "largest_exact_structure_group_ratio": null,
+  "proposal_observations": [
+    {
+      "blocking_observation_count": 17,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 17,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v1",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-CHILD-CRYING-CLOSEUP-004",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 4,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "雨",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "fd8d784fee7a03042e1c8ed5cefb922fb49d0d44b9a8b4b9eec59bcfed446800",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-004",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 17,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 17,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v1",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-CHILD-CRYING-CLOSEUP-004",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 4,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "雨",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "fd8d784fee7a03042e1c8ed5cefb922fb49d0d44b9a8b4b9eec59bcfed446800",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-004",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 17,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 17,
+      "observations": [
+        {
+          "category": "BINDING",
+          "code": "SCHEMA_VERSION_MISMATCH",
+          "expected": "shot-planning-proposal.v1",
+          "observed": null,
+          "path": "$.schema_version"
+        },
+        {
+          "category": "BINDING",
+          "code": "REQUEST_ID_MISMATCH",
+          "expected": "PLAN-CHILD-CRYING-CLOSEUP-004",
+          "observed": null,
+          "path": "$.request_id"
+        },
+        {
+          "category": "BINDING",
+          "code": "SOURCE_TEXT_SHA256_MISMATCH",
+          "expected": "50246e55ead4145aa4848332c2d5e8cea2b77a422a4ba5d8b065c4c27cc94ee9",
+          "observed": null,
+          "path": "$.source_text_sha256"
+        },
+        {
+          "category": "BINDING",
+          "code": "STATUS_MISMATCH",
+          "expected": "DRAFT_NON_AUTHORITATIVE",
+          "observed": null,
+          "path": "$.status"
+        },
+        {
+          "category": "IDENTITY",
+          "code": "PROPOSAL_ID_REQUIRED",
+          "expected": "non-empty string",
+          "observed": null,
+          "path": "$.proposal_id"
+        },
+        {
+          "category": "EVIDENCE",
+          "code": "PLANNER_METADATA_REQUIRED",
+          "expected": "object",
+          "observed": null,
+          "path": "$.planner"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENES_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "BEATS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOTS_REQUIRED",
+          "expected": "non-empty array",
+          "observed": null,
+          "path": "$.shots"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SCENE_COUNT_MISMATCH",
+          "expected": 1,
+          "observed": 0,
+          "path": "$.scenes"
+        },
+        {
+          "category": "STRUCTURE",
+          "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+          "expected": {
+            "maximum": 4,
+            "minimum": 1
+          },
+          "observed": 0,
+          "path": "$.shots"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "SOURCE_CONTENT_NOT_COVERED",
+          "expected": "all non-punctuation source characters covered",
+          "observed": {
+            "missing_indexes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ]
+          },
+          "path": "$.narrative_beats"
+        },
+        {
+          "category": "DURATION",
+          "code": "SHOT_DURATION_SUM_MISMATCH",
+          "expected": {
+            "target": 6,
+            "tolerance": 0
+          },
+          "observed": 0,
+          "path": "$.shots[*].target_duration_seconds"
+        },
+        {
+          "category": "COVERAGE",
+          "code": "REQUIRED_SUBJECT_NOT_COVERED",
+          "expected": [
+            "SUBJECT-001"
+          ],
+          "observed": [],
+          "path": "$.shots[*].subject_ids"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_ENVIRONMENT_TERM_MISSING",
+          "expected": "雨",
+          "observed": "",
+          "path": "$.scenes[*].environment"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_BEAT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.narrative_beats[*].action"
+        },
+        {
+          "category": "SEMANTIC",
+          "code": "REQUIRED_SHOT_ACTION_TERM_MISSING",
+          "expected": "哭",
+          "observed": "",
+          "path": "$.shots[*].action.description"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "fd8d784fee7a03042e1c8ed5cefb922fb49d0d44b9a8b4b9eec59bcfed446800",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-004",
+      "schema_version": "shot-planning-observation.v1"
+    }
+  ],
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-004",
+  "run_count": 3,
+  "run_observations": [
+    {
+      "code": "RUNS_EXCLUDED_FROM_COMPARISON",
+      "expected": 3,
+      "observed": 0
+    },
+    {
+      "code": "INSUFFICIENT_UNIQUE_COMPARABLE_RUNS",
+      "expected": "at least 2 unique runs in one comparison context",
+      "observed": 0
+    }
+  ],
+  "schema_version": "shot-planning-stability-observation.v1"
+}

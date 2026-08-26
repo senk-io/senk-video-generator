@@ -1,0 +1,107 @@
+{
+  "blocking_observation_count": 5,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 5,
+  "observations": [
+    {
+      "category": "OBSERVABILITY",
+      "code": "PLACEHOLDER_OR_UNOBSERVABLE_TEXT",
+      "expected": {
+        "forbidden_values": [
+          "n/a",
+          "none",
+          "yes",
+          "可观察构图",
+          "可观察灯光状态",
+          "可观察表演状态",
+          "无",
+          "未知"
+        ],
+        "minimum_characters": 3
+      },
+      "observed": "雨中",
+      "path": "$.shots[0].composition"
+    },
+    {
+      "category": "OBSERVABILITY",
+      "code": "PLACEHOLDER_OR_UNOBSERVABLE_TEXT",
+      "expected": {
+        "forbidden_values": [
+          "n/a",
+          "none",
+          "yes",
+          "可观察构图",
+          "可观察灯光状态",
+          "可观察表演状态",
+          "无",
+          "未知"
+        ],
+        "minimum_characters": 3
+      },
+      "observed": "悲伤",
+      "path": "$.shots[0].emotion"
+    },
+    {
+      "category": "OBSERVABILITY",
+      "code": "PLACEHOLDER_OR_UNOBSERVABLE_TEXT",
+      "expected": {
+        "forbidden_values": [
+          "n/a",
+          "none",
+          "yes",
+          "可观察构图",
+          "可观察灯光状态",
+          "可观察表演状态",
+          "无",
+          "未知"
+        ],
+        "minimum_characters": 3
+      },
+      "observed": "镜头",
+      "path": "$.shots[0].continuity_in"
+    },
+    {
+      "category": "OBSERVABILITY",
+      "code": "PLACEHOLDER_OR_UNOBSERVABLE_TEXT",
+      "expected": {
+        "forbidden_values": [
+          "n/a",
+          "none",
+          "yes",
+          "可观察构图",
+          "可观察灯光状态",
+          "可观察表演状态",
+          "无",
+          "未知"
+        ],
+        "minimum_characters": 3
+      },
+      "observed": "镜头",
+      "path": "$.shots[0].continuity_out"
+    },
+    {
+      "category": "OBSERVABILITY",
+      "code": "PLACEHOLDER_OR_UNOBSERVABLE_TEXT",
+      "expected": {
+        "forbidden_values": [
+          "n/a",
+          "none",
+          "yes",
+          "可观察构图",
+          "可观察灯光状态",
+          "可观察表演状态",
+          "无",
+          "未知"
+        ],
+        "minimum_characters": 3
+      },
+      "observed": "哭泣",
+      "path": "$.shots[0].observable_checks[0]"
+    }
+  ],
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z-003",
+  "proposal_sha256": "46055a528abdb2bb75b39e93e995ed7e74a6c40798469bfde3bcbe3fb7741748",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-002",
+  "schema_version": "shot-planning-observation.v1"
+}

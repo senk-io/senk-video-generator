@@ -1,0 +1,271 @@
+{
+  "blocking_observation_count": 25,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 25,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "PROPOSAL_NOT_OBJECT",
+      "expected": "object",
+      "observed": "str",
+      "path": "$"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "LEFT_THIRD"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RAIN_SOFTLY_BLURRED",
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "observed": [
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE",
+        "SUBJECT_ACTION"
+      ],
+      "observed": [
+        "FACE"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CENTER",
+        "LEFT_THIRD"
+      ],
+      "observed": [
+        "LEFT_THIRD"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_DOMINANT",
+        "FULL_SUBJECT_VISIBLE"
+      ],
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "MODERATE"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FORWARD_MOTION"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "observed": [
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACING_CAMERA",
+        "MOVING_LEFT_TO_RIGHT"
+      ],
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "observed": [
+        "MODERATE"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING",
+        "FORWARD_MOTION"
+      ],
+      "observed": [
+        "FORWARD_MOTION"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "NIGHT_STREET_LIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "SUBJECT_EDGE_HIGHLIGHT"
+      ],
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "SOFT_DIFFUSED",
+        "DIRECTIONAL_LOW_KEY"
+      ],
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "OVERCAST_DAYLIGHT",
+        "NIGHT_STREET_LIGHT"
+      ],
+      "observed": [
+        "NIGHT_STREET_LIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_FULLY_READABLE",
+        "MOTION_FULLY_READABLE"
+      ],
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    }
+  ],
+  "proposal_id": null,
+  "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "request_id": "PLAN-GENERALIZED-BICYCLE-001",
+  "schema_version": "shot-planning-observation.v1"
+}

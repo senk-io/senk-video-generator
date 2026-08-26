@@ -1,0 +1,341 @@
+{
+  "automatic_retry_count": 0,
+  "comparison_performed": false,
+  "controlled_semantic_comparison_performed": false,
+  "creative_review_required": true,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE",
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "largest_exact_controlled_semantic_group_ratio": null,
+  "largest_exact_structure_group_ratio": null,
+  "model_call_count_observed": 21,
+  "model_call_count_requested": 21,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "parsed_run_count": 3,
+  "prompt_contract_version": "local-shot-planner-scalar-choices.v9",
+  "run_count_observed": 3,
+  "run_count_requested": 3,
+  "runs": [
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 5.18628,
+      "proposal_blocking_observation_count": 3,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-001",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-RUN-001",
+      "run_index": 1,
+      "stage_contract_observation_count": 2,
+      "stages": [
+        {
+          "elapsed_seconds": 0.717782,
+          "generation_error": null,
+          "model_call_index": 1,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "05d5a4cb8a4637ad272cbdf09bba41f5fe52f1afc2aef1ca550377ca6223de02",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.241475,
+          "generation_error": null,
+          "model_call_index": 2,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.302544,
+          "generation_error": null,
+          "model_call_index": 3,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4d494b29abcb47f9129130ae6d4d3d2f562f161b86d6899f050bd40d3f477fb1",
+          "stage": "shot_core",
+          "stage_observation_count": 2
+        },
+        {
+          "elapsed_seconds": 0.635713,
+          "generation_error": null,
+          "model_call_index": 4,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ded3143b6a9b0305ff45747047eba29f871bee67325a8e43b1594a37bd4c35c8",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.698263,
+          "generation_error": null,
+          "model_call_index": 5,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ce7ffbeae5e03fa9c42114bacbbca0c6a2133797aaca8b8990928ac5b661dc2a",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.75935,
+          "generation_error": null,
+          "model_call_index": 6,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "f26e3355e6376f24a4c6248648069d152149cbdc11727cd00b62fb9ebab5b3f2",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.827208,
+          "generation_error": null,
+          "model_call_index": 7,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "51650dd1bb08099374099268108601ea55998214b41e950d59e8b7b0984f0af4",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:37:01.438683+00:00",
+      "structural_observation_count": 3
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 5.079075,
+      "proposal_blocking_observation_count": 3,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-002",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-RUN-002",
+      "run_index": 2,
+      "stage_contract_observation_count": 2,
+      "stages": [
+        {
+          "elapsed_seconds": 0.704804,
+          "generation_error": null,
+          "model_call_index": 8,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "05d5a4cb8a4637ad272cbdf09bba41f5fe52f1afc2aef1ca550377ca6223de02",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.256585,
+          "generation_error": null,
+          "model_call_index": 9,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.247126,
+          "generation_error": null,
+          "model_call_index": 10,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4d494b29abcb47f9129130ae6d4d3d2f562f161b86d6899f050bd40d3f477fb1",
+          "stage": "shot_core",
+          "stage_observation_count": 2
+        },
+        {
+          "elapsed_seconds": 0.633839,
+          "generation_error": null,
+          "model_call_index": 11,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ded3143b6a9b0305ff45747047eba29f871bee67325a8e43b1594a37bd4c35c8",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.704008,
+          "generation_error": null,
+          "model_call_index": 12,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ce7ffbeae5e03fa9c42114bacbbca0c6a2133797aaca8b8990928ac5b661dc2a",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.734569,
+          "generation_error": null,
+          "model_call_index": 13,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "f26e3355e6376f24a4c6248648069d152149cbdc11727cd00b62fb9ebab5b3f2",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.794158,
+          "generation_error": null,
+          "model_call_index": 14,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "51650dd1bb08099374099268108601ea55998214b41e950d59e8b7b0984f0af4",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:37:06.625135+00:00",
+      "structural_observation_count": 3
+    },
+    {
+      "all_stage_contracts_observable": false,
+      "all_stages_parsed": true,
+      "cross_stage_observation_count": 0,
+      "elapsed_seconds": 5.129342,
+      "proposal_blocking_observation_count": 3,
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-003",
+      "run_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-003-BICYCLE_LEFT_TO_RIGHT_WIDE-RUN-003",
+      "run_index": 3,
+      "stage_contract_observation_count": 2,
+      "stages": [
+        {
+          "elapsed_seconds": 0.705559,
+          "generation_error": null,
+          "model_call_index": 15,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "05d5a4cb8a4637ad272cbdf09bba41f5fe52f1afc2aef1ca550377ca6223de02",
+          "stage": "scene_context",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.254394,
+          "generation_error": null,
+          "model_call_index": 16,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4b04ff1e318066592982b64363e3688b36d9fc6045f9390a5f5579b448d9cf21",
+          "stage": "beat_purpose",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 1.232871,
+          "generation_error": null,
+          "model_call_index": 17,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "4d494b29abcb47f9129130ae6d4d3d2f562f161b86d6899f050bd40d3f477fb1",
+          "stage": "shot_core",
+          "stage_observation_count": 2
+        },
+        {
+          "elapsed_seconds": 0.651185,
+          "generation_error": null,
+          "model_call_index": 18,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ded3143b6a9b0305ff45747047eba29f871bee67325a8e43b1594a37bd4c35c8",
+          "stage": "composition",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.693558,
+          "generation_error": null,
+          "model_call_index": 19,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "ce7ffbeae5e03fa9c42114bacbbca0c6a2133797aaca8b8990928ac5b661dc2a",
+          "stage": "performance",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.755804,
+          "generation_error": null,
+          "model_call_index": 20,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "f26e3355e6376f24a4c6248648069d152149cbdc11727cd00b62fb9ebab5b3f2",
+          "stage": "lighting",
+          "stage_observation_count": 0
+        },
+        {
+          "elapsed_seconds": 0.83131,
+          "generation_error": null,
+          "model_call_index": 21,
+          "parse_observation": {
+            "automatic_repair_attempted": false,
+            "parsed": true,
+            "root_type": "dict"
+          },
+          "raw_output_sha256": "51650dd1bb08099374099268108601ea55998214b41e950d59e8b7b0984f0af4",
+          "stage": "continuity",
+          "stage_observation_count": 0
+        }
+      ],
+      "started_at": "2026-08-12T17:37:11.704370+00:00",
+      "structural_observation_count": 3
+    }
+  ],
+  "schema_version": "local-shot-planner-trial-observation.v1",
+  "structurally_observable_run_count": 0
+}

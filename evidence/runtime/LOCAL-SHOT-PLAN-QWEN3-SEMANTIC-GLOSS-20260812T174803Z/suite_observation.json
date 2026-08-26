@@ -1,0 +1,628 @@
+{
+  "automatic_retry_count": 0,
+  "case_count_observed": 3,
+  "case_count_requested": 3,
+  "cases": [
+    {
+      "case_id": "CRY_RAIN_CLOSEUP",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "NEGATIVE_EMOTION",
+        "RAIN",
+        "CLOSE_UP",
+        "STATIC_CAMERA"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 36,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "GENERALIZED_ENVIRONMENT_CONTINUITY_MISMATCH": 3,
+        "PROPOSAL_NOT_OBJECT": 3
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "CENTER",
+              "observed": "LEFT_THIRD",
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 12,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "CENTER",
+              "observed": "LEFT_THIRD",
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 12,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "212afd898d80d78ce3b542acf628dce86b45a80a60d18af8357302432c742a45",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "CENTER",
+              "observed": "LEFT_THIRD",
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": "SAME_INDOOR_ENVIRONMENT",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 12,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    },
+    {
+      "case_id": "SMILE_INDOOR_MEDIUM",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "POSITIVE_EMOTION",
+        "INDOOR",
+        "MEDIUM",
+        "STATIC_CAMERA",
+        "NO_TEARS"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 45,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "PROPOSAL_NOT_OBJECT": 3,
+        "STAGE_ENUM_VALUE_INVALID": 3
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": "FACE_DOMINANT",
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": "SMILING",
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 15,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": "FACE_DOMINANT",
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": "SMILING",
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 15,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "8023d67b098fcb25e9b143ad04fd6ae1c605caa9eabd5f47ccdd90062fa97d38",
+          "controlled_value_mismatches": [
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "beat_purpose.purpose"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": "FACE_DOMINANT",
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": "SUBJECT_FULLY_READABLE",
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": "SMILING",
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": "MODERATE",
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 15,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    },
+    {
+      "case_id": "BICYCLE_LEFT_TO_RIGHT_WIDE",
+      "coverage_tags": [
+        "NON_HUMAN_SUBJECT",
+        "SUBJECT_MOTION",
+        "LEFT_TO_RIGHT",
+        "NIGHT",
+        "WIDE",
+        "STATIC_CAMERA"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 39,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "PROPOSAL_NOT_OBJECT": 3,
+        "STAGE_CAMERA_DIRECTION_INCOMPATIBLE": 3,
+        "STAGE_MOVING_CAMERA_SPEED_NONE": 3
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "controlled_value_mismatches": [
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": "TEAR_HIGHLIGHT_VISIBLE",
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": "FACING_CAMERA",
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 13,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "controlled_value_mismatches": [
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": "TEAR_HIGHLIGHT_VISIBLE",
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": "FACING_CAMERA",
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 13,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "9fead1b6fa1bd7ef017139cf01a9ddda7cb941127a520a4a2a026313e8c45ba4",
+          "controlled_value_mismatches": [
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": "TEAR_HIGHLIGHT_VISIBLE",
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": "SOFT_DIFFUSED",
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": "FACING_CAMERA",
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 13,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    }
+  ],
+  "creative_review_required": true,
+  "cross_case_controlled_fingerprint_groups": [],
+  "exact_source_echo_run_count": 0,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-SEMANTIC-GLOSS-20260812T174803Z",
+  "formal_decision_created": false,
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "held_out_observation_count": 120,
+  "model_call_count_observed": 63,
+  "model_call_count_requested": 63,
+  "model_load_count_observed": 1,
+  "run_count_observed": 9,
+  "run_count_requested": 9,
+  "schema_version": "local-shot-planner-suite-observation.v1",
+  "suite_id": "LOCAL-SHOT-PLANNER-SEMANTIC-GLOSS-001"
+}

@@ -1,0 +1,85 @@
+{
+  "evidence": {
+    "retain_environment": true,
+    "retain_prompt_per_run": true,
+    "retain_raw_output_per_run": true,
+    "write_manifest": true
+  },
+  "execution": {
+    "backend": "transformers_mps",
+    "do_sample": false,
+    "dtype": "float16",
+    "enable_thinking": false,
+    "max_new_tokens": 3072,
+    "run_count": 3,
+    "seed": 20260811,
+    "temperature": 0.0
+  },
+  "model": {
+    "expected_weight_bytes": 1503300328,
+    "model_id": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "non_goals": [
+    "formal_shot_spec_creation",
+    "formal_quality_acceptance",
+    "provider_prompt_compilation",
+    "video_generation",
+    "automatic_retry",
+    "creative_acceptance"
+  ],
+  "prompt_strategy": {
+    "assistant_prefill": "{",
+    "camera_constraints_enforced": true,
+    "choice_glossary_contract_sha256": "be4418dbca8a4f401c89a1d8e4d15c1d418dfc848dddb5e71b0b491e05da4fd7",
+    "choice_glossary_contract_version": "semantic-choice-glossary.v1",
+    "compiler_contract_sha256": "e56d6777fab573f55aba8a8e264e8dbb9ccb9ab60aad671e2be4d743cab1c0b5",
+    "compiler_contract_version": "structured-observability-compiler.v2",
+    "context_compiler_contract_sha256": "9da95ac0bd954b3f6491a8a38bf6670d4096caf25ea26fad765c7f2fb5131067",
+    "context_compiler_contract_version": "tokenized-context-compiler.v1",
+    "context_role_constraints_enforced": true,
+    "cross_stage_consistency_enforced": true,
+    "model_output_scope": "seven_flat_glossed_scalar_choice_stages",
+    "prompt_contract_version": "local-shot-planner-semantic-gloss.v10",
+    "scalar_choice_encoding": "pipe_delimited_strings",
+    "semantic_choice_glossary_enforced": true,
+    "semantic_constraints_enforced": true,
+    "stages": [
+      "scene_context",
+      "beat_purpose",
+      "shot_core",
+      "composition",
+      "performance",
+      "lighting",
+      "continuity"
+    ],
+    "subject_camera_direction_disambiguation": true,
+    "system_owned_beat_action_reuse": true,
+    "system_owned_envelope": true,
+    "system_owned_observable_text_compilation": true
+  },
+  "request_binding": {
+    "request_file": "experiments/shot_planning/generalized_actor_smile_medium_request_v1.json",
+    "request_sha256": "028a408107e70d9e7e3f98deedb58bd8a216e69a23af041a06e2d6aad5067c66"
+  },
+  "resource_budget": {
+    "maximum_model_calls": 21,
+    "maximum_model_weight_bytes": 1600000000,
+    "maximum_runs": 3,
+    "retry_count": 0
+  },
+  "schema_version": "local-shot-planner-trial.v10",
+  "status": "BOUNDED_NON_AUTHORITATIVE_TRIAL",
+  "strategy_context": {
+    "change": "SEMANTIC_CHOICE_GLOSSARY_AND_SUBJECT_CAMERA_DISAMBIGUATION",
+    "previous_execution_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z",
+    "previous_observations": [
+      "SCALAR_ENCODING_REMOVED_ARRAY_SHAPE_OBSERVATIONS",
+      "SMILE_CASE_TWENTY_CONTROLLED_VALUE_MISMATCHES_PER_RUN",
+      "SMILE_CASE_PAN_WITH_NONE_DIRECTION_AND_SPEED_BLOCKED",
+      "CANDIDATE_POSITION_BIAS_OBSERVED",
+      "ZERO_AUTOMATIC_RETRY",
+      "COMPLETE_EVIDENCE_DIGEST_MATCHED"
+    ]
+  }
+}

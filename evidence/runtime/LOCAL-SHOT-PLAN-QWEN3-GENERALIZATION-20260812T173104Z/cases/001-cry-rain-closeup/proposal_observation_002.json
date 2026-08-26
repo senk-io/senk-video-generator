@@ -1,0 +1,355 @@
+{
+  "blocking_observation_count": 33,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 33,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "PROPOSAL_NOT_OBJECT",
+      "expected": "object",
+      "observed": "str",
+      "path": "$"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "RAIN_SOFTLY_BLURRED"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "EYES_AND_TEARS"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CENTER"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RAIN_SOFTLY_BLURRED",
+        "BACKGROUND_SOFTLY_BLURRED"
+      ],
+      "observed": [
+        "RAIN_SOFTLY_BLURRED"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "EYES_AND_TEARS",
+        "FACE"
+      ],
+      "observed": [
+        "EYES_AND_TEARS"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CENTER",
+        "LEFT_THIRD"
+      ],
+      "observed": [
+        "CENTER"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_DOMINANT",
+        "UPPER_BODY_VISIBLE"
+      ],
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "RESTRAINED"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "TEARS_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CRYING"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE"
+      ],
+      "observed": [
+        "TEARS_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACING_CAMERA",
+        "NATURAL_FORWARD"
+      ],
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "observed": [
+        "RESTRAINED"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING",
+        "SMILING"
+      ],
+      "observed": [
+        "CRYING"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "OVERCAST_DAYLIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "NATURAL_FACE_HIGHLIGHT"
+      ],
+      "observed": [
+        "TEAR_HIGHLIGHT_VISIBLE"
+      ],
+      "path": "$.stages.lighting.highlight_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "SOFT_DIFFUSED",
+        "LOW_CONTRAST"
+      ],
+      "observed": [
+        "SOFT_DIFFUSED"
+      ],
+      "path": "$.stages.lighting.light_quality"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "OVERCAST_DAYLIGHT",
+        "INTERIOR_SOFT_LIGHT"
+      ],
+      "observed": [
+        "OVERCAST_DAYLIGHT"
+      ],
+      "path": "$.stages.lighting.light_source"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_FULLY_READABLE",
+        "SUBJECT_FULLY_READABLE"
+      ],
+      "observed": [
+        "FACE_FULLY_READABLE"
+      ],
+      "path": "$.stages.lighting.subject_readability"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.entry_environment_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.exit_environment_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CRYING_CONTINUES"
+      ],
+      "path": "$.stages.continuity.exit_subject_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "SUBJECT_ALREADY_CRYING"
+      ],
+      "path": "$.stages.continuity.entry_subject_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.entry_environment_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "SUBJECT_ALREADY_CRYING",
+        "SUBJECT_ALREADY_SMILING"
+      ],
+      "observed": [
+        "SUBJECT_ALREADY_CRYING"
+      ],
+      "path": "$.stages.continuity.entry_subject_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.exit_environment_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING_CONTINUES",
+        "SMILE_CONTINUES"
+      ],
+      "observed": [
+        "CRYING_CONTINUES"
+      ],
+      "path": "$.stages.continuity.exit_subject_state"
+    }
+  ],
+  "proposal_id": null,
+  "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "request_id": "PLAN-GENERALIZED-CRYING-001",
+  "schema_version": "shot-planning-observation.v1"
+}

@@ -1,0 +1,6 @@
+{
+  "background_visibility": "STREET_VISIBLE_AROUND_SUBJECT",
+  "focus_target": "FACE",
+  "subject_placement": "LEFT_THIRD",
+  "subject_scale": "FACE_DOMINANT"
+}

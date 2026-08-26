@@ -1,0 +1,29 @@
+{
+  "architecture": "arm64",
+  "contract_sha256": "c00d9ba8364382d60b4078df04c8ccc94f80849e0b7a39be846d91aadcbe0dc2",
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z-002-SMILE_INDOOR_MEDIUM",
+  "formal_fact_creation": "PROHIBITED",
+  "git_head": "293de565e36608f5ad39886c662b20654171a090",
+  "git_status_porcelain": "M shot_planning/contracts.py\n M shot_planning/local_trial.py\n M shot_planning/prompting.py\n M shot_planning/validation.py\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173012Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z/\n?? experiments/shot_planning/generalized_actor_smile_medium_request_v1.json\n?? experiments/shot_planning/generalized_bicycle_left_to_right_wide_request_v1.json\n?? experiments/shot_planning/generalized_child_crying_closeup_request_v1.json\n?? experiments/shot_planning/qwen3_0_6b_generalization_suite_v1.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_bicycle_trial_v8.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_crying_trial_v8.json\n?? experiments/shot_planning/qwen3_0_6b_generalized_smile_trial_v8.json\n?? shot_planning/evaluation_suite.py\n?? shot_planning/generalized_observability.py\n?? tests/test_generalized_shot_planner_trial.py\n?? tests/test_local_shot_planner_suite.py\n?? tools/run_local_shot_planner_suite.py\n?? tools/verify_local_shot_planner_suite.py",
+  "implementation_sha256": {
+    "shot_planning/contracts.py": "84477fedf855ecda1f149e0639b668643e41bacd04f9a6da87b1703a3e2b194c",
+    "shot_planning/controlled_context.py": "4e87dec6b744aaf3dabd0b21773eda25b5719b2f2807559637b0ce6a22335daf",
+    "shot_planning/generalized_observability.py": "2d77e0bbea6c8d624a2e7c0a11fe55bad1b2b12354f17f183ad501586c8dd4fd",
+    "shot_planning/local_trial.py": "d110154e88f1cede98b085cf7bd8df50b668ecb32d5d5555cd0a531ad7f58ed3",
+    "shot_planning/prompting.py": "c4c048a4303d9e558f9fa108852fb06b8d34cb31ec0e24ffb87a813174bfb90c",
+    "shot_planning/stability.py": "d579bcca97c4e3b0ce4eb5a253bf5ccbb18c847a9eaf43d7ffbaa64d54d3a5c9",
+    "shot_planning/structured_observability.py": "7c9689c4db79a6ab5cf5237a98d74d4bb2a2a9e86a1f322c707b41f1bc5c3181",
+    "shot_planning/validation.py": "d7328dd5904bbdbd846528e8cee4d0c0b4caac14ed318ac18c668a92084b3879"
+  },
+  "model_download_may_use_network": true,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "paid_request": false,
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-12T17:31:36.760100+00:00",
+  "remote_inference_used": false,
+  "request_sha256": "fbba342c61937308be48fea057a43a8c5860a1ecaa9c542b910b3fbf3093b520",
+  "runner_sha256": "b47b4a48e47d16fa144aa0990bcd8fba9fd4414c0c7e9524df4e63e3a6bf38eb"
+}

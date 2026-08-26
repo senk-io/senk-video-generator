@@ -1,0 +1,195 @@
+{
+  "controlled_context_token_values": {
+    "scene_context": {
+      "continuity_anchor": [
+        "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+        "SAME_SUBJECT_AND_ENVIRONMENT"
+      ],
+      "environment": [
+        "CONTINUOUS_RAIN",
+        "STABLE_ENVIRONMENT"
+      ],
+      "location": [
+        "OUTDOOR_LOCATION",
+        "INDOOR_LOCATION"
+      ],
+      "time": [
+        "DAY",
+        "NIGHT"
+      ]
+    }
+  },
+  "controlled_observability_compiler_version": "structured-observability-compiler.v2",
+  "controlled_stage_allowed_values": {
+    "composition": {
+      "background_visibility": [
+        "RAIN_SOFTLY_BLURRED",
+        "BACKGROUND_SOFTLY_BLURRED"
+      ],
+      "focus_target": [
+        "EYES_AND_TEARS",
+        "FACE"
+      ],
+      "subject_placement": [
+        "CENTER",
+        "LEFT_THIRD"
+      ],
+      "subject_scale": [
+        "FACE_DOMINANT",
+        "UPPER_BODY_VISIBLE"
+      ]
+    },
+    "continuity": {
+      "entry_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "entry_subject_state": [
+        "SUBJECT_ALREADY_CRYING",
+        "SUBJECT_ALREADY_SMILING"
+      ],
+      "exit_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "exit_subject_state": [
+        "CRYING_CONTINUES",
+        "SMILE_CONTINUES"
+      ]
+    },
+    "lighting": {
+      "highlight_state": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "NATURAL_FACE_HIGHLIGHT"
+      ],
+      "light_quality": [
+        "SOFT_DIFFUSED",
+        "LOW_CONTRAST"
+      ],
+      "light_source": [
+        "OVERCAST_DAYLIGHT",
+        "INTERIOR_SOFT_LIGHT"
+      ],
+      "subject_readability": [
+        "FACE_FULLY_READABLE",
+        "SUBJECT_FULLY_READABLE"
+      ]
+    },
+    "performance": {
+      "detail_state": [
+        "TEARS_VISIBLE",
+        "RELAXED_FACE_VISIBLE"
+      ],
+      "orientation_state": [
+        "FACING_CAMERA",
+        "NATURAL_FORWARD"
+      ],
+      "performance_intensity": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "visible_action_state": [
+        "CRYING",
+        "SMILING"
+      ]
+    }
+  },
+  "duration_tolerance_seconds": 0,
+  "expected_scene_count": 1,
+  "request_id": "PLAN-GENERALIZED-CRYING-001",
+  "required_subject_ids": [
+    "SUBJECT-001"
+  ],
+  "schema_version": "shot-planning-request.v2",
+  "semantic_constraints": {
+    "allowed_action_classes": [
+      "EXPRESS",
+      "MOVE"
+    ],
+    "allowed_camera_directions": [
+      "NONE",
+      "RIGHT"
+    ],
+    "allowed_camera_movements": [
+      "STATIC",
+      "PAN"
+    ],
+    "allowed_camera_speeds": [
+      "NONE",
+      "SLOW"
+    ],
+    "allowed_framings": [
+      "CLOSE_UP",
+      "WIDE"
+    ],
+    "allowed_primary_purposes": [
+      "EMPHASIZE_EMOTION",
+      "DEVELOP_ACTION"
+    ],
+    "forbidden_output_terms": [
+      "微笑",
+      "自行车",
+      "街道"
+    ],
+    "forbidden_placeholder_values": [
+      "none",
+      "yes",
+      "n/a",
+      "无",
+      "未知"
+    ],
+    "minimum_free_text_characters": 3,
+    "minimum_observable_check_count": 5,
+    "required_action_terms": [
+      "哭"
+    ],
+    "required_composition_terms": [
+      "面部",
+      "泪",
+      "雨"
+    ],
+    "required_continuity_in_terms": [
+      "主体",
+      "哭",
+      "雨"
+    ],
+    "required_continuity_out_terms": [
+      "主体",
+      "哭",
+      "雨"
+    ],
+    "required_environment_terms": [
+      "雨"
+    ],
+    "required_lighting_terms": [
+      "阴天",
+      "面部",
+      "泪"
+    ],
+    "required_location_terms": [
+      "室外"
+    ],
+    "required_observable_terms": [
+      "主体",
+      "面部",
+      "哭",
+      "雨",
+      "相机",
+      "静止"
+    ],
+    "required_performance_terms": [
+      "哭",
+      "泪"
+    ],
+    "required_time_terms": [
+      "白天"
+    ]
+  },
+  "shot_count_bounds": {
+    "maximum": 1,
+    "minimum": 1
+  },
+  "source_text": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "target_duration_seconds": 6
+}

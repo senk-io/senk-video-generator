@@ -1,0 +1,1 @@
+{ "detail_state": "RELAXED_FACE_VISIBLE" }

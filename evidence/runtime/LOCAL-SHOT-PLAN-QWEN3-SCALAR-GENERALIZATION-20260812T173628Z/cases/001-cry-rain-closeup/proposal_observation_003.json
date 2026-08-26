@@ -1,0 +1,11 @@
+{
+  "blocking_observation_count": 0,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 0,
+  "observations": [],
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-003",
+  "proposal_sha256": "5fda8524bfd2e3bd40ee7295f725b193815f5142d945e0788bf6d3347d4fa23a",
+  "request_id": "PLAN-GENERALIZED-CRYING-001",
+  "schema_version": "shot-planning-observation.v1"
+}

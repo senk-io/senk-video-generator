@@ -1,0 +1,11 @@
+{
+  "assistant_prefill": "{",
+  "prompt_contract_version": "local-shot-planner-controlled-context.v6",
+  "recommended_sampling": {
+    "seed": "fixed_when_supported",
+    "temperature": 0.0
+  },
+  "stage": "composition",
+  "system": "你是单职责结构化镜头规划阶段，只输出一个扁平 JSON 对象。\n必须包含且仅包含 required_keys 中的字段，字段名不得翻译。\n凡字段出现在 allowed_values 中，其值必须逐字选择对应数组中的一个枚举，不得改写或翻译。\n没有 allowed_values 的字符串字段必须结合 source_text 填写，不能照抄 instruction。\n只续写已经开始的 JSON 对象；不要代码围栏、Markdown、解释、嵌套对象或额外字段。",
+  "user": "{\"input\": {\"explicit_semantic_constraints\": {\"allowed_action_classes\": [\"EXPRESS\"], \"allowed_camera_directions\": [\"NONE\"], \"allowed_camera_movements\": [\"STATIC\"], \"allowed_camera_speeds\": [\"NONE\"], \"allowed_framings\": [\"CLOSE_UP\", \"EXTREME_CLOSE_UP\"], \"allowed_primary_purposes\": [\"EMPHASIZE_EMOTION\"], \"forbidden_placeholder_values\": [\"none\", \"yes\", \"n/a\", \"无\", \"未知\", \"可观察构图\", \"可观察表演状态\", \"可观察灯光状态\"], \"minimum_free_text_characters\": 3, \"minimum_observable_check_count\": 5, \"required_action_terms\": [\"哭\"], \"required_composition_terms\": [\"面部\", \"泪\", \"雨\"], \"required_continuity_in_terms\": [\"孩子\", \"哭\", \"雨\"], \"required_continuity_out_terms\": [\"孩子\", \"哭\", \"雨\"], \"required_emotion_terms\": [\"哭\", \"泪\"], \"required_environment_terms\": [\"雨\"], \"required_observable_terms\": [\"主体\", \"面部\", \"哭\", \"泪\", \"雨\", \"相机\"]}, \"source_text\": \"一个外国小孩子在雨中哭泣的特写镜头\", \"target_duration_seconds\": 6}, \"stage_contract\": {\"allowed_values\": {\"background_visibility\": [\"RAIN_SOFTLY_BLURRED\"], \"face_coverage\": [\"FACE_MOST_OF_FRAME\"], \"focus_target\": [\"EYES_AND_TEARS\"], \"subject_placement\": [\"CENTER\"]}, \"instruction\": \"只选择主体位置、面部覆盖、焦点和背景可见性。\", \"required_keys\": [\"background_visibility\", \"face_coverage\", \"focus_target\", \"subject_placement\"]}}"
+}

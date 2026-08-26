@@ -1,0 +1,1 @@
+{ "continuity_anchor": "SAME_SUBJECT_AND_ENVIRONMENT", "environment": "STABLE_ENVIRONMENT" }

@@ -1,0 +1,27 @@
+{
+  "architecture": "arm64",
+  "contract_sha256": "dc1845b842e00e1473faf7146e770bd96302307b5fdfeb88cd2c49b9038e14ee",
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-V6-20260812T165024Z",
+  "formal_fact_creation": "PROHIBITED",
+  "git_head": "50b2a6586581c34a33f4257431871fa74c56b0f3",
+  "git_status_porcelain": "M .env.example\n M README.md\n M docs/provider-compatibility-trials.md\n?? docs/one-sentence-shot-planning.md\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-20260811T100700Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V2-20260811T102000Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V3-20260811T103000Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V4-20260811T104000Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V5-20260812T164438Z/\n?? evidence/runtime/LOCAL-SHOT-PLAN-QWEN3-V6-20260812T165024Z/\n?? experiments/provider_compatibility/minimax_h3_fictional_child_crying_closeup_v1.json\n?? experiments/shot_planning/\n?? knowledge/MiniMax_H3_Compatibility.md\n?? provider_adapters/\n?? shot_planning/\n?? tests/test_local_shot_planner_trial.py\n?? tests/test_minimax_h3_provider.py\n?? tests/test_shot_planning.py\n?? tools/run_local_shot_planner_trial.py\n?? tools/run_minimax_h3_trial.py\n?? tools/validate_shot_plan.py\n?? tools/verify_local_shot_planner_evidence.py\n?? tools/verify_minimax_h3_evidence.py",
+  "implementation_sha256": {
+    "shot_planning/contracts.py": "e177c945856dd60611e8868e18b0be5b333c6251fc1fdf2ae8cc7537979e308a",
+    "shot_planning/local_trial.py": "1fe8cc6c77c8ac1dabb6a6dabd7270252f27d0f655936173389d1731c8899db2",
+    "shot_planning/prompting.py": "abc1ebebb9070cef2cbf7e02bff0ba02a10b3b0a015ab3ce5cf8b4d51b418ab5",
+    "shot_planning/stability.py": "d579bcca97c4e3b0ce4eb5a253bf5ccbb18c847a9eaf43d7ffbaa64d54d3a5c9",
+    "shot_planning/structured_observability.py": "7c9689c4db79a6ab5cf5237a98d74d4bb2a2a9e86a1f322c707b41f1bc5c3181",
+    "shot_planning/validation.py": "14869244963c396bc2c4eb323306c0dfeabdb3f6bdef98c66b22af0a2ef866ab"
+  },
+  "model_download_may_use_network": true,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "operating_system": "Darwin",
+  "operating_system_version": "26.5.2",
+  "paid_request": false,
+  "python_version": "3.12.11",
+  "recorded_at": "2026-08-12T16:50:48.654046+00:00",
+  "remote_inference_used": false,
+  "request_sha256": "59252bdd2af2aa257b0e4d5aa49a7ffa050286bf6e35420b9c89ec4ff3c7d839",
+  "runner_sha256": "9a8f15a1cf0fe728ede397142e5715f841d60307a6ec30319ee5de3704504660"
+}

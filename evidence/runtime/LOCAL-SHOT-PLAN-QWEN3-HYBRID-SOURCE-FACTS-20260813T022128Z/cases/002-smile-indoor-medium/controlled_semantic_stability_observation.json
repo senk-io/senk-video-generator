@@ -1,0 +1,391 @@
+{
+  "comparable_run_count": 3,
+  "comparison_performed": true,
+  "creative_review_required": true,
+  "exact_controlled_semantic_group_count": 1,
+  "excluded_run_indices": [],
+  "field_consistency": {
+    "beat_purpose.purpose": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "DEVELOP_ACTION"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.background_visibility": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "BACKGROUND_SOFTLY_BLURRED"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.focus_target": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FACE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.subject_placement": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "LEFT_THIRD"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "composition.subject_scale": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FACE_DOMINANT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.entry_environment_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SAME_INDOOR_ENVIRONMENT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.entry_subject_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SUBJECT_ALREADY_SMILING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.exit_environment_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SAME_INDOOR_ENVIRONMENT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "continuity.exit_subject_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SMILE_CONTINUES"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.highlight_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "NATURAL_FACE_HIGHLIGHT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.light_quality": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SOFT_DIFFUSED"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.light_source": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "OVERCAST_DAYLIGHT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "lighting.subject_readability": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SUBJECT_FULLY_READABLE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.detail_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "RELAXED_FACE_VISIBLE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.orientation_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "FACING_CAMERA"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.performance_intensity": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "GENTLE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "performance.visible_action_state": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SMILING"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "scene_context.continuity_anchor": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "SAME_SUBJECT_AND_ENVIRONMENT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "scene_context.environment": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "STABLE_ENVIRONMENT"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "scene_context.location": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "INDOOR_LOCATION"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "scene_context.time": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "DAY"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.action_class": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "EXPRESS"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_direction": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "NONE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_movement": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "STATIC"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.camera_speed": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "NONE"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.framing": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "MEDIUM"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    },
+    "shot_core.primary_purpose": {
+      "distinct_value_count": 1,
+      "groups": [
+        {
+          "run_indices": [
+            1,
+            2,
+            3
+          ],
+          "value": "DEVELOP_ACTION"
+        }
+      ],
+      "largest_group_ratio": 1.0
+    }
+  },
+  "formal_decision_created": false,
+  "largest_exact_controlled_semantic_group_ratio": 1.0,
+  "run_count": 3,
+  "schema_version": "controlled-semantic-stability-observation.v2"
+}

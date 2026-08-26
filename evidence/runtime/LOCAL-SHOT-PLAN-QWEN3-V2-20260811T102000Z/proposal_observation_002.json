@@ -1,0 +1,96 @@
+{
+  "blocking_observation_count": 8,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 8,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "SCENES_REQUIRED",
+      "expected": "non-empty array",
+      "observed": [],
+      "path": "$.scenes"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "BEATS_REQUIRED",
+      "expected": "non-empty array",
+      "observed": [],
+      "path": "$.narrative_beats"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "SHOTS_REQUIRED",
+      "expected": "non-empty array",
+      "observed": [],
+      "path": "$.shots"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "SCENE_COUNT_MISMATCH",
+      "expected": 1,
+      "observed": 0,
+      "path": "$.scenes"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "SHOT_COUNT_OUT_OF_BOUNDS",
+      "expected": {
+        "maximum": 4,
+        "minimum": 1
+      },
+      "observed": 0,
+      "path": "$.shots"
+    },
+    {
+      "category": "COVERAGE",
+      "code": "SOURCE_CONTENT_NOT_COVERED",
+      "expected": "all non-punctuation source characters covered",
+      "observed": {
+        "missing_indexes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      "path": "$.narrative_beats"
+    },
+    {
+      "category": "DURATION",
+      "code": "SHOT_DURATION_SUM_MISMATCH",
+      "expected": {
+        "target": 6,
+        "tolerance": 0
+      },
+      "observed": 0,
+      "path": "$.shots[*].target_duration_seconds"
+    },
+    {
+      "category": "COVERAGE",
+      "code": "REQUIRED_SUBJECT_NOT_COVERED",
+      "expected": [
+        "SUBJECT-001"
+      ],
+      "observed": [],
+      "path": "$.shots[*].subject_ids"
+    }
+  ],
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V2-20260811T102000Z-002",
+  "proposal_sha256": "1dcfc11f41ba258a1ab83079d1b4fcec8cac0c5f4450f577c7085e0d68dbe7b4",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "schema_version": "shot-planning-observation.v1"
+}

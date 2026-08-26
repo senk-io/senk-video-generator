@@ -1,0 +1,1 @@
+{ "continuity_anchor": "SAME_SUBJECT_AND_CONTINUOUS_RAIN", "environment": "CONTINUOUS_RAIN", "location": "OUTDOOR_LOCATION", "time": "DAY" }

@@ -1,0 +1,1 @@
+{ "detail_state": "MOTION_DETAIL_VISIBLE", "performance_intensity": "MODERATE", "visible_action_state": "FORWARD_MOTION" }

@@ -1,0 +1,211 @@
+{
+  "comparable_run_count": 3,
+  "comparison_context_count": 1,
+  "comparison_contexts": [
+    {
+      "context": {
+        "model_id": "Qwen/Qwen3-0.6B",
+        "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+        "prompt_contract_version": "local-shot-planner-scalar-choices.v9",
+        "sampling": {
+          "seed": 20260811,
+          "temperature": 0.0
+        }
+      },
+      "context_sha256": "94deb2b848089cc235dee41dfb7647eba8d30c55c7f32ef53c4a662d4576d609"
+    }
+  ],
+  "comparison_performed": true,
+  "creative_review_required": true,
+  "exact_structure_group_count": 1,
+  "exact_structure_groups": [
+    {
+      "proposal_ids": [
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-001",
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-002",
+        "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-003"
+      ],
+      "signature_sha256": "c3a631ec1c1add7c2f8fe096179d90df00bbe8c5e24bf5fd6385464ff5d908a9"
+    }
+  ],
+  "field_consistency": {
+    "beat_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "beat_purpose_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "EMPHASIZE_EMOTION"
+          ],
+          "value_sha256": "fdc727db77fab4cb49129e9b69123c46f81c6e8c906f377e1a8212d52289cd74"
+        }
+      ]
+    },
+    "beat_scene_assignments": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1
+          ],
+          "value_sha256": "080a9ed428559ef602668b4c00f114f1a11c3f6b02a435f0bdc154578e4d7f22"
+        }
+      ]
+    },
+    "duration_profile": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1.0
+          ],
+          "value_sha256": "c2272c0a862f11de35da66ec8be34349001ddebae43b85ab1dafb188f8ad7b30"
+        }
+      ]
+    },
+    "scene_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "shot_action_class_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "EXPRESS"
+          ],
+          "value_sha256": "054826a7da6ba0754d8f6f0057a7d8250a5d87eafbf0ce9bb8f5449a3e66573e"
+        }
+      ]
+    },
+    "shot_camera_movement_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "STATIC"
+          ],
+          "value_sha256": "abe5ebd7fbbfe2caee0c3ed1a8989f5f499cf08f6628e69b7c0e8b55e134278b"
+        }
+      ]
+    },
+    "shot_count": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": 1,
+          "value_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        }
+      ]
+    },
+    "shot_framing_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "WIDE"
+          ],
+          "value_sha256": "5911d1a59ca5e00d1bade270f6a95a52cc44ebdd7067537711cb08282e162a88"
+        }
+      ]
+    },
+    "shot_purpose_sequence": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            "EMPHASIZE_EMOTION"
+          ],
+          "value_sha256": "fdc727db77fab4cb49129e9b69123c46f81c6e8c906f377e1a8212d52289cd74"
+        }
+      ]
+    },
+    "shot_scene_assignments": {
+      "distinct_value_count": 1,
+      "largest_group_ratio": 1.0,
+      "value_groups": [
+        {
+          "run_count": 3,
+          "value": [
+            1
+          ],
+          "value_sha256": "080a9ed428559ef602668b4c00f114f1a11c3f6b02a435f0bdc154578e4d7f22"
+        }
+      ]
+    }
+  },
+  "formal_decision_created": false,
+  "largest_exact_structure_group_ratio": 1.0,
+  "proposal_observations": [
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-001",
+      "proposal_sha256": "44b0b6c958b908932fb9c2e87cd4d96d1e2458453ea214cfa407a8fdea4ee8f9",
+      "request_id": "PLAN-GENERALIZED-CRYING-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-002",
+      "proposal_sha256": "1fb4f3fcb9af4b833a377e56536b8d74da9b59732bf19bf304937e37f295e26e",
+      "request_id": "PLAN-GENERALIZED-CRYING-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 0,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 0,
+      "observations": [],
+      "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-003",
+      "proposal_sha256": "5fda8524bfd2e3bd40ee7295f725b193815f5142d945e0788bf6d3347d4fa23a",
+      "request_id": "PLAN-GENERALIZED-CRYING-001",
+      "schema_version": "shot-planning-observation.v1"
+    }
+  ],
+  "request_id": "PLAN-GENERALIZED-CRYING-001",
+  "run_count": 3,
+  "run_observations": [],
+  "schema_version": "shot-planning-stability-observation.v1"
+}

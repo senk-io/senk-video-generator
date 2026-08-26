@@ -1,0 +1,14 @@
+{
+  "automatic_repair_attempted": false,
+  "expected_model_fields": [
+    "detail_state",
+    "orientation_state",
+    "performance_intensity"
+  ],
+  "formal_decision_created": false,
+  "locked_fields": {
+    "visible_action_state": "CRYING"
+  },
+  "observations": [],
+  "stage": "performance"
+}

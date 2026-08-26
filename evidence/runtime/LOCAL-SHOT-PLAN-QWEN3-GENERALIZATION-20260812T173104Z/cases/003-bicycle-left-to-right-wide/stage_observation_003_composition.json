@@ -1,0 +1,95 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "LEFT_THIRD"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RAIN_SOFTLY_BLURRED",
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "observed": [
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "path": "$.stages.composition.background_visibility"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE",
+        "SUBJECT_ACTION"
+      ],
+      "observed": [
+        "FACE"
+      ],
+      "path": "$.stages.composition.focus_target"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CENTER",
+        "LEFT_THIRD"
+      ],
+      "observed": [
+        "LEFT_THIRD"
+      ],
+      "path": "$.stages.composition.subject_placement"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACE_DOMINANT",
+        "FULL_SUBJECT_VISIBLE"
+      ],
+      "observed": [
+        "FACE_DOMINANT"
+      ],
+      "path": "$.stages.composition.subject_scale"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "composition"
+}

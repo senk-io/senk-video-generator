@@ -1,0 +1,32 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "CAMERA",
+      "code": "STAGE_CAMERA_DIRECTION_INCOMPATIBLE",
+      "expected": [
+        "LEFT",
+        "RIGHT"
+      ],
+      "observed": "NONE",
+      "path": "$.stages.shot_core.camera_direction"
+    },
+    {
+      "category": "CAMERA",
+      "code": "STAGE_MOVING_CAMERA_SPEED_NONE",
+      "expected": [
+        "SLOW",
+        "MODERATE",
+        "FAST"
+      ],
+      "observed": "NONE",
+      "path": "$.stages.shot_core.camera_speed"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "shot_core"
+}

@@ -1,0 +1,95 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "MODERATE"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "FORWARD_MOTION"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "TEARS_VISIBLE",
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "observed": [
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "path": "$.stages.performance.detail_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "FACING_CAMERA",
+        "MOVING_LEFT_TO_RIGHT"
+      ],
+      "observed": [
+        "FACING_CAMERA"
+      ],
+      "path": "$.stages.performance.orientation_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "observed": [
+        "MODERATE"
+      ],
+      "path": "$.stages.performance.performance_intensity"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING",
+        "FORWARD_MOTION"
+      ],
+      "observed": [
+        "FORWARD_MOTION"
+      ],
+      "path": "$.stages.performance.visible_action_state"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "performance"
+}

@@ -1,0 +1,86 @@
+{
+  "comparable_run_count": 0,
+  "comparison_context_count": 0,
+  "comparison_contexts": [],
+  "comparison_performed": false,
+  "creative_review_required": true,
+  "exact_structure_group_count": 0,
+  "exact_structure_groups": [],
+  "field_consistency": {},
+  "formal_decision_created": false,
+  "largest_exact_structure_group_ratio": null,
+  "proposal_observations": [
+    {
+      "blocking_observation_count": 1,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 1,
+      "observations": [
+        {
+          "category": "STRUCTURE",
+          "code": "PROPOSAL_NOT_OBJECT",
+          "expected": "object",
+          "observed": "str",
+          "path": "$"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 1,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 1,
+      "observations": [
+        {
+          "category": "STRUCTURE",
+          "code": "PROPOSAL_NOT_OBJECT",
+          "expected": "object",
+          "observed": "str",
+          "path": "$"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    },
+    {
+      "blocking_observation_count": 1,
+      "creative_review_required": true,
+      "formal_decision_created": false,
+      "observation_count": 1,
+      "observations": [
+        {
+          "category": "STRUCTURE",
+          "code": "PROPOSAL_NOT_OBJECT",
+          "expected": "object",
+          "observed": "str",
+          "path": "$"
+        }
+      ],
+      "proposal_id": null,
+      "proposal_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+      "schema_version": "shot-planning-observation.v1"
+    }
+  ],
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-001",
+  "run_count": 3,
+  "run_observations": [
+    {
+      "code": "RUNS_EXCLUDED_FROM_COMPARISON",
+      "expected": 3,
+      "observed": 0
+    },
+    {
+      "code": "INSUFFICIENT_UNIQUE_COMPARABLE_RUNS",
+      "expected": "at least 2 unique runs in one comparison context",
+      "observed": 0
+    }
+  ],
+  "schema_version": "shot-planning-stability-observation.v1"
+}

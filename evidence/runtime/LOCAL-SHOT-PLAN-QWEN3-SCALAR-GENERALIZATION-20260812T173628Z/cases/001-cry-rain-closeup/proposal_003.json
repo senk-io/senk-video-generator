@@ -1,0 +1,84 @@
+{
+  "narrative_beats": [
+    {
+      "action": "哭",
+      "beat_id": "BEAT-001",
+      "ordinal": 1,
+      "purpose": "EMPHASIZE_EMOTION",
+      "scene_id": "SCENE-001",
+      "source_span": {
+        "end": 35,
+        "quote": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止",
+        "start": 0
+      },
+      "subject_ids": [
+        "SUBJECT-001"
+      ]
+    }
+  ],
+  "planner": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "model_version": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "prompt_contract_version": "local-shot-planner-scalar-choices.v9",
+    "run_id": "LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-RUN-003",
+    "sampling": {
+      "seed": 20260811,
+      "temperature": 0.0
+    }
+  },
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-SCALAR-GENERALIZATION-20260812T173628Z-001-CRY_RAIN_CLOSEUP-003",
+  "request_id": "PLAN-GENERALIZED-CRYING-001",
+  "scenes": [
+    {
+      "continuity_anchors": [
+        "同一主体与持续降雨"
+      ],
+      "environment": "持续降雨",
+      "location": "室外地点",
+      "ordinal": 1,
+      "scene_id": "SCENE-001",
+      "time": "白天"
+    }
+  ],
+  "schema_version": "shot-planning-proposal.v2",
+  "shots": [
+    {
+      "action": {
+        "class": "EXPRESS",
+        "description": "哭"
+      },
+      "beat_ids": [
+        "BEAT-001"
+      ],
+      "camera": {
+        "direction": "NONE",
+        "movement": "STATIC",
+        "speed": "NONE"
+      },
+      "composition": "主体位于画面中央，主体面部占据画面大部分区域，焦点落在眼睛与可见泪水，主体后方雨景柔化可见",
+      "continuity_in": "进入镜头时，主体进入镜头时已经哭泣，进入镜头时背景保持持续降雨",
+      "continuity_out": "离开镜头时，主体离开镜头时继续哭泣，离开镜头时背景仍保持持续降雨",
+      "framing": "WIDE",
+      "lighting": "阴天自然光照亮主体，光线保持柔和漫射，主体面部细节清晰可读，泪水高光保持可见",
+      "observable_checks": [
+        "主体 SUBJECT-001 始终保持同一可见身份",
+        "景别保持为全景，主体面部占据画面大部分区域",
+        "主要动作保持为哭，同时哭泣状态清楚可见",
+        "场景环境保持持续降雨，进入镜头时背景保持持续降雨并且离开镜头时背景仍保持持续降雨",
+        "相机保持静止，方向和速度均不发生漂移"
+      ],
+      "ordinal": 1,
+      "performance": "主体朝向相机，哭泣状态清楚可见，面部泪水清楚可见，可见动作强度保持克制",
+      "primary_purpose": "EMPHASIZE_EMOTION",
+      "scene_id": "SCENE-001",
+      "script_segment": "白天室外，一个虚构的小孩在柔和阴天光下的雨中安静哭泣，特写镜头保持静止",
+      "shot_id": "SHOT-001",
+      "subject_ids": [
+        "SUBJECT-001"
+      ],
+      "target_duration_seconds": 6
+    }
+  ],
+  "source_text_sha256": "9de1b16f74c0f55d7af0ac0708ea8274dd4db7f4d62011d4767410f7d86eb9c2",
+  "status": "DRAFT_NON_AUTHORITATIVE"
+}

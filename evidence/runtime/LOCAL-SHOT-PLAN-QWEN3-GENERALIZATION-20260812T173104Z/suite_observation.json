@@ -1,0 +1,1435 @@
+{
+  "automatic_retry_count": 0,
+  "case_count_observed": 3,
+  "case_count_requested": 3,
+  "cases": [
+    {
+      "case_id": "CRY_RAIN_CLOSEUP",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "NEGATIVE_EMOTION",
+        "RAIN",
+        "CLOSE_UP",
+        "STATIC_CAMERA"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 69,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "PROPOSAL_NOT_OBJECT": 3,
+        "STAGE_ENUM_VALUE_INVALID": 48,
+        "STAGE_VALUE_NOT_NONEMPTY_STRING": 48
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "controlled_value_mismatches": [
+            {
+              "expected": "RAIN_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "EYES_AND_TEARS",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "CENTER"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FACE_DOMINANT",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_CRYING",
+              "observed": [
+                "SUBJECT_ALREADY_CRYING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "CRYING_CONTINUES",
+              "observed": [
+                "CRYING_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "TEAR_HIGHLIGHT_VISIBLE",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "SOFT_DIFFUSED",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "OVERCAST_DAYLIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "TEARS_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": [
+                "RESTRAINED"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "CRYING",
+              "observed": [
+                "CRYING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "CLOSE_UP",
+              "observed": "WIDE",
+              "path": "shot_core.framing"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 23,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "controlled_value_mismatches": [
+            {
+              "expected": "RAIN_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "EYES_AND_TEARS",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "CENTER"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FACE_DOMINANT",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_CRYING",
+              "observed": [
+                "SUBJECT_ALREADY_CRYING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "CRYING_CONTINUES",
+              "observed": [
+                "CRYING_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "TEAR_HIGHLIGHT_VISIBLE",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "SOFT_DIFFUSED",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "OVERCAST_DAYLIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "TEARS_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": [
+                "RESTRAINED"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "CRYING",
+              "observed": [
+                "CRYING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "CLOSE_UP",
+              "observed": "WIDE",
+              "path": "shot_core.framing"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 23,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "aeceac857d686639472a09527fe4254a432cf5dc640d1125d7394e2827401575",
+          "controlled_value_mismatches": [
+            {
+              "expected": "RAIN_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "EYES_AND_TEARS",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "CENTER"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FACE_DOMINANT",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_CRYING",
+              "observed": [
+                "SUBJECT_ALREADY_CRYING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "CONTINUOUS_RAIN",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "CRYING_CONTINUES",
+              "observed": [
+                "CRYING_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "TEAR_HIGHLIGHT_VISIBLE",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "SOFT_DIFFUSED",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "OVERCAST_DAYLIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "TEARS_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "RESTRAINED",
+              "observed": [
+                "RESTRAINED"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "CRYING",
+              "observed": [
+                "CRYING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "CLOSE_UP",
+              "observed": "WIDE",
+              "path": "shot_core.framing"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 23,
+          "required_compiled_terms_missing": [
+            "小孩",
+            "哭",
+            "泪",
+            "雨",
+            "面部",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    },
+    {
+      "case_id": "SMILE_INDOOR_MEDIUM",
+      "coverage_tags": [
+        "HUMAN_SUBJECT",
+        "POSITIVE_EMOTION",
+        "INDOOR",
+        "MEDIUM",
+        "STATIC_CAMERA",
+        "NO_TEARS"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 81,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "PROPOSAL_NOT_OBJECT": 3,
+        "STAGE_ENUM_VALUE_INVALID": 48,
+        "STAGE_MOVING_CAMERA_SPEED_NONE": 3,
+        "STAGE_VALUE_NOT_NONEMPTY_STRING": 48
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "controlled_value_mismatches": [
+            {
+              "expected": "BACKGROUND_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "FACE",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_SMILING",
+              "observed": [
+                "SUBJECT_ALREADY_SMILING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SMILE_CONTINUES",
+              "observed": [
+                "SMILE_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "NATURAL_FACE_HIGHLIGHT",
+              "observed": [
+                "NATURAL_FACE_HIGHLIGHT"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "INTERIOR_SOFT_LIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "SUBJECT_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "NATURAL_FORWARD"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SMILING",
+              "observed": [
+                "SMILING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 27,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "controlled_value_mismatches": [
+            {
+              "expected": "BACKGROUND_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "FACE",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_SMILING",
+              "observed": [
+                "SUBJECT_ALREADY_SMILING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SMILE_CONTINUES",
+              "observed": [
+                "SMILE_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "NATURAL_FACE_HIGHLIGHT",
+              "observed": [
+                "NATURAL_FACE_HIGHLIGHT"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "INTERIOR_SOFT_LIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "SUBJECT_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "NATURAL_FORWARD"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SMILING",
+              "observed": [
+                "SMILING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 27,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "fb2c11cf5ff612604aacd5d572bd7732ce4a3dfb051a868929a52e0fbf6cb862",
+          "controlled_value_mismatches": [
+            {
+              "expected": "BACKGROUND_SOFTLY_BLURRED",
+              "observed": [
+                "RAIN_SOFTLY_BLURRED"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "FACE",
+              "observed": [
+                "EYES_AND_TEARS"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "CENTER",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "UPPER_BODY_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SUBJECT_ALREADY_SMILING",
+              "observed": [
+                "SUBJECT_ALREADY_SMILING"
+              ],
+              "path": "continuity.entry_subject_state"
+            },
+            {
+              "expected": "SAME_INDOOR_ENVIRONMENT",
+              "observed": [
+                "CONTINUOUS_RAIN"
+              ],
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SMILE_CONTINUES",
+              "observed": [
+                "SMILE_CONTINUES"
+              ],
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "NATURAL_FACE_HIGHLIGHT",
+              "observed": [
+                "NATURAL_FACE_HIGHLIGHT"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "LOW_CONTRAST",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "INTERIOR_SOFT_LIGHT",
+              "observed": [
+                "OVERCAST_DAYLIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "FACE_FULLY_READABLE",
+              "observed": [
+                "SUBJECT_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "RELAXED_FACE_VISIBLE",
+              "observed": [
+                "TEARS_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "FACING_CAMERA",
+              "observed": [
+                "NATURAL_FORWARD"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "GENTLE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "SMILING",
+              "observed": [
+                "SMILING"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "EMPHASIZE_EMOTION",
+              "observed": "DEVELOP_ACTION",
+              "path": "shot_core.primary_purpose"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 27,
+          "required_compiled_terms_missing": [
+            "演员",
+            "微笑",
+            "上半身",
+            "室内",
+            "中景",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    },
+    {
+      "case_id": "BICYCLE_LEFT_TO_RIGHT_WIDE",
+      "coverage_tags": [
+        "NON_HUMAN_SUBJECT",
+        "SUBJECT_MOTION",
+        "LEFT_TO_RIGHT",
+        "NIGHT",
+        "WIDE",
+        "STATIC_CAMERA"
+      ],
+      "creative_review_required": true,
+      "exact_source_echo_run_count": 0,
+      "fingerprints": [
+        {
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "run_index": 1
+        },
+        {
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "run_index": 2
+        },
+        {
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "run_index": 3
+        }
+      ],
+      "formal_decision_created": false,
+      "held_out_observation_count": 78,
+      "largest_exact_controlled_semantic_group_ratio": null,
+      "largest_exact_structure_group_ratio": null,
+      "model_call_count_observed": 21,
+      "parsed_run_count": 3,
+      "proposal_observation_code_counts": {
+        "PROPOSAL_NOT_OBJECT": 3,
+        "STAGE_ENUM_VALUE_INVALID": 36,
+        "STAGE_VALUE_NOT_NONEMPTY_STRING": 36
+      },
+      "run_count_observed": 3,
+      "runs": [
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "controlled_value_mismatches": [
+            {
+              "expected": "STREET_VISIBLE_AROUND_SUBJECT",
+              "observed": [
+                "STREET_VISIBLE_AROUND_SUBJECT"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "SUBJECT_ACTION",
+              "observed": [
+                "FACE"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "LEFT_THIRD",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FULL_SUBJECT_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "NIGHT_STREET_LIGHT",
+              "observed": [
+                "NIGHT_STREET_LIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "MOTION_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "MOTION_DETAIL_VISIBLE",
+              "observed": [
+                "MOTION_DETAIL_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "MODERATE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "FORWARD_MOTION",
+              "observed": [
+                "FORWARD_MOTION"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "NONE",
+              "observed": "SLOW",
+              "path": "shot_core.camera_speed"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 26,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 1
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "controlled_value_mismatches": [
+            {
+              "expected": "STREET_VISIBLE_AROUND_SUBJECT",
+              "observed": [
+                "STREET_VISIBLE_AROUND_SUBJECT"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "SUBJECT_ACTION",
+              "observed": [
+                "FACE"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "LEFT_THIRD",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FULL_SUBJECT_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "NIGHT_STREET_LIGHT",
+              "observed": [
+                "NIGHT_STREET_LIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "MOTION_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "MOTION_DETAIL_VISIBLE",
+              "observed": [
+                "MOTION_DETAIL_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "MODERATE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "FORWARD_MOTION",
+              "observed": [
+                "FORWARD_MOTION"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "NONE",
+              "observed": "SLOW",
+              "path": "shot_core.camera_speed"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 26,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 2
+        },
+        {
+          "action_description_exact_source_echo": false,
+          "controlled_fingerprint_sha256": "77feebf7d9d0c9ad020bed57b5d830159f556501772c01c80eb597f9e66ed142",
+          "controlled_value_mismatches": [
+            {
+              "expected": "STREET_VISIBLE_AROUND_SUBJECT",
+              "observed": [
+                "STREET_VISIBLE_AROUND_SUBJECT"
+              ],
+              "path": "composition.background_visibility"
+            },
+            {
+              "expected": "SUBJECT_ACTION",
+              "observed": [
+                "FACE"
+              ],
+              "path": "composition.focus_target"
+            },
+            {
+              "expected": "LEFT_THIRD",
+              "observed": [
+                "LEFT_THIRD"
+              ],
+              "path": "composition.subject_placement"
+            },
+            {
+              "expected": "FULL_SUBJECT_VISIBLE",
+              "observed": [
+                "FACE_DOMINANT"
+              ],
+              "path": "composition.subject_scale"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.entry_environment_state"
+            },
+            {
+              "expected": "SAME_NIGHT_STREET",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "continuity.exit_environment_state"
+            },
+            {
+              "expected": "SUBJECT_EXITS_RIGHT",
+              "observed": "CRYING_CONTINUES",
+              "path": "continuity.exit_subject_state"
+            },
+            {
+              "expected": "SUBJECT_EDGE_HIGHLIGHT",
+              "observed": [
+                "TEAR_HIGHLIGHT_VISIBLE"
+              ],
+              "path": "lighting.highlight_state"
+            },
+            {
+              "expected": "DIRECTIONAL_LOW_KEY",
+              "observed": [
+                "SOFT_DIFFUSED"
+              ],
+              "path": "lighting.light_quality"
+            },
+            {
+              "expected": "NIGHT_STREET_LIGHT",
+              "observed": [
+                "NIGHT_STREET_LIGHT"
+              ],
+              "path": "lighting.light_source"
+            },
+            {
+              "expected": "MOTION_FULLY_READABLE",
+              "observed": [
+                "FACE_FULLY_READABLE"
+              ],
+              "path": "lighting.subject_readability"
+            },
+            {
+              "expected": "MOTION_DETAIL_VISIBLE",
+              "observed": [
+                "MOTION_DETAIL_VISIBLE"
+              ],
+              "path": "performance.detail_state"
+            },
+            {
+              "expected": "MOVING_LEFT_TO_RIGHT",
+              "observed": [
+                "FACING_CAMERA"
+              ],
+              "path": "performance.orientation_state"
+            },
+            {
+              "expected": "MODERATE",
+              "observed": [
+                "MODERATE"
+              ],
+              "path": "performance.performance_intensity"
+            },
+            {
+              "expected": "FORWARD_MOTION",
+              "observed": [
+                "FORWARD_MOTION"
+              ],
+              "path": "performance.visible_action_state"
+            },
+            {
+              "expected": "SAME_SUBJECT_AND_ENVIRONMENT",
+              "observed": "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+              "path": "scene_context.continuity_anchor"
+            },
+            {
+              "expected": "STABLE_ENVIRONMENT",
+              "observed": "CONTINUOUS_RAIN",
+              "path": "scene_context.environment"
+            },
+            {
+              "expected": "NONE",
+              "observed": "RIGHT",
+              "path": "shot_core.camera_direction"
+            },
+            {
+              "expected": "STATIC",
+              "observed": "PAN",
+              "path": "shot_core.camera_movement"
+            },
+            {
+              "expected": "NONE",
+              "observed": "SLOW",
+              "path": "shot_core.camera_speed"
+            }
+          ],
+          "excluded_compiled_terms_present": [],
+          "held_out_observation_count": 26,
+          "required_compiled_terms_missing": [
+            "自行车",
+            "左",
+            "右",
+            "街道",
+            "全景",
+            "相机保持静止"
+          ],
+          "run_index": 3
+        }
+      ],
+      "structurally_observable_run_count": 0
+    }
+  ],
+  "creative_review_required": true,
+  "cross_case_controlled_fingerprint_groups": [],
+  "exact_source_echo_run_count": 0,
+  "execution_id": "LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173104Z",
+  "formal_decision_created": false,
+  "formal_quality_acceptance_created": false,
+  "formal_shot_spec_created": false,
+  "held_out_observation_count": 228,
+  "model_call_count_observed": 63,
+  "model_call_count_requested": 63,
+  "model_load_count_observed": 1,
+  "run_count_observed": 9,
+  "run_count_requested": 9,
+  "schema_version": "local-shot-planner-suite-observation.v1",
+  "suite_id": "LOCAL-SHOT-PLANNER-GENERALIZATION-001"
+}

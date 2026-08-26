@@ -1,0 +1,11 @@
+{
+  "blocking_observation_count": 0,
+  "creative_review_required": true,
+  "formal_decision_created": false,
+  "observation_count": 0,
+  "observations": [],
+  "proposal_id": "PROPOSAL-LOCAL-SHOT-PLAN-QWEN3-V5-20260812T164438Z-001",
+  "proposal_sha256": "fa853f8b23ba77fd7cda1c9227262fe660c4429a45996476f949062c09df7b43",
+  "request_id": "PLAN-CHILD-CRYING-CLOSEUP-003",
+  "schema_version": "shot-planning-observation.v1"
+}

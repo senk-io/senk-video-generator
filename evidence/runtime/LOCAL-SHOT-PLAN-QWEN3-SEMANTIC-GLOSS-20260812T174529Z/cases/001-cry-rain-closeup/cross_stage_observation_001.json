@@ -1,0 +1,18 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "CROSS_STAGE_CONTINUITY",
+      "code": "GENERALIZED_ENVIRONMENT_CONTINUITY_MISMATCH",
+      "expected": {
+        "entry_environment_state": "CONTINUOUS_RAIN",
+        "exit_environment_state": "CONTINUOUS_RAIN"
+      },
+      "observed": {
+        "entry_environment_state": "SAME_INDOOR_ENVIRONMENT",
+        "exit_environment_state": "SAME_INDOOR_ENVIRONMENT"
+      },
+      "path": "$.stages.continuity"
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "allowed_value_validation": "BEFORE_DERIVATION_AND_AFTER_COMBINATION",
+  "ambiguous_behavior": "BLOCK_WITHOUT_WINNER",
+  "automatic_repair": false,
+  "candidate_resolution_order": [
+    "MATCH_REQUEST_PASSTHROUGH_AND_LEXICAL_RULES",
+    "FAIL_ON_MULTIPLE_DISTINCT_VALUES_PER_FIELD",
+    "VALIDATE_BASE_FACT_AGAINST_REQUEST_ALLOWED_VALUES",
+    "DERIVE_ONLY_FROM_VALIDATED_BASE_FACTS",
+    "RESOLVE_AND_VALIDATE_COMBINED_FACTS",
+    "ASSIGN_SORTED_FACT_IDENTIFIERS"
+  ],
+  "conflict_behavior": "BLOCK_WITHOUT_WINNER",
+  "creative_fact_defaulting": false,
+  "derivation_dependency_requirement": "SELECTED_VALID_BASE_FACT",
+  "derivation_rules": [
+    {
+      "depends_on": {
+        "field": "shot_core.camera_movement",
+        "value": "STATIC"
+      },
+      "field": "shot_core.camera_direction",
+      "rule_id": "STATIC-CAMERA-DIRECTION-NONE-001",
+      "value": "NONE"
+    },
+    {
+      "depends_on": {
+        "field": "shot_core.camera_movement",
+        "value": "STATIC"
+      },
+      "field": "shot_core.camera_speed",
+      "rule_id": "STATIC-CAMERA-SPEED-NONE-001",
+      "value": "NONE"
+    },
+    {
+      "depends_on": {
+        "field": "performance.visible_action_state",
+        "value": "CRYING"
+      },
+      "field": "shot_core.action_class",
+      "rule_id": "CRYING-CLASS-EXPRESS-001",
+      "value": "EXPRESS"
+    },
+    {
+      "depends_on": {
+        "field": "performance.visible_action_state",
+        "value": "SMILING"
+      },
+      "field": "shot_core.action_class",
+      "rule_id": "SMILING-CLASS-EXPRESS-001",
+      "value": "EXPRESS"
+    },
+    {
+      "depends_on": {
+        "field": "performance.orientation_state",
+        "value": "MOVING_LEFT_TO_RIGHT"
+      },
+      "field": "shot_core.action_class",
+      "rule_id": "LEFT-TO-RIGHT-CLASS-MOVE-001",
+      "value": "MOVE"
+    }
+  ],
+  "formal_decision_created": false,
+  "held_out_observation_input": false,
+  "lexical_rules": [
+    {
+      "field": "scene_context.location",
+      "kind": "REGEX",
+      "pattern": "室外(?=[，,。；;！？!?]|街灯|街道|场景|环境|或(?=室内)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "LOCATION-OUTDOOR-001",
+      "value": "OUTDOOR_LOCATION"
+    },
+    {
+      "field": "scene_context.location",
+      "kind": "REGEX",
+      "pattern": "室内(?=[，,。；;！？!?]|柔光|灯光|场景|环境|或(?=室外)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "LOCATION-INDOOR-001",
+      "value": "INDOOR_LOCATION"
+    },
+    {
+      "field": "scene_context.time",
+      "kind": "REGEX",
+      "pattern": "白天(?=室内|室外|[，,。；;！？!?]|或(?=夜晚|夜间)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "TIME-DAY-001",
+      "value": "DAY"
+    },
+    {
+      "field": "scene_context.time",
+      "kind": "REGEX",
+      "pattern": "(?:夜晚|夜间)(?=室内|室外|[，,。；;！？!?]|或(?=白天)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "TIME-NIGHT-001",
+      "value": "NIGHT"
+    },
+    {
+      "field": "shot_core.framing",
+      "kind": "REGEX",
+      "pattern": "特写(?=镜头|画面|[，,。；;！？!?]|或(?=中景|全景)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "FRAMING-CLOSE-UP-001",
+      "value": "CLOSE_UP"
+    },
+    {
+      "field": "shot_core.framing",
+      "kind": "REGEX",
+      "pattern": "中景(?=镜头|画面|[，,。；;！？!?]|或(?=特写|全景)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "FRAMING-MEDIUM-001",
+      "value": "MEDIUM"
+    },
+    {
+      "field": "shot_core.framing",
+      "kind": "REGEX",
+      "pattern": "全景(?=镜头|画面|[，,。；;！？!?]|或(?=特写|中景)|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "FRAMING-WIDE-001",
+      "value": "WIDE"
+    },
+    {
+      "field": "shot_core.camera_movement",
+      "kind": "REGEX",
+      "pattern": "固定相机|相机保持静止|镜头保持静止",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "CAMERA-STATIC-001",
+      "value": "STATIC"
+    },
+    {
+      "field": "shot_core.camera_movement",
+      "kind": "REGEX",
+      "pattern": "(?:相机向右摇摄|镜头向右摇摄)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "CAMERA-PAN-RIGHT-MOVEMENT-001",
+      "value": "PAN"
+    },
+    {
+      "field": "shot_core.camera_direction",
+      "kind": "REGEX",
+      "pattern": "(?:相机向右摇摄|镜头向右摇摄)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "CAMERA-PAN-RIGHT-DIRECTION-001",
+      "value": "RIGHT"
+    },
+    {
+      "field": "shot_core.camera_movement",
+      "kind": "REGEX",
+      "pattern": "(?:相机向左摇摄|镜头向左摇摄)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "CAMERA-PAN-LEFT-MOVEMENT-001",
+      "value": "PAN"
+    },
+    {
+      "field": "shot_core.camera_direction",
+      "kind": "REGEX",
+      "pattern": "(?:相机向左摇摄|镜头向左摇摄)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "CAMERA-PAN-LEFT-DIRECTION-001",
+      "value": "LEFT"
+    },
+    {
+      "field": "performance.orientation_state",
+      "kind": "REGEX",
+      "pattern": "面向相机",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "ORIENTATION-FACING-CAMERA-001",
+      "value": "FACING_CAMERA"
+    },
+    {
+      "field": "performance.orientation_state",
+      "kind": "REGEX",
+      "pattern": "(?:自行车|演员|人物|主体|小孩|行人)[^，,。；;！？!?]{0,8}从左向右(?:穿过|移动|行驶|走|跑)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "SUBJECT-MOVING-LEFT-TO-RIGHT-001",
+      "value": "MOVING_LEFT_TO_RIGHT"
+    },
+    {
+      "field": "performance.visible_action_state",
+      "kind": "REGEX",
+      "pattern": "哭泣(?=[，,。；;！？!?]|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "ACTION-CRYING-001",
+      "value": "CRYING"
+    },
+    {
+      "field": "performance.visible_action_state",
+      "kind": "REGEX",
+      "pattern": "微笑(?=[，,。；;！？!?]|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "ACTION-SMILING-001",
+      "value": "SMILING"
+    },
+    {
+      "field": "performance.performance_intensity",
+      "kind": "REGEX",
+      "pattern": "轻轻微笑(?=[，,。；;！？!?]|$)",
+      "provenance": "NORMALIZED_LEXICAL",
+      "rule_id": "INTENSITY-GENTLE-001",
+      "value": "GENTLE"
+    }
+  ],
+  "lossy_enum_mapping": "PROHIBITED",
+  "matching_policy": {
+    "case_sensitive": true,
+    "clause_boundary_pattern": "[，,。；;！？!?]",
+    "compound_word_boundaries": "RULE_SPECIFIC_POSITIVE_CONTEXT",
+    "negation_markers": [
+      "不",
+      "没",
+      "无",
+      "非",
+      "禁止",
+      "避免",
+      "取消",
+      "去掉",
+      "排除"
+    ],
+    "negation_scope": "CLAUSE_START_THROUGH_MATCH_END_CONSERVATIVE",
+    "overlapping_matches": false,
+    "quote_pairs": [
+      [
+        "“",
+        "”"
+      ],
+      [
+        "「",
+        "」"
+      ],
+      [
+        "『",
+        "』"
+      ],
+      [
+        "\"",
+        "\""
+      ],
+      [
+        "'",
+        "'"
+      ]
+    ],
+    "quoted_match_behavior": "IGNORE_MATCH_INSIDE_BALANCED_QUOTES",
+    "regex_engine": "python.re",
+    "unicode_normalization": "NONE"
+  },
+  "provenance_types": [
+    "EXACT_LEXICAL",
+    "NORMALIZED_LEXICAL",
+    "DETERMINISTIC_DERIVATION",
+    "REQUEST_PASSTHROUGH"
+  ],
+  "request_passthrough_rules": [
+    {
+      "field": "shot_core.action_description",
+      "provenance": "REQUEST_PASSTHROUGH",
+      "rule_id": "REQUEST-SOURCE-TEXT-PASSTHROUGH-001",
+      "source_span": "FULL_SOURCE_TEXT",
+      "value_source": "request.source_text"
+    }
+  ],
+  "schema_version": "shot-source-fact-extractor-contract.v1",
+  "source_offset_unit": "UNICODE_CODE_POINT",
+  "source_span_interval": "ZERO_BASED_HALF_OPEN",
+  "supported_language": "zh-Hans",
+  "supported_request_schema_versions": [
+    "shot-planning-request.v2"
+  ],
+  "unstated_behavior": "MODEL_PROPOSABLE_NON_AUTHORITATIVE"
+}

@@ -1,0 +1,95 @@
+{
+  "formal_decision_created": false,
+  "observations": [
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.entry_environment_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.exit_environment_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "CRYING_CONTINUES"
+      ],
+      "path": "$.stages.continuity.exit_subject_state"
+    },
+    {
+      "category": "STRUCTURE",
+      "code": "STAGE_VALUE_NOT_NONEMPTY_STRING",
+      "expected": "non-empty string",
+      "observed": [
+        "SUBJECT_ALREADY_CRYING"
+      ],
+      "path": "$.stages.continuity.entry_subject_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.entry_environment_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "SUBJECT_ALREADY_CRYING",
+        "SUBJECT_ALREADY_SMILING"
+      ],
+      "observed": [
+        "SUBJECT_ALREADY_CRYING"
+      ],
+      "path": "$.stages.continuity.entry_subject_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CONTINUOUS_RAIN",
+        "SAME_INDOOR_ENVIRONMENT"
+      ],
+      "observed": [
+        "CONTINUOUS_RAIN"
+      ],
+      "path": "$.stages.continuity.exit_environment_state"
+    },
+    {
+      "category": "SEMANTIC",
+      "code": "STAGE_ENUM_VALUE_INVALID",
+      "expected": [
+        "CRYING_CONTINUES",
+        "SMILE_CONTINUES"
+      ],
+      "observed": [
+        "CRYING_CONTINUES"
+      ],
+      "path": "$.stages.continuity.exit_subject_state"
+    }
+  ],
+  "parse_observation": {
+    "automatic_repair_attempted": false,
+    "parsed": true,
+    "root_type": "dict"
+  },
+  "stage": "continuity"
+}

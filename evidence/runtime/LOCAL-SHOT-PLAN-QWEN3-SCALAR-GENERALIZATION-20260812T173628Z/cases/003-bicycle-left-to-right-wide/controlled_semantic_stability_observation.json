@@ -1,0 +1,152 @@
+{
+  "comparable_run_count": 0,
+  "comparison_performed": false,
+  "creative_review_required": true,
+  "exact_controlled_semantic_group_count": 0,
+  "excluded_run_indices": [
+    1,
+    2,
+    3
+  ],
+  "field_consistency": {
+    "beat_purpose.purpose": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "composition.background_visibility": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "composition.focus_target": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "composition.subject_placement": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "composition.subject_scale": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "continuity.entry_environment_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "continuity.entry_subject_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "continuity.exit_environment_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "continuity.exit_subject_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "lighting.highlight_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "lighting.light_quality": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "lighting.light_source": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "lighting.subject_readability": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "performance.detail_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "performance.orientation_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "performance.performance_intensity": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "performance.visible_action_state": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "scene_context.continuity_anchor": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "scene_context.environment": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "scene_context.location": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "scene_context.time": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.action_class": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.camera_direction": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.camera_movement": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.camera_speed": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.framing": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    },
+    "shot_core.primary_purpose": {
+      "distinct_value_count": 0,
+      "groups": [],
+      "largest_group_ratio": null
+    }
+  },
+  "formal_decision_created": false,
+  "largest_exact_controlled_semantic_group_ratio": null,
+  "run_count": 3,
+  "schema_version": "controlled-semantic-stability-observation.v2"
+}
