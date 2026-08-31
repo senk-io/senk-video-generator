@@ -274,10 +274,19 @@ function applyGenerationProfile() {
   elements.budgetSection.hidden = remote;
   elements.jobForm.classList.toggle("is-remote-provider", remote);
   if (remote) {
-    const audio = parameters.generate_audio ? "原生音频" : "无音频";
-    const watermark = parameters.watermark ? "含水印" : "无水印";
+    const parts = [
+      parameters.resolution,
+      parameters.duration != null ? `${parameters.duration}s` : null,
+      parameters.ratio,
+    ].filter(Boolean);
+    if ("generate_audio" in parameters) {
+      parts.push(parameters.generate_audio ? "原生音频" : "无音频");
+    }
+    if ("watermark" in parameters) {
+      parts.push(parameters.watermark ? "含水印" : "无水印");
+    }
     elements.remoteParameterSummary.textContent =
-      `固定试验：${parameters.resolution} · ${parameters.duration}s · ${parameters.ratio} · ${audio} · ${watermark}。默认只预检，不使用自由提示词，也不提交计费任务。`;
+      `固定试验：${parts.join(" · ")}。默认只预检，不使用自由提示词，也不提交计费任务。`;
   } else {
     elements.width.value = parameters.width;
     elements.height.value = parameters.height;
@@ -293,8 +302,10 @@ function applyGenerationProfile() {
 function renderMaterialNote() {
   const task = state.overview?.catalog.task_types.find((item) => item.key === state.taskType);
   if (!task) return;
-  if (isRemoteProvider(providerProfile(state.providerKey))) {
-    elements.materialNote.textContent = "当前是 Seedance 远端预检：使用已登记的固定试验合同，不上传素材，也不提交计费请求。";
+  const remoteProfile = providerProfile(state.providerKey);
+  if (isRemoteProvider(remoteProfile)) {
+    elements.materialNote.textContent =
+      `当前是 ${remoteProfile.name} 远端预检：使用已登记的固定试验合同，不上传素材，也不提交计费请求。`;
     return;
   }
   elements.materialNote.textContent = task.requires_material

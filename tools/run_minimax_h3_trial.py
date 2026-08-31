@@ -129,6 +129,26 @@ def environment_record(execution_id: str, contract_path: Path) -> dict[str, Any]
     }
 
 
+def observe_preflight(contract: dict[str, Any], *, execute: bool) -> dict[str, Any]:
+    key_present = bool(os.environ.get(MINIMAX_H3_API_KEY_ENV, "").strip())
+    return {
+        "preflight": "ready" if key_present else "blocked",
+        "provider_key": "minimax_h3",
+        "model_id": "MiniMax-H3",
+        "api_version": "v2",
+        "api_origin": MINIMAX_H3_API_BASE,
+        "credential_env": MINIMAX_H3_API_KEY_ENV,
+        "credential_present": key_present,
+        "credential_recorded": False,
+        "paid_remote_request": True,
+        "execute_flag_present": execute,
+        "generation": contract["generation"],
+        "local_open_weight_execution": "BLOCKED_BY_36GB_MEMORY_AND_UNVALIDATED_MPS_QUANTIZATION",
+        "creates_formal_fact": False,
+        "visual_quality_acceptance": "REQUIRES_REVIEW",
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract", default=str(DEFAULT_CONTRACT))
@@ -150,23 +170,8 @@ def main() -> int:
     except ValueError as exc:
         print(json.dumps({"preflight": "blocked", "reason": str(exc)}, ensure_ascii=False, indent=2))
         return 2
-    key_present = bool(os.environ.get(MINIMAX_H3_API_KEY_ENV, "").strip())
-    preflight = {
-        "preflight": "ready" if key_present else "blocked",
-        "provider_key": "minimax_h3",
-        "model_id": "MiniMax-H3",
-        "api_version": "v2",
-        "api_origin": MINIMAX_H3_API_BASE,
-        "credential_env": MINIMAX_H3_API_KEY_ENV,
-        "credential_present": key_present,
-        "credential_recorded": False,
-        "paid_remote_request": True,
-        "execute_flag_present": args.execute,
-        "generation": contract["generation"],
-        "local_open_weight_execution": "BLOCKED_BY_36GB_MEMORY_AND_UNVALIDATED_MPS_QUANTIZATION",
-        "creates_formal_fact": False,
-        "visual_quality_acceptance": "REQUIRES_REVIEW",
-    }
+    preflight = observe_preflight(contract, execute=args.execute)
+    key_present = bool(preflight["credential_present"])
     if not args.execute:
         print(json.dumps(preflight, ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if key_present else 2

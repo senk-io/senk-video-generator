@@ -56,6 +56,8 @@ set +a
 
 固定试验生成 `768P`、`5` 秒、`16:9`、`24 fps` 且包含 `32 kHz` 双声道音频的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。
 
+作业控制台已把 MiniMax H3 列为远端提供者。选择后可运行无费用预检；控制台不会提交计费任务，也不会把 `MINIMAX_API_KEY` 写入作业请求、日志或前端状态。显式计费仍须使用上面的 CLI `--execute`。
+
 ### Seedance / BytePlus ModelArk 接入
 
 `dreamina-seedance-2-0-260128` 已作为独立 `ProviderAdapter` 接入 [BytePlus ModelArk 视频生成接口](https://docs.byteplus.com/en/docs/modelark/1520757)。适配器只编译请求和结果，不改变上层治理语义，也不创建质量接受、选择、时间线绑定或制度冻结。
