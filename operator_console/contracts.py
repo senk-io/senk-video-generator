@@ -24,6 +24,7 @@ SECRET_REQUEST_FIELDS = frozenset(
         "authorization",
         "bearer",
         "credential",
+        "minimax_api_key",
         "password",
         "secret",
         "token",
@@ -106,7 +107,28 @@ PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
         "risk": "PAID_REMOTE_REQUEST",
         "risk_message": "默认只做无费用预检；控制台不会提交计费任务，也不会把密钥写入作业或前端状态。显式计费仍须使用 CLI --execute。",
         "trial_contract": "experiments/provider_compatibility/seedance_fictional_child_crying_closeup_v1.json",
+        "trial_runner": "tools.run_seedance_trial",
         "default_generation_profile_key": "seedance_remote_trial",
+        "default_execution_strategy": "remote_precheck_only",
+    },
+    "minimax_h3": {
+        "key": "minimax_h3",
+        "name": "MiniMax H3 / 开放平台 V2",
+        "provider_identity": "MiniMax",
+        "model_id": "MiniMax-H3",
+        "execution_backend": "remote_api",
+        "api_version": "v2",
+        "api_origin": "https://api.minimax.io",
+        "credential_env": "MINIMAX_API_KEY",
+        "observed_revision": None,
+        "runtime_observation": "REMOTE_PRECHECK_ONLY",
+        "startable": False,
+        "paid_execute_via_console": False,
+        "risk": "PAID_REMOTE_REQUEST",
+        "risk_message": "默认只做无费用预检；控制台不会提交计费任务，也不会把密钥写入作业或前端状态。显式计费仍须使用 CLI --execute。",
+        "trial_contract": "experiments/provider_compatibility/minimax_h3_fictional_child_crying_closeup_v1.json",
+        "trial_runner": "tools.run_minimax_h3_trial",
+        "default_generation_profile_key": "minimax_h3_remote_trial",
         "default_execution_strategy": "remote_precheck_only",
     },
 }
@@ -242,6 +264,17 @@ GENERATION_PROFILES: dict[str, dict[str, Any]] = {
             "ratio": "16:9",
             "generate_audio": True,
             "watermark": False,
+        },
+    },
+    "minimax_h3_remote_trial": {
+        "key": "minimax_h3_remote_trial",
+        "provider_key": "minimax_h3",
+        "name": "远端试验预检",
+        "description": "固定 768P、5 秒、16:9 试验合同；只预检，不提交计费任务。",
+        "parameters": {
+            "resolution": "768P",
+            "duration": 5,
+            "ratio": "16:9",
         },
     },
 }
@@ -555,7 +588,7 @@ def validate_remote_precheck_request(value: Any) -> tuple[dict[str, Any] | None,
                 "message": "该预检路径只接受远端接口提供者。",
             }
         )
-    elif provider_key != "seedance":
+    elif not profile.get("trial_runner"):
         errors.append(
             {
                 "field": "provider_key",

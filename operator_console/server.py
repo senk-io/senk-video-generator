@@ -454,9 +454,6 @@ class JobManager:
             return value
 
     def _remote_precheck(self, raw_request: Any) -> dict[str, Any]:
-        from tools.run_seedance_trial import REPO_ROOT as TRIAL_REPO_ROOT
-        from tools.run_seedance_trial import load_contract, observe_preflight
-
         normalized, errors = validate_remote_precheck_request(raw_request)
         checks: list[dict[str, Any]] = []
         if errors:
@@ -472,9 +469,26 @@ class JobManager:
             return self._preflight_result(None, checks, errors)
 
         assert normalized is not None
-        contract_path = (TRIAL_REPO_ROOT / normalized["trial_contract"]).resolve()
         try:
-            contract = load_contract(contract_path)
+            trial_module = self._load_remote_trial_runner(normalized["provider_key"])
+        except ControlError as exc:
+            checks.append(
+                self._check(
+                    "TRIAL_RUNNER_WIRED",
+                    "远端试验运行器已接入",
+                    False,
+                    exc.message,
+                    {"provider_key": normalized["provider_key"]},
+                )
+            )
+            return self._preflight_result(
+                None,
+                checks,
+                [{"field": "provider_key", "code": exc.code, "message": exc.message}],
+            )
+        contract_path = (trial_module.REPO_ROOT / normalized["trial_contract"]).resolve()
+        try:
+            contract = trial_module.load_contract(contract_path)
         except ValueError as exc:
             checks.append(
                 self._check(
@@ -491,7 +505,7 @@ class JobManager:
                 [{"field": "trial_contract", "code": "INVALID_TRIAL_CONTRACT", "message": str(exc)}],
             )
 
-        observation = observe_preflight(contract, execute=False)
+        observation = trial_module.observe_preflight(contract, execute=False)
         if observation.get("credential_recorded") is not False:
             checks.append(
                 self._check(
@@ -523,7 +537,7 @@ class JobManager:
                     "NO_PAID_NETWORK",
                     "未发起计费网络请求",
                     True,
-                    "默认路径只做预检，没有调用 ModelArk。",
+                    "默认路径只做预检，没有调用远端接口。",
                     {
                         "execute_flag_present": False,
                         "paid_remote_request": False,
@@ -585,6 +599,36 @@ class JobManager:
                 }
             )
         return values
+
+    @staticmethod
+    def _load_remote_trial_runner(provider_key: str) -> Any:
+        import importlib
+
+        profile = PROVIDER_PROFILES.get(provider_key)
+        module_name = (profile or {}).get("trial_runner")
+        if not isinstance(module_name, str) or not module_name.startswith("tools."):
+            raise ControlError(
+                "REMOTE_PROVIDER_NOT_WIRED",
+                "该远端提供者尚未接入控制台预检。",
+                HTTPStatus.CONFLICT,
+            )
+        try:
+            trial_module = importlib.import_module(module_name)
+        except ImportError as exc:
+            raise ControlError(
+                "REMOTE_PROVIDER_NOT_WIRED",
+                "该远端提供者的试验运行器无法导入。",
+                HTTPStatus.CONFLICT,
+            ) from exc
+        if not callable(getattr(trial_module, "load_contract", None)) or not callable(
+            getattr(trial_module, "observe_preflight", None)
+        ):
+            raise ControlError(
+                "REMOTE_PROVIDER_NOT_WIRED",
+                "该远端提供者的试验运行器缺少预检观察接口。",
+                HTTPStatus.CONFLICT,
+            )
+        return trial_module
 
     def _dynamic_checks(
         self,
