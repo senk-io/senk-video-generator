@@ -1,0 +1,52 @@
+{
+  "contract_id": "SEEDANCE-FICTIONAL-CHILD-CRYING-CLOSEUP-TRIAL-001",
+  "contract_status": "BOUNDED_REMOTE_TRIAL_ONLY",
+  "provider_key": "seedance",
+  "provider": {
+    "provider_identity": "BytePlus",
+    "model_id": "dreamina-seedance-2-0-260128",
+    "api_version": "v3",
+    "execution_backend": "remote_api"
+  },
+  "prompt": "A single continuous cinematic close-up of a fictional young European child actor performing quiet crying in a safe staged scene. The child's face fills most of the frame. Tears gradually well in both eyes; one clear tear rolls naturally down one cheek. The lower lip trembles subtly, breathing is uneven, and the child blinks gently while maintaining stable facial identity. Static eye-level camera, shallow depth of field, soft diffused window light, neutral blurred indoor background, natural skin texture, age-appropriate plain clothing. Native audio: restrained shaky breathing, one soft sniffle, quiet room tone, no dialogue, no music. No injury, no bruises, no blood, no abuse, no threat, no text, no subtitles, no cuts.",
+  "generation": {
+    "resolution": "720p",
+    "duration": 5,
+    "ratio": "16:9",
+    "generate_audio": true,
+    "watermark": false
+  },
+  "timeout_seconds": 3600,
+  "poll_interval_seconds": 10,
+  "max_download_bytes": 1073741824,
+  "paid_remote_request_requires_execute_flag": true,
+  "comparison_source": {
+    "provider_key": "minimax_h3",
+    "contract_id": "MINIMAX-H3-FICTIONAL-CHILD-CRYING-CLOSEUP-TRIAL-001",
+    "comparison_scope": "same_subject_semantics_only",
+    "strict_parameter_equivalence": false
+  },
+  "candidate_observations": [
+    "fictional_child_face_is_visible_throughout",
+    "closeup_framing_persists",
+    "tear_or_crying_semantics_are_visible",
+    "facial_identity_continuity_is_observable",
+    "native_audio_contains_restrained_breathing_or_sniffle",
+    "audio_video_emotion_timing_is_observable",
+    "safe_staged_context_without_injury_or_threat_is_observable",
+    "no_text_is_visible"
+  ],
+  "non_goals": [
+    "visual_quality_acceptance",
+    "formal_selection_decision",
+    "timeline_binding",
+    "production_readiness",
+    "automatic_retry",
+    "institution_freeze",
+    "cross_provider_contract_creation",
+    "operator_console_enablement",
+    "real_person_representation",
+    "harm_or_abuse_depiction",
+    "strict_cost_or_speed_benchmark"
+  ]
+}

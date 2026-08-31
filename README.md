@@ -24,7 +24,7 @@
 ## 模型边界
 
 - Seedance 等高质量模型是正式能力提供者候选，只需在适配器层编译其请求和结果，不改变上层治理语义。
-- 当前参考适配器包括本地 `CogVideoX-2B`、`Wan2.1-T2V-1.3B`，以及远端 `MiniMax-H3` 开放平台 `V2` 接口。三者的运行后端、费用、资源与证据合同彼此独立。
+- 当前参考适配器包括本地 `CogVideoX-2B`、`Wan2.1-T2V-1.3B`，远端 `MiniMax-H3` 开放平台 `V2` 接口，以及远端 `Seedance` / BytePlus ModelArk `v3` 接口。各提供者的运行后端、费用、资源与证据合同彼此独立。
 - 本地小模型用于低成本验证受控生成、资源停止线、证据闭包、后处理和人工选择流程，不代表项目的模型上限或最终画质目标。
 
 ### MiniMax H3 接入
@@ -56,9 +56,11 @@ set +a
 
 固定试验生成 `768P`、`5` 秒、`16:9`、`24 fps` 且包含 `32 kHz` 双声道音频的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。
 
-### Seedance 接入准备
+### Seedance / BytePlus ModelArk 接入
 
-Seedance 适配器尚未实现，以下配置只建立安全的凭据入口，不会自动获得执行能力。根据 [BytePlus ModelArk 官方文档](https://docs.byteplus.com/en/docs/modelark/1520757)，先在控制台创建 API Key，然后写入本地环境：
+`dreamina-seedance-2-0-260128` 已作为独立 `ProviderAdapter` 接入 [BytePlus ModelArk 视频生成接口](https://docs.byteplus.com/en/docs/modelark/1520757)。适配器只编译请求和结果，不改变上层治理语义，也不创建质量接受、选择、时间线绑定或制度冻结。
+
+真实密钥只写入未跟踪的 `.env`：
 
 ```bash
 cp .env.example .env
@@ -66,10 +68,22 @@ cp .env.example .env
 set -a
 . ./.env
 set +a
-test -n "${ARK_API_KEY:-}" && echo "Seedance API Key 已载入"
 ```
 
-`.env` 已被 Git 忽略。未来适配器只能在进程运行时读取 `ARK_API_KEY`；不得把密钥写入镜头合同、执行请求、日志、证据包或前端状态。
+默认命令只做无费用预检；只有显式增加 `--execute` 才提交计费任务。测试与预检从不调用真实接口。缺少密钥时预检失败关闭，不创建空证据：
+
+```bash
+.venv-provider-compat/bin/python -m tools.run_seedance_trial
+
+.venv-provider-compat/bin/python -m tools.run_seedance_trial \
+  --execute \
+  --execution-id SEEDANCE-CLOSEUP-YYYYMMDDTHHMMSSZ
+
+.venv-provider-compat/bin/python -m tools.verify_seedance_evidence \
+  evidence/runtime/SEEDANCE-CLOSEUP-YYYYMMDDTHHMMSSZ
+```
+
+固定试验生成 `720p`、`5` 秒、`16:9`、`24 fps` 且请求原生音频、无水印的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。密钥、签名下载地址和授权头不会进入证据。
 
 ### 一句话镜头规划
 
