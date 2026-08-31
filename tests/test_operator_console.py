@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import tempfile
 import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -18,6 +20,7 @@ from operator_console.contracts import (
     public_catalog,
     validate_job_request,
     validate_persisted_job,
+    validate_remote_precheck_request,
 )
 from operator_console.server import ControlError, JobManager, WEB_ROOT, create_server
 from tools.run_provider_compatibility_trial import (
@@ -1072,6 +1075,201 @@ else:
                 return job
             time.sleep(0.05)
         self.fail("作业没有在测试时限内进入终态")
+
+
+class SeedanceConsoleWiringTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        self.manager = JobManager(
+            repo_root=self.root / "repo",
+            state_root=self.root / "state",
+            evidence_root=self.root / "evidence",
+            cache_root=self.root / "cache",
+        )
+        (self.root / "repo").mkdir()
+        (self.root / "evidence").mkdir()
+        self.manager.observer = FakeObserver()
+        self.env = patch.dict(os.environ, {"ARK_API_KEY": ""}, clear=False)
+        self.env.start()
+        os.environ.pop("ARK_API_KEY", None)
+
+    def tearDown(self) -> None:
+        self.env.stop()
+        self.temporary.cleanup()
+
+    def test_catalog_surfaces_seedance_as_remote_precheck_provider(self) -> None:
+        catalog = public_catalog()
+        seedance = next(item for item in catalog["providers"] if item["key"] == "seedance")
+        profile = next(
+            item for item in catalog["generation_profiles"] if item["key"] == "seedance_remote_trial"
+        )
+
+        self.assertEqual(seedance["execution_backend"], "remote_api")
+        self.assertEqual(seedance["model_id"], "dreamina-seedance-2-0-260128")
+        self.assertEqual(seedance["credential_env"], "ARK_API_KEY")
+        self.assertFalse(seedance["startable"])
+        self.assertIs(seedance["paid_execute_via_console"], False)
+        self.assertEqual(profile["provider_key"], "seedance")
+        self.assertEqual(profile["parameters"]["resolution"], "720p")
+        self.assertEqual(catalog["defaults"]["provider_key"], "wan")
+        self.assertNotIn("dtype", seedance)
+        self.assertNotIn("limits", seedance)
+
+    def test_seedance_precheck_works_without_key_and_does_not_call_network(self) -> None:
+        with patch("urllib.request.urlopen", side_effect=AssertionError("console precheck must not use the network")):
+            result = self.manager.preflight(
+                {
+                    "provider_key": "seedance",
+                    "task_type": "text_to_video",
+                    "generation_profile_key": "seedance_remote_trial",
+                    "execution_strategy": "remote_precheck_only",
+                    "execute": False,
+                }
+            )
+
+        check_ids = {check["id"]: check for check in result["checks"]}
+        self.assertTrue(result["passed"])
+        self.assertIs(result["normalized_request"]["credential_present"], False)
+        self.assertIs(result["normalized_request"]["credential_recorded"], False)
+        self.assertIs(result["normalized_request"]["execute"], False)
+        self.assertEqual(result["normalized_request"]["visual_quality_acceptance"], "REQUIRES_REVIEW")
+        self.assertEqual(check_ids["TRIAL_CONTRACT_VALID"]["status"], "passed")
+        self.assertEqual(check_ids["NO_PAID_NETWORK"]["status"], "passed")
+        self.assertEqual(check_ids["CREDENTIAL_OBSERVED"]["status"], "passed")
+        self.assertEqual(check_ids["CONSOLE_START_DISABLED"]["status"], "passed")
+        self.assertFalse(any((self.root / "evidence").iterdir()))
+        payload = json.dumps(result)
+        self.assertNotIn("Bearer", payload)
+        self.assertNotIn("ARK_API_KEY=", payload)
+
+    def test_present_key_is_observed_but_never_copied_into_console_state(self) -> None:
+        with patch.dict(os.environ, {"ARK_API_KEY": "should-never-appear"}):
+            result = self.manager.preflight(
+                {
+                    "provider_key": "seedance",
+                    "generation_profile_key": "seedance_remote_trial",
+                }
+            )
+        serialized = json.dumps(result)
+        self.assertTrue(result["passed"])
+        self.assertIs(result["normalized_request"]["credential_present"], True)
+        self.assertIs(result["normalized_request"]["credential_recorded"], False)
+        self.assertNotIn("should-never-appear", serialized)
+        self.assertNotIn("ARK_API_KEY=", serialized)
+
+    def test_seedance_execute_flag_and_secret_fields_fail_closed(self) -> None:
+        execute = self.manager.preflight(
+            {
+                "provider_key": "seedance",
+                "generation_profile_key": "seedance_remote_trial",
+                "execute": True,
+            }
+        )
+        unknown = self.manager.preflight(
+            {
+                "provider_key": "seedance",
+                "generation_profile_key": "seedance_remote_trial",
+                "execute": "maybe",
+            }
+        )
+        leaked = self.manager.preflight(
+            {
+                "provider_key": "seedance",
+                "generation_profile_key": "seedance_remote_trial",
+                "api_key": "super-secret-value",
+            }
+        )
+
+        self.assertFalse(execute["passed"])
+        self.assertIn("CONSOLE_PAID_EXECUTE_PROHIBITED", {item["code"] for item in execute["errors"]})
+        self.assertFalse(unknown["passed"])
+        self.assertIn("UNKNOWN_EXECUTE_FLAG", {item["code"] for item in unknown["errors"]})
+        self.assertFalse(leaked["passed"])
+        self.assertIn("SECRET_FIELD_PROHIBITED", {item["code"] for item in leaked["errors"]})
+        self.assertNotIn("super-secret-value", json.dumps(leaked))
+
+    def test_seedance_cannot_register_or_compile_local_job(self) -> None:
+        with self.assertRaises(ControlError) as error:
+            self.manager.create_job({"provider_key": "seedance", "execute": False})
+        self.assertEqual(error.exception.code, "REMOTE_EXECUTE_PROHIBITED")
+
+        normalized, errors = validate_job_request(
+            {
+                "provider_key": "seedance",
+                "task_type": "text_to_video",
+                "generation_profile_key": "seedance_remote_trial",
+                "execution_strategy": "remote_precheck_only",
+                "execution_id": "SEEDANCE-TEST-001",
+                "prompt": "should not become a local job",
+            }
+        )
+        self.assertIsNone(normalized)
+        self.assertIn("REMOTE_PROVIDER_NOT_STARTABLE", {item["code"] for item in errors})
+        with self.assertRaisesRegex(ValueError, "远端提供者"):
+            compile_runner_contract(
+                {
+                    "provider_key": "seedance",
+                    "job_id": "JOB-20260831T000000Z-A1B2C3D4",
+                    "task_type": "text_to_video",
+                    "generation_profile_key": "seedance_remote_trial",
+                    "execution_strategy": "remote_precheck_only",
+                    "prompt": "blocked",
+                    "seed": 0,
+                    "parameters": {},
+                    "timeout_seconds": 3600,
+                    "resource_budget": {},
+                }
+            )
+
+    def test_http_seedance_precheck_does_not_require_key(self) -> None:
+        server = create_server("127.0.0.1", 0, self.manager, WEB_ROOT)
+        import threading
+
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        base = f"http://127.0.0.1:{server.server_address[1]}"
+        try:
+            with urlopen(f"{base}/api/v1/operator", timeout=3) as response:
+                overview = json.load(response)
+            seedance = next(item for item in overview["catalog"]["providers"] if item["key"] == "seedance")
+            model = next(item for item in overview["models"] if item["key"] == "seedance")
+            self.assertEqual(seedance["execution_backend"], "remote_api")
+            self.assertEqual(model["state"], "remote_precheck")
+            self.assertIs(model["credential_recorded"], False)
+            self.assertNotIn("ARK_API_KEY=", json.dumps(overview))
+
+            body = json.dumps(
+                {
+                    "provider_key": "seedance",
+                    "generation_profile_key": "seedance_remote_trial",
+                    "execute": False,
+                }
+            ).encode()
+            request = Request(
+                f"{base}/api/v1/preflight",
+                data=body,
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Senknet-CSRF": overview["csrf_token"],
+                },
+                method="POST",
+            )
+            with urlopen(request, timeout=3) as response:
+                result = json.load(response)
+            self.assertTrue(result["passed"])
+            self.assertIs(result["normalized_request"]["credential_present"], False)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=3)
+
+    def test_remote_precheck_validator_rejects_unwired_remote_shape(self) -> None:
+        normalized, errors = validate_remote_precheck_request(
+            {"provider_key": "wan", "generation_profile_key": "wan_probe"}
+        )
+        self.assertIsNone(normalized)
+        self.assertIn("NOT_REMOTE_PROVIDER", {item["code"] for item in errors})
 
 
 if __name__ == "__main__":

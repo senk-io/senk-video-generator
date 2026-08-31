@@ -27,9 +27,11 @@ from observatory.server import ObservatoryConfig, ObservatoryState, sanitize_tex
 from operator_console.contracts import (
     JOB_ID_PATTERN,
     PROVIDER_PROFILES,
+    is_remote_api_provider,
     public_catalog,
     validate_job_request,
     validate_persisted_job,
+    validate_remote_precheck_request,
 )
 from pilot_project import PilotCatalog, PilotOperationError, PilotWorkspace
 
@@ -151,7 +153,7 @@ class JobManager:
             "mode": "LOCAL_CONTROLLED_EXECUTION",
             "catalog": public_catalog(),
             "system": system,
-            "models": self.observer.model_statuses(),
+            "models": [*self.observer.model_statuses(), *self._remote_provider_statuses()],
             "active_generation_processes": processes,
             "jobs": jobs,
             "pilot_projects": self.pilot_workspace.overview(jobs),
@@ -164,10 +166,15 @@ class JobManager:
                 "creates_selection_decision": False,
                 "creates_institution_freeze": False,
                 "pilot_project_status": "DRAFT_NON_AUTHORITATIVE",
+                "remote_paid_execute_via_console": False,
             },
         }
 
     def preflight(self, raw_request: Any) -> dict[str, Any]:
+        if isinstance(raw_request, dict):
+            profile = PROVIDER_PROFILES.get(str(raw_request.get("provider_key", "")))
+            if is_remote_api_provider(profile):
+                return self._remote_precheck(raw_request)
         normalized, errors = validate_job_request(raw_request)
         checks: list[dict[str, Any]] = []
         if errors:
@@ -187,6 +194,14 @@ class JobManager:
 
     def create_job(self, raw_request: Any) -> dict[str, Any]:
         with self._lock:
+            if isinstance(raw_request, dict):
+                profile = PROVIDER_PROFILES.get(str(raw_request.get("provider_key", "")))
+                if is_remote_api_provider(profile):
+                    raise ControlError(
+                        "REMOTE_EXECUTE_PROHIBITED",
+                        "控制台不对远端提供者登记或启动计费作业。",
+                        HTTPStatus.CONFLICT,
+                    )
             preflight = self.preflight(raw_request)
             if not preflight["passed"]:
                 raise ControlError(
@@ -230,6 +245,12 @@ class JobManager:
         with self._lock:
             job_dir = self._job_dir(job_id)
             request, status = self._load_job(job_dir)
+            if is_remote_api_provider(PROVIDER_PROFILES.get(str(request.get("provider_key", "")))):
+                raise ControlError(
+                    "REMOTE_EXECUTE_PROHIBITED",
+                    "控制台不对远端提供者启动计费作业。",
+                    HTTPStatus.CONFLICT,
+                )
             if status["state"] != "REGISTERED":
                 raise ControlError("INVALID_JOB_STATE", "只有已登记且尚未启动的作业可以启动。", HTTPStatus.CONFLICT)
             if confirmation_execution_id != request["execution_id"]:
@@ -431,6 +452,139 @@ class JobManager:
             if include_events:
                 value["events"] = self._read_events(job_dir)
             return value
+
+    def _remote_precheck(self, raw_request: Any) -> dict[str, Any]:
+        from tools.run_seedance_trial import REPO_ROOT as TRIAL_REPO_ROOT
+        from tools.run_seedance_trial import load_contract, observe_preflight
+
+        normalized, errors = validate_remote_precheck_request(raw_request)
+        checks: list[dict[str, Any]] = []
+        if errors:
+            checks.append(
+                self._check(
+                    "REQUEST_VALID",
+                    "远端预检字段完整",
+                    False,
+                    f"发现 {len(errors)} 个字段问题。",
+                    {"errors": [{"field": item["field"], "code": item["code"]} for item in errors]},
+                )
+            )
+            return self._preflight_result(None, checks, errors)
+
+        assert normalized is not None
+        contract_path = (TRIAL_REPO_ROOT / normalized["trial_contract"]).resolve()
+        try:
+            contract = load_contract(contract_path)
+        except ValueError as exc:
+            checks.append(
+                self._check(
+                    "TRIAL_CONTRACT_VALID",
+                    "固定试验合同可校验",
+                    False,
+                    str(exc),
+                    {"trial_contract": normalized["trial_contract"]},
+                )
+            )
+            return self._preflight_result(
+                None,
+                checks,
+                [{"field": "trial_contract", "code": "INVALID_TRIAL_CONTRACT", "message": str(exc)}],
+            )
+
+        observation = observe_preflight(contract, execute=False)
+        if observation.get("credential_recorded") is not False:
+            checks.append(
+                self._check(
+                    "CREDENTIAL_NOT_RECORDED",
+                    "密钥未被记录",
+                    False,
+                    "预检观察不得记录密钥值。",
+                )
+            )
+            return self._preflight_result(
+                None,
+                checks,
+                [{"field": "credential_recorded", "code": "SECRET_LEAK", "message": "预检观察不得记录密钥值。"}],
+            )
+
+        checks.extend(
+            [
+                self._check(
+                    "TRIAL_CONTRACT_VALID",
+                    "固定试验合同可校验",
+                    True,
+                    "已使用受控试验合同完成无网络预检。",
+                    {
+                        "trial_contract": normalized["trial_contract"],
+                        "generation": observation.get("generation"),
+                    },
+                ),
+                self._check(
+                    "NO_PAID_NETWORK",
+                    "未发起计费网络请求",
+                    True,
+                    "默认路径只做预检，没有调用 ModelArk。",
+                    {
+                        "execute_flag_present": False,
+                        "paid_remote_request": False,
+                        "api_origin": observation.get("api_origin"),
+                    },
+                ),
+                self._check(
+                    "CREDENTIAL_OBSERVED",
+                    "凭据存在性已观察",
+                    True,
+                    (
+                        "已检测到凭据环境变量；控制台仍不会提交计费任务。"
+                        if observation["credential_present"]
+                        else "未检测到凭据环境变量；预检仍可完成，计费执行保持关闭。"
+                    ),
+                    {
+                        "credential_env": observation["credential_env"],
+                        "credential_present": observation["credential_present"],
+                        "credential_recorded": False,
+                    },
+                ),
+                self._check(
+                    "CONSOLE_START_DISABLED",
+                    "控制台不启动计费作业",
+                    True,
+                    "登记与启动保持关闭；显式计费只允许 CLI --execute。",
+                ),
+            ]
+        )
+        normalized = {
+            **normalized,
+            "credential_present": observation["credential_present"],
+            "api_origin": observation["api_origin"],
+            "creates_formal_fact": False,
+            "visual_quality_acceptance": "REQUIRES_REVIEW",
+        }
+        return self._preflight_result(normalized, checks, [])
+
+    def _remote_provider_statuses(self) -> list[dict[str, Any]]:
+        values: list[dict[str, Any]] = []
+        for profile in PROVIDER_PROFILES.values():
+            if not is_remote_api_provider(profile):
+                continue
+            env_name = profile.get("credential_env")
+            present = bool(os.environ.get(str(env_name), "").strip()) if env_name else False
+            values.append(
+                {
+                    "key": profile["key"],
+                    "name": profile["name"],
+                    "model_id": profile["model_id"],
+                    "state": "remote_precheck",
+                    "execution_backend": "remote_api",
+                    "credential_env": env_name,
+                    "credential_present": present,
+                    "credential_recorded": False,
+                    "observed_revision_present": None,
+                    "cache_bytes": None,
+                    "incomplete_file_count": 0,
+                }
+            )
+        return values
 
     def _dynamic_checks(
         self,
