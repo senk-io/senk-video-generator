@@ -380,6 +380,25 @@ h2 { margin-bottom: 0; letter-spacing: -0.02em; font-size: 18px; }
 .provider-id { margin-top: 10px; color: var(--muted); font-family: var(--mono); font-size: 9px; overflow-wrap: anywhere; }
 .provider-message { margin: 14px 0 0; color: var(--muted-2); font-size: 9px; line-height: 1.6; }
 
+.remote-parameter-panel {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(112, 189, 232, 0.06);
+}
+
+.remote-parameter-panel p {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.composer.is-remote-provider .prompt-field textarea {
+  opacity: 0.72;
+}
+
 .task-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

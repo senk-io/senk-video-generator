@@ -32,6 +32,10 @@ const elements = {
   mpsFraction: document.querySelector("#mpsFraction"),
   riskAcknowledged: document.querySelector("#riskAcknowledged"),
   riskMessage: document.querySelector("#riskMessage"),
+  parameterGrid: document.querySelector("#parameterGrid"),
+  remoteParameterPanel: document.querySelector("#remoteParameterPanel"),
+  remoteParameterSummary: document.querySelector("#remoteParameterSummary"),
+  budgetSection: document.querySelector("#budgetSection"),
   preflightTitle: document.querySelector("#preflightTitle"),
   preflightDescription: document.querySelector("#preflightDescription"),
   preflightResults: document.querySelector("#preflightResults"),
@@ -135,6 +139,10 @@ function providerProfile(key) {
   return state.overview?.catalog.providers.find((item) => item.key === key);
 }
 
+function isRemoteProvider(profile) {
+  return profile?.execution_backend === "remote_api";
+}
+
 function modelStatus(key) {
   return state.overview?.models.find((item) => item.key === key);
 }
@@ -143,15 +151,19 @@ function renderCatalog() {
   const catalog = state.overview.catalog;
   elements.providerGrid.innerHTML = catalog.providers.map((profile) => {
     const model = modelStatus(profile.key);
+    const remote = isRemoteProvider(profile);
     const runtimeReady = profile.startable;
-    const statusLabel = runtimeReady ? "已观察运行" : "运行性未知";
-    const statusClass = runtimeReady ? "ready" : "blocked";
+    const statusLabel = remote ? "远端预检" : runtimeReady ? "已观察运行" : "运行性未知";
+    const statusClass = remote || runtimeReady ? "ready" : "blocked";
+    const statusLine = remote
+      ? `凭据环境：${escapeHtml(profile.credential_env || "—")} · ${model?.credential_present ? "已检测到环境变量" : "未检测到密钥"}`
+      : `缓存：${escapeHtml(model?.state || "unknown")} · ${formatBytes(model?.cache_bytes)}`;
     return `
       <label class="provider-card ${profile.key === state.providerKey ? "is-selected" : ""}" data-provider="${escapeHtml(profile.key)}">
         <input type="radio" name="provider" value="${escapeHtml(profile.key)}" ${profile.key === state.providerKey ? "checked" : ""}>
         <span class="provider-top"><strong>${escapeHtml(profile.name)}</strong><span class="provider-state state-${statusClass}">${statusLabel}</span></span>
         <span class="provider-id">${escapeHtml(profile.model_id)}</span>
-        <p class="provider-message">${escapeHtml(profile.risk_message)} 缓存：${escapeHtml(model?.state || "unknown")} · ${formatBytes(model?.cache_bytes)}</p>
+        <p class="provider-message">${escapeHtml(profile.risk_message)} ${statusLine}</p>
       </label>`;
   }).join("");
   elements.taskGrid.innerHTML = catalog.task_types.map((task) => `
@@ -172,8 +184,11 @@ function bindCatalogEvents() {
     input.addEventListener("change", () => {
       state.providerKey = input.value;
       elements.providerGrid.querySelectorAll(".provider-card").forEach((card) => card.classList.toggle("is-selected", card.dataset.provider === state.providerKey));
+      syncProviderBackend();
       renderExecutionControls();
       applyGenerationProfile();
+      renderMaterialNote();
+      elements.executionId.value = newExecutionId();
       invalidatePreflight();
     });
   });
@@ -205,16 +220,39 @@ function executionStrategy(key = state.executionStrategy) {
   return state.overview?.catalog.execution_strategies.find((item) => item.key === key);
 }
 
+function syncProviderBackend() {
+  const profile = providerProfile(state.providerKey);
+  const remote = isRemoteProvider(profile);
+  if (remote) {
+    state.executionStrategy = profile.default_execution_strategy || "remote_precheck_only";
+    if (profile.default_generation_profile_key) {
+      state.generationProfileKey = profile.default_generation_profile_key;
+    }
+  } else if (state.executionStrategy === "remote_precheck_only") {
+    state.executionStrategy = "mps_model_offload_bounded";
+  }
+}
+
 function renderExecutionControls() {
   const profiles = state.overview.catalog.generation_profiles.filter((item) => item.provider_key === state.providerKey);
   if (!profiles.some((item) => item.key === state.generationProfileKey)) {
-    const preferred = profiles.find((item) => item.key === state.overview.catalog.defaults.generation_profile_key);
+    const provider = providerProfile(state.providerKey);
+    const preferredKey = provider?.default_generation_profile_key || state.overview.catalog.defaults.generation_profile_key;
+    const preferred = profiles.find((item) => item.key === preferredKey);
     state.generationProfileKey = (preferred || profiles[0])?.key || "";
   }
   elements.generationProfile.innerHTML = profiles.map((item) => `<option value="${escapeHtml(item.key)}">${escapeHtml(item.name)}</option>`).join("");
   elements.generationProfile.value = state.generationProfileKey;
 
-  elements.executionStrategy.innerHTML = state.overview.catalog.execution_strategies.map((item) => `
+  const backend = providerProfile(state.providerKey)?.execution_backend || "local_diffusers";
+  const strategies = state.overview.catalog.execution_strategies.filter(
+    (item) => (item.execution_backend || "local_diffusers") === backend
+  );
+  if (!strategies.some((item) => item.key === state.executionStrategy)) {
+    const recommended = strategies.find((item) => item.recommended);
+    state.executionStrategy = (recommended || strategies[0])?.key || "";
+  }
+  elements.executionStrategy.innerHTML = strategies.map((item) => `
     <option value="${escapeHtml(item.key)}">${escapeHtml(item.name)}${item.recommended ? "（推荐）" : ""}</option>`).join("");
   elements.executionStrategy.value = state.executionStrategy;
   updateExecutionDescriptions();
@@ -229,13 +267,25 @@ function applyGenerationProfile() {
   const profile = providerProfile(state.providerKey);
   const selected = generationProfile();
   if (!profile || !selected) return;
+  const remote = isRemoteProvider(profile);
   const parameters = selected.parameters;
-  elements.width.value = parameters.width;
-  elements.height.value = parameters.height;
-  elements.numFrames.value = parameters.num_frames;
-  elements.numSteps.value = parameters.num_inference_steps;
-  elements.guidance.value = parameters.guidance_scale;
-  elements.fps.value = parameters.fps;
+  elements.parameterGrid.hidden = remote;
+  elements.remoteParameterPanel.hidden = !remote;
+  elements.budgetSection.hidden = remote;
+  elements.jobForm.classList.toggle("is-remote-provider", remote);
+  if (remote) {
+    const audio = parameters.generate_audio ? "原生音频" : "无音频";
+    const watermark = parameters.watermark ? "含水印" : "无水印";
+    elements.remoteParameterSummary.textContent =
+      `固定试验：${parameters.resolution} · ${parameters.duration}s · ${parameters.ratio} · ${audio} · ${watermark}。默认只预检，不使用自由提示词，也不提交计费任务。`;
+  } else {
+    elements.width.value = parameters.width;
+    elements.height.value = parameters.height;
+    elements.numFrames.value = parameters.num_frames;
+    elements.numSteps.value = parameters.num_inference_steps;
+    elements.guidance.value = parameters.guidance_scale;
+    elements.fps.value = parameters.fps;
+  }
   elements.riskMessage.textContent = profile.risk_message;
   updateExecutionDescriptions();
 }
@@ -243,6 +293,10 @@ function applyGenerationProfile() {
 function renderMaterialNote() {
   const task = state.overview?.catalog.task_types.find((item) => item.key === state.taskType);
   if (!task) return;
+  if (isRemoteProvider(providerProfile(state.providerKey))) {
+    elements.materialNote.textContent = "当前是 Seedance 远端预检：使用已登记的固定试验合同，不上传素材，也不提交计费请求。";
+    return;
+  }
   elements.materialNote.textContent = task.requires_material
     ? "该类型需要参考素材；当前尚未接入上传和来源登记。"
     : "当前是文生视频：无需选择素材，提示词是本次作业的主要生成输入。";
@@ -319,10 +373,22 @@ function newExecutionId() {
     String(date.getSeconds()).padStart(2, "0"),
   ].join("");
   const shotPart = state.projectBinding?.shot_id ? `-${state.projectBinding.shot_id}` : "";
-  return `LOCAL-${state.providerKey.toUpperCase()}${shotPart}-${stamp}`;
+  const prefix = isRemoteProvider(providerProfile(state.providerKey))
+    ? state.providerKey.toUpperCase()
+    : `LOCAL-${state.providerKey.toUpperCase()}`;
+  return `${prefix}${shotPart}-${stamp}`;
 }
 
 function formRequest() {
+  if (isRemoteProvider(providerProfile(state.providerKey))) {
+    return {
+      provider_key: state.providerKey,
+      task_type: state.taskType,
+      generation_profile_key: state.generationProfileKey,
+      execution_strategy: state.executionStrategy,
+      execute: false,
+    };
+  }
   return {
     provider_key: state.providerKey,
     task_type: state.taskType,
@@ -416,7 +482,8 @@ function renderPreflight(result) {
       <span class="check-dot">${check.status === "passed" ? "✓" : "!"}</span>
       <div><strong>${escapeHtml(check.label)}</strong><p>${escapeHtml(check.message)}</p></div>
     </div>`).join("");
-  elements.registerButton.disabled = !result.passed;
+  const canRegister = result.passed && providerProfile(state.providerKey)?.startable;
+  elements.registerButton.disabled = !canRegister;
 }
 
 async function registerJob() {
@@ -439,7 +506,7 @@ async function registerJob() {
     showToast(`登记失败：${error.message}`);
   } finally {
     elements.registerButton.textContent = "登记不可变作业";
-    elements.registerButton.disabled = !state.preflight?.passed;
+    elements.registerButton.disabled = !(state.preflight?.passed && providerProfile(state.providerKey)?.startable);
   }
 }
 

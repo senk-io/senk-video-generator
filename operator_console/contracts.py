@@ -16,12 +16,27 @@ PROJECT_ID_PATTERN = re.compile(r"PILOT-[A-Z0-9][A-Z0-9-]{2,95}")
 SHOT_ID_PATTERN = re.compile(r"SHOT-[0-9]{3}")
 SHA256_PATTERN = re.compile(r"[a-f0-9]{64}")
 
+SECRET_REQUEST_FIELDS = frozenset(
+    {
+        "access_token",
+        "api_key",
+        "ark_api_key",
+        "authorization",
+        "bearer",
+        "credential",
+        "password",
+        "secret",
+        "token",
+    }
+)
+
 PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
     "wan": {
         "key": "wan",
         "name": "Wan2.1-T2V-1.3B",
         "provider_identity": "Wan-AI",
         "model_id": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+        "execution_backend": "local_diffusers",
         "observed_revision": "0fad780a534b6463e45facd96134c9f345acfa5b",
         "runtime_observation": "OBSERVED_OUTPUT_AVAILABLE",
         "startable": True,
@@ -51,6 +66,7 @@ PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
         "name": "CogVideoX-2B",
         "provider_identity": "zai-org",
         "model_id": "zai-org/CogVideoX-2b",
+        "execution_backend": "local_diffusers",
         "observed_revision": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
         "runtime_observation": "DOWNLOAD_ONLY_RUNTIME_UNKNOWN",
         "startable": False,
@@ -73,6 +89,25 @@ PROVIDER_PROFILES: dict[str, dict[str, Any]] = {
             "guidance_scale": [1.0, 8.0],
             "fps": [1, 12],
         },
+    },
+    "seedance": {
+        "key": "seedance",
+        "name": "Seedance 2.0 / BytePlus ModelArk",
+        "provider_identity": "BytePlus",
+        "model_id": "dreamina-seedance-2-0-260128",
+        "execution_backend": "remote_api",
+        "api_version": "v3",
+        "api_origin": "https://ark.ap-southeast.bytepluses.com/api/v3",
+        "credential_env": "ARK_API_KEY",
+        "observed_revision": None,
+        "runtime_observation": "REMOTE_PRECHECK_ONLY",
+        "startable": False,
+        "paid_execute_via_console": False,
+        "risk": "PAID_REMOTE_REQUEST",
+        "risk_message": "默认只做无费用预检；控制台不会提交计费任务，也不会把密钥写入作业或前端状态。显式计费仍须使用 CLI --execute。",
+        "trial_contract": "experiments/provider_compatibility/seedance_fictional_child_crying_closeup_v1.json",
+        "default_generation_profile_key": "seedance_remote_trial",
+        "default_execution_strategy": "remote_precheck_only",
     },
 }
 
@@ -196,6 +231,19 @@ GENERATION_PROFILES: dict[str, dict[str, Any]] = {
             "fps": 8,
         },
     },
+    "seedance_remote_trial": {
+        "key": "seedance_remote_trial",
+        "provider_key": "seedance",
+        "name": "远端试验预检",
+        "description": "固定 720p、5 秒、16:9 试验合同；只预检，不提交计费任务。",
+        "parameters": {
+            "resolution": "720p",
+            "duration": 5,
+            "ratio": "16:9",
+            "generate_audio": True,
+            "watermark": False,
+        },
+    },
 }
 
 EXECUTION_STRATEGIES: dict[str, dict[str, Any]] = {
@@ -203,15 +251,38 @@ EXECUTION_STRATEGIES: dict[str, dict[str, Any]] = {
         "key": "mps_model_offload_bounded",
         "name": "分阶段驻留",
         "recommended": True,
+        "execution_backend": "local_diffusers",
         "description": "文本编码器以无梯度叶级顺序进入 MPS；形成嵌入并释放后再装载 Transformer 与 VAE。",
     },
     "mps_full_bounded": {
         "key": "mps_full_bounded",
         "name": "全量驻留基线",
         "recommended": False,
+        "execution_backend": "local_diffusers",
         "description": "整条管线进入 MPS；仅用于与既有证据比较，内存风险更高。",
     },
+    "remote_precheck_only": {
+        "key": "remote_precheck_only",
+        "name": "远端预检",
+        "recommended": True,
+        "execution_backend": "remote_api",
+        "description": "只校验固定试验合同与凭据观察，不提交计费任务，不加载本地模型。",
+    },
 }
+
+
+def provider_backend(profile: dict[str, Any] | None) -> str:
+    if not profile:
+        return "unknown"
+    return str(profile.get("execution_backend") or "local_diffusers")
+
+
+def is_remote_api_provider(profile: dict[str, Any] | None) -> bool:
+    return provider_backend(profile) == "remote_api"
+
+
+def secret_request_fields(value: dict[str, Any]) -> list[str]:
+    return [str(key) for key in value if str(key).lower() in SECRET_REQUEST_FIELDS]
 
 
 def public_catalog() -> dict[str, Any]:
@@ -247,6 +318,14 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
     profile = PROVIDER_PROFILES.get(provider_key)
     if not profile:
         errors.append({"field": "provider_key", "code": "UNKNOWN_PROVIDER", "message": "提供者不受支持。"})
+    elif is_remote_api_provider(profile):
+        errors.append(
+            {
+                "field": "provider_key",
+                "code": "REMOTE_PROVIDER_NOT_STARTABLE",
+                "message": "远端提供者不能登记为本地作业；控制台只提供无费用预检。",
+            }
+        )
 
     task_type = str(value.get("task_type", ""))
     task = TASK_TYPES.get(task_type)
@@ -337,7 +416,8 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         )
 
     execution_strategy = str(value.get("execution_strategy", ""))
-    if execution_strategy not in EXECUTION_STRATEGIES:
+    strategy = EXECUTION_STRATEGIES.get(execution_strategy)
+    if not strategy:
         errors.append(
             {
                 "field": "execution_strategy",
@@ -345,11 +425,22 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
                 "message": "执行策略不受支持。",
             }
         )
+    elif profile and strategy.get("execution_backend", "local_diffusers") != provider_backend(profile):
+        errors.append(
+            {
+                "field": "execution_strategy",
+                "code": "STRATEGY_BACKEND_MISMATCH",
+                "message": "执行策略不适用于当前提供者后端。",
+            }
+        )
 
     parameters: dict[str, int | float] = {}
     raw_parameters = value.get("parameters")
+    if is_remote_api_provider(profile):
+        raw_parameters = None
     if not isinstance(raw_parameters, dict):
-        errors.append({"field": "parameters", "code": "PARAMETERS_REQUIRED", "message": "必须提供生成参数。"})
+        if not is_remote_api_provider(profile):
+            errors.append({"field": "parameters", "code": "PARAMETERS_REQUIRED", "message": "必须提供生成参数。"})
     elif profile:
         for field, bounds in profile["limits"].items():
             raw = raw_parameters.get(field)
@@ -386,7 +477,7 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
                     )
 
     risk_acknowledged = value.get("risk_acknowledged") is True
-    if profile and profile["startable"] and not risk_acknowledged:
+    if profile and not is_remote_api_provider(profile) and profile["startable"] and not risk_acknowledged:
         errors.append(
             {
                 "field": "risk_acknowledged",
@@ -394,7 +485,7 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
                 "message": "必须明确确认当前模型的高内存风险。",
             }
         )
-    if profile and not profile["startable"]:
+    if profile and not is_remote_api_provider(profile) and not profile["startable"]:
         errors.append(
             {
                 "field": "provider_key",
@@ -435,6 +526,146 @@ def validate_job_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[s
         "institution_freeze_creation": "PROHIBITED",
     }
     return normalized, []
+
+
+def validate_remote_precheck_request(value: Any) -> tuple[dict[str, Any] | None, list[dict[str, str]]]:
+    errors: list[dict[str, str]] = []
+    if not isinstance(value, dict):
+        return None, [{"field": "$", "code": "INVALID_BODY", "message": "预检请求必须是对象。"}]
+
+    leaked = secret_request_fields(value)
+    if leaked:
+        errors.append(
+            {
+                "field": leaked[0],
+                "code": "SECRET_FIELD_PROHIBITED",
+                "message": "请求不得携带密钥、令牌或授权字段。",
+            }
+        )
+
+    provider_key = str(value.get("provider_key", ""))
+    profile = PROVIDER_PROFILES.get(provider_key)
+    if not profile:
+        errors.append({"field": "provider_key", "code": "UNKNOWN_PROVIDER", "message": "提供者不受支持。"})
+    elif not is_remote_api_provider(profile):
+        errors.append(
+            {
+                "field": "provider_key",
+                "code": "NOT_REMOTE_PROVIDER",
+                "message": "该预检路径只接受远端接口提供者。",
+            }
+        )
+    elif provider_key != "seedance":
+        errors.append(
+            {
+                "field": "provider_key",
+                "code": "REMOTE_PROVIDER_NOT_WIRED",
+                "message": "该远端提供者尚未接入控制台预检。",
+            }
+        )
+    elif profile.get("paid_execute_via_console") is not False:
+        errors.append(
+            {
+                "field": "provider_key",
+                "code": "CONSOLE_PAID_EXECUTE_NOT_DISABLED",
+                "message": "控制台远端提供者必须明确禁止计费执行。",
+            }
+        )
+
+    if "execute" in value:
+        raw_execute = value.get("execute")
+        if raw_execute is True:
+            errors.append(
+                {
+                    "field": "execute",
+                    "code": "CONSOLE_PAID_EXECUTE_PROHIBITED",
+                    "message": "控制台不提交计费远端任务；请使用 CLI --execute。",
+                }
+            )
+        elif raw_execute is not False:
+            errors.append(
+                {
+                    "field": "execute",
+                    "code": "UNKNOWN_EXECUTE_FLAG",
+                    "message": "execute 只能是 false 或省略；未知值失败关闭。",
+                }
+            )
+
+    generation_profile_key = str(
+        value.get("generation_profile_key")
+        or (profile or {}).get("default_generation_profile_key")
+        or ""
+    )
+    generation_profile = GENERATION_PROFILES.get(generation_profile_key)
+    if not generation_profile:
+        errors.append(
+            {
+                "field": "generation_profile_key",
+                "code": "UNKNOWN_GENERATION_PROFILE",
+                "message": "生成档位不受支持。",
+            }
+        )
+    elif profile and generation_profile["provider_key"] != provider_key:
+        errors.append(
+            {
+                "field": "generation_profile_key",
+                "code": "PROFILE_PROVIDER_MISMATCH",
+                "message": "生成档位不适用于当前提供者。",
+            }
+        )
+
+    execution_strategy = str(
+        value.get("execution_strategy") or (profile or {}).get("default_execution_strategy") or ""
+    )
+    strategy = EXECUTION_STRATEGIES.get(execution_strategy)
+    if not strategy:
+        errors.append(
+            {
+                "field": "execution_strategy",
+                "code": "UNKNOWN_EXECUTION_STRATEGY",
+                "message": "执行策略不受支持。",
+            }
+        )
+    elif profile and strategy.get("execution_backend", "local_diffusers") != provider_backend(profile):
+        errors.append(
+            {
+                "field": "execution_strategy",
+                "code": "STRATEGY_BACKEND_MISMATCH",
+                "message": "执行策略不适用于当前提供者后端。",
+            }
+        )
+
+    task_type = str(value.get("task_type") or "text_to_video")
+    task = TASK_TYPES.get(task_type)
+    if not task:
+        errors.append({"field": "task_type", "code": "UNKNOWN_TASK_TYPE", "message": "作业类型不受支持。"})
+    elif not task["available"]:
+        errors.append({"field": "task_type", "code": "TASK_TYPE_UNAVAILABLE", "message": task["description"]})
+
+    if errors:
+        return None, errors
+
+    assert profile is not None
+    assert generation_profile is not None
+    return {
+        "provider_key": provider_key,
+        "provider_identity": profile["provider_identity"],
+        "model_id": profile["model_id"],
+        "execution_backend": "remote_api",
+        "task_type": task_type,
+        "generation_profile_key": generation_profile_key,
+        "execution_strategy": execution_strategy,
+        "execute": False,
+        "paid_remote_request": False,
+        "credential_env": profile["credential_env"],
+        "credential_recorded": False,
+        "trial_contract": profile["trial_contract"],
+        "generation": deepcopy(generation_profile["parameters"]),
+        "formal_fact_creation": "PROHIBITED",
+        "selection_decision_creation": "PROHIBITED",
+        "timeline_binding_creation": "PROHIBITED",
+        "institution_freeze_creation": "PROHIBITED",
+    }, []
 
 
 def validate_project_binding(
@@ -527,6 +758,8 @@ def float_field(
 
 def compile_runner_contract(job: dict[str, Any]) -> dict[str, Any]:
     profile = PROVIDER_PROFILES[job["provider_key"]]
+    if is_remote_api_provider(profile):
+        raise ValueError("远端提供者不能编译为本地运行器合同")
     provider = {
         "provider_identity": profile["provider_identity"],
         "model_id": profile["model_id"],

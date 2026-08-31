@@ -93,7 +93,10 @@
                 <span class="field-foot" id="strategyDescription">优先使用分阶段驻留</span>
               </label>
             </div>
-            <div class="parameter-grid">
+            <div class="remote-parameter-panel" id="remoteParameterPanel" hidden>
+              <p id="remoteParameterSummary">远端提供者使用固定试验合同；默认只预检，不提交计费任务。</p>
+            </div>
+            <div class="parameter-grid" id="parameterGrid">
               <label class="field"><span class="field-label">宽度</span><input id="width" name="width" type="number" readonly></label>
               <label class="field"><span class="field-label">高度</span><input id="height" name="height" type="number" readonly></label>
               <label class="field"><span class="field-label">帧数</span><input id="numFrames" name="num_frames" type="number" readonly></label>
@@ -105,7 +108,7 @@
             </div>
           </section>
 
-          <section class="card form-section">
+          <section class="card form-section" id="budgetSection">
             <div class="section-head">
               <span class="step">03</span>
               <div><h2>设置资源护栏</h2><p>这些数字是硬预算，不是界面提示。</p></div>
