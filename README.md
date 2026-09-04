@@ -1,5 +1,4 @@
 # senk-video-generator
-> 这不是 SENK Workfit 的业务仓!!!.
 
 > 由 SENK 管理，为 Seedance、本地开源模型及其他视频能力提供统一、可验证、可修正、可审计的受控生产过程。
 
