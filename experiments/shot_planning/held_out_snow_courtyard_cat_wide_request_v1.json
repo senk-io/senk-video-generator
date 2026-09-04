@@ -1,0 +1,202 @@
+{
+  "acceptance_gate_note": "占位：从未进入既有训练观察；本刀未跑真实套件，不计入本刀过线。",
+  "controlled_context_token_values": {
+    "scene_context": {
+      "continuity_anchor": [
+        "SAME_SUBJECT_AND_CONTINUOUS_RAIN",
+        "SAME_SUBJECT_AND_ENVIRONMENT"
+      ],
+      "environment": [
+        "CONTINUOUS_RAIN",
+        "STABLE_ENVIRONMENT"
+      ],
+      "location": [
+        "INDOOR_LOCATION",
+        "OUTDOOR_LOCATION"
+      ],
+      "time": [
+        "DAY",
+        "NIGHT"
+      ]
+    }
+  },
+  "controlled_observability_compiler_version": "structured-observability-compiler.v2",
+  "controlled_stage_allowed_values": {
+    "composition": {
+      "background_visibility": [
+        "RAIN_SOFTLY_BLURRED",
+        "STREET_VISIBLE_AROUND_SUBJECT"
+      ],
+      "focus_target": [
+        "FACE",
+        "SUBJECT_ACTION"
+      ],
+      "subject_placement": [
+        "CENTER",
+        "LEFT_THIRD"
+      ],
+      "subject_scale": [
+        "FACE_DOMINANT",
+        "FULL_SUBJECT_VISIBLE"
+      ]
+    },
+    "continuity": {
+      "entry_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_NIGHT_STREET"
+      ],
+      "entry_subject_state": [
+        "SUBJECT_ALREADY_CRYING",
+        "SUBJECT_ENTERING_FROM_LEFT"
+      ],
+      "exit_environment_state": [
+        "CONTINUOUS_RAIN",
+        "SAME_NIGHT_STREET"
+      ],
+      "exit_subject_state": [
+        "CRYING_CONTINUES",
+        "SUBJECT_EXITS_RIGHT"
+      ]
+    },
+    "lighting": {
+      "highlight_state": [
+        "TEAR_HIGHLIGHT_VISIBLE",
+        "SUBJECT_EDGE_HIGHLIGHT"
+      ],
+      "light_quality": [
+        "SOFT_DIFFUSED",
+        "DIRECTIONAL_LOW_KEY"
+      ],
+      "light_source": [
+        "OVERCAST_DAYLIGHT",
+        "NIGHT_STREET_LIGHT"
+      ],
+      "subject_readability": [
+        "FACE_FULLY_READABLE",
+        "MOTION_FULLY_READABLE"
+      ]
+    },
+    "performance": {
+      "detail_state": [
+        "TEARS_VISIBLE",
+        "MOTION_DETAIL_VISIBLE"
+      ],
+      "orientation_state": [
+        "FACING_CAMERA",
+        "MOVING_LEFT_TO_RIGHT"
+      ],
+      "performance_intensity": [
+        "RESTRAINED",
+        "MODERATE"
+      ],
+      "visible_action_state": [
+        "CRYING",
+        "FORWARD_MOTION"
+      ]
+    }
+  },
+  "counts_toward_acceptance_gates": false,
+  "duration_tolerance_seconds": 0,
+  "expected_scene_count": 1,
+  "held_out_observation_input": true,
+  "real_local_suite_executed": false,
+  "request_id": "PLAN-HELD-OUT-SNOW-COURTYARD-CAT-001",
+  "required_subject_ids": [
+    "SUBJECT-001"
+  ],
+  "schema_version": "shot-planning-request.v2",
+  "semantic_constraints": {
+    "allowed_action_classes": [
+      "EXPRESS",
+      "MOVE"
+    ],
+    "allowed_camera_directions": [
+      "RIGHT",
+      "NONE"
+    ],
+    "allowed_camera_movements": [
+      "PAN",
+      "STATIC"
+    ],
+    "allowed_camera_speeds": [
+      "SLOW",
+      "NONE"
+    ],
+    "allowed_framings": [
+      "CLOSE_UP",
+      "WIDE"
+    ],
+    "allowed_primary_purposes": [
+      "EMPHASIZE_EMOTION",
+      "DEVELOP_ACTION"
+    ],
+    "forbidden_output_terms": [
+      "哭",
+      "泪",
+      "微笑",
+      "面部"
+    ],
+    "forbidden_placeholder_values": [
+      "none",
+      "yes",
+      "n/a",
+      "无",
+      "未知"
+    ],
+    "minimum_free_text_characters": 3,
+    "minimum_observable_check_count": 5,
+    "required_action_terms": [
+      "橘猫",
+      "石凳"
+    ],
+    "required_composition_terms": [
+      "主体",
+      "动作",
+      "庭院"
+    ],
+    "required_continuity_in_terms": [
+      "主体",
+      "雪",
+      "庭院"
+    ],
+    "required_continuity_out_terms": [
+      "主体",
+      "石凳",
+      "庭院"
+    ],
+    "required_environment_terms": [
+      "环境"
+    ],
+    "required_lighting_terms": [
+      "雪后",
+      "庭院",
+      "边缘高光"
+    ],
+    "required_location_terms": [
+      "室外"
+    ],
+    "required_observable_terms": [
+      "主体",
+      "全景",
+      "橘猫",
+      "石凳",
+      "庭院",
+      "相机",
+      "静止"
+    ],
+    "required_performance_terms": [
+      "跳",
+      "石凳"
+    ],
+    "required_time_terms": [
+      "白天"
+    ]
+  },
+  "shot_count_bounds": {
+    "maximum": 1,
+    "minimum": 1
+  },
+  "source_text": "白天室外雪后庭院，一只虚构橘猫跳上石凳，全景镜头保持静止",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "target_duration_seconds": 6
+}

@@ -71,6 +71,7 @@ from .semantic_choice import (
     semantic_choice_glossary_contract,
     semantic_choice_glossary_sha256,
 )
+from .pre_model_guard import evaluate_pre_model_guard
 from .source_facts import (
     HYBRID_MERGE_CONTRACT_VERSION,
     SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
@@ -1420,6 +1421,10 @@ def _run_staged_trial(
     )
     if source_extraction is not None and source_extraction["blocking_issue_count"]:
         raise LocalTrialError("原句事实提取存在阻断问题，不能启动混合运行。")
+    if contract["schema_version"] == TRIAL_SCHEMA_VERSION_V12:
+        guard_report = evaluate_pre_model_guard(request)
+        if not guard_report["model_invocation_allowed"]:
+            raise LocalTrialError("进模型前守卫阻断，不能启动第十二版运行。")
     evidence_dir.mkdir(parents=True)
     write_json(evidence_dir / "trial_contract.json", contract)
     write_json(evidence_dir / "planning_request.json", request)

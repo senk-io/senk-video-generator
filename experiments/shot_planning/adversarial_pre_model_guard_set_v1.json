@@ -1,0 +1,189 @@
+{
+  "schema_version": "shot-planning-adversarial-pre-model-set.v1",
+  "status": "DRAFT_NON_AUTHORITATIVE",
+  "formal_decision_created": false,
+  "formal_shot_spec_created": false,
+  "formal_quality_acceptance_created": false,
+  "counts_toward_planning_gate": false,
+  "real_local_suite_executed": false,
+  "model_weight_required": false,
+  "minimum_item_count": 20,
+  "categories": [
+    "NEGATION_WITHOUT_REPLACEMENT",
+    "SUBJECT_CAMERA_CROSSOVER",
+    "STATIC_CAMERA_COMPOUND_CONFLICT",
+    "ABBREVIATION_OVERRIDE",
+    "LOCKED_FIELD_POLLUTION",
+    "CROSS_STAGE_CONTRADICTION"
+  ],
+  "items": [
+    {
+      "id": "ADV-001",
+      "expected_block_category": "NEGATION_WITHOUT_REPLACEMENT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "不要使用特写镜头",
+      "note": "否定特写且无同字段正向替代"
+    },
+    {
+      "id": "ADV-002",
+      "expected_block_category": "NEGATION_WITHOUT_REPLACEMENT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "演员从未微笑",
+      "note": "否定微笑且无正向替代"
+    },
+    {
+      "id": "ADV-003",
+      "expected_block_category": "NEGATION_WITHOUT_REPLACEMENT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "别用全景画面",
+      "note": "否定全景且无正向替代"
+    },
+    {
+      "id": "ADV-004",
+      "expected_block_category": "NEGATION_WITHOUT_REPLACEMENT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "禁止固定相机",
+      "note": "否定固定相机且无正向替代"
+    },
+    {
+      "id": "ADV-005",
+      "expected_block_category": "SUBJECT_CAMERA_CROSSOVER",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "演员身后的相机从左向右移动",
+      "note": "主体附近相机承担横向运动"
+    },
+    {
+      "id": "ADV-006",
+      "expected_block_category": "SUBJECT_CAMERA_CROSSOVER",
+      "request_template": "generalized_child_crying_closeup_request_v1.json",
+      "source_text": "小孩附近的镜头从左向右穿过街道",
+      "note": "小孩附近镜头穿越，主客机位缠绕"
+    },
+    {
+      "id": "ADV-007",
+      "expected_block_category": "SUBJECT_CAMERA_CROSSOVER",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "主体前方机位从左向右行驶",
+      "note": "机位被写成主体横向行驶"
+    },
+    {
+      "id": "ADV-008",
+      "expected_block_category": "SUBJECT_CAMERA_CROSSOVER",
+      "request_template": "generalized_bicycle_left_to_right_wide_request_v1.json",
+      "source_text": "自行车旁边的摄影机从左向右移动",
+      "note": "自行车旁摄影机横向移动"
+    },
+    {
+      "id": "ADV-009",
+      "expected_block_category": "STATIC_CAMERA_COMPOUND_CONFLICT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "固定相机向右摇摄",
+      "note": "固定相机与向右摇摄复合冲突"
+    },
+    {
+      "id": "ADV-010",
+      "expected_block_category": "STATIC_CAMERA_COMPOUND_CONFLICT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "固定相机缓慢从左向右移动",
+      "note": "固定相机与相机横向移动复合冲突"
+    },
+    {
+      "id": "ADV-011",
+      "expected_block_category": "STATIC_CAMERA_COMPOUND_CONFLICT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "镜头保持静止并快速推进",
+      "note": "保持静止与快速推进复合冲突"
+    },
+    {
+      "id": "ADV-012",
+      "expected_block_category": "STATIC_CAMERA_COMPOUND_CONFLICT",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "固定相机参数后向右摇摄",
+      "note": "固定相机复合词仍与摇摄冲突"
+    },
+    {
+      "id": "ADV-013",
+      "expected_block_category": "ABBREVIATION_OVERRIDE",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "特写镜头用CU覆盖成中景",
+      "note": "用 CU 缩写覆盖特写"
+    },
+    {
+      "id": "ADV-014",
+      "expected_block_category": "ABBREVIATION_OVERRIDE",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "全景WS顶替特写锁定",
+      "note": "用 WS 缩写顶替特写锁定"
+    },
+    {
+      "id": "ADV-015",
+      "expected_block_category": "ABBREVIATION_OVERRIDE",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "中景简称特写并覆盖原句",
+      "note": "简称用于覆盖原句景别"
+    },
+    {
+      "id": "ADV-016",
+      "expected_block_category": "ABBREVIATION_OVERRIDE",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "用缩写CU覆盖锁定字段特写",
+      "note": "缩写覆盖锁定字段"
+    },
+    {
+      "id": "ADV-017",
+      "expected_block_category": "LOCKED_FIELD_POLLUTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "已锁定特写，模型改写成中景",
+      "note": "要求模型改写已锁定特写"
+    },
+    {
+      "id": "ADV-018",
+      "expected_block_category": "LOCKED_FIELD_POLLUTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "系统锁定固定相机后改为摇摄",
+      "note": "要求改写已锁定固定相机"
+    },
+    {
+      "id": "ADV-019",
+      "expected_block_category": "LOCKED_FIELD_POLLUTION",
+      "request_template": "generalized_child_crying_closeup_request_v1.json",
+      "source_text": "把锁定的哭泣改成微笑",
+      "note": "要求污染已锁定哭泣"
+    },
+    {
+      "id": "ADV-020",
+      "expected_block_category": "LOCKED_FIELD_POLLUTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "覆盖已锁定白天为夜晚",
+      "note": "覆盖已锁定时间字段"
+    },
+    {
+      "id": "ADV-021",
+      "expected_block_category": "CROSS_STAGE_CONTRADICTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "特写镜头，构图使用全景主体",
+      "note": "shot_core 特写与 composition 全景互斥"
+    },
+    {
+      "id": "ADV-022",
+      "expected_block_category": "CROSS_STAGE_CONTRADICTION",
+      "request_template": "generalized_child_crying_closeup_request_v1.json",
+      "source_text": "白天室内，连续性写夜晚室外雨中",
+      "note": "场景时间地点与连续性跨阶段互斥"
+    },
+    {
+      "id": "ADV-023",
+      "expected_block_category": "CROSS_STAGE_CONTRADICTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "演员微笑，连续性出口仍在哭泣",
+      "note": "表演微笑与连续性哭泣互斥"
+    },
+    {
+      "id": "ADV-024",
+      "expected_block_category": "CROSS_STAGE_CONTRADICTION",
+      "request_template": "generalized_actor_smile_medium_request_v1.json",
+      "source_text": "固定相机全景，表演写相机向右摇摄",
+      "note": "固定相机与表演阶段摇摄互斥"
+    }
+  ]
+}
