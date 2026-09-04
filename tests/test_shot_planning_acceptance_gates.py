@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import sys
 import unittest
@@ -38,11 +39,79 @@ HELD_OUT_REQUESTS = (
     "held_out_library_reader_medium_request_v1.json",
     "held_out_snow_courtyard_cat_wide_request_v1.json",
 )
-MODEL_MODULE_NAMES = ("torch", "transformers", "safetensors")
+WEIGHT_LIBRARY_ROOTS = frozenset({"torch", "transformers", "safetensors"})
+GUARD_ENTRY_MODULES = (
+    ROOT / "shot_planning" / "pre_model_guard.py",
+    ROOT / "shot_planning" / "diagnosis_report.py",
+)
 
 
 def load_json(relative_name: str) -> dict:
     return json.loads((EXPERIMENT_ROOT / relative_name).read_text(encoding="utf-8"))
+
+
+def _weight_library_modules() -> frozenset[str]:
+    return frozenset(
+        name
+        for name in sys.modules
+        if name.split(".", 1)[0] in WEIGHT_LIBRARY_ROOTS
+    )
+
+
+def _local_import_targets(node: ast.AST, source_path: Path) -> list[Path]:
+    package_dir = source_path.parent
+    targets: list[Path] = []
+    if isinstance(node, ast.ImportFrom) and node.level:
+        base = package_dir
+        for _ in range(node.level - 1):
+            base = base.parent
+        module_name = node.module or ""
+        relative = Path(*module_name.split(".")) if module_name else base
+        candidate = (base / relative).with_suffix(".py") if module_name else None
+        if candidate is not None:
+            targets.append(candidate)
+        elif node.module is None:
+            for alias in node.names:
+                targets.append((base / alias.name).with_suffix(".py"))
+    elif isinstance(node, ast.ImportFrom) and node.module:
+        parts = node.module.split(".")
+        if parts[0] == "shot_planning":
+            targets.append(ROOT.joinpath(*parts).with_suffix(".py"))
+    elif isinstance(node, ast.Import):
+        for alias in node.names:
+            parts = alias.name.split(".")
+            if parts[0] == "shot_planning":
+                targets.append(ROOT.joinpath(*parts).with_suffix(".py"))
+    return targets
+
+
+def _absolute_import_roots(source: str) -> set[str]:
+    tree = ast.parse(source)
+    roots: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                roots.add(alias.name.split(".", 1)[0])
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            roots.add(node.module.split(".", 1)[0])
+    return roots
+
+
+def collect_guard_import_roots(entry_paths: tuple[Path, ...]) -> set[str]:
+    pending = [path.resolve() for path in entry_paths]
+    seen: set[Path] = set()
+    roots: set[str] = set()
+    while pending:
+        path = pending.pop()
+        if path in seen or not path.is_file():
+            continue
+        seen.add(path)
+        source = path.read_text(encoding="utf-8")
+        roots.update(_absolute_import_roots(source))
+        tree = ast.parse(source)
+        for node in ast.walk(tree):
+            pending.extend(_local_import_targets(node, path))
+    return roots
 
 
 class ShotPlanningAcceptanceGatesTest(unittest.TestCase):
@@ -78,10 +147,15 @@ class ShotPlanningAcceptanceGatesTest(unittest.TestCase):
     def test_fixed_adversarial_set_intercepts_20_of_20_without_model_weights(
         self,
     ) -> None:
+        import_roots = collect_guard_import_roots(GUARD_ENTRY_MODULES)
+        self.assertTrue({"json", "re", "pathlib"}.issubset(import_roots))
+        self.assertTrue(WEIGHT_LIBRARY_ROOTS.isdisjoint(import_roots))
+        loaded_before = _weight_library_modules()
         summary = evaluate_adversarial_set(
             ADVERSARIAL_SET,
             experiment_root=EXPERIMENT_ROOT,
         )
+        loaded_after = _weight_library_modules()
         self.assertEqual(summary["item_count"], 24)
         self.assertEqual(summary["intercepted_count"], 24)
         self.assertEqual(summary["expected_category_hit_count"], 24)
@@ -100,8 +174,11 @@ class ShotPlanningAcceptanceGatesTest(unittest.TestCase):
             self.assertTrue(report["blocks"])
             self.assertTrue(report["cannot_approve_reasons"])
             self.assertIn(result["expected_block_category"], result["observed_categories"])
-        for module_name in MODEL_MODULE_NAMES:
-            self.assertNotIn(module_name, sys.modules)
+        self.assertEqual(
+            loaded_after,
+            loaded_before,
+            "对抗拦截路径不得新导入 torch/transformers/safetensors",
+        )
 
     def test_adversarial_block_path_rejects_guarded_prompt_construction(self) -> None:
         request = load_json(POSITIVE_REQUESTS["smile"])
