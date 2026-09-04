@@ -40,6 +40,10 @@ from .structured_observability import (
     STRUCTURED_STAGE_REQUIRED_KEYS,
 )
 from .semantic_choice import choice_glossary_for_stage
+from .pre_model_guard import (
+    assert_model_invocation_allowed,
+    evaluate_pre_model_guard,
+)
 from .source_facts import (
     SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V1,
     SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
@@ -905,6 +909,7 @@ def build_local_planner_guarded_source_fact_stage_prompt(
 ) -> dict[str, Any]:
     """第十二版提示：使用收紧否定及主体/相机边界的提取合同。"""
 
+    assert_model_invocation_allowed(evaluate_pre_model_guard(request_value))
     return _build_local_planner_hybrid_stage_prompt(
         request_value,
         stage,
