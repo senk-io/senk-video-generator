@@ -1,27 +1,27 @@
-# senk-video-generator 本地构建观测台
+# senk-video-generator local build observatory
 
-本目录是一套完整、只读、仅本机开放的视频构建观测项目。它把项目现有模型缓存、执行状态、资源采样、日志、输出和证据包投影为一个实时网页，帮助开发者在不翻阅多个 JSON、JSONL 和日志文件的情况下理解当前现实。
+This directory is a complete, read-only, machine-local video-build observation surface. It projects the project's existing model cache, execution state, resource samples, logs, outputs, and evidence packages into a live page so developers can understand current reality without opening many JSON, JSONL, and log files.
 
-观测台不启动模型、不修改证据、不执行重试、不创建裁决，也不把“文件存在”提升为正式事实或制度冻结。
+The observatory does not start models, modify evidence, retry, create decisions, or promote "a file exists" into a formal fact or institution freeze.
 
-需要从页面定义提示词、资源预算并显式启动或停止作业时，使用独立的 [`../operator_console/README.md`](../operator_console/README.md)。控制台默认位于 `http://127.0.0.1:4320/`，本观测台继续保持只读。
+To define prompts and resource budgets from a page and explicitly start or stop jobs, use the separate [`../operator_console/README.md`](../operator_console/README.md). The console defaults to `http://127.0.0.1:4320/`. This observatory stays read-only.
 
-## 1. 功能范围
+## 1. Scope
 
-- 自动发现正在运行和历史提供者试运行；
-- 展示执行登记、环境取证、模型快照、管线装载、Metal 转移、推理、导出、证据闭包八个阶段；
-- 每秒刷新中央处理器、统一内存、交换空间和磁盘状态；
-- 绘制进程树内存、系统内存、交换空间和 MPS 分配趋势；
-- 展示 Wan2.1 与 CogVideoX 的精确修订、缓存大小、快照文件和未完成文件；
-- 预览已经形成的缩略图和视频输出；
-- 查看固定请求、依赖环境、活动进程和可筛选运行日志；
-- 查看清单、证据文件、正式事实、跨提供方合同和制度冻结边界；
-- 浏览提供者试运行、受保护写入、正确性与迁移证据包历史；
-- 支持桌面与窄屏响应式布局。
+- Auto-discover running and historical provider trials
+- Show the eight stages: execution registration, environment forensics, model snapshot, pipeline load, Metal transfer, inference, export, and evidence closure
+- Refresh CPU, unified memory, swap, and disk every second
+- Plot process-tree memory, system memory, swap, and MPS allocation trends
+- Show exact revisions, cache size, snapshot files, and incomplete files for Wan2.1 and CogVideoX
+- Preview thumbnails and video output that have already formed
+- Inspect the frozen request, dependency environment, active processes, and filterable run logs
+- Inspect the manifest, evidence files, formal-fact, cross-provider-contract, and institution-freeze boundaries
+- Browse provider-trial, protected-write, correctness, and migration evidence-package history
+- Support desktop and narrow-screen layouts
 
-## 2. 安装
+## 2. Install
 
-观测台复用项目的兼容性试运行环境，不增加前端工具链或服务端依赖。在仓库根目录执行：
+The observatory reuses the project's compatibility-trial environment and adds no frontend toolchain or server dependency. From the repository root:
 
 ```bash
 uv venv --python 3.12.11 .venv-provider-compat
@@ -30,45 +30,45 @@ uv pip sync \
   requirements-provider-compat.txt
 ```
 
-如果已经完成模型兼容性环境安装，不需要重复执行。
+If the model-compatibility environment is already installed, do not repeat this.
 
-## 3. 启动
+## 3. Start
 
-在仓库根目录执行：
+From the repository root:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-默认地址：
+Default URL:
 
 ```text
 http://127.0.0.1:4319/
 ```
 
-不希望自动打开浏览器时省略 `--open`：
+Omit `--open` if you do not want the default browser to launch:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory
 ```
 
-自定义端口：
+Custom port:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --port 5319
 ```
 
-按 `Ctrl+C` 停止观测台。服务拒绝绑定 `0.0.0.0` 或局域网地址，避免无意公开本机执行日志和资源状态。
+Press `Ctrl+C` to stop the observatory. The service refuses to bind `0.0.0.0` or a LAN address so local execution logs and resource state are not exposed by accident.
 
-## 4. 观看一次构建
+## 4. Watch one build
 
-终端一启动观测台：
+Terminal 1 starts the observatory:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-终端二执行已获授权的兼容性试运行：
+Terminal 2 runs an authorized compatibility trial:
 
 ```bash
 .venv-provider-compat/bin/python \
@@ -77,47 +77,47 @@ http://127.0.0.1:4319/
   --execution-id CR-0020-WAN-MAC-001
 ```
 
-页面每秒刷新，不需要手动重载。新执行目录出现后会被自动发现；活动执行优先成为默认观察对象。历史执行可从顶部选择器或底部证据包历史切换。
+The page refreshes every second; no manual reload is needed. A new execution directory is discovered automatically. An active execution becomes the default observation target. Historical executions can be switched from the top selector or the evidence-package history at the bottom.
 
-执行命令本身仍受提案、策略、资源预算和授权约束。启动观测台不等于获得生成授权。
+The execution command itself remains bound by proposal, policy, resource budget, and authorization. Starting the observatory is not generation authorization.
 
-## 5. 状态口径
+## 5. Status language
 
-| 页面状态 | 含义 | 不代表 |
+| Page state | Meaning | Does not mean |
 | --- | --- | --- |
-| `正在构建` | 检测到对应父进程或工作进程 | 不代表最终能够产出 |
-| `已观察到输出` | 摘要记录推理、导出和输出均已形成 | 不代表视频质量合格或正式采纳 |
-| `证据已闭包` | 摘要与清单已经形成 | 不代表正式事实成立 |
-| `未形成输出` | 本次执行现实未形成可用输出 | 不自动决定重试或更换模型 |
-| `等待或已中断` | 执行目录未闭合且没有对应运行进程 | 不自动证明进程崩溃原因 |
-| `状态未知` | 数据源不足以确定当前现实 | 不得视为通过 |
+| Building | A matching parent or worker process was detected | Does not mean a final output will form |
+| Output observed | The summary records that inference, export, and output have formed | Does not mean video quality passed or was formally adopted |
+| Evidence closed | Summary and manifest have formed | Does not mean a formal fact exists |
+| No output formed | This execution reality did not form usable output | Does not automatically decide retry or model replacement |
+| Waiting or interrupted | The execution directory is unclosed and no matching process is running | Does not automatically prove why a process crashed |
+| State unknown | Sources are insufficient to determine current reality | Must not be treated as a pass |
 
-本机资源状态同时考虑即时可用内存和现有换页：
+Local resource state considers both immediate available memory and existing swap:
 
-| 资源状态 | 含义 |
+| Resource state | Meaning |
 | --- | --- |
-| `资源正常` | 可用内存充足，现有换页低于 `4 GiB` |
-| `换页恢复中` | 可用内存已经恢复，但试运行留下的现有换页仍高；新的高内存作业应保持阻断 |
-| `内存偏紧` | 可用内存低于物理内存的 `18%` |
-| `内存临界` | 可用内存低于物理内存的 `8%` |
+| Resources normal | Available memory is sufficient and existing swap is below `4 GiB` |
+| Swap recovering | Available memory has recovered, but leftover swap from a trial is still high; new high-memory jobs should stay blocked |
+| Memory tight | Available memory is below `18%` of physical memory |
+| Memory critical | Available memory is below `8%` of physical memory |
 
-阶段状态只由现有文件、布尔观察、工作进程阶段和活动进程推导。观测台不会向证据目录写入任何补充状态。
+Stage state is derived only from existing files, boolean observations, worker-process stage, and active processes. The observatory writes no extra state into the evidence directory.
 
-## 6. 数据真源与刷新
+## 6. Sources of truth and refresh
 
-| 观测区域 | 数据真源 | 刷新频率 |
+| Area | Source of truth | Refresh |
 | --- | --- | --- |
-| 构建阶段 | `request.json`、`environment.json`、`worker_state.json`、`summary.json`、`manifest.json` | 1 秒 |
-| 进程与本机资源 | `psutil` 只读采样 | 1 秒 |
-| 历史资源曲线 | `process_metrics.jsonl`、`mps_metrics.jsonl` | 1 秒 |
-| 运行日志 | `runtime.log` 末尾 96 KiB | 1 秒 |
-| 输出预览 | `output.mp4`、`thumbnail.png` | 1 秒发现，浏览器按需读取 |
-| 模型缓存 | `~/.cache/huggingface/hub/` | 15 秒 |
-| 全部证据包 | `evidence/runtime/*/summary.json` 与 `manifest.json` | 1 秒 |
+| Build stages | `request.json`, `environment.json`, `worker_state.json`, `summary.json`, `manifest.json` | 1 second |
+| Process and local resources | `psutil` read-only sampling | 1 second |
+| Historical resource curves | `process_metrics.jsonl`, `mps_metrics.jsonl` | 1 second |
+| Run logs | last 96 KiB of `runtime.log` | 1 second |
+| Output preview | `output.mp4`, `thumbnail.png` | 1-second discovery; the browser reads on demand |
+| Model cache | `~/.cache/huggingface/hub/` | 15 seconds |
+| All evidence packages | `evidence/runtime/*/summary.json` and `manifest.json` | 1 second |
 
-长资源序列在接口中最多保留 420 个等距采样点用于绘图；原始 JSONL 文件不会被修改或截断。
+Long resource series keep at most 420 equally spaced samples for plotting in the API. The original JSONL files are not modified or truncated.
 
-## 7. 本地接口
+## 7. Local API
 
 ```text
 GET /api/v1/health
@@ -127,58 +127,58 @@ GET /media/<EXECUTION_ID>/output.mp4
 GET /media/<EXECUTION_ID>/thumbnail.png
 ```
 
-接口只有读取能力。视频端点支持 HTTP 字节范围，便于浏览器定位和播放；执行标识、媒体文件名和实际路径均经过白名单与目录边界检查。
+The API is read-only. The video endpoint supports HTTP byte ranges so the browser can seek and play. Execution ids, media filenames, and real paths are whitelist- and directory-bounded.
 
-## 8. 安全与隐私
+## 8. Security and privacy
 
-- 默认且只允许回环地址；
-- 不提供 `POST`、`PUT`、`PATCH` 或 `DELETE` 业务接口；
-- 不返回模型权重内容或缓存绝对路径；
-- 日志中的仓库路径、用户目录和常见用户路径会在返回前脱敏；
-- 页面启用内容安全策略、禁止外部脚本、禁止被框架嵌入；
-- 所有前端资源均位于仓库内，不依赖内容分发网络；
-- 观测台不导入 PyTorch，不加载模型，不创建 MPS 分配。
+- Loopback is the default and the only allowed bind
+- No `POST`, `PUT`, `PATCH`, or `DELETE` business endpoints
+- Model-weight contents and cache absolute paths are not returned
+- Repository paths, home directories, and common user paths in logs are redacted before return
+- The page enables a content-security policy, forbids external scripts, and forbids framing
+- All frontend assets live in the repository; there is no CDN
+- The observatory does not import PyTorch, load models, or create MPS allocations
 
-本地页面仍可能展示固定提示词、执行日志和公开安全的证据摘要。不要把本机端口转发到公网。
+The local page may still show frozen prompts, execution logs, and publicly safe evidence summaries. Do not forward the local port to the public internet.
 
-## 9. 验证
+## 9. Verification
 
-只运行观测台测试：
+Observatory tests only:
 
 ```bash
 .venv-provider-compat/bin/python -m unittest tests.test_observatory -v
 ```
 
-运行全部测试：
+All tests:
 
 ```bash
 .venv-provider-compat/bin/python -m unittest discover -s tests -v
 ```
 
-观测台测试覆盖完整状态推导、高换页恢复状态、未闭合执行、模型缓存状态、日志路径脱敏、本机绑定限制、静态页面、接口、内容安全策略、路径穿越阻断和媒体分段读取。
+Observatory tests cover full state derivation, high-swap recovery state, unclosed executions, model-cache state, log-path redaction, loopback bind limits, the static page, the API, the content-security policy, path-traversal blocking, and ranged media reads.
 
-## 10. 故障排查
+## 10. Troubleshooting
 
-### 系统 Python 报告缺少 `psutil`
+### System Python reports missing `psutil`
 
-使用项目虚拟环境启动：
+Start with the project virtualenv:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory
 ```
 
-### 端口已经被占用
+### The port is already in use
 
-选择另一个本机端口：
+Choose another local port:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --port 5319
 ```
 
-### 页面没有执行记录
+### The page has no execution record
 
-确认仓库内存在 `evidence/runtime/<execution-id>/request.json`，并且 `request.json` 含有提供者对象。治理、正确性和迁移证据会进入证据包历史，但不会被错误展示成视频生成阶段。
+Confirm the repository has `evidence/runtime/<execution-id>/request.json` and that `request.json` contains a provider object. Governance, correctness, and migration evidence enter the package history but are not shown as video-generation stages by mistake.
 
-### CogVideoX 显示缓存完整但没有生成历史
+### CogVideoX shows a complete cache but no generation history
 
-这是当前正确状态：缓存完整只说明模型文件下载闭合，不代表管线能够装载、进入 MPS 或完成推理。只有真实执行形成新的证据目录后，页面才会显示对应生成阶段。
+This is the current correct state: a complete cache means only that model-file download closed. It does not mean the pipeline can load, enter MPS, or finish inference. Generation stages appear on the page only after a real execution creates a new evidence directory.

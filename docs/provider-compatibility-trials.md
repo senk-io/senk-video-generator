@@ -25,7 +25,7 @@ First put the key in an untracked `.env` and load it in the current terminal. Th
 
 ```bash
 cp .env.example .env
-# 编辑 .env，填写 MINIMAX_API_KEY
+# Edit .env and fill MINIMAX_API_KEY
 set -a
 . ./.env
 set +a

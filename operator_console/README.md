@@ -1,33 +1,33 @@
-# senk-video-generator 本地作业控制台
+# senk-video-generator local operator console
 
-本目录提供一个独立、仅本机开放的视频作业控制面。它把提示词、生成参数、资源预算和风险确认编译为版本化作业请求，并通过“预检、登记、精确确认、启动”四步流程控制兼容性运行器。
+This directory is a standalone, machine-local video job control surface. It compiles prompts, generation parameters, resource budgets, and risk confirmation into a versioned job request, then controls the compatibility runner through a four-step flow: preflight, register, exact confirm, start.
 
-控制台与只读观测台职责分离：
+The console and the read-only observatory have separate duties:
 
-| 项目 | 默认地址 | 职责 |
+| Surface | Default URL | Duty |
 | --- | --- | --- |
-| 作业控制台 | `http://127.0.0.1:4320/` | 定义、预检、登记、启动和停止本地作业 |
-| 构建观测台 | `http://127.0.0.1:4319/` | 只读展示阶段、资源、日志、输出和证据 |
+| Operator console | `http://127.0.0.1:4320/` | Define, preflight, register, start, and stop local jobs |
+| Build observatory | `http://127.0.0.1:4319/` | Read-only view of stages, resources, logs, outputs, and evidence |
 
-控制台创建的是非权威本地执行请求。作业登记、执行成功或视频文件存在，都不等于质量验收、候选选择、发布决定、正式事实或制度冻结。
+The console creates non-authoritative local execution requests. Job registration, a successful run, or a video file on disk is not quality acceptance, candidate selection, a release decision, a formal fact, or an institution freeze.
 
-## 1. 当前能力
+## 1. Current capability
 
-- `Wan2.1-T2V-1.3B`：可选择和启动，但属于高内存风险路径；
-- `CogVideoX-2B`：展示缓存与运行性现实，但在当前 Mac 上尚未形成独立运行观察，因此禁止启动；
-- `Seedance 2.0 / BytePlus ModelArk`：可选择并运行无费用预检；控制台不登记、不启动计费作业，也不把 `ARK_API_KEY` 写入请求或前端状态；
-- `MiniMax H3 / 开放平台 V2`：可选择并运行无费用预检；控制台不登记、不启动计费作业，也不把 `MINIMAX_API_KEY` 写入请求或前端状态；
-- 文生视频：已接入，只需要提示词，不需要选择图片或视频素材；
-- 图生视频：尚未接入，需要素材，界面中禁用；
-- 视频转换：尚未接入，需要素材，界面中禁用。
+- `Wan2.1-T2V-1.3B`: selectable and startable, but a high-memory-risk path
+- `CogVideoX-2B`: shows cache and runnability facts, but has no independent run observation on the current Mac, so start is blocked
+- `Seedance 2.0 / BytePlus ModelArk`: selectable for a no-cost preflight; the console does not register or start billed jobs and does not write `ARK_API_KEY` into requests or frontend state
+- `MiniMax H3 / Open Platform V2`: selectable for a no-cost preflight; the console does not register or start billed jobs and does not write `MINIMAX_API_KEY` into requests or frontend state
+- Text-to-video: attached; needs a prompt only, no image or video asset
+- Image-to-video: not attached; needs an asset and is disabled in the UI
+- Video transform: not attached; needs an asset and is disabled in the UI
 
-控制台默认采用“内存探针”固定档位、分阶段驻留策略和 `75%` MPS 建议工作集上限。生成参数不允许逐项任意组合，而是由档位整体冻结，避免看似低成本的请求在登记后漂移为高内存组合。
+The console defaults to the frozen "memory probe" profile, a staged-residency strategy, and a `75%` MPS recommended working-set cap. Generation parameters cannot be mixed item by item. The profile freezes them as a set so a request that looks cheap cannot drift into a high-memory combination after registration.
 
-`CogVideoX-2B` 的模型缓存完整只代表下载闭合，不代表管线可装载、可进入 Metal 或可完成推理。控制台不会把下载结果提升为运行授权。
+A complete `CogVideoX-2B` model cache means only that download closed. It does not mean the pipeline can load, enter Metal, or finish inference. The console does not promote a download result into run authorization.
 
-## 2. 安装
+## 2. Install
 
-控制台复用提供者兼容性环境，不需要前端构建工具链。在仓库根目录执行：
+The console reuses the provider-compatibility environment and needs no frontend build toolchain. From the repository root:
 
 ```bash
 uv venv --python 3.12.11 .venv-provider-compat
@@ -36,121 +36,121 @@ uv pip sync \
   requirements-provider-compat.txt
 ```
 
-模型安装、固定修订下载和缓存核对见 [`../docs/provider-compatibility-trials.md`](../docs/provider-compatibility-trials.md)。模型权重不包含在本仓库中。
+Model install, fixed-revision download, and cache checks are in [`../docs/provider-compatibility-trials.md`](../docs/provider-compatibility-trials.md). Model weights are not in this repository.
 
-## 3. 启动
+## 3. Start
 
-在仓库根目录启动控制台：
+Start the console from the repository root:
 
 ```bash
 .venv-provider-compat/bin/python -m operator_console --open
 ```
 
-不希望自动打开浏览器时省略 `--open`：
+Omit `--open` if you do not want the default browser to launch:
 
 ```bash
 .venv-provider-compat/bin/python -m operator_console
 ```
 
-如需同时观看完整构建过程，在另一个终端启动观测台：
+To watch the full build at the same time, start the observatory in another terminal:
 
 ```bash
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-自定义控制台端口：
+Custom console port:
 
 ```bash
 .venv-provider-compat/bin/python -m operator_console --port 5320
 ```
 
-按 `Ctrl+C` 只会停止控制服务，不会自动向已经启动的作业发送停止信号。需要停止活动作业时，应先使用页面停止按钮；控制服务意外退出后，可以重新启动并核对、停止仍然匹配的进程。
+`Ctrl+C` stops only the control service. It does not automatically send a stop signal to an already started job. To stop an active job, use the page stop button first. After an unexpected control-service exit, restart it and reconcile or stop still-matching processes.
 
-## 4. 如何开始一次作业
+## 4. How to start a job
 
-1. 选择提供者。当前可执行本地路径是 `Wan2.1-T2V-1.3B`。选择 `Seedance` 或 `MiniMax H3` 时只能运行无费用预检，不能登记或启动计费作业。
-2. 选择作业类型。当前只有文生视频可用，因此不需要上传素材。
-3. 输入提示词，并检查自动生成的执行标识。
-4. 选择固定生成档位。第一次应使用“内存探针”；分辨率、帧数、步数、引导强度和帧率由档位锁定。
-5. 保持推荐的“分阶段驻留”策略，检查 MPS 上限、启动内存、启动前现有换页、运行中停止阈值和最大新增换页预算。
-6. 勾选高内存风险确认，点击“运行预检”。
-7. 只有全部检查通过后，才能点击“登记不可变作业”。
-8. 登记完成后，再次输入页面显示的完整执行标识。
-9. 点击“确认并启动”。此时才会创建真实模型执行进程。
-10. 在右侧作业卡查看状态，或打开 `4319` 观测台查看资源和证据形成过程。
+1. Choose a provider. The current executable local path is `Wan2.1-T2V-1.3B`. Choosing `Seedance` or `MiniMax H3` only allows a no-cost preflight; billed jobs cannot be registered or started.
+2. Choose a job type. Only text-to-video is available, so no asset upload is needed.
+3. Enter a prompt and check the auto-generated execution id.
+4. Choose a frozen generation profile. The first run should use "memory probe". Resolution, frame count, steps, guidance, and frame rate are locked by the profile.
+5. Keep the recommended "staged residency" strategy. Check the MPS cap, start memory, pre-start existing swap, in-run stop threshold, and maximum added-swap budget.
+6. Confirm the high-memory risk and click "run preflight".
+7. Only after every check passes can you click "register immutable job".
+8. After registration, type the full execution id shown on the page again.
+9. Click "confirm and start". Only then is a real model process created.
+10. Watch status on the right-hand job card, or open the `4319` observatory for resources and evidence formation.
 
-预检不会加载模型，也不会生成视频。登记只持久化不可变请求，也不会加载模型。只有最后一步的精确确认会启动真实执行。
+Preflight does not load a model and does not generate video. Registration only persists an immutable request and also does not load a model. Only the last exact-confirm step starts a real execution.
 
-### 30 秒样片入口
+### 30-second pilot entry
 
-页面顶部显示六个 5 秒镜头。点击“准备此镜头”会固定项目标识、镜头标识、项目合同摘要和提示词摘要；修改固定提示词后，预检会失败关闭。作业完成后仍须输入完整镜头标识进行候选选择，六镜头全部选择后才开放结构组装。完整说明见 [`../docs/30-second-pilot.md`](../docs/30-second-pilot.md)。
+The top of the page shows six 5-second shots. Clicking "prepare this shot" freezes the project id, shot id, project-contract digest, and prompt digest. Editing the frozen prompt fail-closes preflight. After a job completes you must still type the full shot id to select a candidate. Structural assembly opens only after all six shots have a current selection. Full notes are in [`../docs/30-second-pilot.md`](../docs/30-second-pilot.md).
 
-## 5. 提示词与素材
+## 5. Prompts and assets
 
-当前文生视频作业的生成输入是提示词。建议包含：
+The generation input for the current text-to-video job is the prompt. Useful contents include:
 
-- 主体及其动作；
-- 环境、时间和光线；
-- 镜头位置、运动和节奏；
-- 画面约束，例如不出现文字、水印或额外人物。
+- Subject and its action
+- Environment, time, and light
+- Camera position, motion, and pace
+- Picture constraints, such as no text, watermark, or extra people
 
-示例：
+Example:
 
 ```text
 一艘纸船在雨后水面缓慢前行，低机位跟拍，柔和晨光，无文字。
 ```
 
-当前不要为文生视频选择素材。未来图生视频和视频转换接入后，控制台会为相应作业类型增加受约束的素材引用字段；在此之前，这两类作业会失败关闭。
+Do not choose an asset for text-to-video today. When image-to-video and video transform are attached later, the console will add constrained asset-reference fields for those job types. Until then, those job types fail closed.
 
-## 6. 作业状态
+## 6. Job states
 
-| 状态 | 含义 |
+| State | Meaning |
 | --- | --- |
-| `REGISTERED` | 不可变请求已登记，尚未启动 |
-| `STARTING` | 启动检查已通过，正在创建执行进程 |
-| `RUNNING` | 对应执行进程已运行 |
-| `STOP_REQUESTED` | 本地操作者已请求安全停止 |
-| `STOPPED` | 停止请求已经闭合 |
-| `COMPLETED` | 运行器已观察到输出并正常结束 |
-| `FAILED` | 启动、资源安全或执行现实未形成可用输出 |
+| `REGISTERED` | Immutable request registered, not started |
+| `STARTING` | Start checks passed; the execution process is being created |
+| `RUNNING` | The matching execution process is running |
+| `STOP_REQUESTED` | The local operator requested a safe stop |
+| `STOPPED` | The stop request has closed |
+| `COMPLETED` | The runner observed output and exited normally |
+| `FAILED` | Start, resource safety, or execution reality did not form usable output |
 
-控制服务重启后会根据进程身份、创建时间、命令行和证据摘要重新核对活动作业。它不会仅凭进程标识结束任意系统进程。
+After a control-service restart, active jobs are reconciled from process identity, creation time, command line, and evidence digest. The service does not kill arbitrary system processes from a process id alone.
 
-## 7. 资源护栏
+## 7. Resource guards
 
-默认预算为：
+Default budget:
 
-| 护栏 | 默认值 | 行为 |
+| Guard | Default | Behavior |
 | --- | --- | --- |
-| 启动前最低可用内存 | `16 GiB` | 不足时禁止登记或启动 |
-| 启动前最大现有换页 | `4 GiB` | 试运行后的高换页恢复期禁止登记或启动 |
-| 运行中最低可用内存 | `3 GiB` | 连续约 `3` 秒低于阈值时停止作业 |
-| 最大新增换页 | `8 GiB` | 相对作业启动时超过预算时停止作业 |
-| MPS 进程内存上限 | 建议工作集的 `75%` | 在模型装载前调用 PyTorch 的进程级 MPS 上限；可调范围为 `50%` 至 `90%` |
-| 最长执行时间 | `3600` 秒 | 超时后由运行器结束执行 |
+| Minimum available memory before start | `16 GiB` | Blocks register or start when short |
+| Maximum existing swap before start | `4 GiB` | Blocks register or start during the high-swap recovery window after a trial |
+| Minimum available memory while running | `3 GiB` | Stops the job after about `3` continuous seconds below the threshold |
+| Maximum added swap | `8 GiB` | Stops the job when growth from job start exceeds the budget |
+| MPS process memory cap | `75%` of recommended working set | Calls PyTorch's process-level MPS cap before model load; adjustable from `50%` to `90%` |
+| Maximum execution time | `3600` seconds | The runner ends the execution on timeout |
 
-界面允许在固定安全范围内调整预算。运行中停止是证据化终态，不会删除已有日志、采样或部分输出。
+The UI may adjust the budget inside a frozen safety range. An in-run stop is an evidenced terminal state. It does not delete existing logs, samples, or partial output.
 
-### 固定生成档位
+### Frozen generation profiles
 
-| 档位 | 参数 | 用途 |
+| Profile | Parameters | Use |
 | --- | --- | --- |
-| 内存探针 | `256×144`、`9` 帧、`1` 步 | 第一次验证内存边界 |
-| 质量探针 | `256×144`、`9` 帧、`4` 步 | 固定最低画幅，只增加步数以寻找可辨识度与成本平衡点 |
-| 平衡探针 | `256×144`、`9` 帧、`16` 步 | 质量探针仍不可辨识时，以几何递增寻找最低可辨识档位 |
-| 推荐平衡 | `256×144`、`9` 帧、`8` 步 | 当前 Mac 已验证的最低可辨识档位，也是控制台默认选项 |
-| 低内存生成 | `416×240`、`9` 帧、`4` 步 | 探针闭合后的短视频试运行 |
-| 既有兼容基线 | `416×240`、`17` 帧、`4` 步 | 只用于与既有高内存证据比较 |
+| Memory probe | `256×144`, `9` frames, `1` step | First memory-boundary check |
+| Quality probe | `256×144`, `9` frames, `4` steps | Keep the lowest canvas; raise steps only to find a recognizability/cost balance |
+| Balance probe | `256×144`, `9` frames, `16` steps | If the quality probe is still unrecognizable, search the lowest recognizable profile by geometric increase |
+| Recommended balance | `256×144`, `9` frames, `8` steps | Lowest recognizable profile already verified on the current Mac, and the console default |
+| Low-memory generation | `416×240`, `9` frames, `4` steps | Short-video trial after the probe closes |
+| Existing compatibility baseline | `416×240`, `17` frames, `4` steps | Comparison against existing high-memory evidence only |
 
-### 执行策略
+### Execution strategies
 
-“分阶段驻留”先单独装载约 `21 GiB` 的文本编码器，在 `torch.inference_mode()` 中以叶级顺序卸载方式让当前计算所需的子模块进入 MPS，避免整套文本编码器同时转移和保留自动求导中间状态；形成提示词嵌入后立即释放，随后才装载约 `5.3 GiB` 的 Transformer 和约 `484 MiB` 的 VAE。去噪和解码阶段继续使用 Diffusers 的模型级中央处理器卸载钩子；推理后主动释放钩子、删除管线引用、执行垃圾回收并清空 MPS 缓存。“全量驻留基线”仍保留为对比路径，但会把完整管线移入 MPS，不是默认选择。
+"Staged residency" first loads the roughly `21 GiB` text encoder alone. Inside `torch.inference_mode()` it uses leaf-order offload so only the submodule needed for the current compute enters MPS. That avoids moving the whole text encoder at once and retaining autograd intermediates. After prompt embeddings are formed, it releases the encoder immediately, then loads the roughly `5.3 GiB` Transformer and roughly `484 MiB` VAE. Denoise and decode continue to use Diffusers' model-level CPU offload hooks. After inference it actively releases hooks, drops pipeline references, runs garbage collection, and clears the MPS cache. "Full residency baseline" remains as a comparison path, but it moves the complete pipeline into MPS and is not the default.
 
-MPS 上限用于快速失败和限制进程分配，不等于整个系统内存或换页空间的硬隔离。因此它必须与启动前可用内存、启动前现有换页、运行中停止阈值和最大新增换页护栏共同使用。即使可用内存已经恢复，只要现有换页高于预算，控制台仍会显示恢复状态并阻断新作业。
+The MPS cap is for fail-fast and process-allocation limiting. It is not hard isolation of whole-system memory or swap. Use it together with pre-start available memory, pre-start existing swap, the in-run stop threshold, and the maximum added-swap guard. Even after available memory recovers, the console still shows a recovery state and blocks new jobs while existing swap is above budget.
 
-## 8. 本地记录与证据
+## 8. Local records and evidence
 
-控制状态默认写入：
+Control state defaults to:
 
 ```text
 .senknet/operator/jobs/<job-id>/
@@ -160,22 +160,22 @@ MPS 上限用于快速失败和限制进程分配，不等于整个系统内存�
 └── launcher.log
 ```
 
-- `request.json` 是不可变作业请求，`status.json` 保存可恢复状态投影；
-- `events.jsonl` 是带前序摘要的追加事件链；
-- `launcher.log` 保存控制层启动日志；
-- `.senknet/operator/` 已被 Git 忽略，不会误提交本机作业历史。
+- `request.json` is the immutable job request; `status.json` stores a recoverable state projection
+- `events.jsonl` is an append-only event chain with predecessor digests
+- `launcher.log` stores control-layer start logs
+- `.senknet/operator/` is Git-ignored so local job history is not committed by mistake
 
-真实运行证据仍写入：
+Real run evidence still writes to:
 
 ```text
 evidence/runtime/<execution-id>/
 ```
 
-作业规范摘要会进入运行环境证据，使控制台请求与运行器现实可以核对。
+The job-spec digest enters runtime-environment evidence so the console request and the runner reality can be checked against each other.
 
-受控作业证据还会记录：固定生成档位、请求的执行策略、MPS 上限的建议值与实际比例、策略激活结果、推理峰值以及主动释放后的 MPS 分配。独立校验器会核对这些字段；缺失或不一致时证据包不会通过。
+Controlled-job evidence also records the frozen generation profile, the requested execution strategy, the recommended and actual MPS-cap ratios, strategy-activation results, inference peaks, and MPS allocation after active release. The independent verifier checks these fields. A missing or inconsistent field keeps the package from passing.
 
-## 9. 本地接口
+## 9. Local API
 
 ```text
 GET  /api/v1/health
@@ -189,56 +189,56 @@ POST /api/v1/pilots/<project-id>/shots/<shot-id>/select
 POST /api/v1/pilots/<project-id>/assemble
 ```
 
-所有写接口都要求页面会话取得的 `X-Senknet-CSRF` 令牌。接口不是远端作业服务，也没有面向公网的身份系统。
+Every write endpoint requires the `X-Senknet-CSRF` token obtained by the page session. The API is not a remote job service and has no public-internet identity system.
 
-## 10. 安全边界
+## 10. Security boundary
 
-- 只允许绑定 `127.0.0.1`、`::1` 或 `localhost`；
-- 禁止绑定 `0.0.0.0` 或局域网地址；
-- 静态文件和作业路径执行目录边界检查；
-- 写接口要求本机会话令牌；
-- 请求正文有大小限制，作业字段有范围和类型约束；
-- 启动前重新执行动态预检，避免登记后的机器现实变化；
-- 启动需要完整执行标识二次确认；
-- 停止前核对进程标识、创建时间、运行脚本和执行标识；
-- 页面使用本地资源和内容安全策略，不加载外部脚本。
+- Bind only `127.0.0.1`, `::1`, or `localhost`
+- Do not bind `0.0.0.0` or a LAN address
+- Static files and job paths are directory-bounded
+- Write endpoints require a local session token
+- Request bodies have size limits; job fields have range and type constraints
+- Dynamic preflight runs again before start so machine reality after registration cannot silently drift
+- Start requires a second confirmation of the full execution id
+- Stop reconciles process id, creation time, run script, and execution id
+- The page uses local assets and a content-security policy; it loads no external scripts
 
-不要把本机端口转发到公网，也不要把 `.senknet/operator/` 中可能包含提示词的记录公开上传。
+Do not forward the local port to the public internet. Do not upload records under `.senknet/operator/` that may contain prompts.
 
-## 11. 验证
+## 11. Verification
 
-只运行控制台测试：
+Console tests only:
 
 ```bash
 .venv-provider-compat/bin/python -m unittest tests.test_operator_console -v
 ```
 
-运行全部测试：
+All tests:
 
 ```bash
 .venv-provider-compat/bin/python -m unittest discover -s tests -v
 ```
 
-控制台测试使用临时假执行器，不加载模型。样片测试使用本地媒体工具生成极小的纯色测试片段，只验证合同、摘要链和精确 30 秒组装，不调用生成模型。测试覆盖固定档位、文本编码器叶级顺序卸载与提前释放、异常回溯脱离、MPS 上限、两种驻留策略、主动释放证据、高换页恢复门禁、请求范围、不可变登记、事件摘要链、二次确认、停止竞争、样片绑定、人工选择、结构组装、动态预检、会话令牌、路径穿越、本机绑定限制，以及 Seedance 与 MiniMax H3 远端预检接线（无密钥、无网络、禁止控制台计费执行）。
+Console tests use a temporary fake executor and do not load models. Pilot tests use local media tools to generate tiny solid-color clips. They only verify contracts, digest chains, and exact 30-second assembly; they do not call a generation model. Coverage includes frozen profiles, text-encoder leaf-order offload and early release, exception-traceback escape, the MPS cap, both residency strategies, active-release evidence, the high-swap recovery gate, request ranges, immutable registration, the event digest chain, second confirmation, stop races, pilot binding, human selection, structural assembly, dynamic preflight, session tokens, path traversal, loopback bind limits, and Seedance / MiniMax H3 remote-preflight wiring (no key, no network, console billed execution forbidden).
 
-## 12. 故障排查
+## 12. Troubleshooting
 
-### 页面显示模型缓存未就绪
+### The page says the model cache is not ready
 
-按提供者指南下载固定修订，并确认缓存中不存在未完成文件。不要通过降低检查条件绕过精确修订要求。
+Download the fixed revision from the provider guide and confirm the cache has no incomplete files. Do not bypass the exact-revision requirement by weakening the check.
 
-### 可用内存不足
+### Available memory is insufficient
 
-关闭其他高内存任务，等待换页压力恢复后重新运行预检。不要为了通过预检而把阈值降到与机器现实不相称的数值。
+Close other high-memory tasks, wait for swap pressure to recover, then run preflight again. Do not lower thresholds to values that do not match machine reality just to pass preflight.
 
-### 执行标识已使用
+### The execution id is already used
 
-点击“生成新标识”。控制台和运行器都禁止覆盖既有证据目录。
+Click "generate new id". Both the console and the runner refuse to overwrite an existing evidence directory.
 
-### 控制服务重启后作业仍显示运行
+### After a control-service restart the job still shows running
 
-页面会核对对应进程。如果进程仍然存在，可继续观察或使用停止按钮；如果进程已经消失，状态会根据已有证据重新收敛为终态。
+The page reconciles the matching process. If the process still exists, keep watching or use the stop button. If the process is gone, status reconverges to a terminal state from existing evidence.
 
-### CogVideoX 无法启动
+### CogVideoX cannot start
 
-这是当前预期行为。必须先通过一次独立授权、低内存约束的真实运行验证建立装载、Metal 转移和推理证据，再修订提供者能力状态。
+This is the current expected behavior. First establish load, Metal-transfer, and inference evidence through an independently authorized, low-memory real run, then revise the provider capability state.
