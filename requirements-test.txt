@@ -1,5 +1,5 @@
 imageio==2.37.4
 imageio-ffmpeg==0.6.0
-numpy==2.5.1
+numpy==2.5.2
 psutil==7.2.2
 torch==2.13.0
