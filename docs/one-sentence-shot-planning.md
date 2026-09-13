@@ -95,14 +95,28 @@ Reserved expectations participate only in after-the-fact observation and never
 enter any model prompt.
 
 ```bash
-.venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite \
-  --suite experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite
 
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_suite \
-  --suite experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json \
-  --execute \
-  --execution-id LOCAL-SHOT-PLAN-QWEN3-HYBRID-SOURCE-FACTS-YYYYMMDDTHHMMSSZ
+  --suite experiments/shot_planning/qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json
+
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial \
+  --contract experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_library_reader_trial_v12.json
+
+.venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial \
+  --contract experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_snow_courtyard_cat_trial_v12.json
 ```
+
+The default suite path is now the edition-12 guarded-source-facts contract: three
+cases, three rounds, seven stages, sixty-three planned calls, zero automatic
+retries, and the same frozen model revision. Omitting `--execute` is contract
+preflight only. The edition-12 live-model suite has not been run. A later
+live-model knife would add `--execute` and a new execution id; this slice must
+not invent that evidence. Historical edition-11 evidence still uses
+`experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json`.
+The two held-out trial contracts are runnable placeholders. They stay
+`DRAFT_NON_AUTHORITATIVE`, keep the same non-goals, and do not count toward the
+planning gate.
 
 ## Single-run structure observations
 
@@ -163,7 +177,7 @@ coverage, or video-generation effect. Drafts therefore stay
 | `v9` | `9/9` | `3/9` | `153` | Scalar candidates removed the array-shape problem; the crying case compiled but chose `WIDE` in all three rounds; the smile and bicycle cases were still blocked by stage constraints |
 | `v10` | `9/9` | `0/9` | `120` | Candidate Chinese glosses reduced wrong choices, but environment-continuity errors, illegal enumerations, and mistaking subject lateral motion for camera `PAN` remained |
 | `v11` | `9/9` | `0/9` | `93` | Deterministic extraction locked `9/11/9` explicit or deterministically derived fields; the model never wrote locked fields, but residual continuity, composition, and lighting choices still blocked every run |
-| `v12` | not executed | not executed | not applicable | Only added versioned negation, turn, compound-word, and subject/camera boundary protection; there is no live-model suite evidence yet |
+| `v12` | not executed | not executed / still unobserved | not applicable | Three-case guarded contracts, the 63-call suite, and two held-out trial contracts are in place; no live-model suite has been run, so structural observability remains unobserved |
 
 Identical in-round controlled fingerprints only mean the model repeated the same
 choice. When the choice itself is wrong, that agreement must not be read as
@@ -191,7 +205,14 @@ regressions cover “并非/从未/别/勿”, controlled “而是/反而/改�
 affirmative idioms, non-negative compounds, camera lateral motion near the
 subject, and “固定相机参数” boundaries. The existing three positive cases still
 lock the same `9/11/9` fields under both extractors, so the result only proves
-wiring non-regression, not model-quality improvement.
+wiring non-regression, not model-quality improvement. Edition 12 now has crying,
+smile, and bicycle `trial.v12` files plus
+`qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json`. Those contracts
+are loadable and hash-bound. They are not live-model evidence, and they do not
+make the planning gate pass. Structural observability is still unobserved. The
+held-out library-reader and snow-courtyard-cat trials are also `trial.v12`, but
+they remain `DRAFT_NON_AUTHORITATIVE` placeholders and must not be counted as
+3/3 structurally observable results.
 
 All seven evidence packages can have their file set and digests rechecked.
 The edition-7 live execution id is

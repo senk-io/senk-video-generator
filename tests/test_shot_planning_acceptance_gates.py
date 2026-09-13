@@ -7,12 +7,14 @@ import unittest
 from copy import deepcopy
 from pathlib import Path
 
-from shot_planning.contracts import validate_request
+from shot_planning.contracts import canonical_sha256, validate_request
 from shot_planning.diagnosis_report import (
     REQUIRED_DIAGNOSIS_REPORT_FIELDS,
     DiagnosisReportError,
     validate_diagnosis_report,
 )
+from shot_planning.evaluation_suite import load_suite_cases
+from shot_planning.local_trial import validate_request_binding, validate_trial_contract
 from shot_planning.pre_model_guard import (
     BLOCK_CATEGORIES,
     PreModelGuardError,
@@ -38,6 +40,16 @@ POSITIVE_REQUESTS = {
 HELD_OUT_REQUESTS = (
     "held_out_library_reader_medium_request_v1.json",
     "held_out_snow_courtyard_cat_wide_request_v1.json",
+)
+HELD_OUT_V12_TRIALS = (
+    "qwen3_0_6b_guarded_source_facts_held_out_library_reader_trial_v12.json",
+    "qwen3_0_6b_guarded_source_facts_held_out_snow_courtyard_cat_trial_v12.json",
+)
+V12_SUITE = "qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json"
+V12_POSITIVE_TRIALS = (
+    "qwen3_0_6b_guarded_source_facts_crying_trial_v12.json",
+    "qwen3_0_6b_guarded_source_facts_smile_trial_v12.json",
+    "qwen3_0_6b_guarded_source_facts_bicycle_trial_v12.json",
 )
 WEIGHT_LIBRARY_ROOTS = frozenset({"torch", "transformers", "safetensors"})
 GUARD_ENTRY_MODULES = (
@@ -235,6 +247,60 @@ class ShotPlanningAcceptanceGatesTest(unittest.TestCase):
             self.assertIn("不计入本刀过线", payload["acceptance_gate_note"])
             request = validate_request(payload)
             self.assertEqual(request["status"], "DRAFT_NON_AUTHORITATIVE")
+
+    def test_v12_suite_and_held_out_trials_load_without_claiming_planning_gate(
+        self,
+    ) -> None:
+        suite, cases = load_suite_cases(load_json(V12_SUITE), ROOT)
+        self.assertEqual(len(cases), 3)
+        self.assertEqual(
+            {loaded["trial"]["schema_version"] for loaded in cases},
+            {"local-shot-planner-trial.v12"},
+        )
+        bound_trial_files = {
+            loaded["case"]["trial_binding"]["trial_contract_file"].rsplit("/", 1)[-1]
+            for loaded in cases
+        }
+        self.assertEqual(bound_trial_files, set(V12_POSITIVE_TRIALS))
+        for filename in V12_POSITIVE_TRIALS:
+            trial = validate_trial_contract(load_json(filename))
+            self.assertEqual(trial["status"], "BOUNDED_NON_AUTHORITATIVE_TRIAL")
+            self.assertIn("formal_shot_spec_creation", trial["non_goals"])
+            self.assertNotIn("planning_gate_passed", trial)
+        self.assertNotIn("planning_gate_passed", suite)
+        self.assertFalse(suite.get("planning_gate_passed", False))
+        self.assertEqual(suite["status"], "BOUNDED_NON_AUTHORITATIVE_EVALUATION")
+
+        for filename in HELD_OUT_V12_TRIALS:
+            trial = validate_trial_contract(load_json(filename))
+            request = validate_request(
+                load_json(Path(trial["request_binding"]["request_file"]).name)
+            )
+            validate_request_binding(
+                trial,
+                request,
+                trial["request_binding"]["request_file"],
+            )
+            self.assertEqual(
+                trial["request_binding"]["request_sha256"],
+                canonical_sha256(request),
+            )
+            self.assertEqual(trial["draft_status"], "DRAFT_NON_AUTHORITATIVE")
+            self.assertEqual(request["status"], "DRAFT_NON_AUTHORITATIVE")
+            self.assertFalse(trial["counts_toward_acceptance_gates"])
+            self.assertFalse(trial["real_local_suite_executed"])
+            self.assertFalse(request["counts_toward_acceptance_gates"])
+            self.assertFalse(request["real_local_suite_executed"])
+            self.assertIn("does not count toward the planning gate", trial["acceptance_gate_note"])
+            self.assertIn("DRAFT_NON_AUTHORITATIVE", trial["acceptance_gate_note"])
+            self.assertEqual(trial["schema_version"], "local-shot-planner-trial.v12")
+            self.assertEqual(
+                trial["prompt_strategy"]["prompt_contract_version"],
+                "local-shot-planner-guarded-source-facts.v12",
+            )
+            report = evaluate_pre_model_guard(request)
+            self.assertTrue(report["model_invocation_allowed"], filename)
+            self.assertEqual(report["blocks"], [], filename)
 
 
 if __name__ == "__main__":

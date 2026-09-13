@@ -86,6 +86,11 @@ V11_CASE_FILES = {
     "bicycle": "qwen3_0_6b_hybrid_source_facts_bicycle_trial_v11.json",
 }
 V12_SMILE_TRIAL_FILE = "qwen3_0_6b_guarded_source_facts_smile_trial_v12.json"
+V12_CASE_FILES = {
+    "crying": "qwen3_0_6b_guarded_source_facts_crying_trial_v12.json",
+    "smile": V12_SMILE_TRIAL_FILE,
+    "bicycle": "qwen3_0_6b_guarded_source_facts_bicycle_trial_v12.json",
+}
 
 
 def load(path: Path) -> dict:
@@ -907,6 +912,37 @@ class GeneralizedShotPlannerTrialTest(unittest.TestCase):
                 )
             self.assertFalse(evidence_dir.exists())
             self.assertEqual(model_call_count, 0)
+
+    def test_v12_positive_trials_share_guarded_contract_and_keep_v11_bindings(
+        self,
+    ) -> None:
+        request_files = {
+            "crying": "generalized_child_crying_closeup_request_v1.json",
+            "smile": "generalized_actor_smile_medium_request_v1.json",
+            "bicycle": "generalized_bicycle_left_to_right_wide_request_v1.json",
+        }
+        prompt_fingerprints = set()
+        for case_name, trial_name in V12_CASE_FILES.items():
+            request = validate_request(load(EXPERIMENT_ROOT / request_files[case_name]))
+            contract = validate_trial_contract(load(EXPERIMENT_ROOT / trial_name))
+            validate_request_binding(
+                contract,
+                request,
+                f"experiments/shot_planning/{request_files[case_name]}",
+            )
+            v11 = load(EXPERIMENT_ROOT / V11_CASE_FILES[case_name])
+            self.assertEqual(contract["request_binding"], v11["request_binding"])
+            self.assertEqual(contract["schema_version"], "local-shot-planner-trial.v12")
+            self.assertEqual(
+                contract["prompt_strategy"]["prompt_contract_version"],
+                PLANNER_GUARDED_SOURCE_FACT_PROMPT_CONTRACT_VERSION,
+            )
+            self.assertEqual(
+                contract["prompt_strategy"]["source_fact_extractor_contract_version"],
+                SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
+            )
+            prompt_fingerprints.add(canonical_sha256(contract["prompt_strategy"]))
+        self.assertEqual(len(prompt_fingerprints), 1)
 
     def test_v12_binds_guarded_extractor_and_recomputes_fake_evidence(self) -> None:
         request, _v8_contract, stages = case_values("smile")
