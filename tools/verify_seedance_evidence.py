@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验 Seedance / BytePlus ModelArk 远端试验证据包。"""
+"""Independently verify a Seedance / BytePlus ModelArk remote-trial evidence package."""
 
 from __future__ import annotations
 

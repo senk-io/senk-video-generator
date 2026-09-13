@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验 CogVideoX 五秒候选的时序稳定派生证据。"""
+"""Independently verify temporal-stability derivation evidence for a CogVideoX five-second candidate."""
 
 from __future__ import annotations
 

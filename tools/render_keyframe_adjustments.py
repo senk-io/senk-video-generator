@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将五个显式关键帧平滑展开为四十帧空间调整候选。"""
+"""Smoothly expand five explicit keyframes into a forty-frame spatial-adjustment candidate."""
 
 from __future__ import annotations
 
@@ -243,7 +243,7 @@ def monotone_cubic_interpolate(
     keyframe_values: np.ndarray,
     frame_numbers: np.ndarray,
 ) -> np.ndarray:
-    """使用不越过单调区间端点的分段三次 Hermite 插值。"""
+    """Use piecewise cubic Hermite interpolation that does not cross monotone interval endpoints."""
     x = np.asarray(keyframe_numbers, dtype=float)
     y = np.asarray(keyframe_values, dtype=float)
     query = np.asarray(frame_numbers, dtype=float)

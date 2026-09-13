@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验 CogVideoX 潜变量重解码证据包。"""
+"""Independently verify a CogVideoX latent re-decode evidence package."""
 
 from __future__ import annotations
 

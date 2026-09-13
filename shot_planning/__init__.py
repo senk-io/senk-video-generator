@@ -1,4 +1,4 @@
-"""模型无关的一句话镜头规划草案与观察工具。"""
+"""Provider-neutral one-sentence shot-planning drafts and observation tools."""
 
 from .contracts import (
     PLANNER_PROMPT_CONTRACT_VERSION,

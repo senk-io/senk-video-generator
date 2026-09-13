@@ -1,4 +1,4 @@
-"""进模型前确定性守卫：复用 v12 提取器，不足则追加规则，不降观察阈值。"""
+"""Deterministic pre-model guard: reuse the v12 extractor, add rules if needed, and do not lower observation thresholds."""
 
 from __future__ import annotations
 
@@ -71,7 +71,7 @@ LOCATION_TERMS: Final[tuple[tuple[str, str], ...]] = (
 
 
 class PreModelGuardError(ValueError):
-    """进模型前守卫阻断，禁止构建第十二版提示或启动模型。"""
+    """The pre-model guard blocked; do not build an edition-12 prompt or start the model."""
 
     def __init__(self, report: dict[str, Any]) -> None:
         reasons = report.get("cannot_approve_reasons") or ["进模型前守卫阻断"]
@@ -254,7 +254,7 @@ def _dedupe_blocks(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def evaluate_pre_model_guard(request_value: Any) -> dict[str, Any]:
-    """对一句话请求做进模型前拦截，并产出诊断报告骨架。"""
+    """Run pre-model interception on a one-sentence request and emit a diagnosis-report skeleton."""
 
     request = validate_request(request_value)
     extraction = extract_source_facts(
@@ -316,7 +316,7 @@ def evaluate_adversarial_set(
     *,
     experiment_root: str | Path,
 ) -> dict[str, Any]:
-    """对固定对抗集做无模型拦截观察，不产生正式过线裁决。"""
+    """Observe no-model interception on the frozen adversarial set; create no formal gate-pass decision."""
 
     payload = load_adversarial_set(set_path)
     root = Path(experiment_root)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验 CogVideoX 九帧镜头方向派生证据。"""
+"""Independently verify CogVideoX nine-frame shot-direction derivation evidence."""
 
 from __future__ import annotations
 

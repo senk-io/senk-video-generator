@@ -1,4 +1,4 @@
-"""镜头规划诊断报告骨架：只产出机器可读观察，不裁决通过或失败。"""
+"""Shot-planning diagnosis-report skeleton: emit machine-readable observations only, not pass or fail."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ GUESS_PLACEHOLDER_TOKENS: Final[tuple[str, ...]] = ("待猜", "自由发挥")
 
 
 class DiagnosisReportError(ValueError):
-    """诊断报告缺少法定字段或结构不完整，必须失败关闭。"""
+    """The diagnosis report is missing a required field or is structurally incomplete and must fail closed."""
 
 
 def _require_mapping(name: str, value: Any) -> dict[str, Any]:
@@ -33,7 +33,7 @@ def _require_list(name: str, value: Any) -> list[Any]:
 
 
 def validate_diagnosis_report(value: Any) -> dict[str, Any]:
-    """缺覆盖、残余、阻断或不能批准原因时失败关闭，不补字段。"""
+    """Fail closed when coverage, residual, block, or cannot-approve reason is missing; do not fill fields in."""
 
     report = _require_mapping("$", value)
     missing = [
@@ -88,7 +88,7 @@ def build_diagnosis_report(
     request_id: str,
     extra_cannot_approve_reasons: list[str] | None = None,
 ) -> dict[str, Any]:
-    """从原句事实与进模型前阻断构造诊断骨架，不产生正式裁决。"""
+    """Build a diagnosis skeleton from source facts and pre-model blocks; create no formal decision."""
 
     field_resolutions = list(extraction.get("field_resolutions") or [])
     locked_fields = dict(extraction.get("locked_fields") or {})

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""senk-video-generator 本地作业控制服务。"""
+"""senk-video-generator local job-control service."""
 
 from __future__ import annotations
 
@@ -109,7 +109,7 @@ class ControlError(Exception):
 
 
 class JobManager:
-    """登记不可变作业请求，并通过显式确认控制本地执行进程。"""
+    """Register immutable job requests and control local execution processes through explicit confirmation."""
 
     def __init__(
         self,
@@ -1130,13 +1130,13 @@ def create_server(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="启动 senk-video-generator 本地作业控制台")
+    parser = argparse.ArgumentParser(description="Start the senk-video-generator local operator console")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=4320)
     parser.add_argument("--state-root", type=Path, default=DEFAULT_STATE_ROOT)
     parser.add_argument("--evidence-root", type=Path, default=DEFAULT_EVIDENCE_ROOT)
     parser.add_argument("--cache-root", type=Path, default=DEFAULT_CACHE_ROOT)
-    parser.add_argument("--open", action="store_true", help="启动后打开默认浏览器")
+    parser.add_argument("--open", action="store_true", help="Open the default browser after start")
     return parser.parse_args()
 
 

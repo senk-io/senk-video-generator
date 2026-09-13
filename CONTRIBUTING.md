@@ -1,17 +1,17 @@
-# 贡献指南
+# Contributing
 
-感谢你参与由 SENK 管理的 `senk-video-generator`。本项目接受问题报告、文档修正、验证器、提供者适配器和治理实现方面的贡献。
+Thanks for helping with `senk-video-generator`, which is managed by SENK. The project accepts issue reports, documentation fixes, and contributions to verifiers, provider adapters, and governance implementation.
 
-## 开始之前
+## Before you start
 
-- 先阅读 [`AGENTS.md`](AGENTS.md) 和与改动相关的 `foundation/`、`execution/`、`video/`、`verification/` 文档。
-- 生成完成、技术合格、人工接受、正式选择、时间线绑定和发布是不同状态，不得在实现或文档中合并。
-- 运行证据只记录观察，不得用测试通过或文件存在替代正式质量裁决。
-- 不要提交模型权重、Hugging Face 缓存、访问令牌、个人凭据或机器专属路径。
+- Read [`AGENTS.md`](AGENTS.md) and the `foundation/`, `execution/`, `video/`, and `verification/` documents that apply to your change.
+- Generation complete, technically valid, human-accepted, formally selected, timeline-bound, and released are different states. Do not collapse them in code or documentation.
+- Runtime evidence records observations only. A passing test or a file on disk is not a formal quality decision.
+- Do not commit model weights, Hugging Face caches, access tokens, personal credentials, or machine-specific paths.
 
-## 本地环境
+## Local environment
 
-推荐使用 Python 3.12：
+Python 3.12 is recommended:
 
 ```bash
 python3.12 -m venv .venv-provider-compat
@@ -19,30 +19,30 @@ python3.12 -m venv .venv-provider-compat
 .venv-provider-compat/bin/python -m pip install -r requirements-provider-compat.txt
 ```
 
-只运行不加载模型的测试时，可以安装较小的测试依赖集：
+For tests that do not load models, a smaller test dependency set is enough:
 
 ```bash
 .venv-provider-compat/bin/python -m pip install -r requirements-test.txt
 ```
 
-## 验证改动
+## Verify your change
 
-提交前至少运行：
+Before you submit, run at least:
 
 ```bash
 .venv-provider-compat/bin/python -m unittest discover -s tests -v
 .venv-provider-compat/bin/python -m unittest discover -s migration_tests -v
 ```
 
-涉及证据格式时，还应使用对应的 `tools/verify_*.py` 校验器复核既有样本。涉及模型运行时，必须先建立唯一执行标识、固定合同和资源停止线；失败证据必须保留，不能自动重试或覆盖。
+If the change touches evidence format, also recheck existing samples with the matching `tools/verify_*.py` verifier. If the change involves a model run, first establish a unique execution id, a fixed contract, and resource stop-lines. Failure evidence must be kept. Do not auto-retry or overwrite it.
 
-## 提交与合并请求
+## Commits and pull requests
 
-- 每次提交只解决一个可说明、可验证的问题。
-- 在合并请求中写明目标、非目标、验证命令、结果和尚未闭合的边界。
-- 新能力需要同时说明输入合同、输出证据、失败关闭行为和与既有权威边界的关系。
-- 不要通过删除失败记录、重写证据或放宽阈值让检查变绿。
+- Each commit should solve one explainable, verifiable problem.
+- In the pull request, state the goal, non-goals, verification commands, results, and any still-open boundary.
+- New capabilities must also describe the input contract, output evidence, fail-closed behavior, and how they relate to existing authority boundaries.
+- Do not make checks green by deleting failure records, rewriting evidence, or relaxing thresholds.
 
-## 报告问题
+## Reporting issues
 
-普通缺陷和功能建议可以使用 GitHub 议题。安全问题不要公开创建议题，请遵循 [`SECURITY.md`](SECURITY.md) 的私密披露流程。
+Ordinary defects and feature requests can use GitHub issues. Do not open a public issue for an unfixed vulnerability. Follow the private disclosure process in [`SECURITY.md`](SECURITY.md).

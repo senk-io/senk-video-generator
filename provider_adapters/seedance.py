@@ -1,4 +1,4 @@
-"""Seedance / BytePlus ModelArk 视频生成适配器。"""
+"""Seedance / BytePlus ModelArk video-generation adapter."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ REQUIRED_NON_GOALS = frozenset(
 
 
 class AdapterError(RuntimeError):
-    """提供者调用失败，且错误内容已经限制为可公开观察。"""
+    """A provider call failed, and the error content is already limited to a publicly safe observation."""
 
     def __init__(self, code: str, message: str, details: dict[str, Any] | None = None) -> None:
         super().__init__(message)
@@ -216,7 +216,7 @@ def public_task_observation(response: dict[str, Any]) -> dict[str, Any]:
 
 
 class UrllibSeedanceTransport:
-    """仅连接固定 ModelArk 来源，且从不持久化授权头。"""
+    """Connect only to the frozen ModelArk origin and never persist authorization headers."""
 
     def __init__(
         self,

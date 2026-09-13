@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从已保存的 CogVideoX 潜变量进行低内存中央处理器解码。"""
+"""Decode saved CogVideoX latents on CPU with a low-memory path."""
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def read_json(file_path: Path) -> dict[str, Any]:
 
 
 def read_macos_memory_pressure_level() -> int | None:
-    """读取 macOS 的权威内存压力级别；无法读取时返回空值。"""
+    """Read the authoritative macOS memory-pressure level; return None when it cannot be read."""
     try:
         result = subprocess.run(
             ["sysctl", "-n", "kern.memorystatus_vm_pressure_level"],

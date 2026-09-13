@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验 MiniMax H3 远端试验证据包。"""
+"""Independently verify a MiniMax H3 remote-trial evidence package."""
 
 from __future__ import annotations
 

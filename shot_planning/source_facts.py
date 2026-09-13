@@ -1,7 +1,9 @@
-"""从一句中文镜头请求中提取可追溯的显式事实。
+"""Extract traceable explicit facts from one Chinese shot request.
 
-本模块只锁定原句能够直接证明或由已锁定事实确定性推出的字段。没有出现、存在
-歧义或无法无损映射到现有枚举的内容继续保留给非权威模型草案或人工澄清。
+This module locks only fields the source sentence can prove directly or that
+follow deterministically from already locked facts. Content that is absent,
+ambiguous, or cannot map losslessly onto an existing enumeration stays with
+the non-authoritative model draft or human clarification.
 """
 
 from __future__ import annotations
@@ -483,7 +485,7 @@ LEXICAL_RULES_V1: Final[tuple[dict[str, Any], ...]] = (
 
 
 def _build_v2_lexical_rules() -> tuple[dict[str, Any], ...]:
-    """在保留第一版历史合同的前提下，收紧易越过语义边界的规则。"""
+    """Tighten rules that easily cross semantic bounds while keeping the edition-1 historical contract."""
 
     rules = deepcopy(LEXICAL_RULES_V1)
     reset = FACT_TERM_RIGHT_BOUNDARY_PATTERN_V2
@@ -637,7 +639,7 @@ DERIVATION_RULES: Final[tuple[dict[str, Any], ...]] = (
 
 
 class SourceFactExtractionError(ValueError):
-    """原句事实无法安全进入混合规划。"""
+    """Source facts cannot safely enter hybrid planning."""
 
 
 def _sha256(value: Any) -> str:
@@ -830,7 +832,7 @@ def _v2_quote_context(
     text: str,
     start: int,
 ) -> tuple[str, int, int] | None:
-    """返回锚点所在引号的状态与范围；不复用第一版的历史启发式。"""
+    """Return the quote state and span that contain the anchor; do not reuse edition-1 historical heuristics."""
 
     for opening, closing in QUOTE_PAIRS:
         prefix = text[:start]
@@ -1496,7 +1498,7 @@ def extract_source_facts(
     *,
     contract_version: str = SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION,
 ) -> dict[str, Any]:
-    """提取原句事实；返回值不读取评测套件或保留观察。"""
+    """Extract source facts; the return value does not read the evaluation suite or reserved observations."""
 
     request = validate_request(request_value)
     if request["schema_version"] != REQUEST_SCHEMA_VERSION_V2:
@@ -1753,7 +1755,7 @@ def merge_hybrid_stage_payload(
     model_payload: Any,
     extraction: dict[str, Any],
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]], dict[str, Any]]:
-    """合并模型残余字段与只读事实，不自动修补模型输出。"""
+    """Merge model residual fields with read-only facts; do not auto-patch model output."""
 
     if extraction["blocking_issue_count"]:
         raise SourceFactExtractionError("原句事实存在阻断问题，不能执行混合合并。")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立复核 CR-0016 迁移证据包。"""
+"""Independently recheck the CR-0016 migration evidence package."""
 
 from __future__ import annotations
 

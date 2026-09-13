@@ -1,4 +1,4 @@
-"""senk-video-generator 本地作业控制台。"""
+"""senk-video-generator local operator console."""
 
 from .contracts import (
     EXECUTION_STRATEGIES,

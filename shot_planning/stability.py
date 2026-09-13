@@ -1,4 +1,4 @@
-"""重复规划结果的确定性结构稳定性观察。"""
+"""Deterministic structural-stability observations over repeated planning results."""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def _comparison_context(proposal: dict[str, Any]) -> dict[str, Any]:
 
 
 def observe_stability(request_value: Any, proposals: list[Any]) -> dict[str, Any]:
-    """比较至少两次原始模型输出，只报告一致率，不作稳定或接受裁决。"""
+    """Compare at least two raw model outputs and report agreement rates only; make no stability or acceptance decision."""
 
     request = validate_request(request_value)
     proposal_reports = [observe_proposal(request, proposal) for proposal in proposals]
@@ -232,7 +232,7 @@ def collect_local_proposals(
     planner: Callable[[dict[str, Any], int], dict[str, Any]],
     run_count: int,
 ) -> list[dict[str, Any]]:
-    """调用注入的本地规划器；不隐藏重试，也不自行增加运行次数。"""
+    """Call the injected local planner; do not hide retries or increase the run count on your own."""
 
     request = validate_request(request_value)
     if not isinstance(run_count, int) or isinstance(run_count, bool) or run_count < 1:

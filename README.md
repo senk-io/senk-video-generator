@@ -1,46 +1,46 @@
 # senk-video-generator
 
-> 由 SENK 管理，为 Seedance、本地开源模型及其他视频能力提供统一、可验证、可修正、可审计的受控生产过程。
+> Managed by SENK. Provides a unified, verifiable, correctable, and auditable production process for Seedance, local open-source models, and other video capabilities.
 
-[![许可证](https://img.shields.io/github/license/senk-io/senk-video-generator?label=%E8%AE%B8%E5%8F%AF%E8%AF%81)](LICENSE)
-[![测试](https://github.com/senk-io/senk-video-generator/actions/workflows/tests.yml/badge.svg?branch=bakboem-dev)](https://github.com/senk-io/senk-video-generator/actions/workflows/tests.yml)
+[![License](https://img.shields.io/github/license/senk-io/senk-video-generator)](LICENSE)
+[![Tests](https://github.com/senk-io/senk-video-generator/actions/workflows/tests.yml/badge.svg?branch=bakboem-dev)](https://github.com/senk-io/senk-video-generator/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
-![管理](https://img.shields.io/badge/%E7%AE%A1%E7%90%86-SENK-111111)
-![架构](https://img.shields.io/badge/%E6%9E%B6%E6%9E%84-%E6%8F%90%E4%BE%9B%E8%80%85%E6%97%A0%E5%85%B3-7C3AED)
-![接入](https://img.shields.io/badge/%E6%8E%A5%E5%85%A5-Seedance%20%7C%20%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B-0284C7)
-![阶段](https://img.shields.io/badge/%E9%98%B6%E6%AE%B5-5%20%E7%A7%92%E9%95%9C%E5%A4%B4%E5%80%99%E9%80%89-2EA44F)
+![Managed by](https://img.shields.io/badge/Managed%20by-SENK-111111)
+![Architecture](https://img.shields.io/badge/Architecture-provider--neutral-7C3AED)
+![Adapters](https://img.shields.io/badge/Adapters-Seedance%20%7C%20local%20models-0284C7)
+![Stage](https://img.shields.io/badge/Stage-5s%20shot%20candidates-2EA44F)
 
-## 项目简介
+## What this project is
 
-`senk-video-generator` 是由 SENK 管理的模型无关视频生产项目。SENK 是项目所属公司的名称，不是视频模型、提供者或协议。项目通过 `ProviderAdapter` 隔离模型专属协议，可接入 Seedance、Veo、Kling、Runway、本地开源模型以及未来的其他视频能力。模型负责生成候选画面，本项目负责合同、资源护栏、证据、确定性后处理和状态边界。
+`senk-video-generator` is a provider-neutral video production project managed by SENK. SENK is the company that owns the project; it is not a video model, provider, or protocol. The project isolates provider-specific protocols behind `ProviderAdapter` and can attach Seedance, Veo, Kling, Runway, local open-source models, and future video capabilities. Models generate candidate frames. This project owns contracts, resource guards, evidence, deterministic post-processing, and state boundaries.
 
 ```text
-创作意图 -> 模型无关镜头合同 -> ProviderAdapter -> 任意模型 -> 验证与修正 -> 人工评审 -> 时间线
+Creative intent -> provider-neutral shot contract -> ProviderAdapter -> any model -> verification and correction -> human review -> timeline
 ```
 
-生成完成不等于质量合格，候选存在也不等于已经进入时间线。
+A finished generation is not a quality pass. A candidate on disk is not a timeline binding.
 
-## 模型边界
+## Model boundary
 
-- Seedance 等高质量模型是正式能力提供者候选，只需在适配器层编译其请求和结果，不改变上层治理语义。
-- 当前参考适配器包括本地 `CogVideoX-2B`、`Wan2.1-T2V-1.3B`，远端 `MiniMax-H3` 开放平台 `V2` 接口，以及远端 `Seedance` / BytePlus ModelArk `v3` 接口。各提供者的运行后端、费用、资源与证据合同彼此独立。
-- 本地小模型用于低成本验证受控生成、资源停止线、证据闭包、后处理和人工选择流程，不代表项目的模型上限或最终画质目标。
+- High-quality models such as Seedance are formal capability-provider candidates. The adapter layer only compiles their requests and results; it does not change upstream governance semantics.
+- Current reference adapters include local `CogVideoX-2B` and `Wan2.1-T2V-1.3B`, the remote `MiniMax-H3` Open Platform `V2` API, and the remote `Seedance` / BytePlus ModelArk `v3` API. Runtime backends, cost, resource, and evidence contracts stay independent per provider.
+- Local small models exist to validate controlled generation, resource stop-lines, evidence closure, post-processing, and human selection at low cost. They do not define the project's model ceiling or final image-quality target.
 
-### MiniMax H3 接入
+### MiniMax H3 adapter
 
-`MiniMax-H3` 已作为独立 `ProviderAdapter` 接入。当前 `36GB` 苹果芯片机器不启动公开权重：官方 `BF16` 基础模型包含 `33B` 稠密视频变换器与完整 `Qwen3-VL-32B` 编码器；官方 `ComfyUI` 文生视频量化组合仍约 `39.55 GiB`，且尚无本机已验证的 `MPS` 量化算子路径。因此第一轮效果试验使用官方远端 `V2` 接口，不下载模型权重。
+`MiniMax-H3` is attached as an independent `ProviderAdapter`. The current `36GB` Apple Silicon machine does not load public weights: the official `BF16` base model includes a `33B` dense video transformer and a full `Qwen3-VL-32B` encoder; the official `ComfyUI` text-to-video quantized stack is still about `39.55 GiB`, and this repo has no verified on-machine `MPS` quantized-operator path. The first effect trial therefore uses the official remote `V2` API and does not download weights.
 
-真实密钥只写入未跟踪的 `.env`：
+Write real secrets only to an untracked `.env`:
 
 ```bash
 cp .env.example .env
-# 在 .env 中填写 MINIMAX_API_KEY
+# Fill MINIMAX_API_KEY in .env
 set -a
 . ./.env
 set +a
 ```
 
-默认命令只做无费用预检；只有显式增加 `--execute` 才提交计费任务：
+The default command is a no-cost preflight. A billed job is submitted only when `--execute` is added explicitly:
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_minimax_h3_trial
@@ -53,25 +53,25 @@ set +a
   evidence/runtime/MINIMAX-H3-CLOSEUP-YYYYMMDDTHHMMSSZ
 ```
 
-固定试验生成 `768P`、`5` 秒、`16:9`、`24 fps` 且包含 `32 kHz` 双声道音频的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。
+The fixed trial produces a `768P`, `5` second, `16:9`, `24 fps` candidate with `32 kHz` stereo audio. Automatic checks only confirm the technical contract and evidence closure. Crying semantics, visible rolling tears, identity continuity, and audio-visual emotional sync still require human review.
 
-作业控制台已把 MiniMax H3 列为远端提供者。选择后可运行无费用预检；控制台不会提交计费任务，也不会把 `MINIMAX_API_KEY` 写入作业请求、日志或前端状态。显式计费仍须使用上面的 CLI `--execute`。
+The operator console already lists MiniMax H3 as a remote provider. Selecting it runs a no-cost preflight. The console does not submit billed jobs and does not write `MINIMAX_API_KEY` into job requests, logs, or frontend state. Explicit billing still requires the CLI `--execute` path above.
 
-### Seedance / BytePlus ModelArk 接入
+### Seedance / BytePlus ModelArk adapter
 
-`dreamina-seedance-2-0-260128` 已作为独立 `ProviderAdapter` 接入 [BytePlus ModelArk 视频生成接口](https://docs.byteplus.com/en/docs/modelark/1520757)。适配器只编译请求和结果，不改变上层治理语义，也不创建质量接受、选择、时间线绑定或制度冻结。
+`dreamina-seedance-2-0-260128` is attached as an independent `ProviderAdapter` for the [BytePlus ModelArk video generation API](https://docs.byteplus.com/en/docs/modelark/1520757). The adapter only compiles requests and results. It does not change upstream governance semantics and does not create quality acceptance, selection, timeline binding, or institution freeze.
 
-真实密钥只写入未跟踪的 `.env`：
+Write real secrets only to an untracked `.env`:
 
 ```bash
 cp .env.example .env
-# 在 .env 中填写 ARK_API_KEY，不要把真实值提交到 Git
+# Fill ARK_API_KEY in .env. Do not commit the real value to Git.
 set -a
 . ./.env
 set +a
 ```
 
-默认命令只做无费用预检；只有显式增加 `--execute` 才提交计费任务。测试与预检从不调用真实接口。缺少密钥时预检失败关闭，不创建空证据：
+The default command is a no-cost preflight. A billed job is submitted only when `--execute` is added explicitly. Tests and preflight never call the live API. If the key is missing, preflight fail-closes and creates no empty evidence:
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_seedance_trial
@@ -84,33 +84,17 @@ set +a
   evidence/runtime/SEEDANCE-CLOSEUP-YYYYMMDDTHHMMSSZ
 ```
 
-固定试验生成 `720p`、`5` 秒、`16:9`、`24 fps` 且请求原生音频、无水印的候选。自动校验只确认技术合同与证据闭包；哭泣语义、泪水滚落、身份连续性和音画情绪同步仍需人工评审。密钥、签名下载地址和授权头不会进入证据。
+The fixed trial produces a `720p`, `5` second, `16:9`, `24 fps` candidate and requests native audio with no watermark. Automatic checks only confirm the technical contract and evidence closure. Crying semantics, visible rolling tears, identity continuity, and audio-visual emotional sync still require human review. Secrets, signed download URLs, and authorization headers never enter evidence.
 
-作业控制台已把 Seedance 列为远端提供者。选择后可运行无费用预检；控制台不会提交计费任务，也不会把 `ARK_API_KEY` 写入作业请求、日志或前端状态。显式计费仍须使用上面的 CLI `--execute`。
+The operator console already lists Seedance as a remote provider. Selecting it runs a no-cost preflight. The console does not submit billed jobs and does not write `ARK_API_KEY` into job requests, logs, or frontend state. Explicit billing still requires the CLI `--execute` path above.
 
-### 一句话镜头规划
+### One-sentence shot planning
 
-本地文本模型可以先把一句创作意图输出为非权威的场景、叙事节拍和镜头草案，再由
-确定性观察器检查原句覆盖、稳定标识、显式语义、单一镜头用途、主体引用、时长和
-连续性。当前参考合同把每轮固定拆为 `scene_context`、`beat_purpose`、`shot_core`、
-`composition`、`performance`、`lighting` 和 `continuity` 七个扁平阶段；三轮共
-二十一次本地调用且不自动重试。场景角色、构图、表演、灯光和连续性标记由系统按
-版本化合同展开，可观察检查项由请求约束和已选标记确定性派生。重复运行分别报告
-结构一致率与受控语义一致率，但不会自动创建正式 `ShotSpec` 或质量裁决。
+A local text model can first turn one sentence of creative intent into a non-authoritative scene, narrative-beat, and shot draft. A deterministic observer then checks source-sentence coverage, stable identifiers, explicit semantics, single-shot purpose, subject references, duration, and continuity. The current reference contract splits each round into seven flat stages: `scene_context`, `beat_purpose`, `shot_core`, `composition`, `performance`, `lighting`, and `continuity`. Three rounds make twenty-one local calls with no automatic retry. Scene roles, composition, performance, lighting, and continuity marks are expanded by the system from a versioned contract. Observable checks are derived deterministically from request constraints and selected marks. Repeated runs report structural agreement and controlled-semantic agreement separately. They never auto-create a formal `ShotSpec` or a quality decision.
 
-默认单请求命令仍保留已取证的 `v7` 哭泣特写基线。通用性观察另使用版本化的
-`request.v2`、中立主体词表和三用例套件，避免把单一请求下的稳定性误写成跨请求
-理解能力。已取证的 `v11` 先用失败关闭的确定性提取器锁定原句明确事实，模型只输出残余字段。
-雨中哭泣、室内微笑和自行车用例分别锁定 `9`、`11`、`9` 个字段；`63/63`
-次本地调用和 `9/9` 轮严格解析全部完成，模型没有写入锁定字段。保留观察从
-`v10` 的 `120` 项降到 `93` 项，但残余的场景连续性、构图、灯光和动作连续性选择仍使
-`0/9` 形成结构可观察草案。因此该 `0.6B` 路径仍只能提供诊断观察，不能自动批准镜头。
+The default single-request command still keeps the evidenced `v7` crying-closeup baseline. Generality observations use a versioned `request.v2`, a neutral subject lexicon, and a three-case suite so stability on one request is not mistaken for cross-request understanding. Evidenced `v11` first locks facts that are explicit in the source sentence with a fail-closed deterministic extractor; the model may emit only residual fields. The rain-crying, indoor-smile, and bicycle cases lock `9`, `11`, and `9` fields respectively. All `63/63` local calls and `9/9` strict-parse rounds completed, and the model never wrote locked fields. Retained observations dropped from `120` in `v10` to `93`, but residual scene-continuity, composition, lighting, and action-continuity choices still left `0/9` structurally observable drafts. This `0.6B` path therefore remains diagnostic observation only and cannot auto-approve shots.
 
-后续 `v12` 只收紧确定性边界：新增独立的提取器 `v2`，逐词法命中保留可重算的极性决定；
-命中已登记受控词法或守卫词根的明确否定，若没有受控的同字段正向替代，会在证据落盘和模型调用前
-阻断，不能再作为残余字段交给模型猜测。受控的“而是/反而/改用”纠正、肯定惯用语、主体/摄影机穿越和“固定相机参数”
-另有固定边界。`v11` 继续永久绑定提取器 `v1`，既有证据不会被新语义重释。`v12` 目前只有
-固定合同、对抗回归和伪模型证据重算，没有新的真实模型运行或质量提升结论。
+Later `v12` only tightens the deterministic boundary: it adds a separate extractor `v2` that keeps recomputable polarity decisions for each lexical hit. An explicit negation that hits a registered controlled lexeme or guard stem, and that has no controlled same-field positive replacement, blocks before evidence is written and before the model is called. It can no longer be handed to the model as a residual field to guess. Controlled “而是/反而/改用” corrections, affirmative idioms, subject/camera crossover, and “固定相机参数” have additional fixed boundaries. `v11` stays permanently bound to extractor `v1`; existing evidence is not reinterpreted under the new semantics. `v12` currently has only a fixed contract, adversarial regressions, and fake-model evidence recomputation. It has no new live-model run and no quality-improvement claim.
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_local_shot_planner_trial
@@ -122,23 +106,23 @@ set +a
   --contract experiments/shot_planning/qwen3_0_6b_guarded_source_facts_smile_trial_v12.json
 ```
 
-完整合同与三次运行比较方式见[一句话镜头规划草案](docs/one-sentence-shot-planning.md)。
+The full contract and the three-run comparison method are in the [one-sentence shot planning draft](docs/one-sentence-shot-planning.md).
 
-## 本地参考验证
+## Local reference observations
 
-| 能力 | 当前观察 |
+| Capability | Current observation |
 | --- | --- |
-| 内存优化 | CogVideoX 八步同参数对照中，MPS 驱动峰值降低约 `63.884%`，新增换页为 `0` |
-| 五秒生成 | 完成 `41` 帧来源生成，并派生为 `40` 帧、`8 fps`、精确 `5.000` 秒候选 |
-| 语义连续 | 全部帧保留红色折纸船、水面、倒影和主要折痕 |
-| 方向控制 | 第二镜头净向右约 `116.30` 像素，全部 `39` 个相邻位移均向右，未见重影或边缘接缝 |
-| 自动回归 | `161` 个单元测试和 `1` 个迁移测试通过，测试本身不下载或运行模型 |
+| Memory optimization | In the CogVideoX eight-step same-parameter comparison, the MPS driver peak dropped about `63.884%`, and added swap was `0` |
+| Five-second generation | Completed a `41`-frame source generation and derived a `40`-frame, `8 fps`, exact `5.000` second candidate |
+| Semantic continuity | Every frame kept the red origami boat, water, reflection, and main crease |
+| Direction control | The second shot netted about `116.30` pixels to the right; all `39` adjacent displacements were rightward, with no ghosting or edge seams |
+| Automatic regression | `161` unit tests and `1` migration test passed. The tests themselves do not download or run models |
 
-这些结果证明受控生成过程可以闭合，不表示本地小模型是唯一运行路径，也不构成正式视觉质量接受。
+These results show that a controlled generation process can close. They do not mean the local small model is the only runtime path, and they are not a formal visual-quality acceptance.
 
-## 快速开始
+## Quick start
 
-以下步骤用于复现当前本地 MPS 参考实现，要求支持 MPS 的 Apple Silicon Mac、macOS 和 Python `3.12`。当前证据使用 Python `3.12.11`。
+The following steps reproduce the current local MPS reference implementation. They require an Apple Silicon Mac with MPS, macOS, and Python `3.12`. Current evidence used Python `3.12.11`.
 
 ```bash
 git clone git@github.com:senk-io/senk-video-generator.git
@@ -148,7 +132,7 @@ python3.12 -m venv .venv-provider-compat
 .venv-provider-compat/bin/python -m pip install -r requirements-provider-compat.txt
 ```
 
-只运行测试时，可以安装较小的依赖集：
+For tests only, a smaller dependency set is enough:
 
 ```bash
 .venv-provider-compat/bin/python -m pip install -r requirements-test.txt
@@ -156,21 +140,21 @@ python3.12 -m venv .venv-provider-compat
 .venv-provider-compat/bin/python -m unittest discover -s migration_tests -v
 ```
 
-## 本地界面
+## Local interfaces
 
 ```bash
 .venv-provider-compat/bin/python -m operator_console --open
 .venv-provider-compat/bin/python -m observatory --open
 ```
 
-- 作业控制台：`http://127.0.0.1:4320/`
-- 只读观测台：`http://127.0.0.1:4319/`
+- Operator console: `http://127.0.0.1:4320/`
+- Read-only observatory: `http://127.0.0.1:4319/`
 
-两个服务只允许绑定回环地址。控制台负责受控作业，观测台只读取状态，不启动模型或创建质量裁决。
+Both services may bind loopback only. The console owns controlled jobs. The observatory only reads state; it does not start models or create quality decisions.
 
-## 运行受控探针
+## Run a controlled probe
 
-下面的 CogVideoX 命令只是本地参考探针。真实模型运行前请先阅读[提供者兼容性试验](docs/provider-compatibility-trials.md)，确认没有残留生成进程，并检查合同中的内存与换页停止线。
+The CogVideoX commands below are a local reference probe. Before a real model run, read [provider compatibility trials](docs/provider-compatibility-trials.md), confirm no leftover generation processes, and check the memory and swap stop-lines in the contract.
 
 ```bash
 .venv-provider-compat/bin/python -m tools.run_provider_compatibility_trial \
@@ -182,32 +166,32 @@ python3.12 -m venv .venv-provider-compat
   evidence/runtime/LM-COGVIDEOX-LOCAL-PROBE-YYYYMMDDTHHMMSSZ
 ```
 
-每个执行标识只能使用一次。成功与失败证据都会保存在 `evidence/runtime/<execution-id>/`。校验通过只表示证据包可审计，不代表画面质量已经通过。
+Each execution id may be used only once. Success and failure evidence are both kept under `evidence/runtime/<execution-id>/`. A passing check means only that the evidence package is auditable. It does not mean picture quality has passed.
 
-## 目录
+## Layout
 
-| 目录 | 内容 |
+| Path | Contents |
 | --- | --- |
-| `foundation/`、`execution/`、`video/` | 治理、执行闭环与视频领域模型 |
-| `operator_console/`、`observatory/` | 本地作业控制台与只读观测台 |
-| `provider_adapters/` | 本地或远端提供者专属协议隔离层 |
-| `tools/`、`experiments/` | 执行工具、派生工具和固定试验合同 |
-| `evidence/runtime/` | 可复核的成功与失败证据样本 |
-| `tests/`、`migration_tests/` | 不加载模型的回归测试 |
+| `foundation/`, `execution/`, `video/` | Governance, the execution loop, and the video domain model |
+| `operator_console/`, `observatory/` | Local operator console and read-only observatory |
+| `provider_adapters/` | Isolation layer for local or remote provider protocols |
+| `tools/`, `experiments/` | Execution tools, derivation tools, and fixed trial contracts |
+| `evidence/runtime/` | Recheckable success and failure evidence samples |
+| `tests/`, `migration_tests/` | Regression tests that do not load models |
 
-## 文档
+## Documentation
 
-- [项目愿景](foundation/00_ProjectVision.md)
-- [治理制度](foundation/02_Governance.md)
-- [证据模型](foundation/05_Evidence.md)
-- [提供者兼容性与 Mac 实测](docs/provider-compatibility-trials.md)
-- [一句话镜头规划草案](docs/one-sentence-shot-planning.md)
-- [三十秒样片工作流](docs/30-second-pilot.md)
-- [作业控制台](operator_console/README.md)
-- [观测台](observatory/README.md)
+- [Project vision](foundation/00_ProjectVision.md)
+- [Governance](foundation/02_Governance.md)
+- [Evidence model](foundation/05_Evidence.md)
+- [Provider compatibility and Mac observations](docs/provider-compatibility-trials.md)
+- [One-sentence shot planning draft](docs/one-sentence-shot-planning.md)
+- [30-second pilot workflow](docs/30-second-pilot.md)
+- [Operator console](operator_console/README.md)
+- [Observatory](observatory/README.md)
 
-## 开源边界
+## Open-source boundary
 
-模型权重和 Hugging Face 缓存不包含在仓库中，也不得提交到 Git。Seedance 等外部能力的访问凭据同样不得进入仓库。使用者须分别遵守模型、服务、依赖和生成内容对应的许可与使用条件。
+Model weights and the Hugging Face cache are not in this repository and must not be committed to Git. Access credentials for Seedance and other external capabilities must also stay out of the repository. Users must separately follow the licenses and use conditions of the models, services, dependencies, and generated content they use.
 
-贡献前请阅读 [`CONTRIBUTING.md`](CONTRIBUTING.md)，安全问题请按 [`SECURITY.md`](SECURITY.md) 私密报告。项目代码和仓库文档采用 [`Apache-2.0`](LICENSE) 许可证。
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before contributing. Report security issues privately using [`SECURITY.md`](SECURITY.md). Project code and repository documentation are licensed under [`Apache-2.0`](LICENSE).

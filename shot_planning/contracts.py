@@ -1,4 +1,4 @@
-"""一句话镜头规划请求的固定合同。"""
+"""Frozen contract for a one-sentence shot-planning request."""
 
 from __future__ import annotations
 
@@ -70,7 +70,7 @@ SUBJECT_ID_PATTERN = re.compile(r"SUBJECT-[0-9]{3}")
 
 
 class ShotPlanningContractError(ValueError):
-    """规划请求无法建立确定性验证边界。"""
+    """The planning request cannot establish a deterministic verification boundary."""
 
     def __init__(self, code: str, message: str, path: str = "$") -> None:
         super().__init__(message)
@@ -89,7 +89,7 @@ def _positive_number(value: Any) -> bool:
 
 
 def validate_request(value: Any) -> dict[str, Any]:
-    """验证并复制非权威规划请求，不补造缺失创作事实。"""
+    """Validate and copy a non-authoritative planning request; do not invent missing creative facts."""
 
     if not isinstance(value, dict):
         raise ShotPlanningContractError("REQUEST_NOT_OBJECT", "规划请求必须是对象。")

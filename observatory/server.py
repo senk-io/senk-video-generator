@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""零额外依赖、只读、仅本机开放的视频构建观测服务。"""
+"""Zero extra-dependency, read-only, loopback-only video-build observation service."""
 
 from __future__ import annotations
 
@@ -86,7 +86,7 @@ def utc_now() -> str:
 
 
 def classify_memory_pressure(total_bytes: int, available_bytes: int, swap_used_bytes: int) -> tuple[str, str]:
-    """同时依据即时可用内存和换页残留判定本机资源状态。"""
+    """Classify local resource state from both immediate available memory and leftover swap."""
     available_ratio = available_bytes / total_bytes if total_bytes else 0
     if available_ratio < 0.08:
         return "critical", "AVAILABLE_MEMORY_CRITICAL"
@@ -214,7 +214,7 @@ class ObservatoryConfig:
 
 
 class ObservatoryState:
-    """聚合只读事实，不创建运行、裁决或制度状态。"""
+    """Aggregate read-only facts; create no run, decision, or institutional state."""
 
     def __init__(self, config: ObservatoryConfig | None = None) -> None:
         self.config = config or ObservatoryConfig()
@@ -893,12 +893,12 @@ def create_server(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="启动 senk-video-generator 本地构建观测台")
+    parser = argparse.ArgumentParser(description="Start the senk-video-generator local build observatory")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=4319)
     parser.add_argument("--evidence-root", type=Path, default=DEFAULT_EVIDENCE_ROOT)
     parser.add_argument("--cache-root", type=Path, default=DEFAULT_CACHE_ROOT)
-    parser.add_argument("--open", action="store_true", help="启动后打开默认浏览器")
+    parser.add_argument("--open", action="store_true", help="Open the default browser after start")
     return parser.parse_args()
 
 

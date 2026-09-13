@@ -1,4 +1,4 @@
-"""多句本地镜头规划评测套件，只汇总观察，不创建质量裁决。"""
+"""Multi-sentence local shot-planning evaluation suite: summarize observations only, create no quality decision."""
 
 from __future__ import annotations
 

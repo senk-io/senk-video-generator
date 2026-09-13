@@ -1,4 +1,4 @@
-"""可替换视频能力提供者的协议适配器。"""
+"""Protocol adapters for replaceable video capability providers."""
 
 from .minimax_h3 import (
     MINIMAX_H3_API_BASE,

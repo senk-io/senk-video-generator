@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""预检或执行固定三次的 Qwen3 本地镜头规划试验。"""
+"""Preflight or run the frozen three-pass Qwen3 local shot-planning trial."""
 
 from __future__ import annotations
 
@@ -153,7 +153,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--execute",
         action="store_true",
-        help="下载缺失权重并在 MPS 上执行固定三次；省略时只预检",
+        help="Download missing weights and run the frozen three passes on MPS; omit for preflight only",
     )
     return parser.parse_args()
 

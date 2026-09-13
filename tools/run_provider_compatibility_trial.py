@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""运行一个有界的视频提供者兼容性试验并生成公开安全的证据包。"""
+"""Run one bounded video-provider compatibility trial and write a publicly safe evidence package."""
 
 from __future__ import annotations
 
@@ -40,11 +40,11 @@ PRIVATE_PATH_PATTERNS = (
 
 
 class WorkerTerminationRequested(RuntimeError):
-    """父进程请求工作进程保存终止证据并释放资源。"""
+    """The parent asked the worker to save termination evidence and release resources."""
 
 
 class WorkerStageFailure(RuntimeError):
-    """阶段失败已经转换为不持有模型张量的公开安全观察。"""
+    """A stage failure has been converted into a publicly safe observation that holds no model tensors."""
 
     def __init__(self, observation: dict[str, Any]) -> None:
         super().__init__(str(observation.get("message", "工作阶段失败")))
@@ -146,7 +146,7 @@ def activate_pipeline_strategy(pipe: Any, strategy: str, device: str = "mps") ->
 
 
 def activate_prompt_encoding_strategy(pipe: Any, device: str = "mps") -> dict[str, Any]:
-    """以叶级顺序卸载运行超大文本编码器，避免整模型同时进入 MPS。"""
+    """Run a very large text encoder with leaf-order offload so the whole model does not enter MPS at once."""
     pipe.enable_sequential_cpu_offload(device=device)
     return {
         "strategy": "mps_sequential_cpu_offload",
@@ -178,7 +178,7 @@ def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
 
 
 def validate_bounded_trial_variant(contract: dict[str, Any], provider_key: str) -> None:
-    """只允许固定 CogVideoX 基线的质量探针与五秒候选观察变体。"""
+    """Allow only quality-probe and five-second candidate observation variants of the frozen CogVideoX baseline."""
     baseline = load_contract()
     invariant_fields = (
         "shared_seed",
@@ -801,7 +801,7 @@ def prepare_wan_prompt_embeddings(
     pipeline_class: Any,
     observation_callback: Any = None,
 ) -> dict[str, Any]:
-    """以叶级顺序卸载形成提示词嵌入，随后在装载 Transformer 前完整释放。"""
+    """Form prompt embeddings with leaf-order offload, then fully release before loading the Transformer."""
     return prepare_prompt_embeddings(
         snapshot_path=snapshot_path,
         prompt=prompt,
@@ -824,7 +824,7 @@ def prepare_cogvideox_prompt_embeddings(
     pipeline_class: Any,
     observation_callback: Any = None,
 ) -> dict[str, Any]:
-    """独立形成 CogVideoX 提示词嵌入并释放约九吉字节文本编码器。"""
+    """Form CogVideoX prompt embeddings independently and release the roughly nine-gigabyte text encoder."""
     return prepare_prompt_embeddings(
         snapshot_path=snapshot_path,
         prompt=prompt,
@@ -850,7 +850,7 @@ def prepare_prompt_embeddings(
     max_sequence_length: int,
     observation_callback: Any = None,
 ) -> dict[str, Any]:
-    """以叶级顺序卸载形成提示词嵌入，并在装载去噪组件前释放编码器。"""
+    """Form prompt embeddings with leaf-order offload and release the encoder before loading denoise components."""
     stage_pipe = None
     tokenizer = None
     text_encoder = None
@@ -921,7 +921,7 @@ def build_wan_denoiser_pipeline(
     scheduler_class: Any,
     pipeline_class: Any,
 ) -> Any:
-    """在文本编码器释放后，仅装载去噪和解码所需组件。"""
+    """After the text encoder is released, load only the components needed for denoise and decode."""
     transformer = transformer_class.from_pretrained(
         snapshot_path,
         subfolder="transformer",
@@ -960,7 +960,7 @@ def build_cogvideox_denoiser_pipeline(
     scheduler_class: Any,
     pipeline_class: Any,
 ) -> Any:
-    """在文本编码器释放后装载 CogVideoX 去噪器和 VAE。"""
+    """After the text encoder is released, load the CogVideoX denoiser and VAE."""
     transformer = transformer_class.from_pretrained(
         snapshot_path,
         subfolder="transformer",
@@ -994,7 +994,7 @@ def build_cogvideox_denoiser_pipeline(
 
 
 def normalize_mps_float64_buffers(module: Any, torch_module: Any) -> list[dict[str, Any]]:
-    """把模型中 MPS 无法承载的 float64 缓冲区降为 float32。"""
+    """Downcast model float64 buffers that MPS cannot host to float32."""
     normalized: list[dict[str, Any]] = []
     for full_name, buffer in list(module.named_buffers()):
         if buffer.dtype != torch_module.float64:

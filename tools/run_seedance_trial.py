@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""预检或执行一次显式计费的 Seedance / BytePlus ModelArk 远端试验。"""
+"""Preflight or run one explicitly billed Seedance / BytePlus ModelArk remote trial."""
 
 from __future__ import annotations
 
@@ -152,7 +152,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--execute",
         action="store_true",
-        help="显式提交计费远端任务；省略时只执行无费用预检",
+        help="Submit a billed remote task explicitly; omit for a no-cost preflight only",
     )
     return parser.parse_args()
 

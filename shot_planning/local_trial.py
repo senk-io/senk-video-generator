@@ -1,4 +1,4 @@
-"""本地文本小模型镜头规划试验，保留原始输出且不自动重试。"""
+"""Local small-text-model shot-planning trial: keep raw output and do not auto-retry."""
 
 from __future__ import annotations
 
@@ -155,7 +155,7 @@ NON_GOALS = frozenset(
 
 
 class LocalTrialError(RuntimeError):
-    """本地试验无法满足固定合同或证据边界。"""
+    """The local trial cannot satisfy the frozen contract or evidence boundary."""
 
 
 def utc_now() -> str:
@@ -695,7 +695,7 @@ def compile_payload_to_proposal(
     proposal_id: str,
     run_id: str,
 ) -> Any:
-    """只编译标识、引用和证据封装，不修补模型遗漏的创意字段。"""
+    """Compile only identifiers, citations, and evidence wrapping; do not patch creative fields the model omitted."""
 
     if not isinstance(payload, dict):
         return payload
@@ -1043,7 +1043,7 @@ def _prepare_stage_payload(
     model_payload: Any,
     source_extraction: dict[str, Any] | None,
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]], dict[str, Any] | None]:
-    """把模型原始阶段载荷转换为可观察的规范阶段载荷。"""
+    """Convert a raw model stage payload into an observable canonical stage payload."""
 
     if contract["schema_version"] in {
         TRIAL_SCHEMA_VERSION_V11,
@@ -1215,7 +1215,7 @@ def compile_observable_stages_to_proposal(
     proposal_id: str,
     run_id: str,
 ) -> dict[str, Any]:
-    """只展开模型选出的受控语义，不自动修补或新增创作事实。"""
+    """Expand only model-selected controlled semantics; do not auto-patch or add creative facts."""
 
     scene = stages["scene"]
     beat = stages["beat"]
@@ -1318,7 +1318,7 @@ def compile_tokenized_context_stages_to_proposal(
     proposal_id: str,
     run_id: str,
 ) -> dict[str, Any]:
-    """展开场景标记，并复用镜头核心阶段的完整动作描述。"""
+    """Expand scene marks and reuse the full action description from the shot-core stage."""
 
     context = stages["scene_context"]
     core = stages["shot_core"]
@@ -1354,7 +1354,7 @@ def compile_generalized_stages_to_proposal(
     proposal_id: str,
     run_id: str,
 ) -> dict[str, Any]:
-    """把第八版通用受控标记编译成第二版非权威提案。"""
+    """Compile edition-8 general controlled marks into an edition-2 non-authoritative proposal."""
 
     return compile_payload_to_proposal(
         build_generalized_payload(stages, request),
@@ -1370,7 +1370,7 @@ def _build_staged_prompt(
     request: dict[str, Any],
     stage: str,
 ) -> dict[str, Any]:
-    """按试验版本确定性重建阶段提示，供运行器和校验器共用。"""
+    """Rebuild stage prompts deterministically by trial edition for the runner and verifier to share."""
 
     schema_version = contract["schema_version"]
     if schema_version == TRIAL_SCHEMA_VERSION_V12:
@@ -1489,7 +1489,7 @@ def _run_staged_trial(
             try:
                 raw_output = generate(prompt, model_call_count)
                 generation_error = None
-            except Exception as exc:  # 固定阶段失败不触发额外调用。
+            except Exception as exc:  # A frozen-stage failure must not trigger extra calls.
                 raw_output = ""
                 generation_error = {"type": type(exc).__name__, "message": str(exc)}
             raw_outputs[stage] = raw_output
@@ -1781,7 +1781,7 @@ def run_trial(
         try:
             raw_output = generate(prompt, run_index)
             generation_error = None
-        except Exception as exc:  # 单次失败形成观察；下一编号运行不是重试。
+        except Exception as exc:  # A single failure becomes an observation; the next numbered run is not a retry.
             raw_output = ""
             generation_error = {"type": type(exc).__name__, "message": str(exc)}
         elapsed_seconds = round(time.monotonic() - started, 6)
@@ -1957,7 +1957,7 @@ def _verify_environment_record(
     contract: dict[str, Any],
     allow_test_environment: bool,
 ) -> None:
-    """核对运行环境的边界字段；测试证据只允许显式最小占位。"""
+    """Check environment boundary fields; test evidence may use only an explicit minimal placeholder."""
 
     if environment == {"test_environment": True}:
         if allow_test_environment:
@@ -2035,7 +2035,7 @@ def _verify_environment_record(
 
 
 def _observation_documents_equal(left: Any, right: Any) -> bool:
-    """观察顺序不承载语义；按完整观察对象的规范 JSON 比较多重集合。"""
+    """Observation order carries no semantics; compare multisets by canonical JSON of the full observation object."""
 
     if not isinstance(left, dict) or not isinstance(right, dict):
         return left == right
@@ -2058,7 +2058,7 @@ def verify_evidence(
     *,
     allow_test_environment: bool = False,
 ) -> dict[str, Any]:
-    """重新计算本地规划证据包完整性，不创建镜头或质量裁决。"""
+    """Recompute local planning evidence-package integrity; create no shot or quality decision."""
 
     manifest = json.loads((evidence_dir / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("schema_version") != "local-shot-planner-evidence-manifest.v1":

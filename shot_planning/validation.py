@@ -1,4 +1,4 @@
-"""只记录镜头规划草案的结构观察，不创建接受裁决。"""
+"""Record structural observations of a shot-planning draft only; create no acceptance decision."""
 
 from __future__ import annotations
 
@@ -133,7 +133,7 @@ def _forbidden_decision_paths(value: Any, path: str = "$") -> list[str]:
 
 
 def observe_proposal(request_value: Any, proposal: Any) -> dict[str, Any]:
-    """比较请求与模型草案，返回结构观察和差异，不返回通过或失败。"""
+    """Compare the request with the model draft and return structural observations and differences, not pass or fail."""
 
     request = validate_request(request_value)
     observations: list[PlanningObservation] = []

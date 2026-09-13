@@ -1,4 +1,4 @@
-"""样片候选选择与可追溯结构组装。"""
+"""Pilot candidate selection and traceable structural assembly."""
 
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ def atomic_write_json(file_path: Path, value: dict[str, Any]) -> None:
 
 
 class PilotWorkspace:
-    """保留选择历史，并只从当前人工选择形成结构样片。"""
+    """Keep selection history and form a structural pilot only from the current human selection."""
 
     def __init__(
         self,

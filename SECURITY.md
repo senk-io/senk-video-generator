@@ -1,23 +1,23 @@
-# 安全策略
+# Security policy
 
-## 支持范围
+## Supported scope
 
-安全修复以默认分支 `bakboem-dev` 的最新版本为准。历史提交和本地生成的媒体证据不单独提供安全维护承诺。
+Security fixes track the latest revision of the default branch `bakboem-dev`. Historical commits and locally generated media evidence do not carry a separate security-maintenance promise.
 
-## 私密报告漏洞
+## Private vulnerability reports
 
-请使用 GitHub 仓库的“私密报告安全漏洞”入口提交报告，不要为尚未修复的漏洞创建公开议题。报告应尽量包含：
+Use the GitHub repository's private vulnerability reporting entry. Do not open a public issue for an unfixed vulnerability. Reports should include as much of the following as possible:
 
-- 受影响的提交与组件；
-- 可复现步骤和最小输入；
-- 实际影响与攻击前提；
-- 已验证的缓解方式；
-- 是否涉及已泄露的令牌、模型凭据或个人数据。
+- Affected commits and components
+- Reproduction steps and a minimal input
+- Actual impact and attack preconditions
+- Any verified mitigation
+- Whether leaked tokens, model credentials, or personal data are involved
 
-维护者完成初步确认前，请勿公开利用细节。普通缺陷和功能请求仍应使用公开议题。
+Do not publish exploit details before maintainers complete an initial confirmation. Ordinary defects and feature requests should still use public issues.
 
-## 本地服务边界
+## Local service boundary
 
-作业控制台和观测台是本机工具，只允许绑定回环地址。不要把 `4320` 或 `4319` 端口直接暴露到局域网或互联网，也不要把包含令牌、个人路径或未脱敏日志的证据包提交到公开仓库。
+The operator console and observatory are machine-local tools and may bind loopback only. Do not expose ports `4320` or `4319` directly to a LAN or the internet. Do not commit evidence packages that contain tokens, personal paths, or unsanitized logs to a public repository.
 
-模型权重和 Hugging Face 缓存不属于本仓库内容。使用者需要自行保护缓存目录、访问令牌和上游模型凭据。
+Model weights and the Hugging Face cache are not part of this repository. Users must protect their own cache directories, access tokens, and upstream model credentials.

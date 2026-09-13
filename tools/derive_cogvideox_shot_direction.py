@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从既有九帧候选派生非权威镜头方向观察。"""
+"""Derive a non-authoritative shot-direction observation from an existing nine-frame candidate."""
 
 from __future__ import annotations
 

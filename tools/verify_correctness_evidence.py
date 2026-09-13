@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立复核 CR-0015 正确性证据包。"""
+"""Independently recheck the CR-0015 correctness evidence package."""
 
 from __future__ import annotations
 
