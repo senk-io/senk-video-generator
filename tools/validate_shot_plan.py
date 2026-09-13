@@ -1,4 +1,4 @@
-"""读取真实本地模型输出并打印非权威规划观察。"""
+"""Read real local-model output and print non-authoritative planning observations."""
 
 from __future__ import annotations
 
@@ -18,20 +18,20 @@ def _read_json(path: Path) -> Any:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="验证一句话镜头规划草案；输出观察，不创建通过、失败或选择裁决。"
+        description="Validate a one-sentence shot-planning draft; emit observations, not pass/fail/selection decisions."
     )
-    parser.add_argument("--request", required=True, type=Path, help="规划请求 JSON")
+    parser.add_argument("--request", required=True, type=Path, help="Planning-request JSON")
     parser.add_argument(
         "--proposal",
         action="append",
         default=[],
         type=Path,
-        help="本地模型原始规划 JSON；重复传入时生成稳定性观察",
+        help="Raw local-model planning JSON; pass more than once to emit stability observations",
     )
     parser.add_argument(
         "--print-prompt",
         action="store_true",
-        help="打印可交给本地文本模型的提示合同",
+        help="Print the prompt contract that can be given to a local text model",
     )
     return parser.parse_args()
 

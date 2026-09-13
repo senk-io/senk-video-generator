@@ -1,4 +1,4 @@
-"""第十版标量候选的通用中文释义合同。"""
+"""Edition-10 general Chinese-gloss contract for scalar candidates."""
 
 from __future__ import annotations
 
@@ -100,7 +100,7 @@ def choice_glossary_for_stage(
     stage: str,
     allowed_choices: dict[str, str],
 ) -> dict[str, dict[str, str]]:
-    """只返回当前提示已允许候选的释义，不泄漏保留答案。"""
+    """Return glosses only for candidates already allowed by the current prompt; do not leak reserved answers."""
 
     if stage == "scene_context":
         descriptions = TOKENIZED_CONTEXT_DESCRIPTIONS

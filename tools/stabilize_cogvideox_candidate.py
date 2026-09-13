@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从既有五秒候选资产派生非权威时序稳定观察。"""
+"""Derive a non-authoritative temporal-stability observation from an existing five-second candidate asset."""
 
 from __future__ import annotations
 

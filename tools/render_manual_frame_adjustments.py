@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""按显式逐帧合同渲染 Shot 002 的非权威手工调整候选。"""
+"""Render a non-authoritative Shot 002 manual-adjustment candidate from an explicit per-frame contract."""
 
 from __future__ import annotations
 
@@ -220,7 +220,7 @@ def validate_contract(contract: dict[str, Any]) -> None:
 
 
 def transform_frame(frame: np.ndarray, adjustment: dict[str, Any], padding: int) -> np.ndarray:
-    """围绕画面中心执行确定性的缩放、旋转、平移。"""
+    """Apply deterministic scale, rotation, and translation around the picture center."""
     x_pixels = float(adjustment["x_pixels"])
     y_pixels = float(adjustment["y_pixels"])
     scale = float(adjustment["scale"])

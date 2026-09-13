@@ -1,4 +1,4 @@
-"""30 秒样片项目合同与只读状态投影。"""
+"""30-second pilot project contract and read-only state projection."""
 
 from pilot_project.catalog import PilotCatalog, PilotContractError
 from pilot_project.workspace import PilotOperationError, PilotWorkspace

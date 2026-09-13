@@ -1,4 +1,4 @@
-"""把中立规划请求编译为本地文本模型提示，不包含视频提供者语法。"""
+"""Compile a neutral planning request into a local text-model prompt with no video-provider syntax."""
 
 from __future__ import annotations
 
@@ -161,7 +161,7 @@ def build_local_planner_prompt(
 
 
 def build_local_planner_payload_prompt(request_value: Any) -> dict[str, Any]:
-    """只让小模型表达创意载荷；标识、证据和状态由系统编译。"""
+    """Let the small model express only the creative payload; identifiers, evidence, and status are compiled by the system."""
 
     request = validate_request(request_value)
     if request["schema_version"] == REQUEST_SCHEMA_VERSION_V2:
@@ -288,7 +288,7 @@ source_span 使用 Python 字符串下标并逐字匹配原句，全部非标点
 
 
 def build_local_planner_stage_prompt(request_value: Any, stage: str) -> dict[str, Any]:
-    """为六亿参数模型建立单职责扁平 JSON 阶段。"""
+    """Build single-duty flat JSON stages for a 0.6B-parameter model."""
 
     request = validate_request(request_value)
     common = {
@@ -438,7 +438,7 @@ def build_local_planner_observable_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """把自由描述拆成受控的构图、表演、灯光、连续性和检查阶段。"""
+    """Split free description into controlled composition, performance, lighting, continuity, and check stages."""
 
     request = validate_request(request_value)
     if stage not in OBSERVABLE_STAGE_ORDER:
@@ -535,7 +535,7 @@ def build_local_planner_context_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第六版提示：固定场景字段角色，并约束未声明运镜的相机组合。"""
+    """Edition-6 prompt: freeze scene-field roles and constrain undeclared camera-move combinations."""
 
     request = validate_request(request_value)
     context_values = request.get("controlled_context_allowed_values")
@@ -571,7 +571,7 @@ def build_local_planner_tokenized_context_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第七版提示：场景用受控标记，节拍动作复用完整镜头动作。"""
+    """Edition-7 prompt: scenes use controlled marks; beat action reuses the full shot action."""
 
     request = validate_request(request_value)
     if stage not in TOKENIZED_CONTEXT_STAGE_ORDER:
@@ -644,7 +644,7 @@ def build_local_planner_generalized_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第八版提示：通用主体尺度、行为、灯光和连续性标记。"""
+    """Edition-8 prompt: general subject-scale, behavior, lighting, and continuity marks."""
 
     request = validate_request(request_value)
     if (
@@ -731,7 +731,7 @@ def build_local_planner_scalar_choice_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第九版提示：用分隔字符串表达候选，禁止把选中值包装成数组。"""
+    """Edition-9 prompt: express candidates as delimited strings; do not wrap a selected value in an array."""
 
     prompt = build_local_planner_generalized_stage_prompt(request_value, stage)
     body = json.loads(prompt["user"])
@@ -759,7 +759,7 @@ def build_local_planner_semantic_gloss_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第十版提示：为允许候选增加通用释义，不注入保留答案。"""
+    """Edition-10 prompt: add general glosses for allowed candidates without injecting reserved answers."""
 
     prompt = build_local_planner_scalar_choice_stage_prompt(request_value, stage)
     body = json.loads(prompt["user"])
@@ -795,7 +795,7 @@ def _build_local_planner_hybrid_stage_prompt(
     extractor_contract_version: str,
     prompt_contract_version: str,
 ) -> dict[str, Any]:
-    """按版本提取原句事实，模型只填写未锁定的残余字段。"""
+    """Extract source facts by version; the model may fill only unlocked residual fields."""
 
     request = validate_request(request_value)
     extraction = extract_source_facts(
@@ -893,7 +893,7 @@ def build_local_planner_hybrid_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第十一版历史提示：固定使用第一版原句事实合同。"""
+    """Edition-11 historical prompt: permanently use the edition-1 source-fact contract."""
 
     return _build_local_planner_hybrid_stage_prompt(
         request_value,
@@ -907,7 +907,7 @@ def build_local_planner_guarded_source_fact_stage_prompt(
     request_value: Any,
     stage: str,
 ) -> dict[str, Any]:
-    """第十二版提示：使用收紧否定及主体/相机边界的提取合同。"""
+    """Edition-12 prompt: use the extractor contract that tightens negation and subject/camera bounds."""
 
     assert_model_invocation_allowed(evaluate_pre_model_guard(request_value))
     return _build_local_planner_hybrid_stage_prompt(

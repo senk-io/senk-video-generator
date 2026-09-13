@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""复核本地镜头规划通用性套件证据包的完整性。"""
+"""Recheck integrity of a local shot-planner generality-suite evidence package."""
 
 from __future__ import annotations
 

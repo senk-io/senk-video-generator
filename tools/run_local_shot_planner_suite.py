@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""预检或执行固定三用例的 Qwen3 本地镜头规划通用性套件。"""
+"""Preflight or run the frozen three-case Qwen3 local shot-planning generality suite."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--execute",
         action="store_true",
-        help="使用一次模型加载依次执行三用例、九轮、六十三次固定阶段调用",
+        help="Run three cases, nine rounds, and sixty-three frozen stage calls sequentially with one model load",
     )
     return parser.parse_args()
 

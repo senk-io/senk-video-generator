@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""校验关键帧自动展开证据的参数、来源、输出和治理边界。"""
+"""Verify parameters, source, output, and governance bounds of keyframe auto-expansion evidence."""
 
 from __future__ import annotations
 

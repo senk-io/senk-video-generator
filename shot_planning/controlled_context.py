@@ -1,4 +1,4 @@
-"""第七版场景角色标记与确定性上下文编译合同。"""
+"""Edition-7 scene-role marks and deterministic context-compile contract."""
 
 from __future__ import annotations
 

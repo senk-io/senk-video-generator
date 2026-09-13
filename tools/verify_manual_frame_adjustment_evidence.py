@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""校验逐帧手工调整证据包的来源绑定、文件摘要与治理边界。"""
+"""Verify source binding, file digests, and governance bounds of a per-frame manual-adjustment evidence package."""
 
 from __future__ import annotations
 

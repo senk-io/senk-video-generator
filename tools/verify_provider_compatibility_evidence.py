@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""独立校验提供者兼容性观察证据包。"""
+"""Independently verify a provider-compatibility observation evidence package."""
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def read_video_metadata(path: Path) -> dict[str, Any]:
 
 
 def verify_operator_memory_contract(request: dict[str, Any], summary: dict[str, Any]) -> None:
-    """校验受控作业的低内存合同与实际运行证据是否一致。"""
+    """Verify that a controlled job's low-memory contract matches the actual run evidence."""
     if request.get("contract_status") != "LOCAL_OPERATOR_JOB_NON_AUTHORITATIVE":
         return
     if not request.get("generation_profile_key"):

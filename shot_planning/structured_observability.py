@@ -1,4 +1,4 @@
-"""小模型结构化可观察阶段的受控词汇与确定性文本映射。"""
+"""Controlled lexicon and deterministic text mapping for small-model structured observable stages."""
 
 from __future__ import annotations
 
@@ -244,13 +244,13 @@ TOKEN_DESCRIPTIONS: Final[dict[str, dict[str, dict[str, str]]]] = {
 
 
 def describe_token(stage: str, field: str, token: str) -> str:
-    """把受控标记确定性映射为可观察文本；未知值原样保留供观察器报告。"""
+    """Map controlled marks to observable text deterministically; keep unknown values as-is for the observer to report."""
 
     return TOKEN_DESCRIPTIONS.get(stage, {}).get(field, {}).get(token, token)
 
 
 def compiler_contract() -> dict[str, Any]:
-    """返回可被证据包摘要绑定的版本化编译合同。"""
+    """Return the versioned compile contract that an evidence-package digest can bind."""
 
     return {
         "schema_version": CONTROLLED_OBSERVABILITY_COMPILER_VERSION,
@@ -292,7 +292,7 @@ CONTROLLED_STAGE_FIELDS: Final[dict[str, tuple[str, ...]]] = {
 def observe_controlled_semantic_stability(
     runs: list[dict[str, dict[str, Any]] | None],
 ) -> dict[str, Any]:
-    """观察受控字段的一致性，不把观察结果升级为质量裁决。"""
+    """Observe consistency of controlled fields; do not promote the observation into a quality decision."""
 
     comparable: list[dict[str, str]] = []
     excluded_run_indices: list[int] = []

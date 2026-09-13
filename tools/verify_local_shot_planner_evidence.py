@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""复核本地镜头规划试验证据包的文件和摘要完整性。"""
+"""Recheck file-set and digest integrity of a local shot-planner trial evidence package."""
 
 from __future__ import annotations
 

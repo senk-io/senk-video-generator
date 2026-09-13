@@ -1,4 +1,4 @@
-"""senk-video-generator 本地观测台。"""
+"""senk-video-generator local observatory."""
 
 from .server import ObservatoryState, create_server
 

@@ -1,4 +1,4 @@
-"""验证模型无关的样片合同，并投影逐镜头候选状态。"""
+"""Validate a provider-neutral pilot contract and project per-shot candidate state."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ REQUIRED_EXPECTATION_FIELDS = frozenset(
 
 
 class PilotContractError(ValueError):
-    """样片合同或作业绑定不满足固定约束。"""
+    """The pilot contract or job binding does not satisfy a frozen constraint."""
 
     def __init__(self, code: str, message: str) -> None:
         super().__init__(message)
@@ -33,7 +33,7 @@ def canonical_sha256(value: Any) -> str:
 
 
 class PilotCatalog:
-    """从受版本控制的项目目录读取合同，不创建创意接受决定。"""
+    """Read the contract from a version-controlled project directory; create no creative-acceptance decision."""
 
     def __init__(self, projects_root: Path) -> None:
         self.projects_root = projects_root.resolve()

@@ -1,4 +1,4 @@
-"""本地非权威视频作业请求的固定字段、范围和执行合同编译。"""
+"""Frozen fields, ranges, and execution-contract compilation for local non-authoritative video job requests."""
 
 from __future__ import annotations
 

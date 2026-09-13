@@ -1,4 +1,4 @@
-"""第八版通用可观察阶段的受控词汇与确定性编译合同。"""
+"""Edition-8 controlled lexicon and deterministic compile contract for general observable stages."""
 
 from __future__ import annotations
 
@@ -325,7 +325,7 @@ def _camera_check(core: dict[str, Any]) -> str:
 def build_generalized_payload(
     stages: dict[str, dict[str, Any]], request: dict[str, Any]
 ) -> dict[str, Any]:
-    """只把模型选中的通用标记展开为提案载荷，不注入创作默认值。"""
+    """Expand only model-selected general marks into the proposal payload; inject no creative defaults."""
 
     context = stages["scene_context"]
     core = stages["shot_core"]
