@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Preflight or run the frozen three-case Qwen3 local shot-planning generality suite."""
+"""Preflight or run the versioned three-case Qwen3 local shot-planning generality suite.
+
+The default suite is the edition-12 guarded-source-facts contract. Historical
+suites remain selectable with --suite. Omitting --execute is preflight only and
+does not run the live-model 63-call suite.
+"""
 
 from __future__ import annotations
 
@@ -15,7 +20,7 @@ DEFAULT_SUITE = (
     REPO_ROOT
     / "experiments"
     / "shot_planning"
-    / "qwen3_0_6b_generalization_suite_v1.json"
+    / "qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json"
 )
 DEFAULT_EVIDENCE_ROOT = REPO_ROOT / "evidence" / "runtime"
 if str(REPO_ROOT) not in sys.path:
@@ -38,7 +43,16 @@ def load_json(path: Path) -> Any:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", type=Path, default=DEFAULT_SUITE)
+    parser.add_argument(
+        "--suite",
+        type=Path,
+        default=DEFAULT_SUITE,
+        help=(
+            "Evaluation-suite contract. Default: edition-12 guarded-source-facts "
+            "suite (63 planned calls, zero automatic retries). Historical v8–v11 "
+            "suites stay selectable by path."
+        ),
+    )
     parser.add_argument("--execution-id")
     parser.add_argument("--evidence-root", type=Path, default=DEFAULT_EVIDENCE_ROOT)
     parser.add_argument(

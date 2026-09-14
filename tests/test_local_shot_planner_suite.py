@@ -6,6 +6,7 @@ import unittest
 from copy import deepcopy
 from pathlib import Path
 
+from shot_planning.contracts import canonical_sha256
 from shot_planning.evaluation_suite import (
     load_suite_cases,
     run_suite,
@@ -14,6 +15,7 @@ from shot_planning.evaluation_suite import (
     write_suite_manifest,
 )
 from shot_planning.local_trial import LocalTrialError, write_json, write_manifest
+from shot_planning.source_facts import SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2
 from tests.test_generalized_shot_planner_trial import CASE_FILES, case_values
 
 
@@ -36,6 +38,19 @@ HYBRID_SOURCE_FACTS_SUITE_PATH = (
     / "shot_planning"
     / "qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json"
 )
+GUARDED_SOURCE_FACTS_SUITE_PATH = (
+    ROOT
+    / "experiments"
+    / "shot_planning"
+    / "qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json"
+)
+V12_TRIAL_FILES = {
+    "CRY_RAIN_CLOSEUP": "qwen3_0_6b_guarded_source_facts_crying_trial_v12.json",
+    "SMILE_INDOOR_MEDIUM": "qwen3_0_6b_guarded_source_facts_smile_trial_v12.json",
+    "BICYCLE_LEFT_TO_RIGHT_WIDE": (
+        "qwen3_0_6b_guarded_source_facts_bicycle_trial_v12.json"
+    ),
+}
 
 
 def load(path: Path) -> dict:
@@ -96,6 +111,83 @@ class LocalShotPlannerSuiteTest(unittest.TestCase):
                 for loaded in cases
             },
             {"local-shot-planner-hybrid-source-facts.v11"},
+        )
+
+    def test_guarded_suite_binds_three_uniform_v12_cases(self) -> None:
+        suite, cases = load_suite_cases(load(GUARDED_SOURCE_FACTS_SUITE_PATH), ROOT)
+        self.assertEqual(
+            suite["suite_id"], "LOCAL-SHOT-PLANNER-GUARDED-SOURCE-FACTS-001"
+        )
+        runner_source = (
+            ROOT / "tools" / "run_local_shot_planner_suite.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json",
+            runner_source,
+        )
+        self.assertNotIn(
+            'qwen3_0_6b_generalization_suite_v1.json"\n)',
+            runner_source,
+        )
+        self.assertEqual(len(cases), 3)
+        self.assertEqual(suite["resource_budget"]["maximum_model_calls"], 63)
+        self.assertEqual(suite["resource_budget"]["maximum_runs"], 9)
+        self.assertEqual(suite["resource_budget"]["retry_count"], 0)
+        self.assertEqual(suite["methodology_invariants"]["retry_count"], 0)
+        self.assertEqual(
+            {loaded["trial"]["schema_version"] for loaded in cases},
+            {"local-shot-planner-trial.v12"},
+        )
+        self.assertEqual(
+            {
+                loaded["trial"]["prompt_strategy"]["prompt_contract_version"]
+                for loaded in cases
+            },
+            {"local-shot-planner-guarded-source-facts.v12"},
+        )
+        self.assertEqual(
+            {
+                loaded["trial"]["prompt_strategy"][
+                    "source_fact_extractor_contract_version"
+                ]
+                for loaded in cases
+            },
+            {SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2},
+        )
+        self.assertEqual(
+            {loaded["trial"]["model"]["revision"] for loaded in cases},
+            {"c1899de289a04d12100db370d81485cdf75e47ca"},
+        )
+        for loaded in cases:
+            case_id = loaded["case"]["case_id"]
+            trial_path = ROOT / "experiments" / "shot_planning" / V12_TRIAL_FILES[case_id]
+            self.assertEqual(
+                loaded["case"]["trial_binding"]["trial_contract_file"],
+                trial_path.relative_to(ROOT).as_posix(),
+            )
+            self.assertEqual(
+                loaded["case"]["trial_binding"]["trial_contract_sha256"],
+                canonical_sha256(load(trial_path)),
+            )
+            self.assertEqual(
+                loaded["case"]["request_binding"]["request_sha256"],
+                canonical_sha256(loaded["request"]),
+            )
+        self.assertEqual(suite["status"], "BOUNDED_NON_AUTHORITATIVE_EVALUATION")
+        self.assertIn("formal_shot_spec_creation", suite["non_goals"])
+        self.assertIn("formal_quality_acceptance", suite["non_goals"])
+        self.assertNotIn("planning_gate_passed", suite)
+        self.assertFalse(suite.get("planning_gate_passed", False))
+        self.assertEqual(
+            [loaded["case"]["case_id"] for loaded in cases],
+            ["CRY_RAIN_CLOSEUP", "SMILE_INDOOR_MEDIUM", "BICYCLE_LEFT_TO_RIGHT_WIDE"],
+        )
+        request_files = {
+            loaded["case"]["request_binding"]["request_file"] for loaded in cases
+        }
+        self.assertTrue(
+            all("held_out_" not in path for path in request_files),
+            "held-out requests must not enter the 63-call suite",
         )
 
     def test_suite_rejects_order_path_digest_or_budget_drift(self) -> None:
@@ -358,6 +450,60 @@ class LocalShotPlannerSuiteTest(unittest.TestCase):
             write_suite_manifest(evidence_dir, case_index)
             with self.assertRaisesRegex(LocalTrialError, "原句事实提取无法"):
                 verify_suite_evidence(evidence_dir)
+
+    def test_guarded_suite_runs_residual_calls_without_claiming_planning_gate(
+        self,
+    ) -> None:
+        suite = load(GUARDED_SOURCE_FACTS_SUITE_PATH)
+        outputs = stage_outputs_by_source()
+        calls: list[tuple[int, str, str, tuple[str, ...]]] = []
+
+        def generate(prompt: dict, global_call_index: int) -> str:
+            body = json.loads(prompt["user"])
+            source = body["input"]["source_text"]
+            required = tuple(body["stage_contract"]["required_keys"])
+            calls.append((global_call_index, source, prompt["stage"], required))
+            return json.dumps(
+                {field: outputs[source][prompt["stage"]][field] for field in required},
+                ensure_ascii=False,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            evidence_dir = Path(temporary) / "LOCAL-GUARDED-SUITE-TEST-001"
+            observation = run_suite(
+                suite,
+                repo_root=ROOT,
+                suite_contract_path=GUARDED_SOURCE_FACTS_SUITE_PATH,
+                runner_path=Path(__file__),
+                execution_id="LOCAL-GUARDED-SUITE-TEST-001",
+                evidence_dir=evidence_dir,
+                generate=generate,
+                model_load_count_observed=1,
+            )
+            self.assertEqual(len(calls), 63)
+            self.assertEqual([item[0] for item in calls], list(range(1, 64)))
+            self.assertTrue(all(item[3] for item in calls))
+            self.assertEqual(observation["run_count_observed"], 9)
+            self.assertEqual(observation["automatic_retry_count"], 0)
+            self.assertFalse(observation["formal_shot_spec_created"])
+            self.assertFalse(observation["formal_quality_acceptance_created"])
+            self.assertFalse(observation["formal_decision_created"])
+            self.assertTrue(observation["creative_review_required"])
+            case_index = load(evidence_dir / "case_index.json")
+            for index_item in case_index:
+                case_dir = evidence_dir / index_item["evidence_path"]
+                extraction = load(case_dir / "source_fact_extraction.json")
+                self.assertEqual(
+                    extraction["extractor"]["contract_version"],
+                    SOURCE_FACT_EXTRACTOR_CONTRACT_VERSION_V2,
+                )
+            verification = verify_suite_evidence(evidence_dir)
+            self.assertEqual(
+                verification["package_integrity_observation"],
+                "COMPLETE_AND_DIGEST_MATCHED",
+            )
+            self.assertFalse(verification["formal_shot_spec_created"])
+            self.assertFalse(verification["formal_quality_acceptance_created"])
 
 
 if __name__ == "__main__":

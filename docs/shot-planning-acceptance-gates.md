@@ -10,7 +10,9 @@
 状态：DRAFT_NON_AUTHORITATIVE
 正式 ShotSpec：未创建
 质量通过：未创建
-本刀真实本地模型套件：未执行
+第十二版三案 trial + generalization suite + held-out trial 合同：已齐
+真实本地模型套件：未执行
+结构可观察草案：待观察（不得写成 9/9）
 ```
 
 ## 冻结验收（原文级，禁止软化）
@@ -73,15 +75,15 @@
 | 冻结要求 | 当前观察 | 差距 |
 | --- | --- | --- |
 | 严格解析 9/9 | 第十一版套件 9/9 | 解析稳定不是结构可观察草案 |
-| 结构可观察草案 9/9 | 第十一版 0/9；第十二版未执行 | 冻结点写明现状 0/9，本刀仍是 0/9 |
+| 结构可观察草案 9/9 | 第十一版 0/9；第十二版合同已齐、真实套件未执行 | 冻结点写明现状 0/9；结构可观察仍是待观察，不得补推 9/9 |
 | 锁定字段改写 0 | 第十一版模型未写入锁定字段 | 残余连续性/构图/灯光仍阻断，没有可比较草案 |
 | 系统编译失败 0 | 第十一版合并后被连续性或可观察文本阻断 | 编译失败未归零 |
 | 结构一致 1.0 且受控语义一致 1.0 | 错误选择上的三轮指纹相同不得写成可接受 | 没有 9 份可比较草案，不能计算过线一致率 |
 | 残余不得留「待猜」 | 未形成可发布残余验收 | 留空或自由发挥仍必须失败关闭 |
-| 2 个 held-out 新一句话 3/3 | 本刀只允许占位 JSON | 占位不计入过线；未跑真实套件 |
+| 2 个 held-out 新一句话 3/3 | 请求占位与 v12 trial 合同已齐 | 占位与未执行 trial 不计入过线；未跑真实套件 |
 | 仍标草案、禁止正式 ShotSpec / 质量通过 | 现有试验保持 `DRAFT_NON_AUTHORITATIVE` | 必须继续保持；不得借本刀改口 |
 
-第十二版只绑定 `extractor.v2` / `extraction.v2` / `guarded prompt.v12`，没有真实模型套件证据。不得把接线无回归写成规划门过线。
+第十二版三案 trial 与 generalization suite 已绑定 `extractor.v2` / `extraction.v2` / `guarded prompt.v12`；两个 held-out 请求也各有可运行 v12 trial 合同。真实模型套件仍未执行。不得把接线无回归写成规划门过线，也不得把结构可观察写成 9/9。
 
 ### 诊断门
 
@@ -142,17 +144,25 @@ CreativeIntent
 - 进模型前守卫：`shot_planning/pre_model_guard.py`。
 - 诊断报告骨架：`shot_planning/diagnosis_report.py`。
 - 无模型回归：`tests/test_shot_planning_acceptance_gates.py`。
-- held-out 占位（不计入本刀过线）：
+- 第十二版三案 trial：
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_crying_trial_v12.json`，
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_smile_trial_v12.json`，
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_bicycle_trial_v12.json`。
+- 第十二版 generalization suite：
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json`。
+- held-out 占位请求与可运行 v12 trial（不计入过线）：
   `experiments/shot_planning/held_out_library_reader_medium_request_v1.json`，
-  `experiments/shot_planning/held_out_snow_courtyard_cat_wide_request_v1.json`。
+  `experiments/shot_planning/held_out_snow_courtyard_cat_wide_request_v1.json`，
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_library_reader_trial_v12.json`，
+  `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_snow_courtyard_cat_trial_v12.json`。
 
 ## 下一刀仍缺的真实套件
 
-下一刀必须在本机真实本地模型上补齐，且不得降阈值：
+v12 合同已经齐备。下一刀必须在本机真实本地模型上执行这些合同，且不得降阈值：
 
-1. 哭/笑/自行车各 3 轮 × 7 阶段 = 63 次，固定模型修订，自动重试为 0。
-2. 观察严格解析 9/9 与结构可观察草案 9/9；锁定字段改写 0；系统编译失败 0。
+1. 哭/笑/自行车各 3 轮 × 7 阶段 = 63 次，固定模型修订，自动重试为 0。套件合同已绑定，执行尚未发生。
+2. 观察严格解析 9/9 与结构可观察草案 9/9；锁定字段改写 0；系统编译失败 0。结构可观察仍是待观察。
 3. 同合同三轮结构一致 1.0、受控语义一致 1.0；残余不得留「待猜」。
-4. 两个 held-out 新一句话同样 3/3 结构可观察，不能用本刀占位 JSON 充数。
+4. 两个 held-out 新一句话同样 3/3 结构可观察，不能用请求占位或未执行的 v12 trial 合同充数。
 5. 规划套件与对抗各至少 9 轮进入人工盲评，诊断对错一致率 18/18。
 6. 证据可复核，且仍禁止自称正式 ShotSpec 或质量通过。
