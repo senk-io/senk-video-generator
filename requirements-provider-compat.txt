@@ -31,7 +31,7 @@ sentencepiece==0.2.2
 setuptools==84.0.0
 sympy==1.14.0
 tokenizers==0.22.2
-torch==2.13.0
+torch==2.14.0
 tqdm==4.70.0
 transformers==5.15.0
 typing-extensions==4.16.0
