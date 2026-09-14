@@ -110,11 +110,22 @@ enter any model prompt.
 The default suite path is now the edition-12 guarded-source-facts contract: three
 cases, three rounds, seven stages, sixty-three planned calls, zero automatic
 retries, and the same frozen model revision. Omitting `--execute` is contract
-preflight only. The edition-12 live-model suite has not been run. A later
-live-model knife would add `--execute` and a new execution id; this slice must
-not invent that evidence. Historical edition-11 evidence still uses
+preflight only. The edition-12 live-model suite has been executed as
+`LOCAL-SHOT-PLANNER-V12-20260914T032833Z` /
+`LOCAL-SHOT-PLANNER-GUARDED-SOURCE-FACTS-001`. This cloud workspace could not
+load that evidence directory, so the numbers below come from the read-only
+prompt snapshot and stay bound to that `execution_id`. They must not be
+rewritten. The suite recorded `model_call_count` `63/63`, `run_count` `9/9`,
+`automatic_retry_count` `0`, `model_load_count` `1`, and
+`package_integrity=COMPLETE_AND_DIGEST_MATCHED`. Strict parse is `9/9`.
+Structurally observable drafts are `0/9`. The planning gate has not passed.
+`formal_shot_spec_created=false`, `formal_quality_acceptance_created=false`,
+and `creative_review_required=true`. This slice must not invent a later
+`--execute` run or treat integrity as a quality pass. Historical edition-11
+evidence still uses
 `experiments/shot_planning/qwen3_0_6b_hybrid_source_facts_generalization_suite_v1.json`.
-The two held-out trial contracts are runnable placeholders. They stay
+The two held-out trial contracts remain runnable placeholders. They were not
+run as a live-model suite in this round. They stay
 `DRAFT_NON_AUTHORITATIVE`, keep the same non-goals, and do not count toward the
 planning gate.
 
@@ -177,7 +188,7 @@ coverage, or video-generation effect. Drafts therefore stay
 | `v9` | `9/9` | `3/9` | `153` | Scalar candidates removed the array-shape problem; the crying case compiled but chose `WIDE` in all three rounds; the smile and bicycle cases were still blocked by stage constraints |
 | `v10` | `9/9` | `0/9` | `120` | Candidate Chinese glosses reduced wrong choices, but environment-continuity errors, illegal enumerations, and mistaking subject lateral motion for camera `PAN` remained |
 | `v11` | `9/9` | `0/9` | `93` | Deterministic extraction locked `9/11/9` explicit or deterministically derived fields; the model never wrote locked fields, but residual continuity, composition, and lighting choices still blocked every run |
-| `v12` | not executed | not executed / still unobserved | not applicable | Three-case guarded contracts, the 63-call suite, and two held-out trial contracts are in place; no live-model suite has been run, so structural observability remains unobserved |
+| `v12` | `9/9` | `0/9` | not counted in this prompt snapshot | Live suite `LOCAL-SHOT-PLANNER-V12-20260914T032833Z` completed `63/63` calls and `9/9` parsed runs with zero automatic retries and one model load; integrity is `COMPLETE_AND_DIGEST_MATCHED`. Each case has `structurally_observable_run_count=0`. This is not a planning-gate pass, formal `ShotSpec`, or quality acceptance |
 
 Identical in-round controlled fingerprints only mean the model repeated the same
 choice. When the choice itself is wrong, that agreement must not be read as
@@ -188,10 +199,10 @@ and the smile case also kept exact source-sentence echo across three proposal
 rounds. `Qwen3-0.6B` is still insufficient on the remaining `17–19` fields of
 cross-stage semantic choice. Two cases were blocked after merge by continuity
 observations, and the smile case also failed the observable-text requirement.
-The next step should compare a stronger local text model on the same residual
-field contract, or extend deterministic rules only for new explicit,
-unambiguous phrasing. Undeclared continuity must not be inferred, and
-observation thresholds must not be lowered.
+The next live-model knife after edition 11 compared the same residual field
+contract under `extractor.v2` / `guarded prompt.v12`. It did not lower
+observation thresholds. The edition-12 result still leaves structurally
+observable drafts at `0/9`, so the planning gate remains closed.
 
 Edition 12 is not an overlay fix of edition-11 evidence. `trial.v11`,
 `extractor.v1`, `extraction.v1`, and `hybrid prompt.v11` stay closed-bound.
@@ -204,15 +215,34 @@ before evidence is written and before the model is called. Adversarial
 regressions cover “并非/从未/别/勿”, controlled “而是/反而/改用” corrections,
 affirmative idioms, non-negative compounds, camera lateral motion near the
 subject, and “固定相机参数” boundaries. The existing three positive cases still
-lock the same `9/11/9` fields under both extractors, so the result only proves
-wiring non-regression, not model-quality improvement. Edition 12 now has crying,
-smile, and bicycle `trial.v12` files plus
-`qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json`. Those contracts
-are loadable and hash-bound. They are not live-model evidence, and they do not
-make the planning gate pass. Structural observability is still unobserved. The
-held-out library-reader and snow-courtyard-cat trials are also `trial.v12`, but
-they remain `DRAFT_NON_AUTHORITATIVE` placeholders and must not be counted as
-3/3 structurally observable results.
+lock the same `9/11/9` fields under both extractors, so wiring non-regression
+alone never proved model-quality improvement. Edition 12 now has crying, smile,
+and bicycle `trial.v12` files plus
+`qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json`, and those
+contracts have a live-model suite execution:
+`LOCAL-SHOT-PLANNER-V12-20260914T032833Z` /
+`LOCAL-SHOT-PLANNER-GUARDED-SOURCE-FACTS-001`. The live suite is not a
+planning-gate pass. Structural observability is `0/9`, not `9/9`.
+`formal_shot_spec_created` remains `false`. `formal_quality_acceptance_created`
+remains `false`. `creative_review_required` remains `true`. The held-out
+library-reader and snow-courtyard-cat trials are also `trial.v12`, but they
+were not run as a live-model suite in this round. They remain
+`DRAFT_NON_AUTHORITATIVE` placeholders and must not be counted as 3/3
+structurally observable results.
+
+Per-case observations from the prompt snapshot, bound to
+`LOCAL-SHOT-PLANNER-V12-20260914T032833Z`:
+
+| Case | Missing compiled terms | Codes / extra marks | Must not be read as |
+| --- | --- | --- | --- |
+| `CRY_RAIN_CLOSEUP` | 小孩 / 哭 / 泪 / 雨 / 面部 / 相机保持静止 | `GENERALIZED_*_MISMATCH` + `PROPOSAL_NOT_OBJECT`; same fingerprint across three rounds | Same-fingerprint agreement as acceptable or structurally observable |
+| `SMILE_INDOOR_MEDIUM` | 上半身 only | `exact_source_echo` `3`; `largest_exact_controlled_semantic_group_ratio=1.0` | Agreement `1.0` on a wrong choice as acceptable |
+| `BICYCLE_LEFT_TO_RIGHT_WIDE` | 自行车 / 左 / 右 / 街道 / 全景 / 相机保持静止 | `GENERALIZED_TEAR_HIGHLIGHT_WITHOUT_VISIBLE_TEARS`; `PROPOSAL_NOT_OBJECT` | Cross-case tear contamination as ignorable, or a missing-term draft as comparable |
+
+The next knife should iterate the policy contract against missing compiled
+terms and `PROPOSAL_NOT_OBJECT` / cross-case contamination. It must not lower
+thresholds, shrink required text, accept abbreviation overrides, or rewrite
+wrong-choice agreement as a pass.
 
 All seven evidence packages can have their file set and digests rechecked.
 The edition-7 live execution id is
@@ -250,3 +280,20 @@ suite executions are
 that stopped on an implementation gap,
 `LOCAL-SHOT-PLAN-QWEN3-GENERALIZATION-20260812T173012Z`, is kept as-is and is
 not cited as a complete suite.
+
+The edition-12 live suite execution id is
+`LOCAL-SHOT-PLANNER-V12-20260914T032833Z`. This cloud workspace could not load
+`evidence/runtime/LOCAL-SHOT-PLANNER-V12-20260914T032833Z`, so the counts above
+are the read-only prompt snapshot, not a fresh digest recheck performed here.
+When that directory is present on the machine that ran the suite, the same
+verifier applies:
+
+```bash
+.venv-provider-compat/bin/python -m tools.verify_local_shot_planner_suite \
+  evidence/runtime/LOCAL-SHOT-PLANNER-V12-20260914T032833Z
+```
+
+The prompt snapshot already records `package_integrity=COMPLETE_AND_DIGEST_MATCHED`,
+`formal_shot_spec_created=false`, `formal_quality_acceptance_created=false`, and
+a human-review requirement. Integrity is not a formal shot spec, quality
+acceptance, or planning-gate pass.
