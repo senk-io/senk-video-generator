@@ -11,8 +11,13 @@
 正式 ShotSpec：未创建
 质量通过：未创建
 第十二版三案 trial + generalization suite + held-out trial 合同：已齐
-真实本地模型套件：未执行
-结构可观察草案：待观察（不得写成 9/9）
+真实本地模型套件：已执行
+execution_id：LOCAL-SHOT-PLANNER-V12-20260914T032833Z
+suite_id：LOCAL-SHOT-PLANNER-GUARDED-SOURCE-FACTS-001
+结构可观察草案：0/9（不得写成 9/9）
+规划门：未过
+三门全过：未成立
+held-out 真模型套件：本轮未跑
 ```
 
 ## 冻结验收（原文级，禁止软化）
@@ -58,38 +63,38 @@
 
 ### 本刀允许完成的范围
 
-本刀只把冻结标准写进仓库，并实现对抗门固定集的无模型拦截与诊断报告骨架。本刀完成不等于项目存续成立。
+本刀只把冻结标准写进仓库，并实现对抗门固定集的无模型拦截与诊断报告骨架。本轮观察记录刀只把已执行第十二版真实套件的只读数字写入现状表，不重跑模型、不改证据。本刀完成不等于项目存续成立。
 
 | 门 | 本刀可交付 | 本刀不得宣称 |
 | --- | --- | --- |
-| 规划门 | 写明冻结标准与现状 0/9；可放 2 个 held-out 请求占位 | 严格解析 9/9、结构可观察 9/9、一致率 1.0、held-out 3/3 |
+| 规划门 | 写明冻结标准与已执行套件观察 0/9；可放 2 个 held-out 请求占位 | 结构可观察 9/9、一致率可接受、held-out 3/3、规划门过线 |
 | 诊断门 | 对抗阻断路径产出覆盖/残余/阻断/不能批准原因；缺字段失败关闭 | 人工盲评 18/18；整门通过 |
 | 对抗门 | 固定集 ≥20 条、六类齐全、无模型权重 20/20 拦截 | 用缩集、降观察阈值或事后叙事补漏拦 |
 
 ## 现状差距
 
-权威观察来自 [`one-sentence-shot-planning.md`](./one-sentence-shot-planning.md) 已落盘的套件记录，不是本刀新跑的模型结果。
+权威观察来自 [`one-sentence-shot-planning.md`](./one-sentence-shot-planning.md) 已落盘的套件记录。本轮云端工作区拉不到 `evidence/runtime/LOCAL-SHOT-PLANNER-V12-20260914T032833Z`，下表数字以本刀 prompt 给出的只读观察为准，并绑定该 `execution_id`；不得改写证据文件，也不得补推未给出的计数。
 
 ### 规划门
 
 | 冻结要求 | 当前观察 | 差距 |
 | --- | --- | --- |
-| 严格解析 9/9 | 第十一版套件 9/9 | 解析稳定不是结构可观察草案 |
-| 结构可观察草案 9/9 | 第十一版 0/9；第十二版合同已齐、真实套件未执行 | 冻结点写明现状 0/9；结构可观察仍是待观察，不得补推 9/9 |
-| 锁定字段改写 0 | 第十一版模型未写入锁定字段 | 残余连续性/构图/灯光仍阻断，没有可比较草案 |
-| 系统编译失败 0 | 第十一版合并后被连续性或可观察文本阻断 | 编译失败未归零 |
-| 结构一致 1.0 且受控语义一致 1.0 | 错误选择上的三轮指纹相同不得写成可接受 | 没有 9 份可比较草案，不能计算过线一致率 |
+| 严格解析 9/9 | 第十二版真实套件每案 `parsed_run_count=3`，合计 9/9 | 解析稳定不是结构可观察草案 |
+| 结构可观察草案 9/9 | 第十二版 0/9；三案各 `structurally_observable_run_count=0` | 冻结点写明现状 0/9；不得补推 9/9 |
+| 锁定字段改写 0 | 本轮 prompt 未给出该计数 | 证据不足保持 `UNKNOWN`，不得补推为 0 |
+| 系统编译失败 0 | 三案均缺必需编译词，未形成可比较草案 | 编译失败未归零 |
+| 结构一致 1.0 且受控语义一致 1.0 | `CRY_RAIN_CLOSEUP` 三轮同指纹；`SMILE_INDOOR_MEDIUM` 的 `largest_exact_controlled_semantic_group_ratio=1.0` | 错误选择上的一致不得写成可接受；没有 9 份可比较草案，不能计算过线一致率 |
 | 残余不得留「待猜」 | 未形成可发布残余验收 | 留空或自由发挥仍必须失败关闭 |
-| 2 个 held-out 新一句话 3/3 | 请求占位与 v12 trial 合同已齐 | 占位与未执行 trial 不计入过线；未跑真实套件 |
-| 仍标草案、禁止正式 ShotSpec / 质量通过 | 现有试验保持 `DRAFT_NON_AUTHORITATIVE` | 必须继续保持；不得借本刀改口 |
+| 2 个 held-out 新一句话 3/3 | 请求占位与 v12 trial 合同已齐；本轮未跑 held-out 真模型套件 | 占位与未执行 trial 不计入过线 |
+| 仍标草案、禁止正式 ShotSpec / 质量通过 | `formal_shot_spec_created=false`；`formal_quality_acceptance_created=false`；`creative_review_required=true` | 必须继续保持；不得借本刀改口 |
 
-第十二版三案 trial 与 generalization suite 已绑定 `extractor.v2` / `extraction.v2` / `guarded prompt.v12`；两个 held-out 请求也各有可运行 v12 trial 合同。真实模型套件仍未执行。不得把接线无回归写成规划门过线，也不得把结构可观察写成 9/9。
+第十二版真实套件已执行：`execution_id=LOCAL-SHOT-PLANNER-V12-20260914T032833Z`，`suite_id=LOCAL-SHOT-PLANNER-GUARDED-SOURCE-FACTS-001`。`model_call_count` 63/63，`run_count` 9/9，`automatic_retry_count` 0，`model_load_count` 1，`package_integrity=COMPLETE_AND_DIGEST_MATCHED`。结构可观察仍是 0/9。规划门未过。不得把接线无回归、严格解析 9/9 或错误选择上的一致率写成规划门过线，也不得宣称正式 `ShotSpec` 或质量通过。
 
 ### 诊断门
 
 | 冻结要求 | 当前观察 | 差距 |
 | --- | --- | --- |
-| 每轮机器可读覆盖、残余、阻断、不能批准原因 | 本刀对抗阻断路径必须产出该四字段 | 规划套件 63 次真实轮次尚未按此结构重跑 |
+| 每轮机器可读覆盖、残余、阻断、不能批准原因 | 本刀对抗阻断路径必须产出该四字段 | 规划套件 63 次真实轮次已跑完，但本轮 prompt 未给出该四字段逐轮复核；不得补推诊断门已过 |
 | 缺一项失败 | 校验器对缺字段失败关闭 | 不得补叙事或事后填空 |
 | 人工盲评 ≥18 轮 18/18 | 未执行 | 整门未过 |
 | 假通过、漏拦、把一致率写成可接受即整门失败 | 历史文本已禁止把错误选择的一致率写成稳定 | 本刀不得输出通过标签 |
@@ -123,6 +128,7 @@ CreativeIntent
 - 不伪造质量、选择或时间线事实。
 - 本刀不下载、不加载、不推理 Qwen 或其他模型权重。
 - 本刀不出片，不计费远端 `execute`。
+- 本刀不改证据文件、不重跑模型、不 `--execute`。
 
 ## 固定对抗类别
 
@@ -150,19 +156,33 @@ CreativeIntent
   `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_bicycle_trial_v12.json`。
 - 第十二版 generalization suite：
   `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_generalization_suite_v12.json`。
-- held-out 占位请求与可运行 v12 trial（不计入过线）：
+- 第十二版真实套件执行（只读，本轮云端未检出该目录）：
+  `evidence/runtime/LOCAL-SHOT-PLANNER-V12-20260914T032833Z`。
+- held-out 占位请求与可运行 v12 trial（不计入过线；本轮未跑真模型）：
   `experiments/shot_planning/held_out_library_reader_medium_request_v1.json`，
   `experiments/shot_planning/held_out_snow_courtyard_cat_wide_request_v1.json`，
   `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_library_reader_trial_v12.json`，
   `experiments/shot_planning/qwen3_0_6b_guarded_source_facts_held_out_snow_courtyard_cat_trial_v12.json`。
 
-## 下一刀仍缺的真实套件
+## 第十二版真实套件逐案观察
 
-v12 合同已经齐备。下一刀必须在本机真实本地模型上执行这些合同，且不得降阈值：
+本轮云端拉不到证据目录，数字以 prompt 只读快照为准，绑定 `execution_id=LOCAL-SHOT-PLANNER-V12-20260914T032833Z`。禁止改写这些数字。
 
-1. 哭/笑/自行车各 3 轮 × 7 阶段 = 63 次，固定模型修订，自动重试为 0。套件合同已绑定，执行尚未发生。
-2. 观察严格解析 9/9 与结构可观察草案 9/9；锁定字段改写 0；系统编译失败 0。结构可观察仍是待观察。
-3. 同合同三轮结构一致 1.0、受控语义一致 1.0；残余不得留「待猜」。
-4. 两个 held-out 新一句话同样 3/3 结构可观察，不能用请求占位或未执行的 v12 trial 合同充数。
+| 案 | 结构可观察 | 严格解析 | 本轮已给出的观察 | 不得写成 |
+| --- | --- | --- | --- | --- |
+| `CRY_RAIN_CLOSEUP` | 0/3 | 3/3 | 缺编译词：小孩/哭/泪/雨/面部/相机保持静止；codes `GENERALIZED_*_MISMATCH` + `PROPOSAL_NOT_OBJECT`；三轮同指纹 | 同指纹 = 可接受或结构可观察 |
+| `SMILE_INDOOR_MEDIUM` | 0/3 | 3/3 | 只缺「上半身」；`exact_source_echo` 3；`largest_exact_controlled_semantic_group_ratio=1.0` | 把错误选择上的 1.0 一致率写成可接受 |
+| `BICYCLE_LEFT_TO_RIGHT_WIDE` | 0/3 | 3/3 | 缺自行车/左/右/街道/全景/相机保持静止；含 `GENERALIZED_TEAR_HIGHLIGHT_WITHOUT_VISIBLE_TEARS`；`PROPOSAL_NOT_OBJECT` | 串案污染可忽略，或把缺词草案写成可比较 |
+
+合计：结构可观察 0/9，严格解析 9/9。规划门未过。
+
+## 下一刀建议
+
+第十二版哭/笑/自行车真实套件已经执行，规划门仍未过。下一刀必须针对缺词与 `PROPOSAL_NOT_OBJECT` / 串案污染做策略合同迭代，禁止降阈值、缩文本、缩写顶覆盖、缺证据补叙事，或把一致率写成可接受。
+
+1. 先修编译词覆盖与 `PROPOSAL_NOT_OBJECT`：哭案缺小孩/哭/泪/雨/面部/相机保持静止；笑案缺「上半身」；自行车案缺自行车/左/右/街道/全景/相机保持静止。
+2. 先切断串案污染：自行车案出现 `GENERALIZED_TEAR_HIGHLIGHT_WITHOUT_VISIBLE_TEARS`，不得用降观察阈值把泪痕串案抹掉。
+3. 错误选择上的三轮同指纹与 `largest_exact_controlled_semantic_group_ratio=1.0` 只能记为稳定错误，不能记为过线一致率。
+4. 两个 held-out 新一句话仍须另跑真实本地模型 3/3 结构可观察；本轮未跑，占位与未执行 trial 不计入过线。
 5. 规划套件与对抗各至少 9 轮进入人工盲评，诊断对错一致率 18/18。
-6. 证据可复核，且仍禁止自称正式 ShotSpec 或质量通过。
+6. 证据可复核，且仍禁止自称正式 ShotSpec 或质量通过。结构可观察必须仍从 0/9 往上观察，不得补推 9/9。
